@@ -58,7 +58,7 @@ public class AdminView {
         JMenu menuProducts = createRightAlignedMenu("PRODUCTS");
         
         JMenu menuSuppliers = createRightAlignedMenu("SUPPLIERS");
-        
+        	
         JMenu menuStockReceipt = createRightAlignedMenu("STOCK RECEIPT");
         JMenuItem importMenuItem = new JMenuItem("Import");
         JMenuItem stockReceipt = new JMenuItem("Stock Inward Slip");

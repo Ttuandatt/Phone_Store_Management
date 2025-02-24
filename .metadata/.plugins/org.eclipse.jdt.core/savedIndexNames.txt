@@ -1,4 +1,2 @@
 INDEX VERSION 1.134+C:\Users\ACER\Dropbox\My PC (LAPTOP-UGP9QJUT)\Documents\ITstudies\JAVA_BACKEND\JAVA PROJECTS\Phone_Store_Management\.metadata\.plugins\org.eclipse.jdt.core
 1865797976.index
-3778004595.index
-3803894794.index
