@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="GUI.AdminView"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.sun.org.apache.xml.internal.serialize.OutputFormat.DTD"/>
+    <fullyQualifiedTypeName name="DAO.ProductsDAO"/>
+    <fullyQualifiedTypeName name="java.awt.Dimension"/>
+    <fullyQualifiedTypeName name="GUI.ProductsGUI"/>
+    <fullyQualifiedTypeName name="javax.swing.JLabel"/>
+    <fullyQualifiedTypeName name="javax.swing.JTextField"/>
+    <fullyQualifiedTypeName name="java.awt.BorderLayout"/>
+    <fullyQualifiedTypeName name="java.awt.GridBagConstraints"/>
+    <fullyQualifiedTypeName name="java.awt.FlowLayout"/>
+    <fullyQualifiedTypeName name="GUI.SuppliersGUI"/>
+    <fullyQualifiedTypeName name="BUS.ProductsBUS"/>
+    <fullyQualifiedTypeName name="DTO.ProductsDTO"/>
+    <fullyQualifiedTypeName name="GUI.ImportGUI"/>
+    <fullyQualifiedTypeName name="javax.swing.JMenuItem"/>
+    <fullyQualifiedTypeName name="GUI.EmployeeGUI"/>
+    <fullyQualifiedTypeName name="GUI.StockInwardSlipGUI"/>
+    <fullyQualifiedTypeName name="GUI.ExportGUI"/>
+    <fullyQualifiedTypeName name="GUI.StockOutwardSlipGUI"/>
+    <fullyQualifiedTypeName name="GUI.AccountGUI"/>
+    <fullyQualifiedTypeName name="GUI.TimesheetGUI"/>
+    <fullyQualifiedTypeName name="GUI.LeaveRequestGUI"/>
+    <fullyQualifiedTypeName name="GUI.CreateLeaveRequestGUI"/>
+    <fullyQualifiedTypeName name="GUI.StatisticsGUI"/>
+    <fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
+    <fullyQualifiedTypeName name="GUI.PersonalInformationGUI"/>
+    <fullyQualifiedTypeName name="java.awt.GridBagLayout"/>
+    <fullyQualifiedTypeName name="java.awt.Color"/>
+    <fullyQualifiedTypeName name="javax.swing.BorderFactory"/>
+    <fullyQualifiedTypeName name="javax.swing.JPanel"/>
+    <fullyQualifiedTypeName name="java.awt.event.MouseAdapter"/>
+    <fullyQualifiedTypeName name="GUI.WarehouseGUI"/>
+    <fullyQualifiedTypeName name="java.awt.CardLayout"/>
+</qualifiedTypeNameHistroy>

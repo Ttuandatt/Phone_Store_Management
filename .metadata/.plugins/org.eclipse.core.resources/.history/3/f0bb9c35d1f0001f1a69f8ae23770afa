@@ -1,0 +1,7 @@
+package BUS;
+
+public class ProductsBUS {
+	public ArrayList<ProductsDTO> getAllProducts(){
+        return spDAO.getAll();
+    }
+}
