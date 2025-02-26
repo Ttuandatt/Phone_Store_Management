@@ -142,7 +142,7 @@ public class AdminView {
         //============================ Content Panel ============================//
         contentPanel = new JPanel(new CardLayout());
         contentPanel.setBackground(Color.DARK_GRAY);
-        contentPanel.setPreferredSize(new Dimension(1200, 800));
+        contentPanel.setPreferredSize(new Dimension(1400, 900));
         mainPanel.add(menuPanel, BorderLayout.WEST);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
