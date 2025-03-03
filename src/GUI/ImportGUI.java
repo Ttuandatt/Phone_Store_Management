@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -25,18 +26,26 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import com.toedter.calendar.JDateChooser; // Thêm thư viện JCalendar
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 
 
@@ -49,6 +58,7 @@ public class ImportGUI extends JPanel{
     ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox<String> brandComboBox;
     private JPanel productContent;
+    private JLabel imageLabel;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
 	
 	
@@ -61,6 +71,13 @@ public class ImportGUI extends JPanel{
     
     //////////////////////////////////////////METHODS//////////////////////////////////////
     private void initComponents() {
+    	//Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+    	FlatRobotoFont.install();
+        FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
+        FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
+        FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
+        FlatIntelliJLaf.registerCustomDefaultsSource("style");
+        FlatIntelliJLaf.setup();
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
         productContent = new JPanel();
@@ -324,10 +341,10 @@ public class ImportGUI extends JPanel{
     }
     
     
-    // Hàm hiển thị JDialog để nhập sản phẩm mới
-    private void newProductDialog() {
+    	// Hàm hiển thị JDialog để nhập sản phẩm mới
+    	private void newProductDialog() {
     	JDialog newProductDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Add New Product", true);
-        newProductDialog.setSize(600, 500);
+        newProductDialog.setSize(600, 400);
         newProductDialog.setLayout(null);
         
         
@@ -337,6 +354,35 @@ public class ImportGUI extends JPanel{
         txtId.setEditable(false); //sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để + thêm 1, k cho nhập tự động
         txtId.setBounds(110, 20, 150, 20); newProductDialog.add(txtId);
         
+        JLabel lblImage = new JLabel("Image:");
+        lblImage.setBounds(280,20,50,20); newProductDialog.add(lblImage);
+        JButton browseButton = new JButton("Browse");
+        browseButton.setBounds(340,20,90,20); 
+        browseButton.setBorderPainted(false);
+        browseButton.setBackground(Color.decode("#01BFF4"));
+        browseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setDialogTitle("Choose an image");
+				
+				// Chỉ cho phép chọn file ảnh
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Hình ảnh", "jpg", "jpeg", "png", "gif"));
+			
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String imagePath = selectedFile.getAbsolutePath();
+                    displayImage(imagePath);
+                }
+			}
+		});
+        imageLabel = new JLabel();
+        imageLabel.setPreferredSize(new DimensionUIResource(200, 200));
+        imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+        imageLabel.setBounds(20, 50, 200, 200);
+        newProductDialog.add(browseButton);
         
         JLabel lblName = new JLabel("Product Name:");
         lblName.setBounds(10,45,100,20); newProductDialog.add(lblName);
@@ -389,15 +435,27 @@ public class ImportGUI extends JPanel{
         
         JLabel lbStatus = new JLabel("Status:");
         lbStatus.setBounds(10,245,100,20); newProductDialog.add(lbStatus);
+        JRadioButton rbOn = new JRadioButton("On");
+        rbOn.setBounds(110, 245, 50, 20); newProductDialog.add(rbOn);
+        JRadioButton rbOff = new JRadioButton("Off");
+        rbOff.setBounds(160, 245, 70, 20); newProductDialog.add(rbOff);
         
         
         JButton btnSave = new JButton("Save");
+        btnSave.setBounds(300,320, 70,25); 
+        btnSave.setBorderPainted(false);
+        btnSave.setBackground(Color.decode("#01BFF4"));
         btnSave.addActionListener(e -> {
             String name = txtName.getText();
+            String brand = brandComboBox.getSelectedItem().toString();
+            String battery = txtBattery.getText();
+            String os = txtOS.getText();
+            String origin = txtOrigin.getText();
+            String frontCam = txtFrontCam.getText();
+            String backCam = txtBackCam.getText();
             String price = txtPrice.getText();
-//            String
 
-            if (name.isEmpty() || price.isEmpty()) {
+            if (name.isEmpty() || brand.isEmpty() || battery.isEmpty() || os.isEmpty() || origin.isEmpty() || frontCam.isEmpty() || backCam.isEmpty() || price.isEmpty()) {
                 JOptionPane.showMessageDialog(newProductDialog, "Please fill in all fields!", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
                 // Thêm vào danh sách sản phẩm (có thể gọi ProductsBUS để xử lý)
@@ -405,6 +463,50 @@ public class ImportGUI extends JPanel{
                 newProductDialog.dispose(); // Đóng form sau khi lưu
             }
         });
+        btnSave.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnSave.setBackground(Color.decode("#3A96CF"));
+        		btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnSave.setBackground(Color.decode("#01BFF4"));
+        	}
+        });
+        newProductDialog.add(btnSave);
+        
+        JButton btnRefresh = new JButton("Refresh");
+        btnRefresh.setBounds(380, 320, 80,25);
+        btnRefresh.setBorderPainted(false);
+        btnRefresh.setBackground(Color.decode("#01BFF4"));
+        btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtName.setText("");
+				brandComboBox.setSelectedIndex(0);
+				txtBattery.setText("");
+				txtOS.setText("");
+				txtOrigin.setText("");
+				txtFrontCam.setText("");
+				txtBackCam.setText("");
+				txtPrice.setText("");
+			}
+		});
+        btnRefresh.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnRefresh.setBackground(Color.decode("#3A96CF"));
+        		btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnRefresh.setBackground(Color.decode("#01BFF4"));
+        	}
+        });
+        newProductDialog.add(btnRefresh);
 
         newProductDialog.setLocationRelativeTo(this);
         newProductDialog.setVisible(true);
@@ -420,6 +522,13 @@ public class ImportGUI extends JPanel{
         }
     }
     
+    //Hàm hiển thị ảnh khi chọn file ảnh khi thêm sản phẩm mới
+    private void displayImage(String path) {
+        ImageIcon icon = new ImageIcon(path);
+        Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(img));
+    }
+
     private void loadSanPhamList() {
     	
     }

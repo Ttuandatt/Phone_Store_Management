@@ -7,7 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 
 public class AdminView {
@@ -15,6 +19,15 @@ public class AdminView {
 	private JPanel contentPanel; // contentPanel để hiển thị các giao diện
 	
 	public AdminView() {
+		
+		//Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+    	FlatRobotoFont.install();
+        FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
+        FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
+        FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
+        FlatIntelliJLaf.registerCustomDefaultsSource("style");
+        FlatIntelliJLaf.setup();
+		
         // Tạo JFrame
         JFrame f = new JFrame("Admin");
         f.setSize(1400, 800);
@@ -360,7 +373,7 @@ public class AdminView {
         menu.setBackground(Color.WHITE);
         menu.setBorderPainted(false); // Không vẽ viền
         menu.setBorder(null); // Xóa viền
-        menu.setHorizontalAlignment(SwingConstants.RIGHT);
+        menu.setHorizontalAlignment(SwingConstants.CENTER);
         JPopupMenu popupMenu = menu.getPopupMenu();
 
         
