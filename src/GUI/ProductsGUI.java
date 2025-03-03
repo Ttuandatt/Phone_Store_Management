@@ -189,9 +189,9 @@ public class ProductsGUI extends JPanel{
         btnUpdate.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
-        		btnUpdate.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+        		btnUpdate.setBackground(Color.decode("#D2E4EE")); // Đổi màu khi hover vào
         		btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		updateButtonPanel.setBackground(Color.decode("#D6D6D6"));
+        		updateButtonPanel.setBackground(Color.decode("#D2E4EE"));
         	}
         	
         	@Override
@@ -237,9 +237,9 @@ public class ProductsGUI extends JPanel{
         btnDelete.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
-        		btnDelete.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+        		btnDelete.setBackground(Color.decode("#D2E4EE")); // Đổi màu khi hover vào
         		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		deleteButtonPanel.setBackground(Color.decode("#D6D6D6"));
+        		deleteButtonPanel.setBackground(Color.decode("#D2E4EE"));
         	}
         	
         	@Override
@@ -466,7 +466,7 @@ public class ProductsGUI extends JPanel{
         btnSearch.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnSearch.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
+                btnSearch.setBackground(Color.decode("#D2E4EE")); // Màu khi hover vào
                 btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
@@ -509,7 +509,7 @@ public class ProductsGUI extends JPanel{
         btnRefresh.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-            	btnRefresh.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
+            	btnRefresh.setBackground(Color.decode("#D2E4EE")); // Màu khi hover vào
             	btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 

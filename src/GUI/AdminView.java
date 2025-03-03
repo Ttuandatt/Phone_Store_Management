@@ -36,7 +36,7 @@ public class AdminView {
 
         //======================= 1. Info Panel (0.3) ============================//
         JPanel infoPanel = new JPanel();
-        infoPanel.setBackground(Color.cyan);
+        infoPanel.setBackground(Color.decode("#01BFF4"));
         infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
         gbc.weightx = 1.0;
         gbc.weighty = 0.3;
@@ -49,7 +49,7 @@ public class AdminView {
         //======================= 2. Menu Panel (0.6) ============================//
         JPanel menuBarPanel = new JPanel();
         menuBarPanel.setLayout(new BoxLayout(menuBarPanel, BoxLayout.Y_AXIS));
-        menuBarPanel.setBackground(Color.ORANGE);
+        menuBarPanel.setBackground(Color.white);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.Y_AXIS));
@@ -185,17 +185,30 @@ public class AdminView {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				changeInfoButton.setBackground(Color.decode("#D2E4EE")); //để đổi màu khi rê chuột vào
 				changeInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
+			
+    		
+    		@Override
+    		public void mouseExited(MouseEvent e) {
+    			changeInfoButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
+    		}
 		});
 		
 		//mouseListener cho nút logoutButton
 		logoutButton.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				logoutButton.setBackground(Color.decode("#D2E4EE")); //để đổi màu khi rê chuột vào
 				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
+			
+    		
+    		@Override
+    		public void mouseExited(MouseEvent e) {
+    			logoutButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
+    		}
 
 		});
 	
@@ -330,7 +343,12 @@ public class AdminView {
 			}
 		});
 //==========================================================================================================================================================//
-
+		
+		changeInfoButton.setOpaque(true);
+		changeInfoButton.setBackground(Color.WHITE);
+		
+		logoutButton.setOpaque(true);
+		logoutButton.setBackground(Color.WHITE);
 	}
 
     private JMenu createRightAlignedMenu(String title) {
@@ -338,6 +356,11 @@ public class AdminView {
         menu.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái theo BoxLayout
         menu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Full chiều ngang, tăng chiều cao
         menu.setPreferredSize(new Dimension(200, 50)); // Điều chỉnh chiều cao theo ý muốn
+        menu.setOpaque(true);
+        menu.setBackground(Color.WHITE);
+        menu.setBorderPainted(false); // Không vẽ viền
+        menu.setBorder(null); // Xóa viền
+        menu.setHorizontalAlignment(SwingConstants.RIGHT);
         JPopupMenu popupMenu = menu.getPopupMenu();
 
         
@@ -345,13 +368,13 @@ public class AdminView {
         menu.addMouseListener(new MouseAdapter() {
         		@Override
         		public void mouseEntered(MouseEvent e) {
-//        			menu.setBackground(Color.decode("")); để đổi màu khi rê chuột vào
+        			menu.setBackground(Color.decode("#D2E4EE")); //để đổi màu khi rê chuột vào
         			menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         		}
         		
         		@Override
         		public void mouseExited(MouseEvent e) {
-//        			menu.setBackground(Color.decode("")); để đổi màu về như cũ khi rê chuột vào
+        			menu.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
         		}
         	
         });
