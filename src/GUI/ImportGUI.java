@@ -4,15 +4,13 @@ import BUS.ProductsBUS;
 import DTO.*;
 import DAO.ProductsDAO;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -37,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -46,6 +45,7 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 
@@ -56,7 +56,7 @@ public class ImportGUI extends JPanel{
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
     ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-    private JComboBox<String> brandComboBox;
+    private JComboBox<String> brandComboBox, supplierComboBox;
     private JPanel productContent;
     private JLabel imageLabel;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
@@ -322,6 +322,20 @@ public class ImportGUI extends JPanel{
         supplierLabel = new JLabel("Suppliers:");
         supplierLabel.setBounds(10, 110, 100, 20);
         informationRightPanel.add(supplierLabel);
+        //Add combobox suppliers
+        String [] suppliers = {"", "Add new supplier"};
+        supplierComboBox = new JComboBox<String>(suppliers);
+        supplierComboBox.setBounds(130,110,200,20); informationRightPanel.add(supplierComboBox);
+        supplierComboBox.addItemListener(e -> {
+        	if(e.getStateChange() == ItemEvent.SELECTED) {
+        		String selected = (String)supplierComboBox.getSelectedItem();
+        		if("Add new supplier".equals(selected)) {
+        			newSupplierDialog();
+        		}
+        	}
+        });
+        
+        
         
         JTextField slipIdTF, warehouseIdTF, creatorIdTF;
         slipIdTF = new JTextField();
@@ -356,28 +370,26 @@ public class ImportGUI extends JPanel{
         
         JLabel lblImage = new JLabel("Image:");
         lblImage.setBounds(280,20,50,20); newProductDialog.add(lblImage);
+        JLabel productImg = new JLabel();
+        productImg.setBounds(280, 0, 350, 350); newProductDialog.add(productImg);
         JButton browseButton = new JButton("Browse");
         browseButton.setBounds(340,20,90,20); 
         browseButton.setBorderPainted(false);
         browseButton.setBackground(Color.decode("#01BFF4"));
         browseButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				fileChooser.setDialogTitle("Choose an image");
-				
-				// Chỉ cho phép chọn file ảnh
-                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Hình ảnh", "jpg", "jpeg", "png", "gif"));
-			
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    String imagePath = selectedFile.getAbsolutePath();
-                    displayImage(imagePath);
+                    ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+                    Image img = icon.getImage().getScaledInstance(260, 260, Image.SCALE_SMOOTH);
+                    productImg.setIcon(new ImageIcon(img));
                 }
-			}
-		});
+            }
+        });
         imageLabel = new JLabel();
         imageLabel.setPreferredSize(new DimensionUIResource(200, 200));
         imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -492,6 +504,7 @@ public class ImportGUI extends JPanel{
 				txtFrontCam.setText("");
 				txtBackCam.setText("");
 				txtPrice.setText("");
+				productImg.setIcon(null); //xóa ảnh vừa browse
 			}
 		});
         btnRefresh.addMouseListener(new MouseAdapter() {
@@ -522,12 +535,50 @@ public class ImportGUI extends JPanel{
         }
     }
     
-    //Hàm hiển thị ảnh khi chọn file ảnh khi thêm sản phẩm mới
-    private void displayImage(String path) {
-        ImageIcon icon = new ImageIcon(path);
-        Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(img));
+    public void newSupplierDialog() {
+        // Tạo panel chứa form nhập
+        JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5)); //row:3, column:2, hgap:5, wgap:5
+
+        JLabel nameLabel = new JLabel("Supplier Name:");
+        JTextField nameField = new JTextField(15);
+        
+        JLabel addressLabel = new JLabel("Address:");
+        JTextField addressField = new JTextField(15);
+
+        JLabel phoneLabel = new JLabel("Phone Number:");
+        JTextField phoneField = new JTextField(15);
+
+        // Thêm các thành phần vào panel
+        panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(addressLabel);
+        panel.add(addressField);
+        panel.add(phoneLabel);
+        panel.add(phoneField);
+
+        // Hiển thị dialog với panel
+        int result = JOptionPane.showConfirmDialog(
+            this, panel, "Add Supplier", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        );
+
+        // Nếu nhấn OK
+        if (result == JOptionPane.OK_OPTION) {
+            String newSupplier = nameField.getText().trim();
+            String address = addressField.getText().trim();
+            String phone = phoneField.getText().trim();
+
+            if (!newSupplier.isEmpty() && !address.isEmpty() && !phone.isEmpty()) {
+                supplierComboBox.insertItemAt(newSupplier, supplierComboBox.getItemCount() - 1);
+                supplierComboBox.setSelectedItem(newSupplier);
+                JOptionPane.showMessageDialog(this, 
+                    "Supplier Added:\nName: " + newSupplier + "\nAddress: " + address + "\nPhone: " + phone);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields!", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
+
+    
 
     private void loadSanPhamList() {
     	
