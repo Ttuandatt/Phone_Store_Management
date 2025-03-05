@@ -198,7 +198,7 @@ public class AdminView {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				changeInfoButton.setBackground(Color.decode("#D2E4EE")); //để đổi màu khi rê chuột vào
+				changeInfoButton.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
 				changeInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			
@@ -213,7 +213,7 @@ public class AdminView {
 		logoutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				logoutButton.setBackground(Color.decode("#D2E4EE")); //để đổi màu khi rê chuột vào
+				logoutButton.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
 				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			
@@ -381,7 +381,7 @@ public class AdminView {
         menu.addMouseListener(new MouseAdapter() {
         		@Override
         		public void mouseEntered(MouseEvent e) {
-        			menu.setBackground(Color.decode("#D2E4EE")); //để đổi màu khi rê chuột vào
+        			menu.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
         			menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         		}
         		

@@ -42,7 +42,7 @@ public class EmployeeGUI extends JPanel{
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
     ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-    private JComboBox sortComboBox;
+    private JComboBox sortComboBox, genderCombobox, departmentCombobox;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
 	
@@ -174,7 +174,7 @@ public class EmployeeGUI extends JPanel{
         btnUpdate.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnUpdate.setHorizontalTextPosition(SwingConstants.CENTER);
         btnUpdate.setFocusPainted(false);
-        btnUpdate.setBorderPainted(false);
+        btnUpdate.setBorderPainted(true);
         btnUpdate.setContentAreaFilled(false);
         btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUpdate.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -222,7 +222,7 @@ public class EmployeeGUI extends JPanel{
         btnDelete.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDelete.setFocusPainted(false);
-        btnDelete.setBorderPainted(false);
+        btnDelete.setBorderPainted(true);
         btnDelete.setContentAreaFilled(false);
         btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnDelete.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -273,7 +273,7 @@ public class EmployeeGUI extends JPanel{
         btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDetail.setFocusPainted(false);
-        btnDetail.setBorderPainted(false);
+        btnDetail.setBorderPainted(true);
         btnDetail.setContentAreaFilled(false);
         btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -324,8 +324,8 @@ public class EmployeeGUI extends JPanel{
         JButton btnExcel = new JButton("Excel", scaledIconExcel);
         btnExcel.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnExcel.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnExcel.setFocusPainted(false);
-        btnExcel.setBorderPainted(false);
+//        btnExcel.setFocusPainted(false);
+        btnExcel.setBorderPainted(true);
         btnExcel.setContentAreaFilled(false);
         btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -368,7 +368,7 @@ public class EmployeeGUI extends JPanel{
         searchPanel.setLayout(new GridBagLayout());
         searchPanel.setBorder(BorderFactory.createTitledBorder(
         	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Functions" // Tiêu đề của border
+        	    "Search" // Tiêu đề của border
         ));	//Tạo border cho panel        
         gbc.weightx = 0.6;
         gbc.weighty = 1.0;
@@ -383,7 +383,7 @@ public class EmployeeGUI extends JPanel{
         searchInputPanel = new JPanel();
         searchInputPanel.setBackground(Color.white);
         searchInputPanel.setLayout(null);
-        gbc.weightx = 0.8;
+        gbc.weightx = 0.85;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -393,7 +393,7 @@ public class EmployeeGUI extends JPanel{
         searchButtonPanel = new JPanel();
         searchButtonPanel.setBackground(Color.white);
         searchButtonPanel.setLayout(null);
-        gbc.weightx = 0.2;
+        gbc.weightx = 0.15;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
@@ -412,25 +412,23 @@ public class EmployeeGUI extends JPanel{
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
         
-        JLabel priceLabel = new JLabel("Price");
-        priceLabel.setBounds(113, 5, 30, 20);
-        searchInputPanel.add(priceLabel);
-        JTextField priceStartTF, priceEndTF;
-        priceStartTF = new JTextField();
-        priceStartTF.setBounds(113, 24, 90, 25);
-        searchInputPanel.add(priceStartTF);
-        priceEndTF = new JTextField();
-        priceEndTF.setBounds(215, 24, 90, 25);
-        searchInputPanel.add(priceEndTF);
-        JLabel between = new JLabel("-");
-        between.setBounds(205, 33, 5, 5);
-        searchInputPanel.add(between);
+        
+        String[] genders = {"Male", "Female"};
+        genderCombobox = new JComboBox<String>(genders);
+        genderCombobox.setBounds(90,  24,  90, 25);
+        searchInputPanel.add(genderCombobox);
+        
+        String[] departments = {"Department", "Add new department..."};
+        departmentCombobox = new JComboBox<String>(departments);
+        departmentCombobox.setBounds(185, 24, 100, 25);
+        searchInputPanel.add(departmentCombobox);
+
         
         JLabel searchLabel = new JLabel("Search");
         searchLabel.setBounds(330, 5, 50, 20);
         searchInputPanel.add(searchLabel);
         JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(330,  24,  210, 25);
+        searchInputTF.setBounds(330,  24,  270, 25);
         searchInputPanel.add(searchInputTF);
         //==================================== End searchInputPanel ===================================================//
         
@@ -439,18 +437,18 @@ public class EmployeeGUI extends JPanel{
         //==================================== searchButtonPanel =======================================================//
         ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
-        Image newImgSearch = imgSearch.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+        Image newImgSearch = imgSearch.getScaledInstance(20,20, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
 
         // Tạo nút Detail
-        JButton btnSearch = new JButton("Search", scaledIconSearch);
+        JButton btnSearch = new JButton(scaledIconSearch);
         btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
         btnSearch.setFocusPainted(false);
-        btnSearch.setBorderPainted(false);
+        btnSearch.setBorderPainted(true);
         btnSearch.setContentAreaFilled(true);
         btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSearch.setBackground(Color.white);
@@ -477,23 +475,23 @@ public class EmployeeGUI extends JPanel{
         });
 
         
-        btnSearch.setBounds(0, 0, 65, 60);
+        btnSearch.setBounds(10, 15, 40, 40);
         searchButtonPanel.add(btnSearch);
         
         ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
-        Image newImgRefresh = imgRefresh.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+        Image newImgRefresh = imgRefresh.getScaledInstance(20,20, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
 
         // Tạo nút Detail
-        JButton btnRefresh = new JButton("Refresh", scaledIconRefresh);
+        JButton btnRefresh = new JButton(scaledIconRefresh);
         btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
         btnRefresh.setFocusPainted(false);
-        btnRefresh.setBorderPainted(false);
+        btnRefresh.setBorderPainted(true);
         btnRefresh.setContentAreaFilled(true);
         btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnRefresh.setBackground(Color.white);
@@ -520,7 +518,7 @@ public class EmployeeGUI extends JPanel{
         });
 
         
-        btnRefresh.setBounds(68, 0, 70, 60);
+        btnRefresh.setBounds(55, 15, 40, 40);
         searchButtonPanel.add(btnRefresh);
         //==================================== End searchButtonPanel ===================================================//
 
