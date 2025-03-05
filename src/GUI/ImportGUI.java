@@ -224,7 +224,7 @@ public class ImportGUI extends JPanel{
         
         JButton quantityButton = new JButton("OK");
         quantityButton.setBounds(180, 20,60,25);
-        quantityButton.setOpaque(true);
+//        quantityButton.setOpaque(true);
         quantityButton.setBackground(Color.white);
         quantityButton.addMouseListener(new MouseAdapter() {
         	@Override
@@ -243,7 +243,7 @@ public class ImportGUI extends JPanel{
         
         JButton newProductButton = new JButton("New product");
         newProductButton.setBounds(250,20,120,25);
-        newProductButton.setOpaque(true);
+//        newProductButton.setOpaque(true);
         newProductButton.setBackground(Color.white);
         newProductButton.addMouseListener(new MouseAdapter() {
         	@Override
@@ -299,7 +299,7 @@ public class ImportGUI extends JPanel{
         rightPanel.add(productChoseRightPanel, gbc);
         
         optionRightPanel = new JPanel();
-        optionRightPanel.setLayout(new GridBagLayout());
+        optionRightPanel.setLayout(null);
         optionRightPanel.setBackground(Color.decode("#785589"));
         gbc.weightx = 1.0;
         gbc.weighty = 0.08;
@@ -308,20 +308,22 @@ public class ImportGUI extends JPanel{
         gbc.gridy = 2;
         rightPanel.add(optionRightPanel, gbc);
         
+        
+        ///////////////////////////////////////// informationRightPanel /////////////////////////////////////////////
         //Ste các labels, textfield để hiện thông tin phiếu nhập
         JLabel slipIdLabel, warehouseIdLabel, creatorIdLabel, supplierLabel;
         slipIdLabel = new JLabel("ID:");
-        slipIdLabel.setBounds(10, 20, 30, 20);
-        informationRightPanel.add(slipIdLabel);
+        slipIdLabel.setBounds(10, 20, 30, 20); informationRightPanel.add(slipIdLabel);
+        
         warehouseIdLabel = new JLabel("Warehouse ID:");
-        warehouseIdLabel.setBounds(10, 50, 100, 20);
-        informationRightPanel.add(warehouseIdLabel);
+        warehouseIdLabel.setBounds(10, 50, 100, 20);informationRightPanel.add(warehouseIdLabel);
+        
         creatorIdLabel = new JLabel("Creator ID:");
-        creatorIdLabel.setBounds(10, 80, 100, 20);
-        informationRightPanel.add(creatorIdLabel);
+        creatorIdLabel.setBounds(10, 80, 100, 20); informationRightPanel.add(creatorIdLabel);
+        
         supplierLabel = new JLabel("Suppliers:");
-        supplierLabel.setBounds(10, 110, 100, 20);
-        informationRightPanel.add(supplierLabel);
+        supplierLabel.setBounds(10, 110, 100, 20); informationRightPanel.add(supplierLabel);
+        
         //Add combobox suppliers
         String [] suppliers = {"", "Add new supplier"};
         supplierComboBox = new JComboBox<String>(suppliers);
@@ -340,16 +342,91 @@ public class ImportGUI extends JPanel{
         JTextField slipIdTF, warehouseIdTF, creatorIdTF;
         slipIdTF = new JTextField();
         slipIdTF.setEditable(false);
-        slipIdTF.setBounds(130, 20, 100,20);
-        informationRightPanel.add(slipIdTF);
+        slipIdTF.setBounds(130, 20, 100,20); informationRightPanel.add(slipIdTF);
+        
         warehouseIdTF = new JTextField();
         warehouseIdTF.setEditable(false);
-        warehouseIdTF.setBounds(130, 50, 100,20);
-        informationRightPanel.add(warehouseIdTF);
+        warehouseIdTF.setBounds(130, 50, 100,20); informationRightPanel.add(warehouseIdTF);
+        
         creatorIdTF = new JTextField();
         creatorIdTF.setEditable(false);
-        creatorIdTF.setBounds(130, 80, 100,20);
-        informationRightPanel.add(creatorIdTF);
+        creatorIdTF.setBounds(130, 80, 100,20); informationRightPanel.add(creatorIdTF);
+        
+        
+        
+        
+        ///////////////////////////////////////// optionRightPanel /////////////////////////////////////////////
+        JButton btnFixQuantity, btnRemoveProduct, btnImport;
+        btnFixQuantity = new JButton("Fix quantity");
+        btnFixQuantity.setBounds(20,20,100,25); optionRightPanel.add(btnFixQuantity);
+        btnFixQuantity.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnFixQuantity.setBackground(Color.decode("#D2E4EE"));
+        		btnFixQuantity.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnFixQuantity.setBackground(Color.white);
+        	}
+        });
+        btnFixQuantity.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Fix quantity button clicked!");
+			}
+		});
+        
+        btnRemoveProduct = new JButton("Remove product");
+        btnRemoveProduct.setBounds(130, 20, 125	, 25); optionRightPanel.add(btnRemoveProduct);
+        btnRemoveProduct.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnRemoveProduct.setBackground(Color.decode("#D2E4EE"));
+        		btnRemoveProduct.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnRemoveProduct.setBackground(Color.white);
+        	}
+        });
+        btnRemoveProduct.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Remove product button clicked!");
+			}
+		});
+        
+        btnImport = new JButton("Import");
+        btnImport.setBounds(480, 20, 100, 25); optionRightPanel.add(btnImport);
+        btnImport.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnImport.setBackground(Color.decode("#D2E4EE"));
+        		btnImport.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnImport.setBackground(Color.white);
+        	}
+        });
+        btnImport.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Import button clicked!");
+			}
+		});
+        
+        JLabel lblTotal, lblTotalValue;
+        lblTotal = new JLabel("Total: ");
+        lblTotal.setBounds(350, 20, 50, 25); optionRightPanel.add(lblTotal);
+        lblTotalValue = new JLabel("0d");	//cai nay se lay tong tien setText lai sau, khi da co csdl
+        lblTotalValue.setBounds(400, 20, 50, 25); optionRightPanel.add(lblTotalValue);
+        
 //========================================================== END RIGHT PANEL =================================================================================================//   
 
     }
