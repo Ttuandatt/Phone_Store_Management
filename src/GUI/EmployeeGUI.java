@@ -33,7 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
+import Components.ShadowButton;
 
 
 public class EmployeeGUI extends JPanel{
@@ -76,7 +76,7 @@ public class EmployeeGUI extends JPanel{
         topPanel.setLayout(new GridBagLayout());
         topPanel.setBackground(Color.blue);
         gbc.weightx = 1.0;
-        gbc.weighty = 0.09;
+        gbc.weighty = 0.08;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -86,7 +86,7 @@ public class EmployeeGUI extends JPanel{
         bottomPanel.setLayout(null);
         bottomPanel.setBackground(Color.decode("#853BA5"));
         gbc.weightx = 1.0;
-        gbc.weighty = 0.91;
+        gbc.weighty = 0.92;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -101,10 +101,7 @@ public class EmployeeGUI extends JPanel{
         functionsPanel = new JPanel();
         functionsPanel.setBackground(Color.white);
         functionsPanel.setLayout(new GridBagLayout());
-        functionsPanel.setBorder(BorderFactory.createTitledBorder(
-        	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Functions" // Tiêu đề của border
-        ));	//Tạo border cho panel
+        functionsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2), "Functions"));	//Tạo border cho panel
         gbc.weightx = 0.4;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -118,7 +115,7 @@ public class EmployeeGUI extends JPanel{
         leftFunctionPanel = new JPanel();
         leftFunctionPanel.setBackground(Color.white);
         leftFunctionPanel.setLayout(null);
-        gbc.weightx = 0.7;
+        gbc.weightx = 0.72;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -128,7 +125,7 @@ public class EmployeeGUI extends JPanel{
         rightFunctionPanel = new JPanel();
         rightFunctionPanel.setBackground(Color.white);
         rightFunctionPanel.setLayout(null);
-        gbc.weightx = 0.3;
+        gbc.weightx = 0.28;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
@@ -136,41 +133,95 @@ public class EmployeeGUI extends JPanel{
         functionsPanel.add(rightFunctionPanel, gbc);
         
         //Chia tiếp các panel con để chứa các nút chức năng ở leftFunctionPanel
-        JPanel updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel;
+        JPanel addButtonPanel, updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel, printButtonPanel;
+        
+        addButtonPanel = new JPanel();
+        addButtonPanel.setBackground(Color.white);
+        addButtonPanel.setBounds(10, 1, 55, 55);
+        leftFunctionPanel.add(addButtonPanel);
         
         updateButtonPanel = new JPanel();
         updateButtonPanel.setBackground(Color.white);
-        updateButtonPanel.setBounds(20, 1, 65, 65);
+        updateButtonPanel.setBounds(79, 1, 60, 60);
         leftFunctionPanel.add(updateButtonPanel);
         
         deleteButtonPanel = new JPanel();
         deleteButtonPanel.setBackground(Color.white);
-        deleteButtonPanel.setBounds(89, 1, 65, 65);
+        deleteButtonPanel.setBounds(148, 1, 65, 65);
         leftFunctionPanel.add(deleteButtonPanel);
         
         detailButtonPanel = new JPanel();
         detailButtonPanel.setBackground(Color.white);
-        detailButtonPanel.setBounds(158, 1, 65, 65);
+        detailButtonPanel.setBounds(217, 1, 65, 65);
         leftFunctionPanel.add(detailButtonPanel);
         
         excelButtonPanel = new JPanel();
         excelButtonPanel.setBackground(Color.white);
-        excelButtonPanel.setBounds(20, 1, 65, 65);
+        excelButtonPanel.setBounds(0, 1, 65, 65);
         rightFunctionPanel.add(excelButtonPanel);
         
+        printButtonPanel = new JPanel();
+        printButtonPanel.setBackground(Color.white);
+        printButtonPanel.setBounds(70, 1, 65, 65);
+        rightFunctionPanel.add(printButtonPanel);
+        
         //======================================= Đặt các nút chức năng vào các panel ==========================================================//
-        //======================================== Nút update ====================================//
+        ImageIcon iconAdd = new ImageIcon(getClass().getResource("/img/plus.png"));
+        Image imgAdd = iconAdd.getImage();
+        Image newImgAdd = imgAdd.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+        if(iconAdd.getIconWidth() == -1) {
+            System.out.println("Không tìm thấy ảnh!");
+        }
+        ImageIcon scaledIconAdd = new ImageIcon(newImgAdd);
+        // Tạo nút Add
+        JButton btnAdd = new ShadowButton("Add", scaledIconAdd);
+        btnAdd.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnAdd.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnAdd.setFocusPainted(false);
+        btnAdd.setBorderPainted(true);
+        btnAdd.setContentAreaFilled(false);
+        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAdd.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+        // Thêm sự kiện click cho nút Update
+        btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Add button clicked!");
+            }
+        });
+        btnAdd.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnAdd.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+        		btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnAdd.setBackground(Color.white);
+        		addButtonPanel.setBackground(Color.white);
+        	}
+        });
+
+        // Thêm nút vào panel
+        addButtonPanel.setLayout(new BorderLayout());
+        addButtonPanel.add(btnAdd, BorderLayout.CENTER);		
+        
+        
+        
+        
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconUpdate = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\update.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconUpdate = new ImageIcon(getClass().getResource("/img/update.png"));
         Image imgUpdate = iconUpdate.getImage();
-        Image newImgUpdate = imgUpdate.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgUpdate = imgUpdate.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconUpdate.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconUpdate = new ImageIcon(newImgUpdate);
 
         // Tạo nút Update
-        JButton btnUpdate = new JButton("Update", scaledIconUpdate);
+        JButton btnUpdate = new ShadowButton("Update", scaledIconUpdate);
         btnUpdate.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnUpdate.setHorizontalTextPosition(SwingConstants.CENTER);
         btnUpdate.setFocusPainted(false);
@@ -204,21 +255,19 @@ public class EmployeeGUI extends JPanel{
         // Thêm nút vào panel
         updateButtonPanel.setLayout(new BorderLayout());
         updateButtonPanel.add(btnUpdate, BorderLayout.CENTER);
-        //========================================== End nút update ==============================//
         
         
-        //======================================== Nút delete ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
         ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
-        Image newImgDelete = imgDelete.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgDelete = imgDelete.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconDelete = new ImageIcon(newImgDelete);
 
         // Tạo nút Delete
-        JButton btnDelete = new JButton("Delete", scaledIconDelete);
+        JButton btnDelete = new ShadowButton("Delete", scaledIconDelete);
         btnDelete.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDelete.setFocusPainted(false);
@@ -252,24 +301,22 @@ public class EmployeeGUI extends JPanel{
         // Thêm nút vào panel
         deleteButtonPanel.setLayout(new BorderLayout());
         deleteButtonPanel.add(btnDelete, BorderLayout.CENTER);
-        //========================================== End nút delete ===========================//
         
         
         
         
      
-        //======================================== Nút detail ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
         ImageIcon iconDetail = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\info.png\\"); // Đặt đường dẫn ảnh ở đây
         Image imgDetail = iconDetail.getImage();
-        Image newImgDetail = imgDetail.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
 
         // Tạo nút Detail
-        JButton btnDetail = new JButton("Info", scaledIconDetail);
+        JButton btnDetail = new ShadowButton("Info", scaledIconDetail);
         btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDetail.setFocusPainted(false);
@@ -312,16 +359,16 @@ public class EmployeeGUI extends JPanel{
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconExcel = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\excel.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconExcel = new ImageIcon(getClass().getResource("/img/excel.png")); // Đặt đường dẫn ảnh ở đây
         Image imgExcel = iconExcel.getImage();
-        Image newImgExcel = imgExcel.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgExcel = imgExcel.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconExcel.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconExcel = new ImageIcon(newImgExcel);
 
         // Tạo nút Detail
-        JButton btnExcel = new JButton("Excel", scaledIconExcel);
+        JButton btnExcel = new ShadowButton("Excel", scaledIconExcel);
         btnExcel.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnExcel.setHorizontalTextPosition(SwingConstants.CENTER);
 //        btnExcel.setFocusPainted(false);
@@ -356,6 +403,54 @@ public class EmployeeGUI extends JPanel{
         // Thêm nút vào panel
         excelButtonPanel.setLayout(new BorderLayout());
         excelButtonPanel.add(btnExcel, BorderLayout.CENTER);
+        
+        
+		// Nút Print
+		// Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
+		ImageIcon iconPrint = new ImageIcon(getClass().getResource("/img/printer.png")); // Đặt đường dẫn ảnh ở đây
+		Image imgPrint = iconPrint.getImage();
+		Image newImgPrint = imgPrint.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		if (iconPrint.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconPrint = new ImageIcon(newImgPrint);
+
+		// Tạo nút Detail
+		JButton btnPrint = new JButton("Print", scaledIconPrint);
+		btnPrint.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnPrint.setHorizontalTextPosition(SwingConstants.CENTER);
+//        btnExcel.setFocusPainted(false);
+		btnPrint.setBorderPainted(true);
+		btnPrint.setContentAreaFilled(false);
+		btnPrint.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnPrint.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+		// Thêm sự kiện click cho nút Print
+		btnPrint.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+			}
+		});
+		btnPrint.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnPrint.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+				btnPrint.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				printButtonPanel.setBackground(Color.decode("#D6D6D6"));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnPrint.setBackground(Color.white);
+				printButtonPanel.setBackground(Color.white);
+			}
+		});
+
+		// Thêm nút vào panel
+		printButtonPanel.setLayout(new BorderLayout());
+		printButtonPanel.add(btnPrint, BorderLayout.CENTER);
+
         //==================================== End functionsPanel ====================================================//
         
         
@@ -413,7 +508,7 @@ public class EmployeeGUI extends JPanel{
         searchInputPanel.add(sortComboBox);
         
         
-        String[] genders = {"Male", "Female"};
+        String[] genders = {"Gender", "Male", "Female"};
         genderCombobox = new JComboBox<String>(genders);
         genderCombobox.setBounds(90,  24,  90, 25);
         searchInputPanel.add(genderCombobox);
@@ -444,7 +539,7 @@ public class EmployeeGUI extends JPanel{
         ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
 
         // Tạo nút Detail
-        JButton btnSearch = new JButton(scaledIconSearch);
+        JButton btnSearch = new ShadowButton(scaledIconSearch);
         btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
         btnSearch.setFocusPainted(false);
@@ -487,7 +582,7 @@ public class EmployeeGUI extends JPanel{
         ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
 
         // Tạo nút Detail
-        JButton btnRefresh = new JButton(scaledIconRefresh);
+        JButton btnRefresh = new ShadowButton(scaledIconRefresh);
         btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
         btnRefresh.setFocusPainted(false);
