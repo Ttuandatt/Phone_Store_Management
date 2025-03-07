@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.ProductsBUS;
+import Components.ShadowButton;
 import DTO.*;
 import net.miginfocom.layout.Grid;
 import DAO.ProductsDAO;
@@ -128,12 +129,13 @@ public class ImportGUI extends JPanel {
 		searchLeftPanel.setLayout(null);
 //		searchLeftPanel.setBackground(Color.decode("#C62E65"));
 		searchLeftPanel.setBackground(Color.white);
-		searchLeftPanel.setBorder(BorderFactory.createTitledBorder("Search"));
+		searchLeftPanel.setBorder(BorderFactory.createTitledBorder(""));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.2;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		leftPanel.add(searchLeftPanel, gbc);
 		
 		
@@ -141,12 +143,13 @@ public class ImportGUI extends JPanel {
 		productListLeftPanel.setLayout(new GridBagLayout());
 //		productListLeftPanel.setBackground(Color.decode("#5D536B"));
 		productListLeftPanel.setBackground(Color.white);
-		productListLeftPanel.setBorder(BorderFactory.createTitledBorder("Product List"));
+		productListLeftPanel.setBorder(BorderFactory.createTitledBorder(""));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.52;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 1;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		leftPanel.add(productListLeftPanel, gbc);
 
 
@@ -159,20 +162,21 @@ public class ImportGUI extends JPanel {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 2;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		leftPanel.add(quantityLeftPanel, gbc);
 
 		// ===================================== searchLeftPanel ======================================//
-		
+//		// DateChooser
+//		JDateChooser dateChooser = new JDateChooser();
+//		dateChooser.setBounds(10, 22, 150, 25); // Định vị
+//		searchLeftPanel.add(dateChooser);
 
-		JLabel searchLabel = new JLabel("Search");
-		searchLabel.setBounds(300, 14, 50, 20);
-		searchLeftPanel.add(searchLabel);
 		JTextField searchTF = new JTextField();
-		searchTF.setBounds(300, 33, 200, 25);
+		searchTF.setBounds(300, 22,235, 25);
 		searchLeftPanel.add(searchTF);
 
 		// Tạo nút Search
-		ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png");
+		ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png"));
 		Image imgSearch = iconSearch.getImage();
 		Image newImgSearch = imgSearch.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		if (iconSearch.getIconWidth() == -1) {
@@ -180,12 +184,11 @@ public class ImportGUI extends JPanel {
 		}
 		ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
 
-		JButton btnSearch = new JButton(scaledIconSearch);
+		ShadowButton btnSearch = new ShadowButton(scaledIconSearch);
 		btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnSearch.setFocusPainted(false);
 		btnSearch.setBorderPainted(true);
-		btnSearch.setContentAreaFilled(true);
 		btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnSearch.setBackground(Color.white);
 		btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -208,24 +211,22 @@ public class ImportGUI extends JPanel {
 				btnSearch.setBackground(Color.white); // Màu khi hover ra
 			}
 		});
-		btnSearch.setBounds(510, 22, 40, 40);
+		btnSearch.setBounds(540, 15, 40, 40);
 		searchLeftPanel.add(btnSearch);
 
 		// Tạo nút Refresh
-		ImageIcon iconRefresh = new ImageIcon(
-				"C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); 
+		ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); 
 		Image imgRefresh = iconRefresh.getImage();
 		Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		if (iconSearch.getIconWidth() == -1) {
 			System.out.println("Không tìm thấy ảnh!");
 		}
 		ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
-		JButton btnRefresh = new JButton(scaledIconRefresh);
+		JButton btnRefresh = new ShadowButton(scaledIconRefresh);
 		btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnRefresh.setFocusPainted(false);
 		btnRefresh.setBorderPainted(true);
-		btnRefresh.setContentAreaFilled(true);
 		btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnRefresh.setBackground(Color.white);
 		btnRefresh.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -248,7 +249,7 @@ public class ImportGUI extends JPanel {
 				btnRefresh.setBackground(Color.white); // Màu khi hover ra
 			}
 		});
-		btnRefresh.setBounds(550, 22, 40, 40);
+		btnRefresh.setBounds(585, 15, 40, 40);
 		searchLeftPanel.add(btnRefresh);
 
 		
@@ -279,7 +280,7 @@ public class ImportGUI extends JPanel {
 		quantityTF.setBounds(100, 20, 50, 25);
 		quantityLeftPanel.add(quantityTF);
 
-		JButton quantityButton = new JButton("OK");
+		JButton quantityButton = new ShadowButton("OK");
 		quantityButton.setBounds(180, 20, 60, 25);
 //        quantityButton.setOpaque(true);
 		quantityButton.setBackground(Color.white);
@@ -298,7 +299,7 @@ public class ImportGUI extends JPanel {
 		});
 		quantityLeftPanel.add(quantityButton);
 
-		JButton newProductButton = new JButton("New product");
+		JButton newProductButton = new ShadowButton("New product");
 		newProductButton.setBounds(250, 20, 120, 25);
 //        newProductButton.setOpaque(true);
 		newProductButton.setBackground(Color.white);
@@ -341,23 +342,26 @@ public class ImportGUI extends JPanel {
 		informationRightPanel.setLayout(null);
 //		informationRightPanel.setBackground(Color.decode("#F7C548"));
 		informationRightPanel.setBackground(Color.white);
-		informationRightPanel.setBorder(BorderFactory.createTitledBorder("Information"));
+		informationRightPanel.setBorder(BorderFactory.createTitledBorder(""));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.41;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		rightPanel.add(informationRightPanel, gbc);
 
 		productChoseRightPanel = new JPanel();
 		productChoseRightPanel.setLayout(new GridBagLayout());
 //		productChoseRightPanel.setBackground(Color.decode("#3AA7A3"));
 		productChoseRightPanel.setBackground(Color.white);
+		productChoseRightPanel.setBorder(BorderFactory.createTitledBorder(""));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.31;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 1;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		rightPanel.add(productChoseRightPanel, gbc);
 
 		optionRightPanel = new JPanel();
@@ -369,31 +373,32 @@ public class ImportGUI extends JPanel {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 2;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		rightPanel.add(optionRightPanel, gbc);
 
 		///////////////////////////////////////// informationRightPanel ///////////////////////////////////////// 
 		// Ste các labels, textfield để hiện thông tin phiếu nhập
 		JLabel slipIdLabel, warehouseIdLabel, creatorIdLabel, supplierLabel;
 		slipIdLabel = new JLabel("ID:");
-		slipIdLabel.setBounds(10, 20, 30, 20);
+		slipIdLabel.setBounds(10, 10, 30, 20);
 		informationRightPanel.add(slipIdLabel);
 
 		warehouseIdLabel = new JLabel("Warehouse ID:");
-		warehouseIdLabel.setBounds(10, 50, 100, 20);
+		warehouseIdLabel.setBounds(10, 40, 100, 20);
 		informationRightPanel.add(warehouseIdLabel);
 
 		creatorIdLabel = new JLabel("Creator ID:");
-		creatorIdLabel.setBounds(10, 80, 100, 20);
+		creatorIdLabel.setBounds(10, 70, 100, 20);
 		informationRightPanel.add(creatorIdLabel);
 
 		supplierLabel = new JLabel("Suppliers:");
-		supplierLabel.setBounds(10, 110, 100, 20);
+		supplierLabel.setBounds(10, 100, 100, 20);
 		informationRightPanel.add(supplierLabel);
 
 		// Add combobox suppliers
 		String[] suppliers = { "", "Add new supplier" };
 		supplierComboBox = new JComboBox<String>(suppliers);
-		supplierComboBox.setBounds(130, 110, 200, 20);
+		supplierComboBox.setBounds(110, 100, 200, 20);
 		informationRightPanel.add(supplierComboBox);
 		supplierComboBox.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -407,26 +412,19 @@ public class ImportGUI extends JPanel {
 		JTextField slipIdTF, warehouseIdTF, creatorIdTF;
 		slipIdTF = new JTextField();
 		slipIdTF.setEditable(false);
-		slipIdTF.setBounds(130, 20, 100, 20);
+		slipIdTF.setBounds(110, 10, 100, 20);
 		informationRightPanel.add(slipIdTF);
 
 		warehouseIdTF = new JTextField();
 		warehouseIdTF.setEditable(false);
-		warehouseIdTF.setBounds(130, 50, 100, 20);
+		warehouseIdTF.setBounds(110, 40, 100, 20);
 		informationRightPanel.add(warehouseIdTF);
 
 		creatorIdTF = new JTextField();
 		creatorIdTF.setEditable(false);
-		creatorIdTF.setBounds(130, 80, 100, 20);
+		creatorIdTF.setBounds(110, 70, 100, 20);
 		informationRightPanel.add(creatorIdTF);
 
-		JLabel dateLabel = new JLabel("Date:");
-		dateLabel.setBounds(390, 20, 50, 20);
-		informationRightPanel.add(dateLabel);
-		// DateChooser
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(430, 20, 150, 25); // Định vị
-		informationRightPanel.add(dateChooser);
 		
 		///////////////////////////////////////// productChoseRightPanel ///////////////////////////////////////// 
 		//Thêm bảng vào panel để hiển thị các sản phẩm đã được chọn để nhập
@@ -441,7 +439,7 @@ public class ImportGUI extends JPanel {
 		
 		///////////////////////////////////////// optionRightPanel /////////////////////////////////////////////
 		JButton btnFixQuantity, btnRemoveProduct, btnImport;
-		btnFixQuantity = new JButton("Fix quantity");
+		btnFixQuantity = new ShadowButton("Fix quantity");
 		btnFixQuantity.setBounds(20, 20, 100, 25);
 		optionRightPanel.add(btnFixQuantity);
 		btnFixQuantity.addMouseListener(new MouseAdapter() {
@@ -464,7 +462,7 @@ public class ImportGUI extends JPanel {
 			}
 		});
 
-		btnRemoveProduct = new JButton("Remove product");
+		btnRemoveProduct = new ShadowButton("Remove product");
 		btnRemoveProduct.setBounds(130, 20, 125, 25);
 		optionRightPanel.add(btnRemoveProduct);
 		btnRemoveProduct.addMouseListener(new MouseAdapter() {
@@ -486,8 +484,8 @@ public class ImportGUI extends JPanel {
 			}
 		});
 
-		btnImport = new JButton("Import");
-		btnImport.setBounds(480, 20, 100, 25);
+		btnImport = new ShadowButton("Import");
+		btnImport.setBounds(520, 20, 100, 25);
 		optionRightPanel.add(btnImport);
 		btnImport.addMouseListener(new MouseAdapter() {
 			@Override
@@ -510,10 +508,10 @@ public class ImportGUI extends JPanel {
 
 		JLabel lblTotal, lblTotalValue;
 		lblTotal = new JLabel("Total: ");
-		lblTotal.setBounds(350, 20, 50, 25);
+		lblTotal.setBounds(400, 20, 50, 25);
 		optionRightPanel.add(lblTotal);
 		lblTotalValue = new JLabel("0d"); // cai nay se lay tong tien setText lai sau, khi da co csdl
-		lblTotalValue.setBounds(400, 20, 50, 25);
+		lblTotalValue.setBounds(450, 20, 50, 25);
 		optionRightPanel.add(lblTotalValue);
 
 //========================================================== END RIGHT PANEL =================================================================================================//   
@@ -541,7 +539,7 @@ public class ImportGUI extends JPanel {
 		JLabel productImg = new JLabel();
 		productImg.setBounds(280, 0, 350, 350);
 		newProductDialog.add(productImg);
-		JButton browseButton = new JButton("Browse");
+		JButton browseButton = new ShadowButton("Browse");
 		browseButton.setBounds(340, 20, 90, 20);
 		browseButton.setBorderPainted(false);
 		browseButton.setBackground(Color.decode("#01BFF4"));

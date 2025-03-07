@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -39,8 +40,8 @@ import Components.ShadowButton;
 public class EmployeeGUI extends JPanel{
 
 	ProductsBUS productBUS = new ProductsBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
+    JTable employeeTable;
+    DefaultTableModel employeeModel = new DefaultTableModel();
     ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox, genderCombobox, departmentCombobox;
     private JPanel productContent;
@@ -50,7 +51,7 @@ public class EmployeeGUI extends JPanel{
 	//Constructor
     public EmployeeGUI(){
         initComponents();
-        loadSanPhamList();
+        loadEmployeeList();
     }
     
     
@@ -59,7 +60,7 @@ public class EmployeeGUI extends JPanel{
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
         productContent = new JPanel();
-        productContent.setBackground(Color.green);
+        productContent.setBackground(Color.white);
         productContent.setLayout(new GridBagLayout());
         
         gbc.weightx = 1.0;
@@ -74,22 +75,24 @@ public class EmployeeGUI extends JPanel{
         //set thông số cho 2 panel
         topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(Color.blue);
+        topPanel.setBackground(Color.white);
         gbc.weightx = 1.0;
-        gbc.weighty = 0.08;
+        gbc.weighty = 0.23;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
         productContent.add(topPanel, gbc);
         
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(null);
-        bottomPanel.setBackground(Color.decode("#853BA5"));
+        bottomPanel.setLayout(new GridBagLayout());
+        bottomPanel.setBackground(Color.white);
+        bottomPanel.setBorder(BorderFactory.createTitledBorder(""));
         gbc.weightx = 1.0;
-        gbc.weighty = 0.92;
+        gbc.weighty = 0.77;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.insets = new Insets(5, 5, 5, 5);
         productContent.add(bottomPanel, gbc);
         
 //==================================================== TOP PANEL =============================================================================================//
@@ -101,7 +104,7 @@ public class EmployeeGUI extends JPanel{
         functionsPanel = new JPanel();
         functionsPanel.setBackground(Color.white);
         functionsPanel.setLayout(new GridBagLayout());
-        functionsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2), "Functions"));	//Tạo border cho panel
+        functionsPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));	//Tạo border cho panel
         gbc.weightx = 0.4;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -115,7 +118,7 @@ public class EmployeeGUI extends JPanel{
         leftFunctionPanel = new JPanel();
         leftFunctionPanel.setBackground(Color.white);
         leftFunctionPanel.setLayout(null);
-        gbc.weightx = 0.72;
+        gbc.weightx = 0.71;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -125,7 +128,7 @@ public class EmployeeGUI extends JPanel{
         rightFunctionPanel = new JPanel();
         rightFunctionPanel.setBackground(Color.white);
         rightFunctionPanel.setLayout(null);
-        gbc.weightx = 0.28;
+        gbc.weightx = 0.29;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
@@ -137,32 +140,32 @@ public class EmployeeGUI extends JPanel{
         
         addButtonPanel = new JPanel();
         addButtonPanel.setBackground(Color.white);
-        addButtonPanel.setBounds(10, 1, 55, 55);
+        addButtonPanel.setBounds(10, 1, 64, 64);
         leftFunctionPanel.add(addButtonPanel);
         
         updateButtonPanel = new JPanel();
         updateButtonPanel.setBackground(Color.white);
-        updateButtonPanel.setBounds(79, 1, 60, 60);
+        updateButtonPanel.setBounds(79, 1, 64, 64);
         leftFunctionPanel.add(updateButtonPanel);
         
         deleteButtonPanel = new JPanel();
         deleteButtonPanel.setBackground(Color.white);
-        deleteButtonPanel.setBounds(148, 1, 65, 65);
+        deleteButtonPanel.setBounds(148, 1, 64, 64);
         leftFunctionPanel.add(deleteButtonPanel);
         
         detailButtonPanel = new JPanel();
         detailButtonPanel.setBackground(Color.white);
-        detailButtonPanel.setBounds(217, 1, 65, 65);
+        detailButtonPanel.setBounds(217, 1, 64, 64);
         leftFunctionPanel.add(detailButtonPanel);
         
         excelButtonPanel = new JPanel();
         excelButtonPanel.setBackground(Color.white);
-        excelButtonPanel.setBounds(0, 1, 65, 65);
+        excelButtonPanel.setBounds(0, 1, 64, 64);
         rightFunctionPanel.add(excelButtonPanel);
         
         printButtonPanel = new JPanel();
         printButtonPanel.setBackground(Color.white);
-        printButtonPanel.setBounds(70, 1, 65, 65);
+        printButtonPanel.setBounds(69, 1, 64, 64);
         rightFunctionPanel.add(printButtonPanel);
         
         //======================================= Đặt các nút chức năng vào các panel ==========================================================//
@@ -242,7 +245,6 @@ public class EmployeeGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnUpdate.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		updateButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -288,7 +290,6 @@ public class EmployeeGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnDelete.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		deleteButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -337,7 +338,6 @@ public class EmployeeGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		detailButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -351,11 +351,7 @@ public class EmployeeGUI extends JPanel{
         // Thêm nút vào panel
         detailButtonPanel.setLayout(new BorderLayout());
         detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
-        //========================================== End nút detail ===========================//
-        
-        
-        
-        
+
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
@@ -389,7 +385,6 @@ public class EmployeeGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		excelButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -416,7 +411,7 @@ public class EmployeeGUI extends JPanel{
 		ImageIcon scaledIconPrint = new ImageIcon(newImgPrint);
 
 		// Tạo nút Detail
-		JButton btnPrint = new JButton("Print", scaledIconPrint);
+		JButton btnPrint = new ShadowButton("Print", scaledIconPrint);
 		btnPrint.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnPrint.setHorizontalTextPosition(SwingConstants.CENTER);
 //        btnExcel.setFocusPainted(false);
@@ -437,7 +432,6 @@ public class EmployeeGUI extends JPanel{
 			public void mouseEntered(MouseEvent e) {
 				btnPrint.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
 				btnPrint.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				printButtonPanel.setBackground(Color.decode("#D6D6D6"));
 			}
 
 			@Override
@@ -451,7 +445,6 @@ public class EmployeeGUI extends JPanel{
 		printButtonPanel.setLayout(new BorderLayout());
 		printButtonPanel.add(btnPrint, BorderLayout.CENTER);
 
-        //==================================== End functionsPanel ====================================================//
         
         
         
@@ -461,10 +454,7 @@ public class EmployeeGUI extends JPanel{
         searchPanel = new JPanel();
         searchPanel.setBackground(Color.white);
         searchPanel.setLayout(new GridBagLayout());
-        searchPanel.setBorder(BorderFactory.createTitledBorder(
-        	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Search" // Tiêu đề của border
-        ));	//Tạo border cho panel        
+        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));	//Tạo border cho panel        
         gbc.weightx = 0.6;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -478,7 +468,7 @@ public class EmployeeGUI extends JPanel{
         searchInputPanel = new JPanel();
         searchInputPanel.setBackground(Color.white);
         searchInputPanel.setLayout(null);
-        gbc.weightx = 0.85;
+        gbc.weightx = 0.87;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -488,7 +478,7 @@ public class EmployeeGUI extends JPanel{
         searchButtonPanel = new JPanel();
         searchButtonPanel.setBackground(Color.white);
         searchButtonPanel.setLayout(null);
-        gbc.weightx = 0.15;
+        gbc.weightx = 0.13;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
@@ -499,9 +489,6 @@ public class EmployeeGUI extends JPanel{
         
         
         //==================================== searchInputPanel =======================================================//
-        JLabel sortComboBoxLabel = new JLabel("Sort");
-        sortComboBoxLabel.setBounds(10, 5, 30, 20);
-        searchInputPanel.add(sortComboBoxLabel);
         String[] sortCriterias = {"All", "A-Z", "Z-A", "Ascending", "Descending"};
         sortComboBox = new JComboBox<String>(sortCriterias);
         sortComboBox.setBounds(10, 24, 75, 25);
@@ -519,13 +506,9 @@ public class EmployeeGUI extends JPanel{
         searchInputPanel.add(departmentCombobox);
 
         
-        JLabel searchLabel = new JLabel("Search");
-        searchLabel.setBounds(330, 5, 50, 20);
-        searchInputPanel.add(searchLabel);
         JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(330,  24,  270, 25);
+        searchInputTF.setBounds(350,  24,  290, 25);
         searchInputPanel.add(searchInputTF);
-        //==================================== End searchInputPanel ===================================================//
         
         
         
@@ -544,10 +527,9 @@ public class EmployeeGUI extends JPanel{
         btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
         btnSearch.setFocusPainted(false);
         btnSearch.setBorderPainted(true);
-        btnSearch.setContentAreaFilled(true);
         btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSearch.setBackground(Color.white);
-        btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+        btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 9
         
         
         btnSearch.addActionListener(new ActionListener() {
@@ -570,12 +552,12 @@ public class EmployeeGUI extends JPanel{
         });
 
         
-        btnSearch.setBounds(10, 15, 40, 40);
+        btnSearch.setBounds(0, 15, 40, 40);
         searchButtonPanel.add(btnSearch);
         
         ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
-        Image newImgRefresh = imgRefresh.getScaledInstance(20,20, Image.SCALE_SMOOTH);
+        Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
@@ -587,11 +569,10 @@ public class EmployeeGUI extends JPanel{
         btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
         btnRefresh.setFocusPainted(false);
         btnRefresh.setBorderPainted(true);
-        btnRefresh.setContentAreaFilled(true);
         btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnRefresh.setBackground(Color.white);
-        btnRefresh.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-        
+        btnRefresh.setFont(new Font("Arial", Font.BOLD, 8)); // Đặt kích cỡ chữ là 10
+
         
         btnRefresh.addActionListener(new ActionListener() {
             @Override
@@ -613,25 +594,47 @@ public class EmployeeGUI extends JPanel{
         });
 
         
-        btnRefresh.setBounds(55, 15, 40, 40);
+        btnRefresh.setBounds(45, 15, 40, 40);
         searchButtonPanel.add(btnRefresh);
-        //==================================== End searchButtonPanel ===================================================//
 
-        //==================================== End searchPanel ====================================================//
-
-//=====================================================END TOP PANEL =====================================================================================================//   
-        
-        
-//==================================================== BOTTOM PANEL =============================================================================================//
-        
-        
-//===================================================== END BOTTOM PANEL =======================================================================================================//   
 
         
+        
+        
+        
+//====================================================================== BOTTOM PANEL ==============================================================//
+
+        //========================= table =========================//
+        employeeTable = new JTable();
+        JScrollPane sp = new JScrollPane(employeeTable);
+        gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(sp, gbc);
     }
 
     
-    private void loadSanPhamList() {
-    	
+    private void loadEmployeeList() {
+    	employeeModel  = new DefaultTableModel();
+    	employeeTable.setModel(employeeModel);
+    	employeeModel.addColumn("ID");
+    	employeeModel.addColumn("Name");
+    	employeeModel.addColumn("Date of birth");
+    	employeeModel.addColumn("Address");
+    	employeeModel.addColumn("Role");
+    	employeeModel.addColumn("Password");
+    	employeeModel.addColumn("Status");
+
+		
+		//Điều chỉnh kích thước các cột
+		TableColumnModel tcm = employeeTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(20);
+		tcm.getColumn(1).setPreferredWidth(100);
+		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(3).setPreferredWidth(100);
+		tcm.getColumn(4).setPreferredWidth(20);
+		tcm.getColumn(5).setPreferredWidth(20);
+		tcm.getColumn(6).setPreferredWidth(20);
+
     }
 }

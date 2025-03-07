@@ -1,544 +1,645 @@
 package GUI;
 
 import BUS.ProductsBUS;
+import Components.ShadowButton;
 import DTO.*;
+import net.miginfocom.layout.Grid;
 import DAO.ProductsDAO;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
+import com.toedter.calendar.JDateChooser; // Thêm thư viện JCalendar
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-
-public class StockInwardSlipGUI extends JPanel{
+public class StockInwardSlipGUI extends JPanel {
 
 	ProductsBUS productBUS = new ProductsBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-    private JComboBox sortComboBox;
-    private JPanel productContent;
-    private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+	JTable productTable, chosenProductTable;
+	DefaultTableModel prodcutModel, chosenProductModel;
+	ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	JComboBox<String> brandComboBox, supplierComboBox;
+	JPanel productContent;
+	JLabel imageLabel;
+	JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+
+	// Constructor
+	public StockInwardSlipGUI() {
+		this.setLayout(new GridLayout(1, 2, 10, 10));
+		initComponents();
+		loadInwardSlipList();
+		loadSlipDetail();
+	}
+
+	////////////////////////////////////////// METHODS//////////////////////////////////////
+	private void initComponents() {
+		// Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+		FlatRobotoFont.install();
+		FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
+		FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
+		FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
+		FlatIntelliJLaf.registerCustomDefaultsSource("style");
+		FlatIntelliJLaf.setup();
+		setLayout(new GridBagLayout()); // set Layout
+		GridBagConstraints gbc = new GridBagConstraints();
+		productContent = new JPanel();
+//		productContent.setBackground(Color.green);
+		productContent.setBackground(Color.white);
+		productContent.setLayout(new GridLayout(1, 2, 15, 15));
+
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		add(productContent, gbc); // Thêm vào ProductsGUI
+
+		// tạo 2 panel leftPanel, rightPanel
+		JPanel leftPanel, rightPanel;
+		// set thông số cho 2 panel
+		leftPanel = new JPanel();
+		leftPanel.setLayout(new GridBagLayout());
+//		leftPanel.setBackground(Color.blue);
+		leftPanel.setBackground(Color.white);
+		gbc.weightx = 0.5;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		productContent.add(leftPanel, gbc);
+
+		rightPanel = new JPanel();
+		rightPanel.setLayout(new GridBagLayout());
+//		rightPanel.setBackground(Color.decode("#372083"));
+		rightPanel.setBackground(Color.white);
+		gbc.weightx = 0.5;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		productContent.add(rightPanel, gbc);
+
+//========================================================== LEFT PANEL =============================================================================================//
+		// Chia 3 panel con searchLeftPanel ở phần trên, productListLeftPanel ở phần
+		// giữa, quantityLeftPanel ở phần dưới;
+		JPanel searchLeftPanel, productListLeftPanel, quantityLeftPanel;
+
+		// set thông số cho 3 panel
+		searchLeftPanel = new JPanel();
+		searchLeftPanel.setLayout(null);
+//		searchLeftPanel.setBackground(Color.decode("#C62E65"));
+		searchLeftPanel.setBackground(Color.white);
+		searchLeftPanel.setBorder(BorderFactory.createTitledBorder(""));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.2;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		leftPanel.add(searchLeftPanel, gbc);
+		
+		
+		productListLeftPanel = new JPanel();
+		productListLeftPanel.setLayout(new GridBagLayout());
+//		productListLeftPanel.setBackground(Color.decode("#5D536B"));
+		productListLeftPanel.setBackground(Color.white);
+		productListLeftPanel.setBorder(BorderFactory.createTitledBorder(""));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.62;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		leftPanel.add(productListLeftPanel, gbc);
+
+
+		quantityLeftPanel = new JPanel();
+		quantityLeftPanel.setLayout(null);
+//		quantityLeftPanel.setBackground(Color.decode("#989FCE"));
+		quantityLeftPanel.setBackground(Color.white);
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.1;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		leftPanel.add(quantityLeftPanel, gbc);
+
+		// ===================================== searchLeftPanel ======================================//
+		// DateChooser
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(10, 22, 150, 25); // Định vị
+		searchLeftPanel.add(dateChooser);
+
+		JTextField searchTF = new JTextField();
+		searchTF.setBounds(300, 22,235, 25);
+		searchLeftPanel.add(searchTF);
+
+		// Tạo nút Search
+		ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png"));
+		Image imgSearch = iconSearch.getImage();
+		Image newImgSearch = imgSearch.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		if (iconSearch.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
+
+		ShadowButton btnSearch = new ShadowButton(scaledIconSearch);
+		btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnSearch.setFocusPainted(false);
+		btnSearch.setBorderPainted(true);
+		btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnSearch.setBackground(Color.white);
+		btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+		btnSearch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Search button clicked!");
+			}
+		});
+		btnSearch.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSearch.setBackground(Color.decode("#D2E4EE")); // Màu khi hover vào
+				btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSearch.setBackground(Color.white); // Màu khi hover ra
+			}
+		});
+		btnSearch.setBounds(540, 15, 40, 40);
+		searchLeftPanel.add(btnSearch);
+
+		// Tạo nút Refresh
+		ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); 
+		Image imgRefresh = iconRefresh.getImage();
+		Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		if (iconSearch.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
+		JButton btnRefresh = new ShadowButton(scaledIconRefresh);
+		btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnRefresh.setFocusPainted(false);
+		btnRefresh.setBorderPainted(true);
+		btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnRefresh.setBackground(Color.white);
+		btnRefresh.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+		btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+			}
+		});
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnRefresh.setBackground(Color.decode("#D2E4EE")); // Màu khi hover vào
+				btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnRefresh.setBackground(Color.white); // Màu khi hover ra
+			}
+		});
+		btnRefresh.setBounds(585, 15, 40, 40);
+		searchLeftPanel.add(btnRefresh);
+
+		
+		
+		// ======================= productListLeftPanel =======================//
+		//Thêm table vào panel để hiển thị danh sách sản phẩm
+		productTable = new JTable();
+		JScrollPane sp = new JScrollPane(productTable);
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		productListLeftPanel.add(sp, gbc);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//========================================================== RIGHT PANEL =============================================================================================//
+		// Chia 3 panel con informationRightPanel ở phần trên, productChoseRightPanel ở
+		// phần giữa, optionRightPanel ở phần dưới;
+		JPanel productChoseRightPanel, optionRightPanel;
+
+
+
+		productChoseRightPanel = new JPanel();
+		productChoseRightPanel.setLayout(new GridBagLayout());
+//		productChoseRightPanel.setBackground(Color.decode("#3AA7A3"));
+		productChoseRightPanel.setBackground(Color.white);
+		productChoseRightPanel.setBorder(BorderFactory.createTitledBorder(""));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.9;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+//		gbc.insets = new Insets(5, 5, 5, 5);
+		rightPanel.add(productChoseRightPanel, gbc);
+
+		optionRightPanel = new JPanel();
+		optionRightPanel.setLayout(null);
+//		optionRightPanel.setBackground(Color.decode("#785589"));
+		optionRightPanel.setBackground(Color.white);
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.1;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		rightPanel.add(optionRightPanel, gbc);
+
+		
+		
+		///////////////////////////////////////// productChoseRightPanel ///////////////////////////////////////// 
+		//Thêm bảng vào panel để hiển thị các sản phẩm đã được chọn để nhập
+		chosenProductTable = new JTable();
+		JScrollPane sp2 = new JScrollPane(chosenProductTable);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.5;
+		gbc.fill = GridBagConstraints.BOTH;
+		productChoseRightPanel.add(sp2, gbc);
+		
+		JPanel informationPanel = new JPanel(null);
+		informationPanel.setBorder(BorderFactory.createTitledBorder(""));
+		informationPanel.setBackground(Color.white);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.5;
+		gbc.fill = GridBagConstraints.BOTH;
+		productChoseRightPanel.add(informationPanel, gbc);
+		
+		JLabel slipIdLabel, warehouseIdLabel, creatorIdLabel, supplierLabel;
+		slipIdLabel = new JLabel("ID:");
+		slipIdLabel.setBounds(10, 10, 30, 20);
+		informationPanel.add(slipIdLabel);
+
+		warehouseIdLabel = new JLabel("Warehouse ID:");
+		warehouseIdLabel.setBounds(10, 40, 100, 20);
+		informationPanel.add(warehouseIdLabel);
+
+		creatorIdLabel = new JLabel("Creator ID:");
+		creatorIdLabel.setBounds(10, 70, 100, 20);
+		informationPanel.add(creatorIdLabel);
+
+		supplierLabel = new JLabel("Suppliers:");
+		supplierLabel.setBounds(10, 100, 100, 20);
+		informationPanel.add(supplierLabel); 
+		
+		
+
+
+	}
+
+	// Hàm hiển thị JDialog để nhập sản phẩm mới
+	private void newProductDialog() {
+		JDialog newProductDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Add New Product",
+				true);
+		newProductDialog.setSize(600, 400);
+		newProductDialog.setLayout(null);
+
+		JLabel lblId = new JLabel("Product ID:");
+		lblId.setBounds(10, 20, 100, 20);
+		newProductDialog.add(lblId);
+		JTextField txtId = new JTextField();
+		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để + thêm 1, k cho nhập tự động
+		txtId.setBounds(110, 20, 150, 20);
+		newProductDialog.add(txtId);
+
+		JLabel lblImage = new JLabel("Image:");
+		lblImage.setBounds(280, 20, 50, 20);
+		newProductDialog.add(lblImage);
+		JLabel productImg = new JLabel();
+		productImg.setBounds(280, 0, 350, 350);
+		newProductDialog.add(productImg);
+		JButton browseButton = new ShadowButton("Browse");
+		browseButton.setBounds(340, 20, 90, 20);
+		browseButton.setBorderPainted(false);
+		browseButton.setBackground(Color.decode("#01BFF4"));
+		browseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
+				int returnValue = fileChooser.showOpenDialog(null);
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+					Image img = icon.getImage().getScaledInstance(260, 260, Image.SCALE_SMOOTH);
+					productImg.setIcon(new ImageIcon(img));
+				}
+			}
+		});
+		imageLabel = new JLabel();
+		imageLabel.setPreferredSize(new DimensionUIResource(200, 200));
+		imageLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+		imageLabel.setBounds(20, 50, 200, 200);
+		newProductDialog.add(browseButton);
+
+		JLabel lblName = new JLabel("Product Name:");
+		lblName.setBounds(10, 45, 100, 20);
+		newProductDialog.add(lblName);
+		JTextField txtName = new JTextField();
+		txtName.setBounds(110, 45, 150, 20);
+		newProductDialog.add(txtName);
+
+		JLabel lblBrand = new JLabel("Brand:");
+		lblBrand.setBounds(10, 70, 100, 20);
+		newProductDialog.add(lblBrand);
+		String[] brands = { "Samsung", "Apple", "Xiaomi", "Add new brand" }; // "Samsung", "Apple", "Xiaomi" là các
+																				// brand thêm vào để khởi đầu thôi, còn
+																				// khi kết nối csdl rồi thì khi thêm
+																				// brand mới sẽ thêm vào csdl
+		brandComboBox = new JComboBox<String>(brands);
+		brandComboBox.setBounds(110, 70, 150, 20);
+		newProductDialog.add(brandComboBox);
+		brandComboBox.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				String selected = (String) brandComboBox.getSelectedItem();
+				if ("Add new brand".equals(selected)) {
+					newBrandDialog();
+				}
+			}
+		});
+
+		JLabel lblBattery = new JLabel("Battery capacity:");
+		lblBattery.setBounds(10, 95, 100, 20);
+		newProductDialog.add(lblBattery);
+		JTextField txtBattery = new JTextField();
+		txtBattery.setBounds(110, 95, 150, 20);
+		newProductDialog.add(txtBattery);
+
+		JLabel lblOS = new JLabel("OS:");
+		lblOS.setBounds(10, 120, 100, 20);
+		newProductDialog.add(lblOS);
+		JTextField txtOS = new JTextField();
+		txtOS.setBounds(110, 120, 150, 20);
+		newProductDialog.add(txtOS);
+
+		JLabel lblOrigin = new JLabel("Origin:");
+		lblOrigin.setBounds(10, 145, 100, 20);
+		newProductDialog.add(lblOrigin);
+		JTextField txtOrigin = new JTextField();
+		txtOrigin.setBounds(110, 145, 150, 20);
+		newProductDialog.add(txtOrigin);
+
+		JLabel lblFrontCam = new JLabel("Front Cam:");
+		lblFrontCam.setBounds(10, 170, 100, 20);
+		newProductDialog.add(lblFrontCam);
+		JTextField txtFrontCam = new JTextField();
+		txtFrontCam.setBounds(110, 170, 150, 20);
+		newProductDialog.add(txtFrontCam);
+
+		JLabel lblBackCam = new JLabel("Back Cam:");
+		lblBackCam.setBounds(10, 195, 100, 20);
+		newProductDialog.add(lblBackCam);
+		JTextField txtBackCam = new JTextField();
+		txtBackCam.setBounds(110, 195, 150, 20);
+		newProductDialog.add(txtBackCam);
+
+		JLabel lblPrice = new JLabel("Price:");
+		lblPrice.setBounds(10, 220, 100, 20);
+		newProductDialog.add(lblPrice);
+		JTextField txtPrice = new JTextField();
+		txtPrice.setBounds(110, 220, 150, 20);
+		newProductDialog.add(txtPrice);
+
+		JLabel lbStatus = new JLabel("Status:");
+		lbStatus.setBounds(10, 245, 100, 20);
+		newProductDialog.add(lbStatus);
+		JRadioButton rbOn = new JRadioButton("On");
+		rbOn.setBounds(110, 245, 50, 20);
+		newProductDialog.add(rbOn);
+		JRadioButton rbOff = new JRadioButton("Off");
+		rbOff.setBounds(160, 245, 70, 20);
+		newProductDialog.add(rbOff);
+
+		JButton btnSave = new JButton("Save");
+		btnSave.setBounds(300, 320, 70, 25);
+		btnSave.setBorderPainted(false);
+		btnSave.setBackground(Color.decode("#01BFF4"));
+		btnSave.addActionListener(e -> {
+			String name = txtName.getText();
+			String brand = brandComboBox.getSelectedItem().toString();
+			String battery = txtBattery.getText();
+			String os = txtOS.getText();
+			String origin = txtOrigin.getText();
+			String frontCam = txtFrontCam.getText();
+			String backCam = txtBackCam.getText();
+			String price = txtPrice.getText();
+
+			if (name.isEmpty() || brand.isEmpty() || battery.isEmpty() || os.isEmpty() || origin.isEmpty()
+					|| frontCam.isEmpty() || backCam.isEmpty() || price.isEmpty()) {
+				JOptionPane.showMessageDialog(newProductDialog, "Please fill in all fields!", "Warning",
+						JOptionPane.WARNING_MESSAGE);
+			} else {
+				// Thêm vào danh sách sản phẩm (có thể gọi ProductsBUS để xử lý)
+				JOptionPane.showMessageDialog(newProductDialog, "Product added successfully!", "Success",
+						JOptionPane.INFORMATION_MESSAGE);
+				newProductDialog.dispose(); // Đóng form sau khi lưu
+			}
+		});
+		btnSave.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSave.setBackground(Color.decode("#3A96CF"));
+				btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSave.setBackground(Color.decode("#01BFF4"));
+			}
+		});
+		newProductDialog.add(btnSave);
+
+		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setBounds(380, 320, 80, 25);
+		btnRefresh.setBorderPainted(false);
+		btnRefresh.setBackground(Color.decode("#01BFF4"));
+		btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtName.setText("");
+				brandComboBox.setSelectedIndex(0);
+				txtBattery.setText("");
+				txtOS.setText("");
+				txtOrigin.setText("");
+				txtFrontCam.setText("");
+				txtBackCam.setText("");
+				txtPrice.setText("");
+				productImg.setIcon(null); // xóa ảnh vừa browse
+			}
+		});
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnRefresh.setBackground(Color.decode("#3A96CF"));
+				btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnRefresh.setBackground(Color.decode("#01BFF4"));
+			}
+		});
+		newProductDialog.add(btnRefresh);
+
+		newProductDialog.setLocationRelativeTo(this);
+		newProductDialog.setVisible(true);
+	}
+
+	// Hàm hiển thị JDialog để nhập thương hiệu mới
+	public void newBrandDialog() {
+		String newBrand = JOptionPane.showInputDialog(this, "Enter new brand:", "Add Brand", JOptionPane.PLAIN_MESSAGE);
+
+		if (newBrand != null && !newBrand.trim().isEmpty()) {
+			brandComboBox.insertItemAt(newBrand, brandComboBox.getItemCount() - 1); // Thêm vào trước "Add new brand"
+			brandComboBox.setSelectedItem(newBrand);
+		}
+	}
+
+	public void newSupplierDialog() {
+		// Tạo panel chứa form nhập
+		JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5)); // row:3, column:2, hgap:5, wgap:5
+
+		JLabel nameLabel = new JLabel("Supplier Name:");
+		JTextField nameField = new JTextField(15);
+
+		JLabel addressLabel = new JLabel("Address:");
+		JTextField addressField = new JTextField(15);
+
+		JLabel phoneLabel = new JLabel("Phone Number:");
+		JTextField phoneField = new JTextField(15);
+
+		// Thêm các thành phần vào panel
+		panel.add(nameLabel);
+		panel.add(nameField);
+		panel.add(addressLabel);
+		panel.add(addressField);
+		panel.add(phoneLabel);
+		panel.add(phoneField);
+
+		// Hiển thị dialog với panel
+		int result = JOptionPane.showConfirmDialog(this, panel, "Add Supplier", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+
+		// Nếu nhấn OK
+		if (result == JOptionPane.OK_OPTION) {
+			String newSupplier = nameField.getText().trim();
+			String address = addressField.getText().trim();
+			String phone = phoneField.getText().trim();
+
+			if (!newSupplier.isEmpty() && !address.isEmpty() && !phone.isEmpty()) {
+				supplierComboBox.insertItemAt(newSupplier, supplierComboBox.getItemCount() - 1);
+				supplierComboBox.setSelectedItem(newSupplier);
+				JOptionPane.showMessageDialog(this,
+						"Supplier Added:\nName: " + newSupplier + "\nAddress: " + address + "\nPhone: " + phone);
+			} else {
+				JOptionPane.showMessageDialog(this, "Please fill in all fields!", "Warning",
+						JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
+
+	private void loadInwardSlipList() {
+		prodcutModel = new DefaultTableModel();
+		productTable.setModel(prodcutModel);
+		prodcutModel.addColumn("ID");
+		prodcutModel.addColumn("Date");
+		prodcutModel.addColumn("Warehouse");
+		prodcutModel.addColumn("Total");
+		prodcutModel.addColumn("Status");
+
+
+		
+		//Điều chỉnh kích thước các cột
+		TableColumnModel tcm = productTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(20);
+		tcm.getColumn(1).setPreferredWidth(50);
+		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(3).setPreferredWidth(50);
+		tcm.getColumn(4).setPreferredWidth(20);
+;
+	}
 	
-	
-	//Constructor
-    public StockInwardSlipGUI(){
-        initComponents();
-        loadSanPhamList();
-    }
-    
-    
-    //////////////////////////////////////////METHODS//////////////////////////////////////
-    private void initComponents() {
-        setLayout(new GridBagLayout()); //set Layout
-        GridBagConstraints gbc = new GridBagConstraints();
-        productContent = new JPanel();
-        productContent.setBackground(Color.green);
-        productContent.setLayout(new GridBagLayout());
-        
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(productContent, gbc); // Thêm vào ProductsGUI
-        
-        //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
-        JPanel topPanel, bottomPanel;
-        //set thông số cho 2 panel
-        topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(Color.blue);
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.09;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        productContent.add(topPanel, gbc);
-        
-        bottomPanel = new JPanel();
-        bottomPanel.setLayout(null);
-        bottomPanel.setBackground(Color.decode("#0B1D51"));
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.91;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        productContent.add(bottomPanel, gbc);
-        
-//==================================================== TOP PANEL =============================================================================================//
-        JPanel functionsPanel, searchPanel;
-        
-        
-        //======================================= functionsPanel =====================================================//
-        //set thông số cho functionsPanel
-        functionsPanel = new JPanel();
-        functionsPanel.setBackground(Color.white);
-        functionsPanel.setLayout(new GridBagLayout());
-        functionsPanel.setBorder(BorderFactory.createTitledBorder(
-        	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Functions" // Tiêu đề của border
-        ));	//Tạo border cho panel
-        gbc.weightx = 0.4;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        topPanel.add(functionsPanel,gbc);
-        
-        //chia 2 panel con nữa, leftFunctionPanel cho các nút chức năng, rightFunctionPanel cho nút xuất Excel
-        JPanel leftFunctionPanel, rightFunctionPanel;
-        
-        leftFunctionPanel = new JPanel();
-        leftFunctionPanel.setBackground(Color.white);
-        leftFunctionPanel.setLayout(null);
-        gbc.weightx = 0.7;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        functionsPanel.add(leftFunctionPanel, gbc);
-        
-        rightFunctionPanel = new JPanel();
-        rightFunctionPanel.setBackground(Color.white);
-        rightFunctionPanel.setLayout(null);
-        gbc.weightx = 0.3;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        functionsPanel.add(rightFunctionPanel, gbc);
-        
-        //Chia tiếp các panel con để chứa các nút chức năng ở leftFunctionPanel
-        JPanel updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel;
-        
-        updateButtonPanel = new JPanel();
-        updateButtonPanel.setBackground(Color.white);
-        updateButtonPanel.setBounds(20, 1, 65, 65);
-        leftFunctionPanel.add(updateButtonPanel);
-        
-        deleteButtonPanel = new JPanel();
-        deleteButtonPanel.setBackground(Color.white);
-        deleteButtonPanel.setBounds(89, 1, 65, 65);
-        leftFunctionPanel.add(deleteButtonPanel);
-        
-        detailButtonPanel = new JPanel();
-        detailButtonPanel.setBackground(Color.white);
-        detailButtonPanel.setBounds(158, 1, 65, 65);
-        leftFunctionPanel.add(detailButtonPanel);
-        
-        excelButtonPanel = new JPanel();
-        excelButtonPanel.setBackground(Color.white);
-        excelButtonPanel.setBounds(20, 1, 65, 65);
-        rightFunctionPanel.add(excelButtonPanel);
-        
-        //======================================= Đặt các nút chức năng vào các panel ==========================================================//
-        //======================================== Nút update ====================================//
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconUpdate = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\update.png\\"); // Đặt đường dẫn ảnh ở đây
-        Image imgUpdate = iconUpdate.getImage();
-        Image newImgUpdate = imgUpdate.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        if (iconUpdate.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconUpdate = new ImageIcon(newImgUpdate);
+	private void loadSlipDetail() {
+		chosenProductModel  = new DefaultTableModel();
+		chosenProductTable.setModel(chosenProductModel);
+		chosenProductModel.addColumn("ID");
+		chosenProductModel.addColumn("Name");
+		chosenProductModel.addColumn("RAM");
+		chosenProductModel.addColumn("ROM");
+		chosenProductModel.addColumn("Color");
+		chosenProductModel.addColumn("Price");
+		chosenProductModel.addColumn("Quantity");
 
-        // Tạo nút Update
-        JButton btnUpdate = new JButton("Update", scaledIconUpdate);
-        btnUpdate.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnUpdate.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnUpdate.setFocusPainted(false);
-        btnUpdate.setBorderPainted(false);
-        btnUpdate.setContentAreaFilled(false);
-        btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUpdate.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-
-        // Thêm sự kiện click cho nút Update
-        btnUpdate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Update button clicked!");
-            }
-        });
-        btnUpdate.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnUpdate.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		updateButtonPanel.setBackground(Color.decode("#D6D6D6"));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnUpdate.setBackground(Color.white);
-        		updateButtonPanel.setBackground(Color.white);
-        	}
-        });
-
-        // Thêm nút vào panel
-        updateButtonPanel.setLayout(new BorderLayout());
-        updateButtonPanel.add(btnUpdate, BorderLayout.CENTER);
-        //========================================== End nút update ==============================//
-        
-        
-        //======================================== Nút delete ====================================//
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
-        Image imgDelete = iconDelete.getImage();
-        Image newImgDelete = imgDelete.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        if (iconDelete.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconDelete = new ImageIcon(newImgDelete);
-
-        // Tạo nút Delete
-        JButton btnDelete = new JButton("Delete", scaledIconDelete);
-        btnDelete.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnDelete.setFocusPainted(false);
-        btnDelete.setBorderPainted(false);
-        btnDelete.setContentAreaFilled(false);
-        btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnDelete.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-
-        // Thêm sự kiện click cho nút Delete
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Delete button clicked!");
-            }
-        });
-        btnDelete.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnDelete.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		deleteButtonPanel.setBackground(Color.decode("#D6D6D6"));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnDelete.setBackground(Color.white);
-        		deleteButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
-        // Thêm nút vào panel
-        deleteButtonPanel.setLayout(new BorderLayout());
-        deleteButtonPanel.add(btnDelete, BorderLayout.CENTER);
-        //========================================== End nút delete ===========================//
-        
-        
-        
-        
-     
-        //======================================== Nút detail ====================================//
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDetail = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\info.png\\"); // Đặt đường dẫn ảnh ở đây
-        Image imgDetail = iconDetail.getImage();
-        Image newImgDetail = imgDetail.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        if (iconDelete.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
-
-        // Tạo nút Detail
-        JButton btnDetail = new JButton("Info", scaledIconDetail);
-        btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnDetail.setFocusPainted(false);
-        btnDetail.setBorderPainted(false);
-        btnDetail.setContentAreaFilled(false);
-        btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-
-        // Thêm sự kiện click cho nút Detail
-        btnDetail.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Info button clicked!");
-            }
-        });
-        btnDetail.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		detailButtonPanel.setBackground(Color.decode("#D6D6D6"));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnDetail.setBackground(Color.white);
-        		detailButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
-
-        // Thêm nút vào panel
-        detailButtonPanel.setLayout(new BorderLayout());
-        detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
-        //========================================== End nút detail ===========================//
-        
-        
-        
-        
-        
-        //Nút Xuất Excel
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconExcel = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\excel.png\\"); // Đặt đường dẫn ảnh ở đây
-        Image imgExcel = iconExcel.getImage();
-        Image newImgExcel = imgExcel.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        if (iconExcel.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconExcel = new ImageIcon(newImgExcel);
-
-        // Tạo nút Detail
-        JButton btnExcel = new JButton("Excel", scaledIconExcel);
-        btnExcel.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnExcel.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnExcel.setFocusPainted(false);
-        btnExcel.setBorderPainted(false);
-        btnExcel.setContentAreaFilled(false);
-        btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-
-        // Thêm sự kiện click cho nút Detail
-        btnExcel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Excel button clicked!");
-            }
-        });
-        btnExcel.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		excelButtonPanel.setBackground(Color.decode("#D6D6D6"));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnExcel.setBackground(Color.white);
-        		excelButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
-
-        // Thêm nút vào panel
-        excelButtonPanel.setLayout(new BorderLayout());
-        excelButtonPanel.add(btnExcel, BorderLayout.CENTER);
-        //==================================== End functionsPanel ====================================================//
-        
-        
-        
-        
-        //======================================= seacrhPanel ========================================================//
-        //set thông số cho seacrhPanel
-        searchPanel = new JPanel();
-        searchPanel.setBackground(Color.white);
-        searchPanel.setLayout(new GridBagLayout());
-        searchPanel.setBorder(BorderFactory.createTitledBorder(
-        	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Functions" // Tiêu đề của border
-        ));	//Tạo border cho panel        
-        gbc.weightx = 0.6;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        topPanel.add(searchPanel,gbc);
-        
-        //chia 2 panel con nữa: searchInputPanel & searchButtonPanel. searchButtonPanel để chứa nút tìm kiềm và refresh
-        JPanel searchInputPanel, searchButtonPanel;
-        
-        searchInputPanel = new JPanel();
-        searchInputPanel.setBackground(Color.white);
-        searchInputPanel.setLayout(null);
-        gbc.weightx = 0.8;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        searchPanel.add(searchInputPanel, gbc);
-        
-        searchButtonPanel = new JPanel();
-        searchButtonPanel.setBackground(Color.white);
-        searchButtonPanel.setLayout(null);
-        gbc.weightx = 0.2;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        searchPanel.add(searchButtonPanel, gbc);
-        
-        
-        
-        
-        //==================================== searchInputPanel =======================================================//
-        JLabel sortComboBoxLabel = new JLabel("Sort");
-        sortComboBoxLabel.setBounds(10, 5, 30, 20);
-        searchInputPanel.add(sortComboBoxLabel);
-        String[] sortCriterias = {"All", "A-Z", "Z-A", "Ascending", "Descending"};
-        sortComboBox = new JComboBox<String>(sortCriterias);
-        sortComboBox.setBounds(10, 24, 75, 25);
-        searchInputPanel.add(sortComboBox);
-        
-        JLabel priceLabel = new JLabel("Price");
-        priceLabel.setBounds(113, 5, 30, 20);
-        searchInputPanel.add(priceLabel);
-        JTextField priceStartTF, priceEndTF;
-        priceStartTF = new JTextField();
-        priceStartTF.setBounds(113, 24, 90, 25);
-        searchInputPanel.add(priceStartTF);
-        priceEndTF = new JTextField();
-        priceEndTF.setBounds(215, 24, 90, 25);
-        searchInputPanel.add(priceEndTF);
-        JLabel between = new JLabel("-");
-        between.setBounds(205, 33, 5, 5);
-        searchInputPanel.add(between);
-        
-        JLabel searchLabel = new JLabel("Search");
-        searchLabel.setBounds(330, 5, 50, 20);
-        searchInputPanel.add(searchLabel);
-        JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(330,  24,  210, 25);
-        searchInputPanel.add(searchInputTF);
-        //==================================== End searchInputPanel ===================================================//
-        
-        
-        
-        //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
-        Image imgSearch = iconSearch.getImage();
-        Image newImgSearch = imgSearch.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-        if (iconSearch.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
-
-        // Tạo nút Detail
-        JButton btnSearch = new JButton("Search", scaledIconSearch);
-        btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnSearch.setFocusPainted(false);
-        btnSearch.setBorderPainted(false);
-        btnSearch.setContentAreaFilled(true);
-        btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSearch.setBackground(Color.white);
-        btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-        
-        
-        btnSearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Search button clicked!");
-            }
-        });
-        btnSearch.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btnSearch.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
-                btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnSearch.setBackground(Color.white); // Màu khi hover ra
-            }
-        });
-
-        
-        btnSearch.setBounds(0, 0, 65, 60);
-        searchButtonPanel.add(btnSearch);
-        
-        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
-        Image imgRefresh = iconRefresh.getImage();
-        Image newImgRefresh = imgRefresh.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-        if (iconRefresh.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
-
-        // Tạo nút Detail
-        JButton btnRefresh = new JButton("Refresh", scaledIconRefresh);
-        btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnRefresh.setFocusPainted(false);
-        btnRefresh.setBorderPainted(false);
-        btnRefresh.setContentAreaFilled(true);
-        btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnRefresh.setBackground(Color.white);
-        btnRefresh.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-        
-        
-        btnRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Refresh button clicked!");
-            }
-        });
-        btnRefresh.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            	btnRefresh.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
-            	btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            	btnRefresh.setBackground(Color.white); // Màu khi hover ra
-            }
-        });
-
-        
-        btnRefresh.setBounds(68, 0, 70, 60);
-        searchButtonPanel.add(btnRefresh);
-        //==================================== End searchButtonPanel ===================================================//
-
-        //==================================== End searchPanel ====================================================//
-
-//=====================================================END TOP PANEL =====================================================================================================//   
-        
-        
-//==================================================== BOTTOM PANEL =============================================================================================//
-        
-        
-//===================================================== END BOTTOM PANEL =======================================================================================================//   
-
-        
-    }
-
-    
-    private void loadSanPhamList() {
-    	
-    }
+		
+		//Điều chỉnh kích thước các cột
+		TableColumnModel tcm = chosenProductTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(20);
+		tcm.getColumn(1).setPreferredWidth(100);
+		tcm.getColumn(2).setPreferredWidth(20);
+		tcm.getColumn(3).setPreferredWidth(20);
+		tcm.getColumn(4).setPreferredWidth(20);
+		tcm.getColumn(5).setPreferredWidth(50);
+		tcm.getColumn(6).setPreferredWidth(20);
+	}
 }

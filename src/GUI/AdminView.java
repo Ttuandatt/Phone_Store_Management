@@ -30,7 +30,7 @@ public class AdminView {
 		
         // Tạo JFrame
         JFrame f = new JFrame("Admin");
-        f.setSize(1400, 800);
+        f.setSize(1500, 800);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel, menuPanel;
