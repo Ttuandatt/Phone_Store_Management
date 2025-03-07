@@ -12,10 +12,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -140,32 +142,32 @@ public class EmployeeGUI extends JPanel{
         
         addButtonPanel = new JPanel();
         addButtonPanel.setBackground(Color.white);
-        addButtonPanel.setBounds(10, 1, 64, 64);
+        addButtonPanel.setBounds(10, 4, 60, 60);
         leftFunctionPanel.add(addButtonPanel);
         
         updateButtonPanel = new JPanel();
         updateButtonPanel.setBackground(Color.white);
-        updateButtonPanel.setBounds(79, 1, 64, 64);
+        updateButtonPanel.setBounds(79, 4, 60, 60);
         leftFunctionPanel.add(updateButtonPanel);
         
         deleteButtonPanel = new JPanel();
         deleteButtonPanel.setBackground(Color.white);
-        deleteButtonPanel.setBounds(148, 1, 64, 64);
+        deleteButtonPanel.setBounds(148, 4, 60, 60);
         leftFunctionPanel.add(deleteButtonPanel);
         
         detailButtonPanel = new JPanel();
         detailButtonPanel.setBackground(Color.white);
-        detailButtonPanel.setBounds(217, 1, 64, 64);
+        detailButtonPanel.setBounds(217, 4, 60, 60);
         leftFunctionPanel.add(detailButtonPanel);
         
         excelButtonPanel = new JPanel();
         excelButtonPanel.setBackground(Color.white);
-        excelButtonPanel.setBounds(0, 1, 64, 64);
+        excelButtonPanel.setBounds(0, 4, 60, 60);
         rightFunctionPanel.add(excelButtonPanel);
         
         printButtonPanel = new JPanel();
         printButtonPanel.setBackground(Color.white);
-        printButtonPanel.setBounds(69, 1, 64, 64);
+        printButtonPanel.setBounds(69, 4, 60, 60);
         rightFunctionPanel.add(printButtonPanel);
         
         //======================================= Đặt các nút chức năng vào các panel ==========================================================//
@@ -177,7 +179,7 @@ public class EmployeeGUI extends JPanel{
         }
         ImageIcon scaledIconAdd = new ImageIcon(newImgAdd);
         // Tạo nút Add
-        JButton btnAdd = new ShadowButton("Add", scaledIconAdd);
+        JButton btnAdd = new ShadowButton("Thêm", scaledIconAdd);
         btnAdd.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnAdd.setHorizontalTextPosition(SwingConstants.CENTER);
         btnAdd.setFocusPainted(false);
@@ -224,7 +226,7 @@ public class EmployeeGUI extends JPanel{
         ImageIcon scaledIconUpdate = new ImageIcon(newImgUpdate);
 
         // Tạo nút Update
-        JButton btnUpdate = new ShadowButton("Update", scaledIconUpdate);
+        JButton btnUpdate = new ShadowButton("Sửa", scaledIconUpdate);
         btnUpdate.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnUpdate.setHorizontalTextPosition(SwingConstants.CENTER);
         btnUpdate.setFocusPainted(false);
@@ -269,7 +271,7 @@ public class EmployeeGUI extends JPanel{
         ImageIcon scaledIconDelete = new ImageIcon(newImgDelete);
 
         // Tạo nút Delete
-        JButton btnDelete = new ShadowButton("Delete", scaledIconDelete);
+        JButton btnDelete = new ShadowButton("Xóa", scaledIconDelete);
         btnDelete.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDelete.setFocusPainted(false);
@@ -489,25 +491,34 @@ public class EmployeeGUI extends JPanel{
         
         
         //==================================== searchInputPanel =======================================================//
-        String[] sortCriterias = {"All", "A-Z", "Z-A", "Ascending", "Descending"};
+        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A", "Tăng dần", "Giảm dần"};
         sortComboBox = new JComboBox<String>(sortCriterias);
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
         
         
-        String[] genders = {"Gender", "Male", "Female"};
+        String[] genders = {"Giới tính", "Nam", "Nữ"};
         genderCombobox = new JComboBox<String>(genders);
         genderCombobox.setBounds(90,  24,  90, 25);
         searchInputPanel.add(genderCombobox);
         
-        String[] departments = {"Department", "Add new department..."};
+        String[] departments = {"Phòng ban", "Thêm phòng ban mới..."};
         departmentCombobox = new JComboBox<String>(departments);
-        departmentCombobox.setBounds(185, 24, 100, 25);
+        departmentCombobox.setBounds(185, 24, 150, 25);
         searchInputPanel.add(departmentCombobox);
+        departmentCombobox.addItemListener(e -> {
+        	if(e.getStateChange() == ItemEvent.SELECTED) {
+        		String selected = (String)departmentCombobox.getSelectedItem();
+        		if("Add new department...".equals(selected)) {
+        			newDepartmentDialog();
+        		}
+        	}
+        	
+        });
 
         
         JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(350,  24,  290, 25);
+        searchInputTF.setBounds(375,  24,  260, 25);
         searchInputPanel.add(searchInputTF);
         
         
@@ -607,10 +618,66 @@ public class EmployeeGUI extends JPanel{
         //========================= table =========================//
         employeeTable = new JTable();
         JScrollPane sp = new JScrollPane(employeeTable);
-        gbc.weightx = 1.0;
+        gbc.weightx = 0.55;
 		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		bottomPanel.add(sp, gbc);
+		
+		JPanel attendancePanel = new JPanel(new GridBagLayout());
+		attendancePanel.setBackground(Color.white);
+		attendancePanel.setBorder(BorderFactory.createTitledBorder(""));
+		gbc.weightx = 0.45;
+		gbc.weighty = 1.0;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(attendancePanel, gbc);
+		
+		//Chia 2 panel top & bottom trong attendancePanel
+		JPanel topAttendancePanel, bottomAttendancePanel;
+		
+		topAttendancePanel = new JPanel(null);
+		topAttendancePanel.setBackground(Color.white);
+		topAttendancePanel.setBorder(BorderFactory.createTitledBorder(""));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.5;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		attendancePanel.add(topAttendancePanel, gbc);
+		
+		bottomAttendancePanel = new JPanel();
+		bottomAttendancePanel.setBackground(Color.white);
+		bottomAttendancePanel.setBorder(BorderFactory.createTitledBorder("Chi tiết"));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.5;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		attendancePanel.add(bottomAttendancePanel, gbc);
+		
+		//topAttendancePanel
+		JLabel lblSoNgayCong, lblSoNgayNghiPhep, lblSoNgayNghiKhongPhep, lblSoGioOT;
+		
+		lblSoNgayCong = new JLabel("Số ngày công: ");
+		lblSoNgayCong.setBounds(10, 10, 100, 20);
+		topAttendancePanel.add(lblSoNgayCong);
+		
+		lblSoNgayNghiPhep = new JLabel("Số ngày nghỉ phép: ");
+		lblSoNgayNghiPhep.setBounds(10, 40, 150, 20);
+		topAttendancePanel.add(lblSoNgayNghiPhep);
+		
+		lblSoNgayNghiKhongPhep = new JLabel("Số ngày nghỉ không phép: ");
+		lblSoNgayNghiKhongPhep.setBounds(10, 70, 150, 20);
+		topAttendancePanel.add(lblSoNgayNghiKhongPhep);
+		
+		lblSoGioOT = new JLabel("Số giờ tăng ca: ");
+		lblSoGioOT.setBounds(10, 100, 150, 20);
+		topAttendancePanel.add(lblSoGioOT);
+				
+
     }
 
     
@@ -618,23 +685,63 @@ public class EmployeeGUI extends JPanel{
     	employeeModel  = new DefaultTableModel();
     	employeeTable.setModel(employeeModel);
     	employeeModel.addColumn("ID");
-    	employeeModel.addColumn("Name");
-    	employeeModel.addColumn("Date of birth");
-    	employeeModel.addColumn("Address");
-    	employeeModel.addColumn("Role");
-    	employeeModel.addColumn("Password");
-    	employeeModel.addColumn("Status");
+    	employeeModel.addColumn("Họ và tên");
+    	employeeModel.addColumn("Ngày sinh");
+    	employeeModel.addColumn("Địa chỉ");
+    	employeeModel.addColumn("Chức vụ");
+    	employeeModel.addColumn("Mật khẩu");
+    	employeeModel.addColumn("Trạng thái");
 
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = employeeTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(20);
-		tcm.getColumn(1).setPreferredWidth(100);
-		tcm.getColumn(2).setPreferredWidth(50);
-		tcm.getColumn(3).setPreferredWidth(100);
-		tcm.getColumn(4).setPreferredWidth(20);
-		tcm.getColumn(5).setPreferredWidth(20);
-		tcm.getColumn(6).setPreferredWidth(20);
+		tcm.getColumn(0).setPreferredWidth(50);
+		tcm.getColumn(1).setPreferredWidth(200);
+		tcm.getColumn(2).setPreferredWidth(100);
+		tcm.getColumn(3).setPreferredWidth(250);
+		tcm.getColumn(4).setPreferredWidth(100);
+		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(6).setPreferredWidth(78);
 
+		employeeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
     }
+    
+    public void newDepartmentDialog() {
+    	//Tạo Jpanel chứa form nhập
+    	JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5)); // row:3, column:2, hgap:5, wgap:5
+    	
+    	
+    	JLabel nameLabel = new JLabel("Tên phòng ban:");
+		JTextField nameField = new JTextField(15);
+
+		JLabel managerLabel = new JLabel("Trưởng phòng (ID):");
+		JTextField managerField = new JTextField(15);
+		
+		panel.add(nameLabel);
+		panel.add(nameField);
+		panel.add(managerLabel);
+		panel.add(managerField);
+
+		// Hiển thị dialog với panel
+		int result = JOptionPane.showConfirmDialog(this, panel, "Thêm phòng ban", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+
+		// Nếu nhấn OK
+		if (result == JOptionPane.OK_OPTION) {
+			String newDepartment = nameField.getText().trim();
+			String managerID = managerField.getText().trim();
+
+
+			if (!newDepartment.isEmpty() && !managerID.isEmpty()) {
+				departmentCombobox.insertItemAt(newDepartment, departmentCombobox.getItemCount() - 1);
+				departmentCombobox.setSelectedItem(newDepartment);
+				JOptionPane.showMessageDialog(this,
+						"Department Added:\nName: " + newDepartment + "\nDepartment Manager: " + managerID);
+			} else {
+				JOptionPane.showMessageDialog(this, "Please fill in all fields!", "Warning",
+						JOptionPane.WARNING_MESSAGE);
+			}
+		}
+
+	}
 }

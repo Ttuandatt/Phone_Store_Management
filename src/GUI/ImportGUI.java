@@ -56,7 +56,7 @@ public class ImportGUI extends JPanel {
 
 	ProductsBUS productBUS = new ProductsBUS();
 	JTable productTable, chosenProductTable;
-	DefaultTableModel prodcutModel, chosenProductModel;
+	DefaultTableModel productModel, chosenProductModel;
 	ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
@@ -396,14 +396,14 @@ public class ImportGUI extends JPanel {
 		informationRightPanel.add(supplierLabel);
 
 		// Add combobox suppliers
-		String[] suppliers = { "", "Add new supplier" };
+		String[] suppliers = { "", "Add new supplier..." };
 		supplierComboBox = new JComboBox<String>(suppliers);
 		supplierComboBox.setBounds(110, 100, 200, 20);
 		informationRightPanel.add(supplierComboBox);
 		supplierComboBox.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				String selected = (String) supplierComboBox.getSelectedItem();
-				if ("Add new supplier".equals(selected)) {
+				if ("Add new supplier...".equals(selected)) {
 					newSupplierDialog();
 				}
 			}
@@ -748,8 +748,7 @@ public class ImportGUI extends JPanel {
 		panel.add(phoneField);
 
 		// Hiển thị dialog với panel
-		int result = JOptionPane.showConfirmDialog(this, panel, "Add Supplier", JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE);
+		int result = JOptionPane.showConfirmDialog(this, panel, "Add Supplier", JOptionPane.OK_CANCEL_OPTION,				JOptionPane.PLAIN_MESSAGE);
 
 		// Nếu nhấn OK
 		if (result == JOptionPane.OK_OPTION) {
@@ -770,26 +769,29 @@ public class ImportGUI extends JPanel {
 	}
 
 	private void loadProductList() {
-		prodcutModel = new DefaultTableModel();
-		productTable.setModel(prodcutModel);
-		prodcutModel.addColumn("ID");
-		prodcutModel.addColumn("Name");
-		prodcutModel.addColumn("RAM");
-		prodcutModel.addColumn("ROM");
-		prodcutModel.addColumn("Color");
-		prodcutModel.addColumn("Price");
-		prodcutModel.addColumn("Quantity");
+		productModel = new DefaultTableModel();
+		productTable.setModel(productModel);
+		productModel.addColumn("ID");
+		productModel.addColumn("Name");
+		productModel.addColumn("RAM");
+		productModel.addColumn("ROM");
+		productModel.addColumn("Color");
+		productModel.addColumn("Price");
+		productModel.addColumn("Quantity");
 
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = productTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(20);
-		tcm.getColumn(1).setPreferredWidth(100);
-		tcm.getColumn(2).setPreferredWidth(20);
-		tcm.getColumn(3).setPreferredWidth(20);
-		tcm.getColumn(4).setPreferredWidth(20);
-		tcm.getColumn(5).setPreferredWidth(50);
-		tcm.getColumn(6).setPreferredWidth(20);
+		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(1).setPreferredWidth(250);
+		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(3).setPreferredWidth(50);
+		tcm.getColumn(4).setPreferredWidth(50);
+		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(6).setPreferredWidth(55);
+
+		productTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
 	}
 	
 	private void loadChosenProduct() {
@@ -806,12 +808,15 @@ public class ImportGUI extends JPanel {
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = chosenProductTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(20);
-		tcm.getColumn(1).setPreferredWidth(100);
-		tcm.getColumn(2).setPreferredWidth(20);
-		tcm.getColumn(3).setPreferredWidth(20);
-		tcm.getColumn(4).setPreferredWidth(20);
-		tcm.getColumn(5).setPreferredWidth(50);
-		tcm.getColumn(6).setPreferredWidth(20);
+		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(1).setPreferredWidth(250);
+		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(3).setPreferredWidth(50);
+		tcm.getColumn(4).setPreferredWidth(50);
+		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(6).setPreferredWidth(55);
+
+		chosenProductTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
 	}
 }

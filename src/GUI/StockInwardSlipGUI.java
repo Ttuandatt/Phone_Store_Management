@@ -55,8 +55,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class StockInwardSlipGUI extends JPanel {
 
 	ProductsBUS productBUS = new ProductsBUS();
-	JTable productTable, chosenProductTable;
-	DefaultTableModel prodcutModel, chosenProductModel;
+	JTable slipTable, slipDetailTable;
+	DefaultTableModel slipModel, slipDetailModel;
 	ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
@@ -256,8 +256,8 @@ public class StockInwardSlipGUI extends JPanel {
 		
 		// ======================= productListLeftPanel =======================//
 		//Thêm table vào panel để hiển thị danh sách sản phẩm
-		productTable = new JTable();
-		JScrollPane sp = new JScrollPane(productTable);
+		slipTable = new JTable();
+		JScrollPane sp = new JScrollPane(slipTable);
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -307,8 +307,8 @@ public class StockInwardSlipGUI extends JPanel {
 		
 		///////////////////////////////////////// productChoseRightPanel ///////////////////////////////////////// 
 		//Thêm bảng vào panel để hiển thị các sản phẩm đã được chọn để nhập
-		chosenProductTable = new JTable();
-		JScrollPane sp2 = new JScrollPane(chosenProductTable);
+		slipDetailTable = new JTable();
+		JScrollPane sp2 = new JScrollPane(slipDetailTable);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 1.0;
@@ -600,46 +600,51 @@ public class StockInwardSlipGUI extends JPanel {
 	}
 
 	private void loadInwardSlipList() {
-		prodcutModel = new DefaultTableModel();
-		productTable.setModel(prodcutModel);
-		prodcutModel.addColumn("ID");
-		prodcutModel.addColumn("Date");
-		prodcutModel.addColumn("Warehouse");
-		prodcutModel.addColumn("Total");
-		prodcutModel.addColumn("Status");
+		slipModel = new DefaultTableModel();
+		slipTable.setModel(slipModel);
+		slipModel.addColumn("ID");
+		slipModel.addColumn("Date");
+		slipModel.addColumn("Warehouse");
+		slipModel.addColumn("Total");
+		slipModel.addColumn("Status");
 
 
 		
 		//Điều chỉnh kích thước các cột
-		TableColumnModel tcm = productTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(20);
-		tcm.getColumn(1).setPreferredWidth(50);
-		tcm.getColumn(2).setPreferredWidth(50);
-		tcm.getColumn(3).setPreferredWidth(50);
-		tcm.getColumn(4).setPreferredWidth(20);
-;
+		TableColumnModel tcm = slipTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(100);
+		tcm.getColumn(1).setPreferredWidth(100);
+		tcm.getColumn(2).setPreferredWidth(200);
+		tcm.getColumn(3).setPreferredWidth(115);
+		tcm.getColumn(4).setPreferredWidth(100);
+		
+		slipTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
 	}
 	
 	private void loadSlipDetail() {
-		chosenProductModel  = new DefaultTableModel();
-		chosenProductTable.setModel(chosenProductModel);
-		chosenProductModel.addColumn("ID");
-		chosenProductModel.addColumn("Name");
-		chosenProductModel.addColumn("RAM");
-		chosenProductModel.addColumn("ROM");
-		chosenProductModel.addColumn("Color");
-		chosenProductModel.addColumn("Price");
-		chosenProductModel.addColumn("Quantity");
+		slipDetailModel  = new DefaultTableModel();
+		slipDetailTable.setModel(slipDetailModel);
+		slipDetailModel.addColumn("ID");
+		slipDetailModel.addColumn("Name");
+		slipDetailModel.addColumn("RAM");
+		slipDetailModel.addColumn("ROM");
+		slipDetailModel.addColumn("Color");
+		slipDetailModel.addColumn("Price");
+		slipDetailModel.addColumn("Quantity");
 
 		
 		//Điều chỉnh kích thước các cột
-		TableColumnModel tcm = chosenProductTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(20);
-		tcm.getColumn(1).setPreferredWidth(100);
-		tcm.getColumn(2).setPreferredWidth(20);
-		tcm.getColumn(3).setPreferredWidth(20);
-		tcm.getColumn(4).setPreferredWidth(20);
-		tcm.getColumn(5).setPreferredWidth(50);
-		tcm.getColumn(6).setPreferredWidth(20);
+		TableColumnModel tcm = slipDetailTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(1).setPreferredWidth(250);
+		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(3).setPreferredWidth(50);
+		tcm.getColumn(4).setPreferredWidth(50);
+		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(6).setPreferredWidth(55);
+		
+		slipDetailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
 	}
 }
