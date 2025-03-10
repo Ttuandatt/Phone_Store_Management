@@ -57,7 +57,7 @@ public class XuatHangGUI extends JPanel {
 	ProductsBUS productBUS = new ProductsBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
-	ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
 	JLabel imageLabel;

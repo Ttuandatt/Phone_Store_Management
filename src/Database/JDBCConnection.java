@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class JDBCConnection {
-	private String dbUrl = "";
+	private String dbUrl = "jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false";
 	private String username = "";
 	private String password = "";
 	private Connection con;

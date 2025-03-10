@@ -2,10 +2,10 @@ package BUS;
 
 import java.util.ArrayList;
 
-import DTO.ProductsDTO;
+import DTO.SanPhamDTO;
 
 public class ProductsBUS {
-	public ArrayList<ProductsDTO> getAllProducts(){
+	public ArrayList<SanPhamDTO> getAllProducts(){
         return null;
     }
 }

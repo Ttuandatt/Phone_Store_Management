@@ -57,7 +57,7 @@ public class PhieuNhapGUI extends JPanel {
 	ProductsBUS productBUS = new ProductsBUS();
 	JTable slipTable, slipDetailTable;
 	DefaultTableModel slipModel, slipDetailModel;
-	ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
 	JLabel imageLabel;

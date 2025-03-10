@@ -57,7 +57,7 @@ public class NhapHangGUI extends JPanel {
 	ProductsBUS productBUS = new ProductsBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
-	ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
 	JLabel imageLabel;
@@ -532,8 +532,7 @@ public class NhapHangGUI extends JPanel {
 
 	// Hàm hiển thị JDialog để nhập sản phẩm mới
 	private void newProductDialog() {
-		JDialog newProductDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Add New Product",
-				true);
+		JDialog newProductDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm sản phẩm", true);
 		newProductDialog.setSize(600, 400);
 		newProductDialog.setLayout(null);
 
@@ -541,7 +540,7 @@ public class NhapHangGUI extends JPanel {
 		lblId.setBounds(10, 20, 100, 20);
 		newProductDialog.add(lblId);
 		JTextField txtId = new JTextField();
-		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để + thêm 1, k cho nhập tự động
+		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để tạo mã, k cho nhập tự động
 		txtId.setBounds(110, 20, 150, 20);
 		newProductDialog.add(txtId);
 

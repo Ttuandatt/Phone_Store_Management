@@ -39,7 +39,7 @@ public class StatisticsGUI extends JPanel{
 	ProductsBUS productBUS = new ProductsBUS();
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
-    ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox cb;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
