@@ -68,37 +68,35 @@ public class AdminView {
         menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.Y_AXIS));
 
         // ================================ MENU ITEMS ================================//
-        JMenu menuProducts = createRightAlignedMenu("PRODUCTS");
+        JMenu menuProducts = createRightAlignedMenu("SẢN PHẨM");
         
-        JMenu menuSuppliers = createRightAlignedMenu("SUPPLIERS");
+        JMenu menuSuppliers = createRightAlignedMenu("NHÀ CUNG CẤP");
         	
-        JMenu menuStockReceipt = createRightAlignedMenu("STOCK RECEIPT");
-        JMenuItem importMenuItem = new JMenuItem("Import");
-        JMenuItem stockReceipt = new JMenuItem("Stock Inward Slip");
+        JMenu menuStockReceipt = createRightAlignedMenu("NHẬP HÀNG");
+        JMenuItem importMenuItem = new JMenuItem("Tạo phiếu nhập");
+        JMenuItem stockReceipt = new JMenuItem("Phiếu nhập");
         menuStockReceipt.add(importMenuItem);
         menuStockReceipt.add(stockReceipt);
         
-        JMenu menuStockRelease = createRightAlignedMenu("STOCK RELEASE");
-        JMenuItem exportMenuItem = new JMenuItem("Export");
-        JMenuItem stockRelease = new JMenuItem("Stock Outward Slip");
+        JMenu menuStockRelease = createRightAlignedMenu("XUẤT HÀNG");
+        JMenuItem exportMenuItem = new JMenuItem("Tạo phiếu xuất");
+        JMenuItem stockRelease = new JMenuItem("Phiếu xuất");
         menuStockRelease.add(exportMenuItem);
         menuStockRelease.add(stockRelease);
         
-        JMenu menuEmployeeManagement = createRightAlignedMenu("EMPLOYEE");
-        JMenuItem employeeMenuItem = new JMenuItem("Employees");
-        JMenuItem accountMenuItem = new JMenuItem("Accounts");
-        JMenuItem timesheetMenuItem = new JMenuItem("Timesheets");
-        JMenuItem leaveRequestMenuItem = new JMenuItem("Leave requests");
+        JMenu menuEmployeeManagement = createRightAlignedMenu("NHÂN VIÊN");
+        JMenuItem employeeMenuItem = new JMenuItem("Danh sách nhân viên");
+        JMenuItem timesheetMenuItem = new JMenuItem("Bảng công");
+        JMenuItem leaveRequestMenuItem = new JMenuItem("Đơn xin");
         menuEmployeeManagement.add(employeeMenuItem);
-        menuEmployeeManagement.add(accountMenuItem);
         menuEmployeeManagement.add(timesheetMenuItem);
         menuEmployeeManagement.add(leaveRequestMenuItem);
         
-        JMenu menuCreateLeaveRequest = createRightAlignedMenu("CREATE LEAVE REQUEST");
+        JMenu menuCreateLeaveRequest = createRightAlignedMenu("TẠO ĐƠN");
         
-        JMenu menuWarehouse = createRightAlignedMenu("WAREHOUSE");
+        JMenu menuWarehouse = createRightAlignedMenu("KHO");
         
-        JMenu menuStatistics = createRightAlignedMenu("STATISTICS");
+        JMenu menuStatistics = createRightAlignedMenu("THỐNG KÊ");
 
         // Thêm vào menuBar
         menuBar.add(menuProducts);
@@ -170,7 +168,7 @@ public class AdminView {
         final String suppliersMenu_Identification = "SUPPLIERS";
         final String stockReceiptMenu_Identification = "STOCK RECEIPT";
         final String importMenuItem_Identification = "IMPORT";
-        final String stockInwardSlipMenuItem_Identification = "STOCK INWARD SLIP";
+        final String phieuNhapMenuItem_Identification = "STOCK INWARD SLIP";
         final String stockReleaseMenu_Identification = "STOCK RELEASE";
         final String exportMenuItem_Identification = "EXPORT";
         final String stockOutwardSlipMenuItem_Identification = "STOCK OUTWARD SLIP";
@@ -250,7 +248,7 @@ public class AdminView {
 		
 		//ActionListener cho Imports. Vì menuItem thì kích hoạt sự kiện bằng ActionListener chứ k phải MouseListener
 		importMenuItem.addActionListener(e -> {
-		    ImportGUI importObj = new ImportGUI(); // Tạo instance của ImportGUI
+		    NhapHangGUI importObj = new NhapHangGUI(); // Tạo instance của ImportGUI
 		    contentPanel.add(importObj, importMenuItem_Identification); // Thêm vào contentPanel
 		    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 		    cardLayout.show(contentPanel, importMenuItem_Identification); // Chuyển sang ImportGUI
@@ -258,15 +256,15 @@ public class AdminView {
 		
 		//ActionListener cho menuItem Stock Inward Slip
 		stockReceipt.addActionListener(e ->{
-			StockInwardSlipGUI stockInwardSlipObj = new StockInwardSlipGUI();
-			contentPanel.add(stockInwardSlipObj, stockInwardSlipMenuItem_Identification);
+			PhieuNhapGUI phieuNhapObj = new PhieuNhapGUI();
+			contentPanel.add(phieuNhapObj, phieuNhapMenuItem_Identification);
 			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
-			cardLayout.show(contentPanel, stockInwardSlipMenuItem_Identification);
+			cardLayout.show(contentPanel, phieuNhapMenuItem_Identification);
 		});
 		
 		//ActionListener cho menuItem Export 
 		exportMenuItem.addActionListener(e ->{
-			ExportGUI exportObj = new ExportGUI();
+			XuatHangGUI exportObj = new XuatHangGUI();
 			contentPanel.add(exportObj, employeeListMenuItem_Identification);
 			CardLayout cartLayout = (CardLayout)contentPanel.getLayout();
 			cartLayout.show(contentPanel,employeeListMenuItem_Identification);
@@ -274,7 +272,7 @@ public class AdminView {
 		
 		//ActionListener cho menuItem Stock Outward Slip
 		stockRelease.addActionListener(e ->{
-			StockOutwardSlipGUI stockOutwardSlipObj = new StockOutwardSlipGUI();
+			PhieuXuatGUI stockOutwardSlipObj = new PhieuXuatGUI();
 			contentPanel.add(stockOutwardSlipObj, stockOutwardSlipMenuItem_Identification);
 			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
 			cardLayout.show(contentPanel, stockOutwardSlipMenuItem_Identification);
@@ -282,19 +280,12 @@ public class AdminView {
 		
 		//ActionListener cho menuItem Employees
 		employeeMenuItem.addActionListener(e -> {
-			EmployeeGUI employeeObj = new EmployeeGUI();
+			NhanVienGUI employeeObj = new NhanVienGUI();
 			contentPanel.add(employeeObj, employeeListMenuItem_Identification);
 			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
 			cardLayout.show(contentPanel, employeeListMenuItem_Identification);
 		});
 		
-		//ActionListener cho menuItem Accounts
-		accountMenuItem.addActionListener(e -> {
-			AccountGUI accountObj = new AccountGUI();
-			contentPanel.add(accountObj, accountListMenuItem_Identification);
-			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
-			cardLayout.show(contentPanel, accountListMenuItem_Identification);
-		});
 		
 		//ActionListener cho menuItem Timesheet
 		timesheetMenuItem.addActionListener(e -> {
