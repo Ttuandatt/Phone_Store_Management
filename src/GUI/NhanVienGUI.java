@@ -703,6 +703,7 @@ public class NhanVienGUI extends JPanel{
     	employeeModel.addColumn("Chức vụ");
     	employeeModel.addColumn("Mật khẩu");
     	employeeModel.addColumn("Trạng thái");
+    	employeeModel.addColumn("Hình ảnh");
 
 		arrNhanVien = nvBUS.selectAll();
 		for(int i=0; i<arrNhanVien.size(); i++) {
@@ -715,6 +716,7 @@ public class NhanVienGUI extends JPanel{
 			String matKhau = nv.getMatKhau();
 			String trangThai = nv.getTrangThai();
 			
+			
 			Object[] row = {maNV, hoTen, ngaySinh, diaChi, chucVu, matKhau, trangThai};
 			employeeModel.addRow(row);
 		}
@@ -723,12 +725,13 @@ public class NhanVienGUI extends JPanel{
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = employeeTable.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(50);
-		tcm.getColumn(1).setPreferredWidth(200);
+		tcm.getColumn(1).setPreferredWidth(150);
 		tcm.getColumn(2).setPreferredWidth(100);
-		tcm.getColumn(3).setPreferredWidth(250);
-		tcm.getColumn(4).setPreferredWidth(100);
+		tcm.getColumn(3).setPreferredWidth(200);
+		tcm.getColumn(4).setPreferredWidth(70);
 		tcm.getColumn(5).setPreferredWidth(100);
 		tcm.getColumn(6).setPreferredWidth(78);
+		tcm.getColumn(7).setPreferredWidth(130);
 
 		employeeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
     }
