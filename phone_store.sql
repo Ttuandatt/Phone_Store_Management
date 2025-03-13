@@ -68,6 +68,8 @@ CREATE TABLE CHUCVU (
     tenCV NVARCHAR(255) NOT NULL,
     luongCB DECIMAL(18,2) NOT NULL,
     heSo FLOAT NOT NULL,
+	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+
 
     PRIMARY KEY (maCV)
 );
@@ -78,7 +80,7 @@ CREATE TABLE KHO (
     maKho VARCHAR(50) NOT NULL,
     tenKho NVARCHAR(255) NOT NULL,
     diaChi NVARCHAR(255) NOT NULL,
-    sdt NVARCHAR(20) NOT NULL,
+    sdt VARCHAR(20) NOT NULL,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
     PRIMARY KEY (maKho)
@@ -94,12 +96,12 @@ CREATE TABLE NHANVIEN (
     diaChi NVARCHAR(255) NOT NULL,
     sdt NVARCHAR(20) NOT NULL,
     email NVARCHAR(255) NOT NULL,
-    hinhAnh VARBINARY(MAX) NOT NULL,
+    hinhAnh VARBINARY(MAX),
     vaiTro NVARCHAR(50) NOT NULL,
     matKhau NVARCHAR(255) NOT NULL,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-    maCV VARCHAR(50) NOT NULL,
-    noiLamViec VARCHAR(50) NOT NULL,
+    maCV VARCHAR(50) ,
+    noiLamViec VARCHAR(50),
 
     PRIMARY KEY (maNV),
     CONSTRAINT FK_NHANVIEN_CHUCVU FOREIGN KEY (maCV) REFERENCES CHUCVU(maCV) ON DELETE NO ACTION,
@@ -159,8 +161,10 @@ CREATE TABLE PHIEUXUAT (
     tongTien DECIMAL(18,2),
     httt NVARCHAR(50),
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-    maNV VARCHAR(50) FOREIGN KEY REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
-    maKH VARCHAR(50) FOREIGN KEY REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
+    maNV VARCHAR(50) NOT NULL,
+	maKH VARCHAR(50) NOT NULL,
+	CONSTRAINT FK_PHIEUXUAT_NHANVIEN FOREIGN KEY (maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUXUAT_KHACHHANG FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
 );
 DROP TABLE PHIEUXUAT;
 
@@ -268,17 +272,7 @@ CREATE TABLE GHICHU (
 DROP TABLE GHICHU;
 
 -------------------------------------------- ALTER TABLE -------------------------------------------------
--- Đổi kiểu dữ liệu của hình ảnh của bảng SANPHAM & NHANVIEN sang dạng BLOB
-ALTER TABLE SANPHAM
-DROP COLUMN hinhAnh;
-ALTER TABLE SANPHAM
-ADD hinhAnh VARBINARY(MAX);
 
-
-ALTER TABLE NHANVIEN
-DROP COLUMN hinhAnh;
-ALTER TABLE NHANVIEN
-ADD hinhAnh VARBINARY(MAX);
 
 -- Cập nhật thêm các trạng thái của nhân viên: đang làm, đã nghỉ, đang nghỉ phép, 
 -- 1️. Tìm tên ràng buộc CHECK hiện tại trên cột trangThai
@@ -305,6 +299,30 @@ SELECT DISTINCT trangThai FROM NHANVIEN;
 EXEC sp_rename 'NHANVIEN.vaiTro', 'chucVu', 'COLUMN';
 
 ------------------------------------------ INSERT --------------------------------------
+-- Insert bảng CHUCVU
+INSERT INTO CHUCVU (maCV, tenCV, luongCB, heSo, trangThai) 
+VALUES 
+('CV001', N'Quản lý kho', 15000000, 2.0, 'on'),
+('CV002', N'Nhân viên kho', 8000000, 1.2, 'on'),
+('CV003', N'Quản lý nhân sự', 9000000, 1.3, 'on');
+
+
+-- Insert bảng KHO
+INSERT INTO KHO (maKho, tenKho, diaChi, sdt, trangThai) 
+VALUES 
+('KHO001', N'Kho Hồ Chí Minh', N'123 Lê Lợi, Quận 1, TP.HCM', '0901234567', 'on'),
+('KHO002', N'Kho Hà Nội', N'456 Hai Bà Trưng, Quận Hoàn Kiếm, Hà Nội', '0912345678', 'on'),
+('KHO003', N'Kho Huế', N'789 Nguyễn Huệ, TP. Huế', '0923456789', 'off');
+
+
+-- Insert bảng NHANVIEN
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, vaiTro, matKhau, trangThai, maCV, noiLamViec)
+VALUES 
+('NV001', N'Nguyễn Văn A', '1990-05-12', N'Nam', N'123 Lê Lợi, TP.HCM', '0901234567', 'nguyenvana@example.com', NULL, 'CV001', '123456', 'on', 'CV001', 'KHO001'),
+('NV002', N'Trần Thị B', '1995-08-22', N'Nữ', N'456 Hai Bà Trưng, Hà Nội', '0912345678', 'tranthib@example.com', NULL, 'CV002', 'abcdef', 'on', 'CV002', 'KHO002'),
+('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'CV001', 'password', 'off', 'CV003', 'KHO001'),
+('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'CV002', 'letidpass', 'on', 'CV002', 'KHO003'),
+('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'CV002', 'hoangepass', 'off', 'CV001', 'KHO002');
 
 
 ------------------------------------------ SELECT --------------------------------------
@@ -312,6 +330,9 @@ select * from nhanvien;
 select * from sanpham;
 select * from pbsp;
 select * from PHIEUNHAP;
+select * from chucvu;
+SELECT maCV FROM NHANVIEN;
+select * from chucvu
 
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;

@@ -92,6 +92,8 @@ public class AdminView {
         menuEmployeeManagement.add(timesheetMenuItem);
         menuEmployeeManagement.add(leaveRequestMenuItem);
         
+        JMenu menuCheckAttendanceManagement = createRightAlignedMenu("CHẤM CÔNG");
+        
         JMenu menuCreateLeaveRequest = createRightAlignedMenu("TẠO ĐƠN");
         
         JMenu menuWarehouse = createRightAlignedMenu("KHO");
@@ -104,6 +106,7 @@ public class AdminView {
         menuBar.add(menuStockReceipt);
         menuBar.add(menuStockRelease);
         menuBar.add(menuEmployeeManagement);
+        menuBar.add(menuCheckAttendanceManagement);
         menuBar.add(menuCreateLeaveRequest);
         menuBar.add(menuWarehouse);
         menuBar.add(menuStatistics);
@@ -174,6 +177,7 @@ public class AdminView {
         final String stockOutwardSlipMenuItem_Identification = "STOCK OUTWARD SLIP";
         final String employeeMenu_Identification = "EMPLOYEE";
         final String employeeListMenuItem_Identification = "EMPLOYEES";
+        final String checkAttendanceMenu_Identification = "CHECK ATTENDANCE";
         final String accountListMenuItem_Identification = "ACCOUNTS";
         final String timesheetMenuItem_Identification = "TIMESHEETs";
         final String leaveRequestMenuItem_Identification = "LEAVE REQUEST";
@@ -287,12 +291,22 @@ public class AdminView {
 		});
 		
 		
-		//ActionListener cho menuItem Timesheet
+		//ActionListener cho menuItem Bang cham cong
 		timesheetMenuItem.addActionListener(e -> {
-			TimesheetGUI timesheetObj = new TimesheetGUI();
+			BangChamCongGUI timesheetObj = new BangChamCongGUI();
 			contentPanel.add(timesheetObj, timesheetMenuItem_Identification);
 			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
 			cardLayout.show(contentPanel, timesheetMenuItem_Identification);
+		});
+		
+		menuCheckAttendanceManagement.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				ChamCongGUI chamCongObj = new ChamCongGUI();
+				contentPanel.add(chamCongObj, checkAttendanceMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, checkAttendanceMenu_Identification);
+			}
 		});
 		
 		//ActionListener cho menuItem Leave Requests

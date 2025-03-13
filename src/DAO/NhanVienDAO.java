@@ -34,13 +34,13 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	            nv.setDiaChi(rs.getString("diaChi"));
 	            nv.setSoDienThoai(rs.getString("sdt"));
 	            nv.setEmail(rs.getString("email"));
-	            nv.setChucVu(rs.getString("chucVu"));
+	            nv.setChucVu(rs.getString("vaiTro"));
 	            nv.setTrangThai(rs.getString("trangThai"));
 	            nv.setMaCV(rs.getString("maCV"));
 	            nv.setNoiLamViec(rs.getString("noiLamViec"));
 	            nv.setMatKhau(rs.getString("matKhau"));
-	            // Xử lý ảnh (BLOB)
-	            nv.setHinhAnh(rs.getBytes("hinhAnh"));
+	            nv.setHinhAnh(rs.getBytes("hinhAnh")); 	            // Xử lý ảnh (BLOB)
+
 
 	            // Thêm vào danh sách
 	            arrNhanVien.add(nv);	
@@ -81,12 +81,13 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			ps.setString(5, nv.getDiaChi());
 			ps.setString(6, nv.getSoDienThoai());
 			ps.setString(7, nv.getEmail());
-			ps.setString(8, nv.getChucVu());
-			ps.setString(9, nv.getMatKhau());
-			ps.setString(10, nv.getTrangThai());
-			ps.setString(11, nv.getMaCV());
-			ps.setString(12, nv.getNoiLamViec());
-			ps.setBytes(13, nv.getHinhAnh());
+			ps.setBytes(8, nv.getHinhAnh());
+			ps.setString(9, nv.getChucVu());
+			ps.setString(10, nv.getMatKhau());
+			ps.setString(11, nv.getTrangThai());
+			ps.setString(12, "CV001");
+			ps.setString(13, "KHO001");
+			
 			
 			//Thực thi query
 			result = ps.executeUpdate();
