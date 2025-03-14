@@ -71,7 +71,7 @@ public class NhanVienGUI extends JPanel{
     String[] roles = new String[arrChucVu.size()];
     JPanel productContent;
     JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
-	JLabel imageLabel;
+	
 	final byte[][] imageBytes = new byte[1][];
 	String selectedFilePathName;	//biến lưu đường dẫn của ảnh được chọn
 	
@@ -1019,22 +1019,17 @@ public class NhanVienGUI extends JPanel{
     	topLeftPanel.add(btnBrowse);
     	
     	//middleLeftPanel
-    	JLabel lblAccount, lblPassword;
-    	lblAccount = new JLabel("Tên đăng nhập:");
-    	lblAccount.setBounds(10, 20, 100, 20);
-    	middleLeftPanel.add(lblAccount);
+    	JLabel lblPassword;
+
     	
     	lblPassword = new JLabel("Mật khẩu:");
-    	lblPassword.setBounds(10, 45, 100, 20);
+    	lblPassword.setBounds(10, 20, 100, 20);
     	middleLeftPanel.add(lblPassword);
     	
-    	JTextField txtAccount, txtPassword;
-    	txtAccount = new JTextField();
-    	txtAccount.setBounds(100, 20, 100, 20);
-    	middleLeftPanel.add(txtAccount);
+    	JTextField txtPassword;
     	
     	txtPassword = new JTextField();
-    	txtPassword.setBounds(100, 45, 100, 20);
+    	txtPassword.setBounds(100, 20, 100, 20);
     	middleLeftPanel.add(txtPassword);
     	
     	//bottomLeftPanel
@@ -1161,7 +1156,7 @@ public class NhanVienGUI extends JPanel{
 
     	middleLeftPanel = new JPanel(null);
     	middleLeftPanel.setBackground(Color.white);
-    	middleLeftPanel.setBorder(BorderFactory.createTitledBorder("Tài khoản"));
+    	middleLeftPanel.setBorder(BorderFactory.createTitledBorder("Đăng nhập"));
     	gbc.gridx = 0;
     	gbc.gridy = 1;
     	gbc.weightx = 1.0;
@@ -1353,206 +1348,243 @@ public class NhanVienGUI extends JPanel{
     }
     
     private void employeeDetailDialog() {
-    	JDialog newEmployeeDiadlog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thông tin nhân viên", true);
-    	newEmployeeDiadlog.setSize(800,500);
-    	newEmployeeDiadlog.setLayout(new GridBagLayout());
-    	GridBagConstraints gbc = new GridBagConstraints();
-    	
-    	JPanel leftPanel, rightPanel;
-    	leftPanel = new JPanel(new GridBagLayout());
-    	leftPanel.setBackground(Color.white);
-    	gbc.gridx = 0;
-    	gbc.gridy = 0;
-    	gbc.weightx = 0.5;
-    	gbc.weighty = 1.0;
-    	gbc.fill = GridBagConstraints.BOTH;
-    	newEmployeeDiadlog.add(leftPanel, gbc);
-    	
-    	rightPanel = new JPanel(new GridBagLayout());
-    	rightPanel.setBackground(Color.white);
-    	rightPanel.setBorder(BorderFactory.createTitledBorder("Hình ảnh"));
-    	gbc.gridx = 1;
-    	gbc.gridy = 0;
-    	gbc.weightx = 0.5;
-    	gbc.weighty = 1.0;
-    	gbc.fill = GridBagConstraints.BOTH;
-    	newEmployeeDiadlog.add(rightPanel, gbc);
-    	
-    	//topLeftPanel
-    	JPanel topLeftPanel, middleLeftPanel, bottomLeftPanel;
-    	topLeftPanel = new JPanel(null);
-    	topLeftPanel.setBackground(Color.white);
-    	topLeftPanel.setBorder(BorderFactory.createTitledBorder("Thông tin"));
-    	gbc.gridx = 0;
-    	gbc.gridy = 0;
-    	gbc.weightx = 1.0;
-    	gbc.weighty = 0.63;
-    	gbc.fill = GridBagConstraints.BOTH;
-    	gbc.insets = new Insets(3, 3, 3, 3);
-    	leftPanel.add(topLeftPanel, gbc);
+    	int selectedRow = employeeTable.getSelectedRow();
+    	if(selectedRow!=-1) {
+    		JDialog newEmployeeDiadlog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thông tin nhân viên", true);
+        	newEmployeeDiadlog.setSize(800,500);
+        	newEmployeeDiadlog.setLayout(new GridBagLayout());
+        	GridBagConstraints gbc = new GridBagConstraints();
+        	
+        	JPanel leftPanel, rightPanel;
+        	leftPanel = new JPanel(new GridBagLayout());
+        	leftPanel.setBackground(Color.white);
+        	gbc.gridx = 0;
+        	gbc.gridy = 0;
+        	gbc.weightx = 0.5;
+        	gbc.weighty = 1.0;
+        	gbc.fill = GridBagConstraints.BOTH;
+        	newEmployeeDiadlog.add(leftPanel, gbc);
+        	
+        	rightPanel = new JPanel(new GridBagLayout());
+        	rightPanel.setBackground(Color.white);
+        	rightPanel.setBorder(BorderFactory.createTitledBorder("Hình ảnh"));
+        	gbc.gridx = 1;
+        	gbc.gridy = 0;
+        	gbc.weightx = 0.5;
+        	gbc.weighty = 1.0;
+        	gbc.fill = GridBagConstraints.BOTH;
+        	newEmployeeDiadlog.add(rightPanel, gbc);
+        	
+        	//topLeftPanel
+        	JPanel topLeftPanel, middleLeftPanel, bottomLeftPanel;
+        	topLeftPanel = new JPanel(null);
+        	topLeftPanel.setBackground(Color.white);
+        	topLeftPanel.setBorder(BorderFactory.createTitledBorder("Thông tin"));
+        	gbc.gridx = 0;
+        	gbc.gridy = 0;
+        	gbc.weightx = 1.0;
+        	gbc.weighty = 0.63;
+        	gbc.fill = GridBagConstraints.BOTH;
+        	gbc.insets = new Insets(3, 3, 3, 3);
+        	leftPanel.add(topLeftPanel, gbc);
 
-    	middleLeftPanel = new JPanel(null);
-    	middleLeftPanel.setBackground(Color.white);
-    	middleLeftPanel.setBorder(BorderFactory.createTitledBorder("Tài khoản"));
-    	gbc.gridx = 0;
-    	gbc.gridy = 1;
-    	gbc.weightx = 1.0;
-    	gbc.weighty = 0.17;
-    	gbc.fill = GridBagConstraints.BOTH;
-    	gbc.insets = new Insets(3, 3, 3, 3);
-    	leftPanel.add(middleLeftPanel, gbc);
-    	
-    	bottomLeftPanel = new JPanel(null);
-    	bottomLeftPanel.setBackground(Color.white);
-    	gbc.gridx = 0;
-    	gbc.gridy = 2;
-    	gbc.weightx = 1.0;
-    	gbc.weighty = 0.2;
-    	gbc.fill = GridBagConstraints.BOTH;
-    	gbc.insets = new Insets(3, 3, 3, 3);
-    	leftPanel.add(bottomLeftPanel, gbc);
-    	
-    	JLabel lblId = new JLabel("Mã nhân viên:");
-    	lblId.setBounds(10, 20, 100, 20);
-    	topLeftPanel.add(lblId);
-    	JTextField txtId = new JTextField();
-		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng nhân viên trong csdl ra để tạo mã, k cho nhập tự động
-		txtId.setBounds(100, 20, 100, 20);
-		txtId.setEditable(false);
-		txtId.setEnabled(false);
-		topLeftPanel.add(txtId);
-		
-		JLabel lblName = new JLabel("Họ tên:");
-		lblName.setBounds(10, 45, 100, 20);
-		topLeftPanel.add(lblName);
-    	JTextField txtName = new JTextField();
-    	txtName.setBounds(100, 45, 100, 20);
-    	txtName.setEnabled(false);
-    	topLeftPanel.add(txtName);
-		
-		JLabel lblDOB = new JLabel("Ngày sinh:");
-		lblDOB.setBounds(10, 70, 100, 20);
-		topLeftPanel.add(lblDOB);
-    	JDateChooser dateChooser = new JDateChooser();
-    	dateChooser.setBounds(100, 70, 123, 20);
-    	dateChooser.setEnabled(false);
-    	topLeftPanel.add(dateChooser);
-    	
-    	JLabel lblGender = new JLabel("Giới tính:");
-    	lblGender.setBounds(10, 95, 100, 20);
-    	topLeftPanel.add(lblGender);
-    	String[] genders = {"Nam", "Nữ"};
-    	genderCombobox = new JComboBox<String>(genders);
-    	genderCombobox.setBounds(100, 95, 70, 20);
-    	genderCombobox.setEnabled(false);
-    	topLeftPanel.add(genderCombobox);
-    	
-    	JLabel lblAddress = new JLabel("Địa chỉ:");
-    	lblAddress.setBounds(10, 120, 100, 20);
-    	topLeftPanel.add(lblAddress);
-    	JTextField txtAddress = new JTextField();
-    	txtAddress.setBounds(100, 120, 100, 20);
-    	txtAddress.setEnabled(false);
-    	topLeftPanel.add(txtAddress);
-    	
-    	JLabel lblPhone = new JLabel("Số điện thoại:");
-    	lblPhone.setBounds(10, 145, 100, 20);
-    	topLeftPanel.add(lblPhone);
-    	JTextField txtPhone = new JTextField();
-    	txtPhone.setBounds(100, 145, 100, 20);
-    	txtPhone.setEnabled(false);
-    	topLeftPanel.add(txtPhone);
-    	
-    	JLabel lblEmail = new JLabel("Email:");
-    	lblEmail.setBounds(10, 170, 100, 20);
-    	topLeftPanel.add(lblEmail);
-    	JTextField txtEmail = new JTextField();
-    	txtEmail.setBounds(100, 170, 100, 20);
-    	topLeftPanel.add(txtEmail);
-    	
-    	JLabel lblRole = new JLabel("Chức vụ:");
-    	lblRole.setBounds(10, 195, 100, 20);
-    	topLeftPanel.add(lblRole);
+        	middleLeftPanel = new JPanel(null);
+        	middleLeftPanel.setBackground(Color.white);
+        	middleLeftPanel.setBorder(BorderFactory.createTitledBorder("Đăng nhập"));
+        	gbc.gridx = 0;
+        	gbc.gridy = 1;
+        	gbc.weightx = 1.0;
+        	gbc.weighty = 0.17;
+        	gbc.fill = GridBagConstraints.BOTH;
+        	gbc.insets = new Insets(3, 3, 3, 3);
+        	leftPanel.add(middleLeftPanel, gbc);
+        	
+        	bottomLeftPanel = new JPanel(null);
+        	bottomLeftPanel.setBackground(Color.white);
+        	gbc.gridx = 0;
+        	gbc.gridy = 2;
+        	gbc.weightx = 1.0;
+        	gbc.weighty = 0.2;
+        	gbc.fill = GridBagConstraints.BOTH;
+        	gbc.insets = new Insets(3, 3, 3, 3);
+        	leftPanel.add(bottomLeftPanel, gbc);
+        	
+        	JLabel lblId = new JLabel("Mã nhân viên:");
+        	lblId.setBounds(10, 20, 100, 20);
+        	topLeftPanel.add(lblId);
+        	JTextField txtId = new JTextField();
+    		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng nhân viên trong csdl ra để tạo mã, k cho nhập tự động
+    		txtId.setBounds(100, 20, 100, 20);
+    		txtId.setEditable(false);
+    		txtId.setEnabled(false);
+    		topLeftPanel.add(txtId);
+    		
+    		JLabel lblName = new JLabel("Họ tên:");
+    		lblName.setBounds(10, 45, 100, 20);
+    		topLeftPanel.add(lblName);
+        	JTextField txtName = new JTextField();
+        	txtName.setBounds(100, 45, 100, 20);
+        	txtName.setEnabled(false);
+        	topLeftPanel.add(txtName);
+    		
+    		JLabel lblDOB = new JLabel("Ngày sinh:");
+    		lblDOB.setBounds(10, 70, 100, 20);
+    		topLeftPanel.add(lblDOB);
+        	JDateChooser dateChooser = new JDateChooser();
+        	dateChooser.setBounds(100, 70, 123, 20);
+        	dateChooser.setEnabled(false);
+        	topLeftPanel.add(dateChooser);
+        	
+        	JLabel lblGender = new JLabel("Giới tính:");
+        	lblGender.setBounds(10, 95, 100, 20);
+        	topLeftPanel.add(lblGender);
+        	String[] genders = {"Nam", "Nữ"};
+        	genderCombobox = new JComboBox<String>(genders);
+        	genderCombobox.setBounds(100, 95, 70, 20);
+        	genderCombobox.setEnabled(false);
+        	topLeftPanel.add(genderCombobox);
+        	
+        	JLabel lblAddress = new JLabel("Địa chỉ:");
+        	lblAddress.setBounds(10, 120, 100, 20);
+        	topLeftPanel.add(lblAddress);
+        	JTextField txtAddress = new JTextField();
+        	txtAddress.setBounds(100, 120, 100, 20);
+        	txtAddress.setEnabled(false);
+        	topLeftPanel.add(txtAddress);
+        	
+        	JLabel lblPhone = new JLabel("Số điện thoại:");
+        	lblPhone.setBounds(10, 145, 100, 20);
+        	topLeftPanel.add(lblPhone);
+        	JTextField txtPhone = new JTextField();
+        	txtPhone.setBounds(100, 145, 100, 20);
+        	txtPhone.setEnabled(false);
+        	topLeftPanel.add(txtPhone);
+        	
+        	JLabel lblEmail = new JLabel("Email:");
+        	lblEmail.setBounds(10, 170, 100, 20);
+        	topLeftPanel.add(lblEmail);
+        	JTextField txtEmail = new JTextField();
+        	txtEmail.setBounds(100, 170, 100, 20);
+        	txtEmail.setEnabled(false);
+        	topLeftPanel.add(txtEmail);
+        	
+        	JLabel lblRole = new JLabel("Chức vụ:");
+        	lblRole.setBounds(10, 195, 100, 20);
+        	topLeftPanel.add(lblRole);
 
-    	JComboBox<String> roleCombobox = new JComboBox<String>(roles);
-    	roleCombobox.setBounds(100, 195, 100, 20);
-    	topLeftPanel.add(roleCombobox);
-    	roleCombobox.addItemListener(e -> {
-    		if(e.getStateChange() == ItemEvent.SELECTED) {
-    			String selected = (String)roleCombobox.getSelectedItem();
-    			if("Thêm chức vụ...".equals(selected)) {
-    				newRoleDialog();
+        	JComboBox<String> roleCombobox = new JComboBox<String>(roles);
+        	roleCombobox.setBounds(100, 195, 100, 20);
+        	roleCombobox.setEnabled(false);
+        	topLeftPanel.add(roleCombobox);
+        	roleCombobox.addItemListener(e -> {
+        		if(e.getStateChange() == ItemEvent.SELECTED) {
+        			String selected = (String)roleCombobox.getSelectedItem();
+        			if("Thêm chức vụ...".equals(selected)) {
+        				newRoleDialog();
+        			}
+        		}
+        	});
+        	
+        	JLabel lblStatus = new JLabel("Trạng thái:");
+        	lblStatus.setBounds(10, 220, 100, 20);
+        	topLeftPanel.add(lblStatus);
+        	JRadioButton rbOn = new JRadioButton("On");
+        	rbOn.setBounds(100, 220, 100, 20);
+        	rbOn.setEnabled(false);
+        	topLeftPanel.add(rbOn);
+        	JRadioButton rbOff = new JRadioButton("Off");
+        	rbOff.setBounds(150, 220, 100, 20);
+        	rbOff.setEnabled(false);
+        	topLeftPanel.add(rbOff);
+        	
+      
+        	//rightPanel
+        	JLabel employeeImg = new JLabel();
+        	employeeImg.setHorizontalAlignment(JLabel.CENTER);
+        	employeeImg.setVerticalAlignment(JLabel.CENTER);
+        	employeeImg.setPreferredSize(new Dimension(200, 200)); // Tự động co giãn
+
+    		GridBagConstraints gbcImg = new GridBagConstraints();
+    		gbcImg.gridx = 0;
+    		gbcImg.gridy = 0;
+    		gbcImg.weightx = 1.0;
+    		gbcImg.weighty = 1.0;
+    		gbcImg.fill = GridBagConstraints.BOTH; // Ảnh sẽ fill toàn bộ panel
+    		rightPanel.add(employeeImg, gbcImg);
+        	//End rightPanel
+
+        	
+        	//middleLeftPanel
+        	JLabel lblPassword;
+        	
+        	lblPassword = new JLabel("Mật khẩu:");
+        	lblPassword.setBounds(10, 20, 100, 20);
+        	middleLeftPanel.add(lblPassword);
+        	
+        	JTextField txtPassword;
+        	
+        	txtPassword = new JTextField();
+        	txtPassword.setBounds(100, 20, 100, 20);
+        	txtPassword.setEnabled(false);
+        	middleLeftPanel.add(txtPassword);
+        	
+        	//bottomLeftPanel
+        	JButton btnSave = new ShadowButton("Lưu");
+        	btnSave.setBounds(215, 60, 70, 20);
+        	btnSave.addMouseListener(new MouseAdapter() {
+        		@Override
+        		public void mouseEntered(MouseEvent e) {
+        			btnSave.setBackground(Color.decode("#3A96CF"));
+        			btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        		}
+        		@Override
+    			public void mouseExited(MouseEvent e) {
+        			btnSave.setBackground(Color.white);
     			}
-    		}
-    	});
+        	});
+        	
+        	
+        	//Lấy giá trị từ csdl và truyền vào các trường dữ liệu
+        	String maNV = employeeTable.getValueAt(selectedRow, 0).toString();	
+        	NhanVienDTO nv = nvBUS.selectById(maNV);
+        	if(nv!=null) {
+        		txtId.setText(nv.getMaNV());
+        		txtName.setText(nv.getHoTen());
+        		dateChooser.setDate(nv.getNgaySinh());
+        		genderCombobox.setSelectedItem(cvBUS.selectById(nv.getMaCV()));	//lấy mã chưc vụ của nhân viên để lấy tên chức vụ
+        		txtAddress.setText(nv.getDiaChi());
+        		txtPhone.setText(nv.getSoDienThoai());
+        		txtEmail.setText(nv.getEmail());
+        		if(nv.getTrangThai().equalsIgnoreCase("On")) {	//lấy trạng thái của nhân viên, nếu là "On" thì set radio button rbOn lên
+        			rbOn.setSelected(true);
+        		}else {
+        			rbOff.setSelected(true);
+        		}
+        		txtPassword.setText(nv.getMatKhau());
+        		// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
+    		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
+    		    ImageIcon imageIcon = null;
+    		    if (imageData != null) {
+    		        // Chuyển đổi byte[] thành ImageIcon
+    		        Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+    		        Image scaledImage = image.getScaledInstance(450, 450, Image.SCALE_SMOOTH); // Resize ảnh
+    		        imageIcon = new ImageIcon(scaledImage);
+    		        //rightPanel
+					employeeImg.setIcon(new ImageIcon(scaledImage));
+					
+    		    }
+        		
+        		
+        	}
+        	
+        	bottomLeftPanel.add(btnSave);
+        	
+        	newEmployeeDiadlog.setLocationRelativeTo(this);
+        	newEmployeeDiadlog.setVisible(true);
+    	}else {
+    		JOptionPane.showMessageDialog(null,"Vui lòng chọn nhân viên để xem chi tiết");
+    	}
     	
-    	JLabel lblStatus = new JLabel("Trạng thái:");
-    	lblStatus.setBounds(10, 220, 100, 20);
-    	topLeftPanel.add(lblStatus);
-    	JRadioButton rbOn = new JRadioButton("On");
-    	rbOn.setBounds(100, 220, 100, 20);
-    	topLeftPanel.add(rbOn);
-    	JRadioButton rbOff = new JRadioButton("Off");
-    	rbOff.setBounds(150, 220, 100, 20);
-    	topLeftPanel.add(rbOff);
-    	
-  
-    	//rightPanel
-    	JLabel employeeImg = new JLabel();
-    	employeeImg.setHorizontalAlignment(JLabel.CENTER);
-    	employeeImg.setVerticalAlignment(JLabel.CENTER);
-    	employeeImg.setPreferredSize(new Dimension(200, 200)); // Tự động co giãn
-
-		GridBagConstraints gbcImg = new GridBagConstraints();
-		gbcImg.gridx = 0;
-		gbcImg.gridy = 0;
-		gbcImg.weightx = 1.0;
-		gbcImg.weighty = 1.0;
-		gbcImg.fill = GridBagConstraints.BOTH; // Ảnh sẽ fill toàn bộ panel
-		rightPanel.add(employeeImg, gbcImg);
-    	//End rightPanel
-
-    	
-    	//middleLeftPanel
-    	JLabel lblAccount, lblPassword;
-    	lblAccount = new JLabel("Tên đăng nhập:");
-    	lblAccount.setBounds(10, 20, 100, 20);
-    	middleLeftPanel.add(lblAccount);
-    	
-    	lblPassword = new JLabel("Mật khẩu:");
-    	lblPassword.setBounds(10, 45, 100, 20);
-    	middleLeftPanel.add(lblPassword);
-    	
-    	JTextField txtAccount, txtPassword;
-    	txtAccount = new JTextField();
-    	txtAccount.setBounds(100, 20, 100, 20);
-    	txtAccount.setEnabled(false);
-    	middleLeftPanel.add(txtAccount);
-    	
-    	txtPassword = new JTextField();
-    	txtPassword.setBounds(100, 45, 100, 20);
-    	txtPassword.setEnabled(false);
-    	middleLeftPanel.add(txtPassword);
-    	
-    	//bottomLeftPanel
-    	JButton btnSave = new ShadowButton("Lưu");
-    	btnSave.setBounds(215, 60, 70, 20);
-    	btnSave.addMouseListener(new MouseAdapter() {
-    		@Override
-    		public void mouseEntered(MouseEvent e) {
-    			btnSave.setBackground(Color.decode("#3A96CF"));
-    			btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    		}
-    		@Override
-			public void mouseExited(MouseEvent e) {
-    			btnSave.setBackground(Color.white);
-			}
-    	});
-
-    	bottomLeftPanel.add(btnSave);
-    	
-    	newEmployeeDiadlog.setLocationRelativeTo(this);
-    	newEmployeeDiadlog.setVisible(true);
     }
     
     private void refreshList(){

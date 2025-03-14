@@ -60,8 +60,43 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	}
 	@Override
 	public NhanVienDTO selectById(String maNV) {
-		// TODO Auto-generated method stub
-		return null;
+		NhanVienDTO nv = new NhanVienDTO();
+		
+		try {
+			
+			jdbc.openConnection();
+			
+			String query = "select * from nhanvien where maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maNV);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				nv.setMaNV(rs.getString("maNV"));
+	            nv.setHoTen(rs.getString("hoTen"));
+	            nv.setNgaySinh(rs.getDate("ngaySinh"));
+	            nv.setGioiTinh(rs.getString("gioiTinh"));
+	            nv.setDiaChi(rs.getString("diaChi"));
+	            nv.setSoDienThoai(rs.getString("sdt"));
+	            nv.setEmail(rs.getString("email"));
+	            nv.setChucVu(rs.getString("vaiTro"));
+	            nv.setTrangThai(rs.getString("trangThai"));
+	            nv.setMaCV(rs.getString("maCV"));
+	            nv.setNoiLamViec(rs.getString("noiLamViec"));
+	            nv.setMatKhau(rs.getString("matKhau"));
+	            nv.setHinhAnh(rs.getBytes("hinhAnh")); 	            // Xử lý ảnh (BLOB)
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			//Đóng kết nối CSDL
+			jdbc.closeConnection();
+		}
+		
+		return nv;
 	}
 
 	@Override

@@ -13,6 +13,10 @@ public class ChucVuBUS {
 		return cvDAO.selectAll();
 	}
 	
+	public ChucVuDTO selectById(String maCV) {
+		return cvDAO.selectById(maCV);
+	}
+	
 	public String insert(ChucVuDTO cv) {
 		if(cvDAO.insert(cv)>0)
 			return "Thêm chức vụ thành công";

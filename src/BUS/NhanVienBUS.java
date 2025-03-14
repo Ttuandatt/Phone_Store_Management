@@ -12,6 +12,10 @@ public class NhanVienBUS {
 		return nvDAO.selectAll();
 	}
 	
+	public NhanVienDTO selectById(String maNV) {
+		return nvDAO.selectById(maNV);
+	}
+	
 	public String insert(NhanVienDTO nv) {
 		if(nvDAO.insert(nv)>0)
 			return "Thêm nhân viên thành công";

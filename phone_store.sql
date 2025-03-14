@@ -274,29 +274,6 @@ DROP TABLE GHICHU;
 -------------------------------------------- ALTER TABLE -------------------------------------------------
 
 
--- Cập nhật thêm các trạng thái của nhân viên: đang làm, đã nghỉ, đang nghỉ phép, 
--- 1️. Tìm tên ràng buộc CHECK hiện tại trên cột trangThai
-SELECT name 
-FROM sys.check_constraints 
-WHERE parent_object_id = OBJECT_ID('NHANVIEN');
-
--- 2️. Xóa ràng buộc CHECK cũ (thay 'CK_NHANVIEN_TrangThai' bằng tên thực tế nếu khác)
-ALTER TABLE NHANVIEN DROP CONSTRAINT CK__NHANVIEN__trangT__619B8048;
-
--- 3️. Cập nhật dữ liệu cũ từ 'on' và 'off' sang trạng thái mới
-UPDATE NHANVIEN SET trangThai = 'Đang làm' WHERE trangThai = 'on';
-UPDATE NHANVIEN SET trangThai = 'Đã nghỉ' WHERE trangThai = 'off';
-
--- 4️. Thêm CHECK CONSTRAINT mới để chỉ cho phép 3 giá trị cụ thể
-ALTER TABLE NHANVIEN  
-ADD CONSTRAINT CK_NHANVIEN_TrangThai  
-CHECK (trangThai IN ('Đang làm', 'Đã nghỉ', 'Đang nghỉ phép'));
-
--- 5️. Kiểm tra lại dữ liệu xem đã cập nhật đúng chưa
-SELECT DISTINCT trangThai FROM NHANVIEN;
-
--- Đổi tên cột vaiTro của nhân viên thành cột chucVu
-EXEC sp_rename 'NHANVIEN.vaiTro', 'chucVu', 'COLUMN';
 
 ------------------------------------------ INSERT --------------------------------------
 -- Insert bảng CHUCVU
@@ -333,6 +310,7 @@ select * from PHIEUNHAP;
 select * from chucvu;
 SELECT maCV FROM NHANVIEN;
 select * from chucvu
+select * from kho
 
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;
