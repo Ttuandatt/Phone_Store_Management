@@ -65,8 +65,8 @@ DROP TABLE NHACUNGCAP;
 CREATE TABLE CHUCVU (
     maCV VARCHAR(50) NOT NULL,
     tenCV NVARCHAR(255) NOT NULL,
-    luongCB DECIMAL(18,2) NOT NULL,
-    heSo FLOAT NOT NULL,
+    luongCB DECIMAL(18,2),
+    heSo FLOAT,
 	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
 
@@ -211,10 +211,10 @@ DROP TABLE DONYEUCAU;
 
 -- Bảng Lịch Sử Chỉnh Sửa
 CREATE TABLE LSCHINHSUA (
-    maLSCS VARCHAR(50) PRIMARY KEY,
+    maLSCS INT IDENTITY(1,1) PRIMARY KEY,
     maNguoiChinhSua VARCHAR(50) FOREIGN KEY REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
     maNguoiBiChinhSua VARCHAR(50) FOREIGN KEY REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
-    thoiGian DATETIME NOT NULL,
+    thoiGian DATE NOT NULL,
     noiDungChinhSua NVARCHAR(MAX)
 );
 DROP TABLE LSCHINHSUA;
@@ -311,9 +311,9 @@ INSERT INTO NHACUNGCAP (maNCC, tenNCC, sdt, email, diaChi, trangThai) VALUES
 INSERT INTO CHUCVU (maCV, tenCV, luongCB, heSo, trangThai) 
 VALUES 
 ('CV001', N'Quản lý kho', 15000000, 2.0, 'on'),
-('CV002', N'Nhân viên kho', 8000000, 1.2, 'on'),
-('CV003', N'Quản lý nhân sự', 9000000, 1.3, 'on');
-
+('CV002', N'Quản lý nhân sự', 8000000, 1.2, 'on'),
+('CV003', N'Nhân viên kho', 9000000, 1.3, 'on'),
+('CV004', N'Admin', 0, 0, 'on');
 
 -- Insert bảng KHO
 INSERT INTO KHO (maKho, tenKho, diaChi, sdt) 
@@ -445,6 +445,7 @@ select * from khachhang;
 select * from bangchamcong;
 select * from bangluong;
 select * from ghichu;
+select * from lschinhsua
 
 
 
@@ -475,5 +476,110 @@ DELETE FROM THUONGHIEU;
 DELETE FROM KHACHHANG;
 DELETE FROM KHO;
 DELETE FROM NHACUNGCAP;
+DELETE FROM CHUCVU;
 
+
+------------------------------------------ STORED PROCEDURE --------------------------------------
+-- 1. Lấy danh sách nhân viên
+create procedure sp_layDanhSachNhanVien
+as
+begin
+	select * from nhanvien where trangThai='on' or trangThai='On';
+end
+
+exec sp_layDanhSachNhanVien;
+go
+drop procedure sp_layDanhSachNhanVien;
+
+-- . Lấy nhân viên theo ID
+create procedure sp_layNhanVienTheoID
+@maNV nvarchar(50)
+as
+begin
+	select * from nhanvien where maNV = @maNV
+end
+
+exec sp_layNhanVienTheoID 'NV001'
+go
+
+-- . Lấy nhân viên theo tên
+-- . Lấy tên nhân viên theo ID
+-- . Thêm nhân viên
+CREATE PROCEDURE sp_themNhanVien
+    @maNV VARCHAR(50),
+    @hoTen NVARCHAR(255),
+    @ngaySinh DATE,
+    @gioiTinh NVARCHAR(3),
+    @diaChi NVARCHAR(255),
+    @sdt NVARCHAR(20),
+    @email NVARCHAR(255),
+    @hinhAnh VARBINARY(MAX),
+    @matKhau NVARCHAR(255),
+    @trangThai VARCHAR(10),
+    @maCV VARCHAR(50) = NULL, -- Có thể NULL
+    @noiLamViec VARCHAR(50) = NULL -- Có thể NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Kiểm tra trùng mã nhân viên
+    IF EXISTS (SELECT 1 FROM NHANVIEN WHERE maNV = @maNV)
+    BEGIN
+        PRINT N'Lỗi: Mã nhân viên đã tồn tại!';
+        RETURN -1;
+    END;
+
+    -- Kiểm tra nếu chức vụ không NULL nhưng không tồn tại trong bảng CHUCVU
+    IF @maCV IS NOT NULL AND NOT EXISTS (SELECT 1 FROM CHUCVU WHERE maCV = @maCV)
+    BEGIN
+        PRINT N'Lỗi: Mã chức vụ không hợp lệ!';
+        RETURN -2;
+    END;
+
+    -- Kiểm tra nếu nơi làm việc không NULL nhưng không tồn tại trong bảng KHO
+    IF @noiLamViec IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @noiLamViec)
+    BEGIN
+        PRINT N'Lỗi: Mã kho (nơi làm việc) không hợp lệ!';
+        RETURN -3;
+    END;
+
+    -- Chèn dữ liệu vào bảng NHANVIEN
+    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
+    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @noiLamViec);
+
+    PRINT N'Thêm nhân viên thành công!';
+    RETURN 1;
+END;
+EXEC sp_themNhanVien 
+    @maNV = 'NV099', 
+    @hoTen = N'Nguyễn Văn Q', 
+    @ngaySinh = '1995-06-15', 
+    @gioiTinh = N'Nam', 
+    @diaChi = N'123 Đường ABC, Quận 1, TP.HCM', 
+    @sdt = '0901234567', 
+    @email = 'nguyenvana@example.com', 
+    @hinhAnh = NULL, -- Nếu không có ảnh thì để NULL
+    @matKhau = '123456', 
+    @trangThai = 'On', 
+    @maCV = 'CV002', 
+    @noiLamViec = 'KHO001';
+
+-- . Cập nhật nhân viên
+-- . Lấy danh sách chức vụ
+-- . Lấy chức vụ theo ID
+-- . Lấy chức vụ theo tên
+-- . Lấy tên chức vụ theo ID
+-- . Thêm chức vụ
+-- . Cập nhật chức vụ
+-- .
+
+
+-------------------------------- Các tiêu chí để lọc/tìm kiếm ---------------------------------
+-- Đối với nhân viên:
+--		- Tìm kiếm theo mã
+--		- Tìm kiếm theo email
+-- Đối với khách hàng:
+-- Đối với sản phẩm:
+-- Đối với kho:
+-- Đối với nhà cung cấp:
 

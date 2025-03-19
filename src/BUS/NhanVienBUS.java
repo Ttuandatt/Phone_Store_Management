@@ -34,8 +34,23 @@ public class NhanVienBUS {
 	}
 	
 	public String update(NhanVienDTO nv) {
-		if(nvDAO.update(nv)>0)
-			return "Cập nhật nhân viên thành công";
+		if(cvDAO.getIdByName(nv.getChucVu()) != null && khoDAO.getIdByName(nv.getNoiLamViec()) != null){
+			nv.setChucVu(cvDAO.getIdByName(nv.getChucVu()));
+			nv.setNoiLamViec(khoDAO.getIdByName(nv.getNoiLamViec()));
+			if(nvDAO.update(nv)>0)
+				return "Cập nhật nhân viên thành công";
+		}
+		return "Cập nhật nhân viên thất bại";
+	}
+	
+	public String updateWithoutChangingImage(NhanVienDTO nv) {
+		if(cvDAO.getIdByName(nv.getChucVu()) != null && khoDAO.getIdByName(nv.getNoiLamViec()) != null){
+			nv.setChucVu(cvDAO.getIdByName(nv.getChucVu()));
+			nv.setNoiLamViec(khoDAO.getIdByName(nv.getNoiLamViec()));
+			if(nvDAO.updateWithoutChangingImage(nv)>0)
+				return "Cập nhật nhân viên thành công";
+		}
+		
 		return "Cập nhật nhân viên thất bại";
 	}
 	
@@ -47,5 +62,9 @@ public class NhanVienBUS {
     		System.out.println("NhanVienBUS: k lấy được tên chức vụ");
 		}
 		return roleName;
+	}
+	
+	public float getBaseSalaryByRoleID(String maCV) {
+		return nvDAO.getBaseSalaryByRoleID(maCV);
 	}
 }

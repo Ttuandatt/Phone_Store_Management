@@ -36,6 +36,21 @@ public class NhanVienDTO {
 		this.noiLamViec = noiLamViec;
 	}
 	
+	public NhanVienDTO(String maNV, String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, String trangThai, String chucVu, String noiLamViec) {
+		this.maNV = maNV;
+		this.hoTen = hoTen;
+		this.ngaySinh = ngaySinh;
+		this.gioiTinh = gioiTinh;
+		this.diaChi = diaChi;
+		this.soDienThoai = soDienThoai;
+		this.email = email;
+		this.trangThai = trangThai;
+		this.matKhau = matKhau;
+		this.chucVu = chucVu;
+		this.noiLamViec = noiLamViec;
+	}
+	
+	
 	public String getMatKhau() {
 		return matKhau;
 	}

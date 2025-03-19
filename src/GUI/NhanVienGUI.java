@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -845,7 +847,7 @@ public class NhanVienGUI extends JPanel{
     	leftPanel.setBackground(Color.white);
     	gbc.gridx = 0;
     	gbc.gridy = 0;
-    	gbc.weightx = 0.5;
+    	gbc.weightx = 0.75;
     	gbc.weighty = 1.0;
     	gbc.fill = GridBagConstraints.BOTH;
     	newEmployeeDialog.add(leftPanel, gbc);
@@ -855,7 +857,7 @@ public class NhanVienGUI extends JPanel{
     	rightPanel.setBorder(BorderFactory.createTitledBorder("Hình ảnh"));
     	gbc.gridx = 1;
     	gbc.gridy = 0;
-    	gbc.weightx = 0.5;
+    	gbc.weightx = 0.25;
     	gbc.weighty = 1.0;
     	gbc.fill = GridBagConstraints.BOTH;
     	newEmployeeDialog.add(rightPanel, gbc);
@@ -868,7 +870,7 @@ public class NhanVienGUI extends JPanel{
     	gbc.gridx = 0;
     	gbc.gridy = 0;
     	gbc.weightx = 1.0;
-    	gbc.weighty = 0.7;
+    	gbc.weighty = 0.73;
     	gbc.fill = GridBagConstraints.BOTH;
     	gbc.insets = new Insets(3, 3, 3, 3);
     	leftPanel.add(topLeftPanel, gbc);
@@ -889,7 +891,7 @@ public class NhanVienGUI extends JPanel{
     	gbc.gridx = 0;
     	gbc.gridy = 2;
     	gbc.weightx = 1.0;
-    	gbc.weighty = 0.15;
+    	gbc.weighty = 0.12;
     	gbc.fill = GridBagConstraints.BOTH;
     	gbc.insets = new Insets(3, 3, 3, 3);
     	leftPanel.add(bottomLeftPanel, gbc);
@@ -898,59 +900,59 @@ public class NhanVienGUI extends JPanel{
     	lblId.setBounds(10, 20, 100, 20);
     	topLeftPanel.add(lblId);
     	JTextField txtId = new JTextField();
-		txtId.setBounds(100, 20, 100, 20);
+		txtId.setBounds(100, 20, 100, 25);
 		topLeftPanel.add(txtId);
 		
 		JLabel lblName = new JLabel("Họ tên:");
-		lblName.setBounds(10, 45, 100, 20);
+		lblName.setBounds(10, 47, 100, 20);
 		topLeftPanel.add(lblName);
     	JTextField txtName = new JTextField();
-    	txtName.setBounds(100, 45, 100, 20);
+    	txtName.setBounds(100, 47, 100, 25);
     	topLeftPanel.add(txtName);
 		
 		JLabel lblDOB = new JLabel("Ngày sinh:");
-		lblDOB.setBounds(10, 70, 100, 20);
+		lblDOB.setBounds(10, 74, 100, 20);
 		topLeftPanel.add(lblDOB);
     	JDateChooser dateChooser = new JDateChooser();
-    	dateChooser.setBounds(100, 70, 123, 20);
+    	dateChooser.setBounds(100, 74, 123, 25);
     	topLeftPanel.add(dateChooser);
     	
     	JLabel lblGender = new JLabel("Giới tính:");
-    	lblGender.setBounds(10, 95, 100, 20);
+    	lblGender.setBounds(10, 101, 100, 20);
     	topLeftPanel.add(lblGender);
     	String[] genders = {"Nam", "Nữ"};
     	genderCombobox = new JComboBox<String>(genders);
-    	genderCombobox.setBounds(100, 95, 70, 20);
+    	genderCombobox.setBounds(100, 101, 70, 25);
     	topLeftPanel.add(genderCombobox);
     	
     	JLabel lblAddress = new JLabel("Địa chỉ:");
-    	lblAddress.setBounds(10, 120, 100, 20);
+    	lblAddress.setBounds(10, 128, 100, 20);
     	topLeftPanel.add(lblAddress);
     	JTextField txtAddress = new JTextField();
-    	txtAddress.setBounds(100, 120, 130, 20);
+    	txtAddress.setBounds(100, 128, 320, 25);
     	topLeftPanel.add(txtAddress);
     	
     	JLabel lblPhone = new JLabel("Số điện thoại:");
-    	lblPhone.setBounds(10, 145, 100, 20);
+    	lblPhone.setBounds(10, 155, 100, 20);
     	topLeftPanel.add(lblPhone);
     	JTextField txtPhone = new JTextField();
-    	txtPhone.setBounds(100, 145, 100, 20);
+    	txtPhone.setBounds(100, 155, 100, 25);
     	topLeftPanel.add(txtPhone);
     	
     	JLabel lblEmail = new JLabel("Email:");
-    	lblEmail.setBounds(10, 170, 100, 20);
+    	lblEmail.setBounds(10, 182, 100, 20);
     	topLeftPanel.add(lblEmail);
     	JTextField txtEmail = new JTextField();
-    	txtEmail.setBounds(100, 170, 100, 20);
+    	txtEmail.setBounds(100, 182, 160, 25);
     	topLeftPanel.add(txtEmail);
     	
     	JLabel lblRole = new JLabel("Chức vụ:");
-    	lblRole.setBounds(10, 195, 130, 20);
+    	lblRole.setBounds(10, 209, 130, 20);
     	topLeftPanel.add(lblRole);
     	
     	JComboBox<String> roleCombobox = new JComboBox<String>(roles);
     	//lấy dữ liệu chức vụ từ database để fill vào combobox
-    	roleCombobox.setBounds(100, 195, 130, 20);
+    	roleCombobox.setBounds(100, 209, 130, 25);
     	topLeftPanel.add(roleCombobox);
     	roleCombobox.addItemListener(e -> {
     		if(e.getStateChange() == ItemEvent.SELECTED) {
@@ -963,7 +965,7 @@ public class NhanVienGUI extends JPanel{
     	
     	
     	JLabel lblWorkplace = new JLabel("Nơi làm việc:");
-    	lblWorkplace.setBounds(10, 220, 100, 20);
+    	lblWorkplace.setBounds(10, 236, 100, 20);
     	topLeftPanel.add(lblWorkplace);
     	
     	ArrayList<KhoDTO> arrKho = khoBUS.selectAll();
@@ -971,7 +973,7 @@ public class NhanVienGUI extends JPanel{
         	workplaces[i] =  arrKho.get(i).getTenKho();
         }
     	JComboBox<String> workplaceCombobox = new JComboBox<String>(workplaces);
-    	workplaceCombobox.setBounds(100, 220, 130, 20);
+    	workplaceCombobox.setBounds(100, 236, 130, 25);
     	topLeftPanel.add(workplaceCombobox);
     	workplaceCombobox.addItemListener(e -> {
     		if(e.getStateChange() == ItemEvent.SELECTED) {
@@ -983,17 +985,17 @@ public class NhanVienGUI extends JPanel{
     	});
     	
     	JLabel lblStatus = new JLabel("Trạng thái:");
-    	lblStatus.setBounds(10, 245, 100, 20);
+    	lblStatus.setBounds(10, 263, 100, 20);
     	topLeftPanel.add(lblStatus);
     	JRadioButton rbOn = new JRadioButton("On");
-    	rbOn.setBounds(100, 245, 100, 20);
+    	rbOn.setBounds(100, 263, 100, 25);
     	topLeftPanel.add(rbOn);
     	JRadioButton rbOff = new JRadioButton("Off");
-    	rbOff.setBounds(150, 245, 100, 20);
+    	rbOff.setBounds(150, 263, 100, 25);
     	topLeftPanel.add(rbOff);
     	
     	JLabel lblImage = new JLabel("Hình ảnh:");
-    	lblImage.setBounds(10, 270, 100, 20);
+    	lblImage.setBounds(10, 290, 100, 20);
     	topLeftPanel.add(lblImage);
   
     	//rightPanel
@@ -1011,7 +1013,28 @@ public class NhanVienGUI extends JPanel{
 		rightPanel.add(employeeImg, gbcImg);
     	//End rightPanel
     	JButton btnBrowse = new ShadowButton("Chọn");
-    	btnBrowse.setBounds(100, 270, 70, 20);
+    	btnBrowse.setBounds(100, 290, 70, 20);
+    	
+
+    	topLeftPanel.add(btnBrowse);
+    	
+    	//middleLeftPanel
+    	JLabel lblPassword;
+
+    	
+    	lblPassword = new JLabel("Mật khẩu:");
+    	lblPassword.setBounds(10, 25, 100, 20);
+    	middleLeftPanel.add(lblPassword);
+    	
+    	JTextField txtPassword;
+    	
+    	txtPassword = new JTextField();
+    	txtPassword.setBounds(100, 25, 100, 25);
+    	middleLeftPanel.add(txtPassword);
+    	
+    	//bottomLeftPanel
+    	JButton btnSave = new ShadowButton("Lưu");
+    	btnSave.setBounds(270, 25, 70, 25);
     	btnBrowse.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseEntered(MouseEvent e) {
@@ -1034,38 +1057,16 @@ public class NhanVienGUI extends JPanel{
 					File selectedFile = fileChooser.getSelectedFile();
 					selectedFilePathName = selectedFile.getAbsolutePath();
 					//Hiển thị đường dẫn của ảnh được
-					System.out.println("Đường dẫn của ảnh được chọn: "+selectedFile.getAbsolutePath());
+					System.out.println("Class: NhanVienGUI | Method: newEmployeeDialog: Đường dẫn của ảnh được chọn: "+selectedFile.getAbsolutePath());
 					ImageIcon icon = new ImageIcon(selectedFile.getAbsoluteFile().getAbsolutePath());
 					Image img = icon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
 					employeeImg.setIcon(new ImageIcon(img));
 					
-					// Chuyển ảnh sang byte array
-				    byte[] imageData = convertImageToBytes(selectedFile);
 				}
 			}
 
 			
 		});
-
-    	topLeftPanel.add(btnBrowse);
-    	
-    	//middleLeftPanel
-    	JLabel lblPassword;
-
-    	
-    	lblPassword = new JLabel("Mật khẩu:");
-    	lblPassword.setBounds(10, 20, 100, 20);
-    	middleLeftPanel.add(lblPassword);
-    	
-    	JTextField txtPassword;
-    	
-    	txtPassword = new JTextField();
-    	txtPassword.setBounds(100, 20, 100, 20);
-    	middleLeftPanel.add(txtPassword);
-    	
-    	//bottomLeftPanel
-    	JButton btnSave = new ShadowButton("Lưu");
-    	btnSave.setBounds(215, 30, 70, 20);
     	btnSave.addMouseListener(new MouseAdapter() {
     		@Override
     		public void mouseEntered(MouseEvent e) {
@@ -1077,6 +1078,7 @@ public class NhanVienGUI extends JPanel{
     			btnSave.setBackground(Color.white);
 			}
     	});
+    	
     	btnSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1107,6 +1109,8 @@ public class NhanVienGUI extends JPanel{
 					NhanVienBUS nvBUS = new NhanVienBUS();
 					String message = nvBUS.insert(nv);
 					JOptionPane.showMessageDialog(null, message);
+					
+
 					
 				}catch (Exception e2) {
 					e2.printStackTrace();
@@ -1159,7 +1163,7 @@ public class NhanVienGUI extends JPanel{
         	leftPanel.setBackground(Color.white);
         	gbc.gridx = 0;
         	gbc.gridy = 0;
-        	gbc.weightx = 0.5;
+        	gbc.weightx = 0.75;
         	gbc.weighty = 1.0;
         	gbc.fill = GridBagConstraints.BOTH;
         	updateEmployeeDialog.add(leftPanel, gbc);
@@ -1169,7 +1173,7 @@ public class NhanVienGUI extends JPanel{
         	rightPanel.setBorder(BorderFactory.createTitledBorder("Hình ảnh"));
         	gbc.gridx = 1;
         	gbc.gridy = 0;
-        	gbc.weightx = 0.5;
+        	gbc.weightx = 0.25;
         	gbc.weighty = 1.0;
         	gbc.fill = GridBagConstraints.BOTH;
         	updateEmployeeDialog.add(rightPanel, gbc);
@@ -1182,7 +1186,7 @@ public class NhanVienGUI extends JPanel{
         	gbc.gridx = 0;
         	gbc.gridy = 0;
         	gbc.weightx = 1.0;
-        	gbc.weighty = 0.7;
+        	gbc.weighty = 0.73;
         	gbc.fill = GridBagConstraints.BOTH;
         	gbc.insets = new Insets(3, 3, 3, 3);
         	leftPanel.add(topLeftPanel, gbc);
@@ -1203,7 +1207,7 @@ public class NhanVienGUI extends JPanel{
         	gbc.gridx = 0;
         	gbc.gridy = 2;
         	gbc.weightx = 1.0;
-        	gbc.weighty = 0.15;
+        	gbc.weighty = 0.12;
         	gbc.fill = GridBagConstraints.BOTH;
         	gbc.insets = new Insets(3, 3, 3, 3);
         	leftPanel.add(bottomLeftPanel, gbc);
@@ -1212,64 +1216,73 @@ public class NhanVienGUI extends JPanel{
         	lblId.setBounds(10, 20, 100, 20);
         	topLeftPanel.add(lblId);
         	JTextField txtId = new JTextField();
-    		txtId.setBounds(100, 20, 100, 20);
+    		txtId.setBounds(100, 20, 100, 25);
     		txtId.setEnabled(false);
     		topLeftPanel.add(txtId);
     		
     		JLabel lblName = new JLabel("Họ tên:");
-    		lblName.setBounds(10, 45, 100, 20);
+    		lblName.setBounds(10, 47, 100, 20);
     		topLeftPanel.add(lblName);
         	JTextField txtName = new JTextField();
-        	txtName.setBounds(100, 45, 100, 20);
+        	txtName.setBounds(100, 47, 100, 25);
         	topLeftPanel.add(txtName);
     		
     		JLabel lblDOB = new JLabel("Ngày sinh:");
-    		lblDOB.setBounds(10, 70, 100, 20);
+    		lblDOB.setBounds(10, 74, 100, 20);
     		topLeftPanel.add(lblDOB);
         	JDateChooser dateChooser = new JDateChooser();
-        	dateChooser.setBounds(100, 70, 123, 20);
+        	dateChooser.setBounds(100, 74, 123, 25);
         	topLeftPanel.add(dateChooser);
         	
         	JLabel lblGender = new JLabel("Giới tính:");
-        	lblGender.setBounds(10, 95, 100, 20);
+        	lblGender.setBounds(10, 101, 100, 20);
         	topLeftPanel.add(lblGender);
         	String[] genders = {"Nam", "Nữ"};
         	genderCombobox = new JComboBox<String>(genders);
-        	genderCombobox.setBounds(100, 95, 70, 20);
+        	genderCombobox.setBounds(100, 101, 70, 25);
         	topLeftPanel.add(genderCombobox);
         	
         	JLabel lblAddress = new JLabel("Địa chỉ:");
-        	lblAddress.setBounds(10, 120, 100, 20);
+        	lblAddress.setBounds(10, 128, 100, 20);
         	topLeftPanel.add(lblAddress);
         	JTextField txtAddress = new JTextField();
-        	txtAddress.setBounds(100, 120, 130, 20);
+        	txtAddress.setBounds(100, 128, 320, 25);
         	topLeftPanel.add(txtAddress);
         	
         	JLabel lblPhone = new JLabel("Số điện thoại:");
-        	lblPhone.setBounds(10, 145, 100, 20);
+        	lblPhone.setBounds(10, 155, 100, 20);
         	topLeftPanel.add(lblPhone);
         	JTextField txtPhone = new JTextField();
-        	txtPhone.setBounds(100, 145, 100, 20);
+        	txtPhone.setBounds(100, 155, 100, 25);
         	topLeftPanel.add(txtPhone);
         	
         	JLabel lblEmail = new JLabel("Email:");
-        	lblEmail.setBounds(10, 170, 100, 20);
+        	lblEmail.setBounds(10, 182, 100, 20);
         	topLeftPanel.add(lblEmail);
         	JTextField txtEmail = new JTextField();
-        	txtEmail.setBounds(100, 170, 130, 20);
+        	txtEmail.setBounds(100, 182, 160, 25);
         	topLeftPanel.add(txtEmail);
         	
         	JLabel lblRole = new JLabel("Chức vụ:");
-        	lblRole.setBounds(10, 195, 100, 20);
+        	lblRole.setBounds(10, 209, 130, 20);
         	topLeftPanel.add(lblRole);
-
-        	roleCombobox = new JComboBox<String>(roles);
-        	roleCombobox.setBounds(100, 195, 130, 20);
+        	
+        	JComboBox<String> roleCombobox = new JComboBox<String>(roles);
+        	//lấy dữ liệu chức vụ từ database để fill vào combobox
+        	roleCombobox.setBounds(100, 209, 130, 25);
         	topLeftPanel.add(roleCombobox);
-
+        	roleCombobox.addItemListener(e -> {
+        		if(e.getStateChange() == ItemEvent.SELECTED) {
+        			String selected = (String)roleCombobox.getSelectedItem();
+        			if("Thêm chức vụ...".equals(selected)) {
+        				newRoleDialog();
+        			}
+        		}
+        	});
+        	
         	
         	JLabel lblWorkplace = new JLabel("Nơi làm việc:");
-        	lblWorkplace.setBounds(10, 220, 100, 20);
+        	lblWorkplace.setBounds(10, 236, 100, 20);
         	topLeftPanel.add(lblWorkplace);
         	
         	ArrayList<KhoDTO> arrKho = khoBUS.selectAll();
@@ -1277,19 +1290,30 @@ public class NhanVienGUI extends JPanel{
             	workplaces[i] =  arrKho.get(i).getTenKho();
             }
         	JComboBox<String> workplaceCombobox = new JComboBox<String>(workplaces);
-        	workplaceCombobox.setBounds(100, 220, 130, 20);
+        	workplaceCombobox.setBounds(100, 236, 130, 25);
         	topLeftPanel.add(workplaceCombobox);
+        	workplaceCombobox.addItemListener(e -> {
+        		if(e.getStateChange() == ItemEvent.SELECTED) {
+        			String selected = (String)workplaceCombobox.getSelectedItem();
+        			if("Thêm kho...".equals(selected)) {
+        				newWarehouseDialog();
+        			}
+        		}
+        	});
         	
         	JLabel lblStatus = new JLabel("Trạng thái:");
-        	lblStatus.setBounds(10, 245, 100, 20);
+        	lblStatus.setBounds(10, 263, 100, 20);
         	topLeftPanel.add(lblStatus);
         	JRadioButton rbOn = new JRadioButton("On");
-        	rbOn.setBounds(100, 245, 100, 20);
+        	rbOn.setBounds(100, 263, 100, 25);
         	topLeftPanel.add(rbOn);
         	JRadioButton rbOff = new JRadioButton("Off");
-        	rbOff.setBounds(150, 245, 100, 20);
+        	rbOff.setBounds(150, 263, 100, 25);
         	topLeftPanel.add(rbOff);
         	
+        	JLabel lblImage = new JLabel("Hình ảnh:");
+        	lblImage.setBounds(10, 290, 100, 20);
+        	topLeftPanel.add(lblImage);
       
         	//rightPanel
         	JLabel employeeImg = new JLabel();
@@ -1305,28 +1329,61 @@ public class NhanVienGUI extends JPanel{
     		gbcImg.fill = GridBagConstraints.BOTH; // Ảnh sẽ fill toàn bộ panel
     		rightPanel.add(employeeImg, gbcImg);
         	//End rightPanel
+        	JButton btnBrowse = new ShadowButton("Chọn");
+        	btnBrowse.setBounds(100, 290, 70, 20);
+        	
 
+        	topLeftPanel.add(btnBrowse);
         	
         	//middleLeftPanel
         	JLabel lblPassword;
+
+        	
         	lblPassword = new JLabel("Mật khẩu:");
-        	lblPassword.setBounds(10, 20, 100, 20);
+        	lblPassword.setBounds(10, 25, 100, 20);
         	middleLeftPanel.add(lblPassword);
         	
         	JTextField txtPassword;
+        	
         	txtPassword = new JTextField();
-        	txtPassword.setBounds(100, 20, 100, 20);
-        	txtPassword.setEnabled(false);
+        	txtPassword.setBounds(100, 25, 100, 25);
         	middleLeftPanel.add(txtPassword);
         	
-        	
-        	
         	//bottomLeftPanel
-        	JLabel lblEditor = new JLabel("Người chỉnh sứa:");
-        	lblEditor.setBounds(10, 5, 130, 20);
-        	bottomLeftPanel.add(lblEditor);
         	JButton btnSave = new ShadowButton("Lưu");
-        	btnSave.setBounds(215, 35, 70, 20);
+        	btnSave.setBounds(270, 25, 70, 25);
+        	btnBrowse.addMouseListener(new MouseAdapter() {
+        		@Override
+        		public void mouseEntered(MouseEvent e) {
+        			btnBrowse.setBackground(Color.decode("#3A96CF"));
+        			btnBrowse.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        		}
+        		@Override
+    			public void mouseExited(MouseEvent e) {
+        			btnBrowse.setBackground(Color.white);
+    			}
+        	});
+        	btnBrowse.addActionListener(new ActionListener() {
+    			
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				JFileChooser fileChooser = new JFileChooser();
+    				fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
+    				int returnValue = fileChooser.showOpenDialog(null);
+    				if(returnValue == JFileChooser.APPROVE_OPTION) {
+    					File selectedFile = fileChooser.getSelectedFile();
+    					selectedFilePathName = selectedFile.getAbsolutePath();
+    					//Hiển thị đường dẫn của ảnh được
+    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Đường dẫn của ảnh được chọn: "+selectedFilePathName);
+    					ImageIcon icon = new ImageIcon(selectedFile.getAbsoluteFile().getAbsolutePath());
+    					Image img = icon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
+    					employeeImg.setIcon(new ImageIcon(img));
+    					
+    				}
+    			}
+
+    			
+    		});
         	btnSave.addMouseListener(new MouseAdapter() {
         		@Override
         		public void mouseEntered(MouseEvent e) {
@@ -1338,6 +1395,60 @@ public class NhanVienGUI extends JPanel{
         			btnSave.setBackground(Color.white);
     			}
         	});
+        	btnSave.addActionListener(new ActionListener() {
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				try {
+    					String maNV = txtId.getText();
+    					String hoTen = txtName.getText();
+    					java.util.Date utilDate = dateChooser.getDate(); // Lấy ngày từ JDateChooser
+    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Thời gian của biến utilDate: "+utilDate);
+    					java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime()); // Chuyển sang SQL Date
+    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Thời gian của biến sqlDate: "+sqlDate);
+    					String gioiTinh = genderCombobox.getSelectedItem().toString();
+    					String diaChi = txtAddress.getText();
+    					String sdt = txtPhone.getText();
+    					String email = txtEmail.getText();
+    					String trangThai = rbOn.isSelected()? "On":"Off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "On", không thì là "Off"
+    					String matKhau = txtPassword.getText();
+    					String chucVu = roleCombobox.getSelectedItem().toString();
+    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Role picked: " + chucVu);
+    					String noiLamViec = workplaceCombobox.getSelectedItem().toString();
+    					File imageFile = new File(selectedFilePathName);
+    					byte[] hinhAnh = convertImageToBytes(imageFile);
+    					
+    					if(btnBrowse.isSelected()) { //Nếu có cập nhật ảnh 
+	    					// Chuyển ảnh thành byte[]
+	    					NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, hinhAnh, trangThai, chucVu, noiLamViec);
+	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: "+ chucVu);
+	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: selectedFilePathName: " + selectedFilePathName);
+	    					// Gọi phương thức insert từ NhanVienBUS
+	    					NhanVienBUS nvBUS = new NhanVienBUS();
+	    					String message = nvBUS.update(nv);
+	    					JOptionPane.showMessageDialog(null, message);
+	    					
+//	    					//Insert thông tin chỉnh sửa vào bảng LSCHINHSUA
+//	    					String maNguoiChinhSua = "";
+//	    					String maNguoiBiChinhSua = maNV;
+//	    					Date thoiGian = Date.valueOf(LocalDate.now());	//Lấy thời gian hiện tại của hệ thống, sau đó ép kiểu về kiểu sql.Date
+//	    					Scanner sc = new Scanner(System.in);
+//	    					String noiDung = sc.nextLine();
+//	    					
+    					}else {
+    						NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, trangThai, chucVu, noiLamViec);
+    						// Gọi phương thức insert từ NhanVienBUS
+        					NhanVienBUS nvBUS = new NhanVienBUS();
+        					String message = nvBUS.updateWithoutChangingImage(nv);
+        					JOptionPane.showMessageDialog(null, message);
+    					}
+    					
+    				}catch (Exception e2) {
+    					e2.printStackTrace();
+    					e2.getMessage();
+    		            JOptionPane.showMessageDialog(updateEmployeeDialog, "Lỗi khi cập nhật nhân viên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    				}
+    			}
+    		});
         	bottomLeftPanel.add(btnSave);
 
         	
@@ -1352,8 +1463,8 @@ public class NhanVienGUI extends JPanel{
         		dateChooser.setDate(nv.getNgaySinh());
         		genderCombobox.setSelectedItem(nv.getGioiTinh());	
         		roleCombobox.setSelectedItem(nvBUS.getRoleNameByRoleId(nv.getChucVu()));	//lấy mã chưc vụ của nhân viên để lấy tên chức vụ
-        		System.out.println("Class: NhanVienGUI | Method: employeeDetailDialog: "+ nvBUS.getRoleNameByRoleId(nv.getChucVu()));
-        		System.out.println("Class: NhanVienGUI | Method: employeeDetailDialog: "+ nv.getChucVu());
+        		System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: "+ nvBUS.getRoleNameByRoleId(nv.getChucVu()));
+        		System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: "+ nv.getChucVu());
         		txtAddress.setText(nv.getDiaChi());
         		txtPhone.setText(nv.getSoDienThoai());
         		txtEmail.setText(nv.getEmail());
@@ -1404,7 +1515,7 @@ public class NhanVienGUI extends JPanel{
         	leftPanel.setBackground(Color.white);
         	gbc.gridx = 0;
         	gbc.gridy = 0;
-        	gbc.weightx = 0.5;
+        	gbc.weightx = 0.75;
         	gbc.weighty = 1.0;
         	gbc.fill = GridBagConstraints.BOTH;
         	employeeDetailDialog.add(leftPanel, gbc);
@@ -1414,7 +1525,7 @@ public class NhanVienGUI extends JPanel{
         	rightPanel.setBorder(BorderFactory.createTitledBorder("Hình ảnh"));
         	gbc.gridx = 1;
         	gbc.gridy = 0;
-        	gbc.weightx = 0.5;
+        	gbc.weightx = 0.25;
         	gbc.weighty = 1.0;
         	gbc.fill = GridBagConstraints.BOTH;
         	employeeDetailDialog.add(rightPanel, gbc);
@@ -1427,7 +1538,7 @@ public class NhanVienGUI extends JPanel{
         	gbc.gridx = 0;
         	gbc.gridy = 0;
         	gbc.weightx = 1.0;
-        	gbc.weighty = 0.7;
+        	gbc.weighty = 0.73;
         	gbc.fill = GridBagConstraints.BOTH;
         	gbc.insets = new Insets(3, 3, 3, 3);
         	leftPanel.add(topLeftPanel, gbc);
@@ -1448,7 +1559,7 @@ public class NhanVienGUI extends JPanel{
         	gbc.gridx = 0;
         	gbc.gridy = 2;
         	gbc.weightx = 1.0;
-        	gbc.weighty = 0.15;
+        	gbc.weighty = 0.12;
         	gbc.fill = GridBagConstraints.BOTH;
         	gbc.insets = new Insets(3, 3, 3, 3);
         	leftPanel.add(bottomLeftPanel, gbc);
@@ -1457,73 +1568,80 @@ public class NhanVienGUI extends JPanel{
         	lblId.setBounds(10, 20, 100, 20);
         	topLeftPanel.add(lblId);
         	JTextField txtId = new JTextField();
-    		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng nhân viên trong csdl ra để tạo mã, k cho nhập tự động
-    		txtId.setBounds(100, 20, 100, 20);
-    		txtId.setEditable(false);
+    		txtId.setBounds(100, 20, 100, 25);
     		txtId.setEnabled(false);
     		topLeftPanel.add(txtId);
     		
     		JLabel lblName = new JLabel("Họ tên:");
-    		lblName.setBounds(10, 45, 100, 20);
+    		lblName.setBounds(10, 47, 100, 20);
     		topLeftPanel.add(lblName);
         	JTextField txtName = new JTextField();
-        	txtName.setBounds(100, 45, 100, 20);
+        	txtName.setBounds(100, 47, 100, 25);
         	txtName.setEnabled(false);
         	topLeftPanel.add(txtName);
     		
     		JLabel lblDOB = new JLabel("Ngày sinh:");
-    		lblDOB.setBounds(10, 70, 100, 20);
+    		lblDOB.setBounds(10, 74, 100, 20);
     		topLeftPanel.add(lblDOB);
         	JDateChooser dateChooser = new JDateChooser();
-        	dateChooser.setBounds(100, 70, 123, 20);
+        	dateChooser.setBounds(100, 74, 123, 25);
         	dateChooser.setEnabled(false);
         	topLeftPanel.add(dateChooser);
         	
         	JLabel lblGender = new JLabel("Giới tính:");
-        	lblGender.setBounds(10, 95, 100, 20);
+        	lblGender.setBounds(10, 101, 100, 20);
         	topLeftPanel.add(lblGender);
         	String[] genders = {"Nam", "Nữ"};
         	genderCombobox = new JComboBox<String>(genders);
-        	genderCombobox.setBounds(100, 95, 70, 20);
+        	genderCombobox.setBounds(100, 101, 70, 25);
         	genderCombobox.setEnabled(false);
         	topLeftPanel.add(genderCombobox);
         	
         	JLabel lblAddress = new JLabel("Địa chỉ:");
-        	lblAddress.setBounds(10, 120, 100, 20);
+        	lblAddress.setBounds(10, 128, 100, 20);
         	topLeftPanel.add(lblAddress);
         	JTextField txtAddress = new JTextField();
-        	txtAddress.setBounds(100, 120, 130, 20);
+        	txtAddress.setBounds(100, 128, 320, 25);
         	txtAddress.setEnabled(false);
         	topLeftPanel.add(txtAddress);
         	
         	JLabel lblPhone = new JLabel("Số điện thoại:");
-        	lblPhone.setBounds(10, 145, 100, 20);
+        	lblPhone.setBounds(10, 155, 100, 20);
         	topLeftPanel.add(lblPhone);
         	JTextField txtPhone = new JTextField();
-        	txtPhone.setBounds(100, 145, 100, 20);
+        	txtPhone.setBounds(100, 155, 100, 25);
         	txtPhone.setEnabled(false);
         	topLeftPanel.add(txtPhone);
         	
         	JLabel lblEmail = new JLabel("Email:");
-        	lblEmail.setBounds(10, 170, 100, 20);
+        	lblEmail.setBounds(10, 182, 100, 20);
         	topLeftPanel.add(lblEmail);
         	JTextField txtEmail = new JTextField();
-        	txtEmail.setBounds(100, 170, 130, 20);
+        	txtEmail.setBounds(100, 182, 160, 25);
         	txtEmail.setEnabled(false);
         	topLeftPanel.add(txtEmail);
         	
         	JLabel lblRole = new JLabel("Chức vụ:");
-        	lblRole.setBounds(10, 195, 100, 20);
+        	lblRole.setBounds(10, 209, 100, 20);
         	topLeftPanel.add(lblRole);
 
         	roleCombobox = new JComboBox<String>(roles);
-        	roleCombobox.setBounds(100, 195, 130, 20);
+        	roleCombobox.setBounds(100, 209, 130, 25);
         	roleCombobox.setEnabled(false);
         	topLeftPanel.add(roleCombobox);
 
         	
+        	JLabel lblBaseSalary = new JLabel("Lương cơ bản:");
+        	lblBaseSalary.setBounds(10, 236, 100, 20);
+        	topLeftPanel.add(lblBaseSalary);
+        	JTextField txtBaseSalary = new JTextField();
+        	txtBaseSalary.setBounds(100, 236, 130, 25);
+        	txtBaseSalary.setEnabled(false);
+        	topLeftPanel.add(txtBaseSalary);
+        	
+        	
         	JLabel lblWorkplace = new JLabel("Nơi làm việc:");
-        	lblWorkplace.setBounds(10, 220, 100, 20);
+        	lblWorkplace.setBounds(10, 263, 100, 20);
         	topLeftPanel.add(lblWorkplace);
         	
         	ArrayList<KhoDTO> arrKho = khoBUS.selectAll();
@@ -1531,19 +1649,19 @@ public class NhanVienGUI extends JPanel{
             	workplaces[i] =  arrKho.get(i).getTenKho();
             }
         	JComboBox<String> workplaceCombobox = new JComboBox<String>(workplaces);
-        	workplaceCombobox.setBounds(100, 220, 130, 20);
+        	workplaceCombobox.setBounds(100, 263, 130, 25);
         	workplaceCombobox.setEnabled(false);
         	topLeftPanel.add(workplaceCombobox);
         	
         	JLabel lblStatus = new JLabel("Trạng thái:");
-        	lblStatus.setBounds(10, 245, 100, 20);
+        	lblStatus.setBounds(10, 290, 100, 20);
         	topLeftPanel.add(lblStatus);
         	JRadioButton rbOn = new JRadioButton("On");
-        	rbOn.setBounds(100, 245, 100, 20);
+        	rbOn.setBounds(100, 290, 100, 20);
         	rbOn.setEnabled(false);
         	topLeftPanel.add(rbOn);
         	JRadioButton rbOff = new JRadioButton("Off");
-        	rbOff.setBounds(150, 245, 100, 20);
+        	rbOff.setBounds(150, 290, 100, 20);
         	rbOff.setEnabled(false);
         	topLeftPanel.add(rbOff);
         	
@@ -1568,30 +1686,18 @@ public class NhanVienGUI extends JPanel{
         	JLabel lblPassword;
         	
         	lblPassword = new JLabel("Mật khẩu:");
-        	lblPassword.setBounds(10, 20, 100, 20);
+        	lblPassword.setBounds(10, 25, 100, 20);
         	middleLeftPanel.add(lblPassword);
         	
         	JTextField txtPassword;
         	
         	txtPassword = new JTextField();
-        	txtPassword.setBounds(100, 20, 100, 20);
+        	txtPassword.setBounds(100, 25, 100, 25);
         	txtPassword.setEnabled(false);
         	middleLeftPanel.add(txtPassword);
         	
         	//bottomLeftPanel
-//        	JButton btnSave = new ShadowButton("Lưu");
-//        	btnSave.setBounds(215, 30, 70, 20);
-//        	btnSave.addMouseListener(new MouseAdapter() {
-//        		@Override
-//        		public void mouseEntered(MouseEvent e) {
-//        			btnSave.setBackground(Color.decode("#3A96CF"));
-//        			btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//        		}
-//        		@Override
-//    			public void mouseExited(MouseEvent e) {
-//        			btnSave.setBackground(Color.white);
-//    			}
-//        	});
+
         	
         	
         	//Lấy giá trị từ csdl và truyền vào các trường dữ liệu
@@ -1617,6 +1723,7 @@ public class NhanVienGUI extends JPanel{
         		}
         		
         		txtPassword.setText(nv.getMatKhau());
+        		
         		// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
     		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
     		    ImageIcon imageIcon = null;
@@ -1629,6 +1736,9 @@ public class NhanVienGUI extends JPanel{
 					employeeImg.setIcon(new ImageIcon(scaledImage));
 					
     		    }
+    		    
+    		    //lấy lương cơ bản từ bảng chức vụ
+    		    txtBaseSalary.setText(String.valueOf(nvBUS.getBaseSalaryByRoleID(nv.getChucVu())) + "VND");
         		
         		
         	}
