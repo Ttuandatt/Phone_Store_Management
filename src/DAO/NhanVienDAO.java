@@ -34,9 +34,8 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	            nv.setDiaChi(rs.getString("diaChi"));
 	            nv.setSoDienThoai(rs.getString("sdt"));
 	            nv.setEmail(rs.getString("email"));
-	            nv.setChucVu(rs.getString("vaiTro"));
 	            nv.setTrangThai(rs.getString("trangThai"));
-	            nv.setMaCV(rs.getString("maCV"));
+	            nv.setChucVu(rs.getString("maCV"));
 	            nv.setNoiLamViec(rs.getString("noiLamViec"));
 	            nv.setMatKhau(rs.getString("matKhau"));
 	            nv.setHinhAnh(rs.getBytes("hinhAnh")); 	            // Xử lý ảnh (BLOB)
@@ -80,12 +79,12 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	            nv.setDiaChi(rs.getString("diaChi"));
 	            nv.setSoDienThoai(rs.getString("sdt"));
 	            nv.setEmail(rs.getString("email"));
-	            nv.setChucVu(rs.getString("vaiTro"));
-	            nv.setTrangThai(rs.getString("trangThai"));
-	            nv.setMaCV(rs.getString("maCV"));
-	            nv.setNoiLamViec(rs.getString("noiLamViec"));
-	            nv.setMatKhau(rs.getString("matKhau"));
 	            nv.setHinhAnh(rs.getBytes("hinhAnh")); 	            // Xử lý ảnh (BLOB)
+	            nv.setMatKhau(rs.getString("matKhau"));
+	            nv.setChucVu(rs.getString("maCV"));
+	            nv.setNoiLamViec(rs.getString("noiLamViec"));
+	            nv.setTrangThai(rs.getString("trangThai"));
+
 			}
 			
 		}catch (Exception e) {
@@ -106,7 +105,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			
 			jdbc.openConnection();
 			
-			String query = "INSERT INTO NHANVIEN VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String query = "INSERT INTO NHANVIEN VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getMaNV());
@@ -117,11 +116,13 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			ps.setString(6, nv.getSoDienThoai());
 			ps.setString(7, nv.getEmail());
 			ps.setBytes(8, nv.getHinhAnh());
-			ps.setString(9, nv.getChucVu());
-			ps.setString(10, nv.getMatKhau());
-			ps.setString(11, nv.getTrangThai());
-			ps.setString(12, "CV001");
-			ps.setString(13, "KHO001");
+			ps.setString(9, nv.getMatKhau());
+			ps.setString(10, nv.getTrangThai());
+			if(nv.getChucVu().equalsIgnoreCase("")) {
+				
+			};
+			ps.setString(11, nv.getChucVu());
+			ps.setString(12, nv.getNoiLamViec());
 			
 			
 			//Thực thi query
@@ -148,8 +149,33 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 	@Override
 	public int update(NhanVienDTO nv) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			
+			jdbc.openConnection();
+			
+			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, hinhAnh=?, vaiTro=?, matKhau=?, trangThai=?, maCV=?, noiLamViec=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, nv.getHoTen());
+			ps.setDate(2, nv.getNgaySinh());
+			ps.setString(3, nv.getGioiTinh());
+			ps.setString(4, nv.getDiaChi());
+			ps.setString(5, nv.getSoDienThoai());
+			ps.setString(6, nv.getEmail());
+			ps.setBytes(7, nv.getHinhAnh());
+			ps.setString(9, nv.getEmail());
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return result;
 	}
 	
 }

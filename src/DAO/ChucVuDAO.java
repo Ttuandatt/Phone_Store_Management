@@ -78,7 +78,63 @@ public class ChucVuDAO implements DAOInterface<ChucVuDTO>{
 		
 		return cv;
 	}
+	
+	public String getIdByName(String tenCV) {
+		String maCV="";
 
+		try {
+
+			jdbc.openConnection();
+
+			String query = "select maCV from chucvu where tenCV = ?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, tenCV);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				maCV = rs.getString("maCV");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			// Đóng kết nối CSD
+			jdbc.closeConnection();
+		}
+
+		return maCV;
+	}
+
+	public String getRoleNameByRoleId(String maCV) {
+		String tenCV="";
+
+		try {
+
+			jdbc.openConnection();
+
+			String query = "select tenCV from chucvu where maCV = ?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maCV);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				tenCV = rs.getString("tenCV");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			// Đóng kết nối CSD
+			jdbc.closeConnection();
+		}
+
+		return tenCV;
+	}
+	
 	@Override
 	public int insert(ChucVuDTO cv) {
 		int result = 0;
