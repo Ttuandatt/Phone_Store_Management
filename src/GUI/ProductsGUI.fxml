@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1509.0" style="-fx-background-color: #6ea8fe;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductsGUIController"> 
+   <children>
+      <TabPane prefHeight="689.0" prefWidth="1324.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Quản lý sản phẩm">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="445.0" prefWidth="742.0">
+                     <children>
+                        <TableView layoutX="6.0" layoutY="109.0" prefHeight="378.0" prefWidth="688.0">
+                          <columns>
+                            <TableColumn prefWidth="63.19997864961624" text="Mã SP" />
+                            <TableColumn prefWidth="176.79998779296875" text="Tên SP" />
+                              <TableColumn prefWidth="70.40003967285156" text="Pin" />
+                              <TableColumn prefWidth="89.5999755859375" text="Hệ điều hành" />
+                              <TableColumn minWidth="4.7999267578125" prefWidth="84.79998779296875" text="Cam trước" />
+                              <TableColumn minWidth="0.0" prefWidth="89.60003662109375" text="Cam sau" />
+                              <TableColumn prefWidth="116.7999267578125" text="Xuất xứ " />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="395.0" layoutY="25.0" style="-fx-background-color: white;" text="Danh sách sản phẩm" textFill="#181818">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="1001.0" layoutY="76.0" style="-fx-background-color: white;" text="Chi tiết sản phẩm" textFill="#181818">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="883.0" layoutY="126.0" text="Mã sản phẩm">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="122.0" />
+                        <Label layoutX="883.0" layoutY="166.0" text="Tên sản phẩm">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="162.0" />
+                        <Label layoutX="883.0" layoutY="205.0" text="Pin">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="201.0" />
+                        <Label layoutX="883.0" layoutY="245.0" text="Hệ điều hành">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="241.0" />
+                        <TextField fx:id="textFieldTimKiem" layoutX="246.0" layoutY="74.0" onKeyPressed="#handlePressTimKiem" />
+                        <Text layoutX="173.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tìm kiếm">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Label layoutX="883.0" layoutY="289.0" text="Cam trước">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="285.0" />
+                        <Label layoutX="883.0" layoutY="334.0" text="Cam sau">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="330.0" />
+                        <Label layoutX="883.0" layoutY="381.0" text="Xuất xứ">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="985.0" layoutY="377.0" />
+                        <Button layoutX="1009.0" layoutY="429.0" mnemonicParsing="false" style="-fx-background-color: #0d6efd;" text="Thêm sản phẩm" />
+                        <Button layoutX="882.0" layoutY="429.0" mnemonicParsing="false" style="-fx-background-color: #ffc107;" text="Sửa sản phẩm" />
+                        <Button layoutX="1135.0" layoutY="429.0" mnemonicParsing="false" style="-fx-background-color: #dc3545;" text="Xóa sản phẩm" />
+                        <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="662.0" layoutY="497.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Quản lý cấu hình">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</Pane>
