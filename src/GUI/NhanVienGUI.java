@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
@@ -49,12 +51,15 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -76,7 +81,7 @@ public class NhanVienGUI extends JPanel{
     String[] roles = new String[arrChucVu.size()];
     String[] workplaces =  new String[arrNoiLamViec.size()];
     JPanel productContent;
-    JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+    JTextField tfTimKiem;
 	
 	final byte[][] imageBytes = new byte[1][];
 	String selectedFilePathName;	//biến lưu đường dẫn của ảnh được chọn
@@ -320,7 +325,7 @@ public class NhanVienGUI extends JPanel{
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Delete button clicked!");
+                deleteEmployee(employeeTable);
             }
         });
         btnDelete.addMouseListener(new MouseAdapter() {
@@ -527,16 +532,47 @@ public class NhanVienGUI extends JPanel{
         
         
         //==================================== searchInputPanel =======================================================//
-        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A", "Tăng dần", "Giảm dần"};
+        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A"};
         sortComboBox = new JComboBox<String>(sortCriterias);
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
+        sortComboBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedOption = (String)sortComboBox.getSelectedItem();
+				switch(selectedOption) {
+					case "A-Z":
+						sortAZ();
+						break;
+					case "Z-A":
+						sortZA();
+						break;
+				}
+			}
+		});
         
         
         String[] genders = {"Giới tính", "Nam", "Nữ"};
         genderCombobox = new JComboBox<String>(genders);
         genderCombobox.setBounds(90,  24,  90, 25);
         searchInputPanel.add(genderCombobox);
+        genderCombobox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedOption = (String)genderCombobox.getSelectedItem();
+				switch(selectedOption) {
+				case "Nam":
+					sortGenderMale();
+					break;
+				case "Nữ":
+					sortGenderFeMale();
+					break;
+				}
+				
+			}
+		});
         
      
         ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
@@ -559,9 +595,9 @@ public class NhanVienGUI extends JPanel{
         });
 
         
-        JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(375,  24,  260, 25);
-        searchInputPanel.add(searchInputTF);
+        tfTimKiem = new JTextField();
+        tfTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(tfTimKiem);
         
         
         
@@ -588,7 +624,7 @@ public class NhanVienGUI extends JPanel{
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Search button clicked!");
+                searchPerformed(employeeTable);
             }
         });
         btnSearch.addMouseListener(new MouseAdapter() {
@@ -725,11 +761,12 @@ public class NhanVienGUI extends JPanel{
     
     private void loadEmployeeList() {
     	employeeTable.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
-    	employeeModel  = new DefaultTableModel();
+    	
     	employeeTable.setModel(employeeModel);
     	employeeModel.addColumn("ID");
     	employeeModel.addColumn("Họ và tên");
     	employeeModel.addColumn("Ngày sinh");
+    	employeeModel.addColumn("Giới tính");
     	employeeModel.addColumn("Địa chỉ");
     	employeeModel.addColumn("Chức vụ");
     	employeeModel.addColumn("Mật khẩu");
@@ -742,6 +779,7 @@ public class NhanVienGUI extends JPanel{
 			String maNV = nv.getMaNV();
 			String hoTen = nv.getHoTen();
 			Date ngaySinh = nv.getNgaySinh();
+			String gioiTinh = nv.getGioiTinh();
 			String diaChi = nv.getDiaChi();
 			String chucVu = nv.getChucVu();
 			String matKhau = nv.getMatKhau();
@@ -757,7 +795,7 @@ public class NhanVienGUI extends JPanel{
 		    }
 			
 			
-		    Object[] row = {maNV, hoTen, ngaySinh, diaChi, chucVu, matKhau, trangThai, imageIcon};
+		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon};
 			employeeModel.addRow(row);
 		}
 		
@@ -765,15 +803,16 @@ public class NhanVienGUI extends JPanel{
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = employeeTable.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(50);
-		tcm.getColumn(1).setPreferredWidth(150);
+		tcm.getColumn(1).setPreferredWidth(120);
 		tcm.getColumn(2).setPreferredWidth(100);
-		tcm.getColumn(3).setPreferredWidth(200);
-		tcm.getColumn(4).setPreferredWidth(90);
-		tcm.getColumn(5).setPreferredWidth(90);
-		tcm.getColumn(6).setPreferredWidth(70);
-		tcm.getColumn(7).setPreferredWidth(128);
+		tcm.getColumn(3).setPreferredWidth(70);
+		tcm.getColumn(4).setPreferredWidth(200);
+		tcm.getColumn(5).setPreferredWidth(50);
+		tcm.getColumn(6).setPreferredWidth(90);
+		tcm.getColumn(7).setPreferredWidth(70);
+		tcm.getColumn(8).setPreferredWidth(128);
 		// **Thêm ImageRenderer vào cột "Hình ảnh"**
-	    employeeTable.getColumnModel().getColumn(7).setCellRenderer(new ImageRenderer());
+	    employeeTable.getColumnModel().getColumn(8).setCellRenderer(new ImageRenderer());
 
 
 		employeeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
@@ -975,14 +1014,7 @@ public class NhanVienGUI extends JPanel{
     	JComboBox<String> workplaceCombobox = new JComboBox<String>(workplaces);
     	workplaceCombobox.setBounds(100, 236, 130, 25);
     	topLeftPanel.add(workplaceCombobox);
-    	workplaceCombobox.addItemListener(e -> {
-    		if(e.getStateChange() == ItemEvent.SELECTED) {
-    			String selected = (String)workplaceCombobox.getSelectedItem();
-    			if("Thêm kho...".equals(selected)) {
-    				newWarehouseDialog();
-    			}
-    		}
-    	});
+    	
     	
     	JLabel lblStatus = new JLabel("Trạng thái:");
     	lblStatus.setBounds(10, 263, 100, 20);
@@ -1292,14 +1324,7 @@ public class NhanVienGUI extends JPanel{
         	JComboBox<String> workplaceCombobox = new JComboBox<String>(workplaces);
         	workplaceCombobox.setBounds(100, 236, 130, 25);
         	topLeftPanel.add(workplaceCombobox);
-        	workplaceCombobox.addItemListener(e -> {
-        		if(e.getStateChange() == ItemEvent.SELECTED) {
-        			String selected = (String)workplaceCombobox.getSelectedItem();
-        			if("Thêm kho...".equals(selected)) {
-        				newWarehouseDialog();
-        			}
-        		}
-        	});
+        	
         	
         	JLabel lblStatus = new JLabel("Trạng thái:");
         	lblStatus.setBounds(10, 263, 100, 20);
@@ -1414,32 +1439,48 @@ public class NhanVienGUI extends JPanel{
     					String chucVu = roleCombobox.getSelectedItem().toString();
     					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Role picked: " + chucVu);
     					String noiLamViec = workplaceCombobox.getSelectedItem().toString();
-    					File imageFile = new File(selectedFilePathName);
-    					byte[] hinhAnh = convertImageToBytes(imageFile);
+    					
     					
     					if(btnBrowse.isSelected()) { //Nếu có cập nhật ảnh 
+    						File imageFile = new File(selectedFilePathName);
+        					byte[] hinhAnh = convertImageToBytes(imageFile);
 	    					// Chuyển ảnh thành byte[]
 	    					NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, hinhAnh, trangThai, chucVu, noiLamViec);
 	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: "+ chucVu);
 	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: selectedFilePathName: " + selectedFilePathName);
-	    					// Gọi phương thức insert từ NhanVienBUS
-	    					NhanVienBUS nvBUS = new NhanVienBUS();
-	    					String message = nvBUS.update(nv);
-	    					JOptionPane.showMessageDialog(null, message);
+	    					int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn cập nhật nhân viên này?", "Xác nhận cập nhật", JOptionPane.OK_CANCEL_OPTION);
+	    					if(dialogResult == JOptionPane.OK_OPTION) {
+	    						// Gọi phương thức insert từ NhanVienBUS
+		    					NhanVienBUS nvBUS = new NhanVienBUS();
+		    					String message = nvBUS.update(nv);
+		    					JOptionPane.showMessageDialog(null, message);
+		    					
+//		    					//Insert thông tin chỉnh sửa vào bảng LSCHINHSUA
+//		    					String maNguoiChinhSua = "";
+//		    					String maNguoiBiChinhSua = maNV;
+//		    					Date thoiGian = Date.valueOf(LocalDate.now());	//Lấy thời gian hiện tại của hệ thống, sau đó ép kiểu về kiểu sql.Date
+//		    					Scanner sc = new Scanner(System.in);
+//		    					String noiDung = sc.nextLine();
+	    					}
 	    					
-//	    					//Insert thông tin chỉnh sửa vào bảng LSCHINHSUA
-//	    					String maNguoiChinhSua = "";
-//	    					String maNguoiBiChinhSua = maNV;
-//	    					Date thoiGian = Date.valueOf(LocalDate.now());	//Lấy thời gian hiện tại của hệ thống, sau đó ép kiểu về kiểu sql.Date
-//	    					Scanner sc = new Scanner(System.in);
-//	    					String noiDung = sc.nextLine();
 //	    					
     					}else {
-    						NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, trangThai, chucVu, noiLamViec);
-    						// Gọi phương thức insert từ NhanVienBUS
-        					NhanVienBUS nvBUS = new NhanVienBUS();
-        					String message = nvBUS.updateWithoutChangingImage(nv);
-        					JOptionPane.showMessageDialog(null, message);
+    						int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn cập nhật nhân viên này?", "Xác nhận cập nhật", JOptionPane.OK_CANCEL_OPTION);
+	    					if(dialogResult == JOptionPane.OK_OPTION) {
+	    						NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, trangThai, chucVu, noiLamViec);
+	    						// Gọi phương thức insert từ NhanVienBUS
+	        					NhanVienBUS nvBUS = new NhanVienBUS();
+	        					String message = nvBUS.updateWithoutChangingImage(nv);
+	        					JOptionPane.showMessageDialog(null, message);
+		    					
+//		    					//Insert thông tin chỉnh sửa vào bảng LSCHINHSUA
+//		    					String maNguoiChinhSua = "";
+//		    					String maNguoiBiChinhSua = maNV;
+//		    					Date thoiGian = Date.valueOf(LocalDate.now());	//Lấy thời gian hiện tại của hệ thống, sau đó ép kiểu về kiểu sql.Date
+//		    					Scanner sc = new Scanner(System.in);
+//		    					String noiDung = sc.nextLine();
+	    					}
+    						
     					}
     					
     				}catch (Exception e2) {
@@ -1753,16 +1794,153 @@ public class NhanVienGUI extends JPanel{
     	
     }
     
-    public void newWarehouseDialog() {
+    
+    
+    public void deleteEmployee(JTable employeeTable) {
+    	int selectedRow = employeeTable.getSelectedRow();
+    	if(selectedRow != -1) {
+    		int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhân viên này?", "Xác nhận xóa", JOptionPane.OK_CANCEL_OPTION);
+    		if(dialogResult == JOptionPane.OK_OPTION) {
+    			String manv = (String)employeeModel.getValueAt(selectedRow, 0);
+    			NhanVienDTO nv = new NhanVienDTO(manv);	//Vì NhanVienDAO và NhanVienBUS có tham số là đối tượng nhân viên nên phải tạo 1 nv, chứ k thì dùng mã nv cho nhanh r, mà do mình set ở DAOInterface là tham số là NhanVienDTO nên chịu khó
+    			String message = nvBUS.deleteEmployee(nv);
+    			if(message.equals("Xóa nhân viên thành công")){
+                    employeeModel.removeRow(selectedRow);
+                    arrNhanVien.remove(selectedRow);
+                }
+                JOptionPane.showMessageDialog(this, message);
+    		}
+    	}else {
+    		JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa");
+    	}
     	
     }
     
     private void refreshList(){
         // Xóa tất cả các dòng trong mô hình bảng
         employeeModel.setRowCount(0);
+        employeeModel.setColumnCount(0);
         loadEmployeeList();
         sortComboBox.setSelectedIndex(0);
         genderCombobox.setSelectedIndex(0);
         roleCombobox.setSelectedIndex(0);
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+	private void searchPerformed(JTable tb){
+        String searchContent = tfTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
+            ArrayList<NhanVienDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
+
+            // Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm kiếm
+            boolean found = false;
+            for (NhanVienDTO nv: arrNhanVien) {
+                // Kiểm tra xem thông tin của sản phẩm có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
+                if (nv.getMaNV().toLowerCase().contains(searchContent.toLowerCase()) ||
+                    nv.getHoTen().toLowerCase().contains(searchContent.toLowerCase())||
+                  
+                    nv.getGioiTinh().toLowerCase().contains(searchContent.toLowerCase())||
+                    nv.getDiaChi().toLowerCase().contains(searchContent.toLowerCase())||
+                    nv.getSoDienThoai().toLowerCase().contains(searchContent.toLowerCase())||
+                    nv.getChucVu().toLowerCase().contains(searchContent.toLowerCase()))
+                 {
+                    dsTimKiem.add(nv); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
+                    found = true;
+                }
+                
+            }
+            // Kiểm tra nếu không tìm thấy sản phẩm nào
+            if(!found){
+                JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
+                refreshList();
+                return; // Kết thúc phương thức sau khi hiển thị thông báo
+            }
+            
+            // Xóa tất cả các dòng hiện có trong bảng
+            DefaultTableModel tableModel = (DefaultTableModel) tb.getModel();
+            tableModel.setRowCount(0);
+
+            // Thêm các sản phẩm thỏa mãn vào bảng
+            for (NhanVienDTO nv : dsTimKiem) {
+    			String maNV = nv.getMaNV();
+    			String hoTen = nv.getHoTen();
+    			Date ngaySinh = nv.getNgaySinh();
+    			String gioiTinh = nv.getGioiTinh();
+    			String diaChi = nv.getDiaChi();
+    			String chucVu = nv.getChucVu();
+    			String matKhau = nv.getMatKhau();
+    			String trangThai = nv.getTrangThai();
+    			// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
+    		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
+    		    ImageIcon imageIcon = null;
+    		    if (imageData != null) {
+    		        // Chuyển đổi byte[] thành ImageIcon
+    		        Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+    		        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize ảnh
+    		        imageIcon = new ImageIcon(scaledImage);
+    		    }
+    			
+    			
+    		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon};
+                tableModel.addRow(row);
+            }
+        } else {
+            // Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển thị tất cả sản phẩm
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
+            refreshList();
+        }
+    }
+    
+    private void sortAZ(){
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeModel);
+        employeeTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        
+        int columnIndexSort = 1; // 1 là chỉ số cột tên nhân viên, cần sắp xếp
+        sortKeys.add(new RowSorter.SortKey(columnIndexSort, SortOrder.ASCENDING));
+        
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+    }
+    
+    private void sortZA(){
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeModel);
+        employeeTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        
+        int columnIndexSort = 1; // 1 là chỉ số cột tên nhân viên, cần sắp xếp
+        sortKeys.add(new RowSorter.SortKey(columnIndexSort, SortOrder.DESCENDING));
+        
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+    }
+    
+    private void sortGenderMale() {
+    	TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeModel);
+        employeeTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        
+        int columnIndexSort = 3; // 3 là chỉ số cột giới tính nhân viên, cần sắp xếp
+        sortKeys.add(new RowSorter.SortKey(columnIndexSort, SortOrder.ASCENDING));
+        
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+    }
+    
+    private void sortGenderFeMale() {
+    	TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(employeeModel);
+        employeeTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        
+        int columnIndexSort = 3; // 3 là chỉ số cột giới tính nhân viên, cần sắp xếp
+        sortKeys.add(new RowSorter.SortKey(columnIndexSort, SortOrder.DESCENDING));
+        
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+    }
+    
+    private void sortRole() {
+    	
     }
 }

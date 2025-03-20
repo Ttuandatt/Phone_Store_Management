@@ -51,6 +51,11 @@ public class NhanVienDTO {
 	}
 	
 	
+	public NhanVienDTO(String maNV) {
+		super();
+		this.maNV = maNV;
+	}
+
 	public String getMatKhau() {
 		return matKhau;
 	}

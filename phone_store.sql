@@ -203,7 +203,7 @@ CREATE TABLE DONYEUCAU (
 	maNV VARCHAR(50) NOT NULL,
 	maNguoiDuyet VARCHAR(50) NOT NULL,
 
-	PRIMARY KEY(maNV),
+	PRIMARY KEY(maDon),
     CONSTRAINT FK_DONYEUCAU_NHANVIEN  FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,	-- khi xóa nhân viên này đi thì giá trị khóa ngoại ở đây sẽ set về null, nhưng vẫn giữ mã người duyệt bên dưới
     CONSTRAINT FK_DONYEUCAU_NGUOIDUYET FOREIGN KEY(maNguoiDuyet) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION
 );

@@ -161,8 +161,27 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 	@Override
 	public int delete(NhanVienDTO nv) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			
+			jdbc.openConnection();
+			
+			String query = "update nhanvien set trangThai='Off' where maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, nv.getMaNV());
+			
+			result = ps.executeUpdate();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
+		}
+		
+		return result;
 	}
 
 	@Override
