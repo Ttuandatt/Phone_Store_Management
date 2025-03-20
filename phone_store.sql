@@ -65,7 +65,7 @@ DROP TABLE NHACUNGCAP;
 CREATE TABLE CHUCVU (
     maCV VARCHAR(50) NOT NULL,
     tenCV NVARCHAR(255) NOT NULL,
-    luongCB DECIMAL(18,2),
+    luongCB FLOAT,
     heSo FLOAT,
 	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
@@ -445,7 +445,7 @@ select * from khachhang;
 select * from bangchamcong;
 select * from bangluong;
 select * from ghichu;
-select * from lschinhsua
+select * from lschinhsua;
 
 
 

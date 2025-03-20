@@ -257,8 +257,8 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	}
 	
 	
-	public float getBaseSalaryByRoleID(String maCV) {
-		float baseSalary = 0;
+	public Double getBaseSalaryByRoleID(String maCV) {
+		Double baseSalary = 0.0;
 		try {
 
 			jdbc.openConnection();
@@ -270,7 +270,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				baseSalary = rs.getFloat("luongCB");
+				baseSalary = rs.getDouble("luongCB");
 			}
 
 		} catch (Exception e) {

@@ -64,7 +64,7 @@ public class NhanVienBUS {
 		return roleName;
 	}
 	
-	public float getBaseSalaryByRoleID(String maCV) {
+	public Double getBaseSalaryByRoleID(String maCV) {
 		return nvDAO.getBaseSalaryByRoleID(maCV);
 	}
 	

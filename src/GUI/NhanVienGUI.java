@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.BangChamCongBUS;
 import BUS.ChucVuBUS;
 import BUS.KhoBUS;
 import BUS.NhanVienBUS;
@@ -65,6 +66,7 @@ import com.toedter.calendar.JDateChooser;
 
 import Components.ImageRenderer;
 import Components.ShadowButton;
+import java.text.DecimalFormat;
 
 
 public class NhanVienGUI extends JPanel{
@@ -72,6 +74,7 @@ public class NhanVienGUI extends JPanel{
 	NhanVienBUS nvBUS = new NhanVienBUS();
 	ChucVuBUS cvBUS = new ChucVuBUS();
 	KhoBUS khoBUS = new KhoBUS();
+	BangChamCongBUS bccBUS = new BangChamCongBUS();
     JTable employeeTable;
     DefaultTableModel employeeModel = new DefaultTableModel();
     ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>(); 
@@ -1779,7 +1782,8 @@ public class NhanVienGUI extends JPanel{
     		    }
     		    
     		    //lấy lương cơ bản từ bảng chức vụ
-    		    txtBaseSalary.setText(String.valueOf(nvBUS.getBaseSalaryByRoleID(nv.getChucVu())) + "VND");
+    		    DecimalFormat df = new DecimalFormat("#,###");
+    		    txtBaseSalary.setText(df.format(nvBUS.getBaseSalaryByRoleID(nv.getChucVu())) + " VND");
         		
         		
         	}
