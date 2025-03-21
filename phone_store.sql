@@ -14,7 +14,6 @@ CREATE TABLE THUONGHIEU (
     PRIMARY KEY (maTH)
 );
 DROP TABLE THUONGHIEU;
-SELECT * FROM THUONGHIEU;
 
 -- Bảng Sản Phẩm
 CREATE TABLE SANPHAM (
@@ -57,7 +56,7 @@ CREATE TABLE NHACUNGCAP (
     sdt NVARCHAR(20) NOT NULL,
     email NVARCHAR(255),
     diaChi NVARCHAR(255),
-    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+    trangThai NVARCHAR(50) CHECK (trangThai IN ('On', 'Off')) NOT NULL,
     PRIMARY KEY (maNCC)
 );
 DROP TABLE NHACUNGCAP;
@@ -68,6 +67,8 @@ CREATE TABLE CHUCVU (
     tenCV NVARCHAR(255) NOT NULL,
     luongCB DECIMAL(18,2) NOT NULL,
     heSo FLOAT NOT NULL,
+	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+
 
     PRIMARY KEY (maCV)
 );
@@ -78,8 +79,7 @@ CREATE TABLE KHO (
     maKho VARCHAR(50) NOT NULL,
     tenKho NVARCHAR(255) NOT NULL,
     diaChi NVARCHAR(255) NOT NULL,
-    sdt NVARCHAR(20) NOT NULL,
-    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+    sdt VARCHAR(20) NOT NULL,
 
     PRIMARY KEY (maKho)
 );
@@ -94,12 +94,11 @@ CREATE TABLE NHANVIEN (
     diaChi NVARCHAR(255) NOT NULL,
     sdt NVARCHAR(20) NOT NULL,
     email NVARCHAR(255) NOT NULL,
-    hinhAnh VARBINARY(MAX) NOT NULL,
-    vaiTro NVARCHAR(50) NOT NULL,
+    hinhAnh VARBINARY(MAX),
     matKhau NVARCHAR(255) NOT NULL,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-    maCV VARCHAR(50) NOT NULL,
-    noiLamViec VARCHAR(50) NOT NULL,
+    maCV VARCHAR(50) ,
+    noiLamViec VARCHAR(50),
 
     PRIMARY KEY (maNV),
     CONSTRAINT FK_NHANVIEN_CHUCVU FOREIGN KEY (maCV) REFERENCES CHUCVU(maCV) ON DELETE NO ACTION,
@@ -159,8 +158,10 @@ CREATE TABLE PHIEUXUAT (
     tongTien DECIMAL(18,2),
     httt NVARCHAR(50),
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-    maNV VARCHAR(50) FOREIGN KEY REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
-    maKH VARCHAR(50) FOREIGN KEY REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
+    maNV VARCHAR(50) NOT NULL,
+	maKH VARCHAR(50) NOT NULL,
+	CONSTRAINT FK_PHIEUXUAT_NHANVIEN FOREIGN KEY (maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUXUAT_KHACHHANG FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
 );
 DROP TABLE PHIEUXUAT;
 
@@ -268,50 +269,192 @@ CREATE TABLE GHICHU (
 DROP TABLE GHICHU;
 
 -------------------------------------------- ALTER TABLE -------------------------------------------------
--- Đổi kiểu dữ liệu của hình ảnh của bảng SANPHAM & NHANVIEN sang dạng BLOB
-ALTER TABLE SANPHAM
-DROP COLUMN hinhAnh;
-ALTER TABLE SANPHAM
-ADD hinhAnh VARBINARY(MAX);
 
 
-ALTER TABLE NHANVIEN
-DROP COLUMN hinhAnh;
-ALTER TABLE NHANVIEN
-ADD hinhAnh VARBINARY(MAX);
-
--- Cập nhật thêm các trạng thái của nhân viên: đang làm, đã nghỉ, đang nghỉ phép, 
--- 1️. Tìm tên ràng buộc CHECK hiện tại trên cột trangThai
-SELECT name 
-FROM sys.check_constraints 
-WHERE parent_object_id = OBJECT_ID('NHANVIEN');
-
--- 2️. Xóa ràng buộc CHECK cũ (thay 'CK_NHANVIEN_TrangThai' bằng tên thực tế nếu khác)
-ALTER TABLE NHANVIEN DROP CONSTRAINT CK__NHANVIEN__trangT__619B8048;
-
--- 3️. Cập nhật dữ liệu cũ từ 'on' và 'off' sang trạng thái mới
-UPDATE NHANVIEN SET trangThai = 'Đang làm' WHERE trangThai = 'on';
-UPDATE NHANVIEN SET trangThai = 'Đã nghỉ' WHERE trangThai = 'off';
-
--- 4️. Thêm CHECK CONSTRAINT mới để chỉ cho phép 3 giá trị cụ thể
-ALTER TABLE NHANVIEN  
-ADD CONSTRAINT CK_NHANVIEN_TrangThai  
-CHECK (trangThai IN ('Đang làm', 'Đã nghỉ', 'Đang nghỉ phép'));
-
--- 5️. Kiểm tra lại dữ liệu xem đã cập nhật đúng chưa
-SELECT DISTINCT trangThai FROM NHANVIEN;
-
--- Đổi tên cột vaiTro của nhân viên thành cột chucVu
-EXEC sp_rename 'NHANVIEN.vaiTro', 'chucVu', 'COLUMN';
 
 ------------------------------------------ INSERT --------------------------------------
+-- Insert vào bảng THUONGHIEU
+INSERT INTO THUONGHIEU (maTH, tenTH, trangThai) VALUES
+('TH001', N'Apple', 'on'),
+('TH002', N'Samsung', 'on'),
+('TH003', N'Xiaomi', 'off'),
+('TH004', N'Oppo', 'on'),
+('TH005', N'Vivo', 'off');
+
+-- Insert vào bảng SANPHAM
+INSERT INTO SANPHAM (maSP, tenSP, pin, OS, camTruoc, camSau, xuatXu, hinhAnh, trangThai, maTH) VALUES
+('SP001', N'iPhone 13', '3240mAh', 'iOS', '12MP', '12MP + 12MP', 'USA', 0x, 'on', 'TH001'),
+('SP002', N'Galaxy S22', '3700mAh', 'Android', '10MP', '50MP + 12MP', 'Korea', 0x, 'on', 'TH002'),
+('SP003', N'Redmi Note 11', '5000mAh', 'Android', '13MP', '50MP + 8MP', 'China', 0x, 'off', 'TH003'),
+('SP004', N'Find X5', '4800mAh', 'Android', '32MP', '50MP + 50MP', 'China', 0x, 'on', 'TH004'),
+('SP005', N'Vivo X70', '4400mAh', 'Android', '32MP', '50MP + 12MP', 'China', 0x, 'off', 'TH005');
+
+-- Thêm dữ liệu vào bảng PBSP
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP)
+VALUES
+('PBSP001', N'Đen', '8GB', '128GB', 20000000.00, 10, 'on', 'SP001'),
+('PBSP002', N'Trắng', '12GB', '256GB', 25000000.00, 8, 'on', 'SP002'),
+('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 15, 'on', 'SP003'),
+('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 12, 'on', 'SP004'),
+('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 7, 'on', 'SP005');
+
+
+-- Insert vào bảng NHACUNGCAP
+INSERT INTO NHACUNGCAP (maNCC, tenNCC, sdt, email, diaChi, trangThai) VALUES
+('NCC001', N'Công ty A', '0901234567', 'a@gmail.com', N'Hà Nội', N'On'),
+('NCC002', N'Công ty B', '0912345678', 'b@gmail.com', N'Hồ Chí Minh', N'On'),
+('NCC003', N'Công ty C', '0923456789', 'c@gmail.com', N'Đà Nẵng', N'On'),
+('NCC004', N'Công ty D', '0934567890', 'd@gmail.com', N'Cần Thơ', N'On'),
+('NCC005', N'Công ty E', '0945678901', 'e@gmail.com', N'Hải Phòng', N'On');
+
+-- Insert bảng CHUCVU
+INSERT INTO CHUCVU (maCV, tenCV, luongCB, heSo, trangThai) 
+VALUES 
+('CV001', N'Quản lý kho', 15000000, 2.0, 'on'),
+('CV002', N'Nhân viên kho', 8000000, 1.2, 'on'),
+('CV003', N'Quản lý nhân sự', 9000000, 1.3, 'on');
+
+
+-- Insert bảng KHO
+INSERT INTO KHO (maKho, tenKho, diaChi, sdt) 
+VALUES 
+('KHO001', N'Kho Hồ Chí Minh', N'123 Lê Lợi, Quận 1, TP.HCM', '0901234567'),
+('KHO002', N'Kho Hà Nội', N'456 Hai Bà Trưng, Quận Hoàn Kiếm, Hà Nội', '0912345678'),
+('KHO003', N'Kho Huế', N'789 Nguyễn Huệ, TP. Huế', '0923456789');
+
+
+-- Insert bảng NHANVIEN
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
+VALUES 
+('NV001', N'Nguyễn Văn A', '1990-05-12', N'Nam', N'123 Lê Lợi, TP.HCM', '0901234567', 'nguyenvana@example.com', NULL, '123456', 'on', 'CV001', 'KHO001'),
+('NV002', N'Trần Thị B', '1995-08-22', N'Nữ', N'456 Hai Bà Trưng, Hà Nội', '0912345678', 'tranthib@example.com', NULL, 'abcdef', 'on', 'CV002', 'KHO002'),
+('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'KHO001'),
+('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'KHO003'),
+('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'KHO002');
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec) VALUES
+('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'KHO001'),
+('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'KHO002'),
+('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'KHO003'),
+('NV009', N'Phan Văn I', '1990-12-05', N'Nam', N'321 Điện Biên Phủ, Cần Thơ', '0939012345', 'phanvani@example.com', NULL, 'passi101', 'on', 'CV002', 'KHO001'),
+('NV010', N'Lý Thị J', '1997-04-18', N'Nữ', N'654 Võ Văn Kiệt, Hải Phòng', '0940123456', 'lythij@example.com', NULL, 'passj202', 'on', 'CV002', 'KHO002'),
+('NV011', N'Đặng Văn K', '1994-07-07', N'Nam', N'987 Phan Xích Long, TP.HCM', '0951234567', 'dangvank@example.com', NULL, 'passk303', 'on', 'CV002', 'KHO003'),
+('NV012', N'Huỳnh Thị L', '1991-10-25', N'Nữ', N'246 Hoàng Hoa Thám, Hà Nội', '0962345678', 'huynhthil@example.com', NULL, 'passl404', 'on', 'CV002', 'KHO001'),
+('NV013', N'Tô Văn M', '1998-01-30', N'Nam', N'135 Nguyễn Thượng Hiền, Đà Nẵng', '0973456789', 'tovanm@example.com', NULL, 'passm505', 'on', 'CV002', 'KHO002'),
+('NV014', N'Trịnh Thị N', '1995-05-20', N'Nữ', N'753 Lý Thường Kiệt, Cần Thơ', '0984567890', 'trinhthin@example.com', NULL, 'passn606', 'on', 'CV002', 'KHO003'),
+('NV015', N'Ngô Văn O', '1992-11-11', N'Nam', N'852 Ba Tháng Hai, Hải Phòng', '0995678901', 'ngovano@example.com', NULL, 'passo707', 'on', 'CV002', 'KHO001');
+
+
+
+INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai)
+VALUES
+('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on'),
+('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off'),
+('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on'),
+('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off'),
+('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on');
+
+INSERT INTO PHIEUNHAP (maPN, ngayTao, kho, tongTien, trangThai, maNV, maNCC)
+VALUES
+('PN001', '2024-03-01', N'Kho Hà Nội', 5000000.00, 'on', 'NV001', 'NCC001'),
+('PN002', '2024-03-05', N'Kho HCM', 7500000.00, 'off', 'NV002', 'NCC002'),
+('PN003', '2024-03-10', N'Kho Đà Nẵng', 6000000.00, 'on', 'NV003', 'NCC003'),
+('PN004', '2024-03-15', N'Kho Hải Phòng', 4500000.00, 'off', 'NV004', 'NCC004'),
+('PN005', '2024-03-20', N'Kho Bình Dương', 7000000.00, 'on', 'NV005', 'NCC005');
+
+INSERT INTO CTPN (soLuong, giaNhap, maPN, maPBSP)
+VALUES
+(10, 500000.00, 'PN001', 'PBSP001'),
+(15, 600000.00, 'PN002', 'PBSP002'),
+(20, 700000.00, 'PN003', 'PBSP003'),
+(25, 550000.00, 'PN004', 'PBSP004'),
+(30, 750000.00, 'PN005', 'PBSP005');
+
+INSERT INTO PHIEUXUAT (maPX, ngayTao, diaChi, tongTien, httt, trangThai, maNV, maKH)
+VALUES
+('PX001', '2024-03-02', N'Hà Nội', 5500000.00, N'Tiền mặt', 'on', 'NV001', 'KH001'),
+('PX002', '2024-03-06', N'Hồ Chí Minh', 8000000.00, N'Chuyển khoản', 'off', 'NV002', 'KH002'),
+('PX003', '2024-03-11', N'Đà Nẵng', 6500000.00, N'Tiền mặt', 'on', 'NV003', 'KH003'),
+('PX004', '2024-03-16', N'Hải Phòng', 5000000.00, N'Chuyển khoản', 'off', 'NV004', 'KH004'),
+('PX005', '2024-03-21', N'Bình Dương', 7500000.00, N'Tiền mặt', 'on', 'NV005', 'KH005');
+
+INSERT INTO CTPX (soLuong, giaXuat, maPX, maPBSP)
+VALUES
+(5, 600000.00, 'PX001', 'PBSP001'),
+(10, 650000.00, 'PX002', 'PBSP002'),
+(15, 750000.00, 'PX003', 'PBSP003'),
+(20, 700000.00, 'PX004', 'PBSP004'),
+(25, 850000.00, 'PX005', 'PBSP005');
+
+-- Chèn dữ liệu vào bảng BANGCHAMCONG
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiPhep, soNgayNghiKhongPhep, soGioOT, maNV) VALUES
+('BCC001', 3, 2024, 22, 2, 1, 5, 'NV001'),
+('BCC002', 3, 2024, 20, 3, 2, 4, 'NV002'),
+('BCC003', 3, 2024, 21, 1, 1, 6, 'NV003'),
+('BCC004', 3, 2024, 23, 0, 2, 3, 'NV004'),
+('BCC005', 3, 2024, 19, 4, 3, 2, 'NV005');
+
+-- Chèn dữ liệu vào bảng BANGLUONG
+INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, phuCapAnTrua, phuCapDiLai, thuong, bhxh, bhyt, bhtn, thueTNCN, tamUng, thucNhan, maNV) VALUES
+('BL001', 3, 2024, 500000, 300000, 200000, 800000, 500000, 200000, 300000, 1000000, 9000000, 'NV001'),
+('BL002', 3, 2024, 450000, 250000, 180000, 750000, 480000, 190000, 280000, 900000, 8500000, 'NV002'),
+('BL003', 3, 2024, 550000, 320000, 250000, 820000, 520000, 220000, 350000, 1100000, 9200000, 'NV003'),
+('BL004', 3, 2024, 480000, 290000, 210000, 780000, 490000, 200000, 320000, 950000, 8800000, 'NV004'),
+('BL005', 3, 2024, 420000, 220000, 170000, 730000, 450000, 180000, 270000, 800000, 8100000, 'NV005');
+
+INSERT INTO GHICHU (ngayTao, noiDung, maBCC) VALUES
+('2024-03-01', N'Đi làm trễ.', 'BCC001'),
+('2024-03-02', N'Nghỉ có phép.', 'BCC002'),
+('2024-03-03', N'Nghỉ không phép.', 'BCC003'),
+('2024-03-04', N'Đi làm trễ.', 'BCC004'),
+('2024-03-05', N'Nghỉ có phép.', 'BCC005');
+
+INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP, ngayCapNhat) VALUES
+(5, 'KHO001', 'PBSP001', '2024-03-19'),
+(3, 'KHO001', 'PBSP002', '2024-03-19'),
+(7, 'KHO001', 'PBSP003', '2024-03-19'),
+(4, 'KHO002', 'PBSP001', '2024-03-19'),
+(5, 'KHO002', 'PBSP004', '2024-03-19'),
+(6, 'KHO002', 'PBSP005', '2024-03-19'),
+(8, 'KHO003', 'PBSP003', '2024-03-19'),
+(2, 'KHO003', 'PBSP002', '2024-03-19'),
+(9, 'KHO003', 'PBSP004', '2024-03-19'),
+(10, 'KHO003', 'PBSP005', '2024-03-19');
+
+INSERT INTO DONYEUCAU (maDon, tenDon, ngayTao, loaiDon, chiTiet, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
+('DYC006', N'Đơn xin nghỉ phép', '2024-03-10', N'Đơn xin nghỉ phép', N'Nghỉ phép 2 ngày để giải quyết công việc gia đình.', N'Có việc riêng cần xử lý.', '2024-03-11', 'on', 'NV006', 'NV001'), -- Quản lý kho duyệt
+('DYC007', N'Đơn xin tăng lương', '2024-03-15', N'Đơn xin tăng lương', N'Xin xét duyệt tăng lương do hoàn thành tốt công việc.', N'Có đóng góp lớn cho công ty.', '2024-03-20', 'on', 'NV007', 'NV003'), -- Quản lý nhân sự duyệt
+('DYC008', N'Đơn xin nghỉ việc', '2024-03-20', N'Đơn xin nghỉ việc', N'Nghỉ việc để chuyển sang công ty khác.', N'Muốn phát triển trong môi trường mới.', '2024-03-25', 'off', 'NV008', 'NV001'), -- Quản lý kho duyệt
+('DYC009', N'Đơn xin nghỉ phép', '2024-03-25', N'Đơn xin nghỉ phép', N'Nghỉ phép 1 tuần để đi du lịch.', N'Cần thời gian nghỉ ngơi.', '2024-03-26', 'on', 'NV009', 'NV003'), -- Quản lý nhân sự duyệt
+('DYC010', N'Đơn xin điều chuyển công tác', '2024-03-28', N'Đơn xin điều chuyển công tác', N'Muốn chuyển công tác đến chi nhánh khác.', N'Gần gia đình hơn.', '2024-04-01', 'off', 'NV010', 'NV001'); -- Quản lý kho duyệt
 
 
 ------------------------------------------ SELECT --------------------------------------
 select * from nhanvien;
 select * from sanpham;
 select * from pbsp;
-select * from PHIEUNHAP;
+select * from phieunhap;
+select * from ctpn;
+select * from phieuxuat;
+select * from ctpx;
+select * from chucvu;
+select * from kho;
+select * from kho_pbsp;
+select * from nhacungcap;
+select * from thuonghieu;
+select * from khachhang;
+select * from bangchamcong;
+select * from bangluong;
+select * from ghichu;
+
+
+
+SELECT maCV FROM NHANVIEN;
+
+
+SELECT name, definition
+FROM sys.check_constraints
+WHERE parent_object_id = OBJECT_ID('NHACUNGCAP');
+
 
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;

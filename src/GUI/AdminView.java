@@ -95,7 +95,9 @@ public class AdminView {
         menuEmployeeManagement.add(employeeMenuItem);
         menuEmployeeManagement.add(timesheetMenuItem);
         menuEmployeeManagement.add(leaveRequestMenuItem);
-
+        
+        JMenu menuCheckAttendanceManagement = createRightAlignedMenu("CHẤM CÔNG");
+        
         JMenu menuCreateLeaveRequest = createRightAlignedMenu("TẠO ĐƠN");
 
         JMenu menuWarehouse = createRightAlignedMenu("KHO");
@@ -108,6 +110,7 @@ public class AdminView {
         menuBar.add(menuStockReceipt);
         menuBar.add(menuStockRelease);
         menuBar.add(menuEmployeeManagement);
+        menuBar.add(menuCheckAttendanceManagement);
         menuBar.add(menuCreateLeaveRequest);
         menuBar.add(menuWarehouse);
         menuBar.add(menuStatistics);
@@ -173,6 +176,7 @@ public class AdminView {
         final String stockOutwardSlipMenuItem_Identification = "STOCK OUTWARD SLIP";
         final String employeeMenu_Identification = "EMPLOYEE";
         final String employeeListMenuItem_Identification = "EMPLOYEES";
+        final String checkAttendanceMenu_Identification = "CHECK ATTENDANCE";
         final String accountListMenuItem_Identification = "ACCOUNTS";
         final String timesheetMenuItem_Identification = "TIMESHEETs";
         final String leaveRequestMenuItem_Identification = "LEAVE REQUEST";
