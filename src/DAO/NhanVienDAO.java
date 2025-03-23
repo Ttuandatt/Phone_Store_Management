@@ -1,100 +1,103 @@
 package DAO;
+
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import Database.*;
 import DTO.NhanVienDTO;
+
 public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	JDBCConnection jdbc = new JDBCConnection();
 
 	@Override
 	public ArrayList<NhanVienDTO> selectAll() {
 		ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
-		
+
 		try {
-			
-			//Thiết lập kết nối tới Database
+
+			// Thiết lập kết nối tới Database
 			jdbc.openConnection();
-			
-			//Tạo query
-			String query = "SELECT * FROM NHANVIEN";
-			
-			//Tạo đối tượng PreparedStatement
+
+			// Tạo query
+			String query = "exec sp_layDanhSachNhanVien"; // dùng stored procedure thay vì dùng raw sql
+
+			// Tạo đối tượng PreparedStatement
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-			
-			//Xử lý kết quả
+
+			// Xử lý kết quả
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-	            NhanVienDTO nv = new NhanVienDTO();
-	            nv.setMaNV(rs.getString("maNV"));
-	            nv.setHoTen(rs.getString("hoTen"));
-	            nv.setNgaySinh(rs.getDate("ngaySinh"));
-	            nv.setGioiTinh(rs.getString("gioiTinh"));
-	            nv.setDiaChi(rs.getString("diaChi"));
-	            nv.setSoDienThoai(rs.getString("sdt"));
-	            nv.setEmail(rs.getString("email"));
-	            nv.setTrangThai(rs.getString("trangThai"));
-	            nv.setChucVu(rs.getString("maCV"));
-	            nv.setNoiLamViec(rs.getString("noiLamViec"));
-	            nv.setMatKhau(rs.getString("matKhau"));
-	            nv.setHinhAnh(rs.getBytes("hinhAnh")); 	            // Xử lý ảnh (BLOB)
+				NhanVienDTO nv = new NhanVienDTO();
+				nv.setMaNV(rs.getString("maNV"));
+				nv.setHoTen(rs.getString("hoTen"));
+				nv.setNgaySinh(rs.getDate("ngaySinh"));
+				nv.setGioiTinh(rs.getString("gioiTinh"));
+				nv.setDiaChi(rs.getString("diaChi"));
+				nv.setSoDienThoai(rs.getString("sdt"));
+				nv.setEmail(rs.getString("email"));
+				nv.setTrangThai(rs.getString("trangThai"));
+				nv.setChucVu(rs.getString("maCV"));
+				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setMatKhau(rs.getString("matKhau"));
+				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
 
-
-	            // Thêm vào danh sách
-	            arrNhanVien.add(nv);	
+				// Thêm vào danh sách
+				arrNhanVien.add(nv);
 			}
-			//Đóng tài nguyên
+			// Đóng tài nguyên
 			rs.close();
-			ps.close();		
-		}catch (Exception e) {
+			ps.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
-		}finally {
-			//Đóng kết nối CSDL
+		} finally {
+			// Đóng kết nối CSDL
 			jdbc.closeConnection();
 		}
-		
+
 		return arrNhanVien;
 	}
+
 	@Override
 	public NhanVienDTO selectById(String maNV) {
 		NhanVienDTO nv = new NhanVienDTO();
-		
+
 		try {
-			
+
 			jdbc.openConnection();
-			
-			String query = "select * from nhanvien where maNV=?";
-			
+
+			String query = "exec sp_layNhanVienTheoID ?";
+
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, maNV);
-			
+
 			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				nv.setMaNV(rs.getString("maNV"));
-	            nv.setHoTen(rs.getString("hoTen"));
-	            nv.setNgaySinh(rs.getDate("ngaySinh"));
-	            nv.setGioiTinh(rs.getString("gioiTinh"));
-	            nv.setDiaChi(rs.getString("diaChi"));
-	            nv.setSoDienThoai(rs.getString("sdt"));
-	            nv.setEmail(rs.getString("email"));
-	            nv.setHinhAnh(rs.getBytes("hinhAnh")); 	            // Xử lý ảnh (BLOB)
-	            nv.setMatKhau(rs.getString("matKhau"));
-	            nv.setChucVu(rs.getString("maCV"));
-	            nv.setNoiLamViec(rs.getString("noiLamViec"));
-	            nv.setTrangThai(rs.getString("trangThai"));
+				nv.setHoTen(rs.getString("hoTen"));
+				nv.setNgaySinh(rs.getDate("ngaySinh"));
+				nv.setGioiTinh(rs.getString("gioiTinh"));
+				nv.setDiaChi(rs.getString("diaChi"));
+				nv.setSoDienThoai(rs.getString("sdt"));
+				nv.setEmail(rs.getString("email"));
+				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
+				nv.setMatKhau(rs.getString("matKhau"));
+				nv.setChucVu(rs.getString("maCV"));
+				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setTrangThai(rs.getString("trangThai"));
 
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
-		}finally {
-			//Đóng kết nối CSDL
+		} finally {
+			// Đóng kết nối CSDL
 			jdbc.closeConnection();
 		}
-		
+
 		return nv;
 	}
 
@@ -102,39 +105,79 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	public int insert(NhanVienDTO nv) {
 		int result = 0;
 		try {
+			jdbc.openConnection();
+
+			// Gọi stored procedure
+			String query = "{ ? = CALL sp_themNhanVien(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
+			CallableStatement cs = jdbc.getConnection().prepareCall(query); // Dùng CallableStatement thay vì
+																			// PreparedStatement vì PreparedStatement
+																			// không thể lấy được giá trị logic được trả
+																			// về từ Stored Procedure còn
+																			// CallableStatement thì có thể. Search
+																			// ChatGPT để hiêu rõ hơn khác biệt giữa
+																			// chúng
+
+			// Đăng ký tham số trả về
+			cs.registerOutParameter(1, java.sql.Types.INTEGER);
+
+			// Truyền tham số đầu vào
+			cs.setString(2, nv.getMaNV());
+			cs.setString(3, nv.getHoTen());
+			cs.setDate(4, nv.getNgaySinh());
+			cs.setString(5, nv.getGioiTinh());
+			cs.setString(6, nv.getDiaChi());
+			cs.setString(7, nv.getSoDienThoai());
+			cs.setString(8, nv.getEmail());
+			cs.setBytes(9, nv.getHinhAnh());
+			cs.setString(10, nv.getMatKhau());
+			cs.setString(11, nv.getTrangThai());
+
+			if (nv.getChucVu() == null || nv.getChucVu().trim().isEmpty()) {
+				cs.setNull(12, java.sql.Types.VARCHAR);
+			} else {
+				cs.setString(12, nv.getChucVu());
+			}
+
+			cs.setString(13, nv.getNoiLamViec());
+
+			// Thực thi Stored Procedure
+			cs.execute();
+
+			// Lấy giá trị trả về từ stored procedure
+			result = cs.getInt(1);
+
+			// Đóng tài nguyên
+			cs.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.closeConnection();
+		}
+
+		System.out.println("NhanVienDAO | method: insert: giá trị của biến int result: " + result);
+		return result;
+	}
+
+	@Override
+	public int delete(NhanVienDTO nv) {
+		int result = 0;
+		
+		try {
 			
 			jdbc.openConnection();
 			
-			String query = "INSERT INTO NHANVIEN VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+			String query = "update nhanvien set trangThai='Off' where maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getMaNV());
-			ps.setString(2, nv.getHoTen());
-			ps.setDate(3, nv.getNgaySinh());
-			ps.setString(4, nv.getGioiTinh());
-			ps.setString(5, nv.getDiaChi());
-			ps.setString(6, nv.getSoDienThoai());
-			ps.setString(7, nv.getEmail());
-			ps.setBytes(8, nv.getHinhAnh());
-			ps.setString(9, nv.getMatKhau());
-			ps.setString(10, nv.getTrangThai());
-			if(nv.getChucVu().equalsIgnoreCase("")) {
-				
-			};
-			ps.setString(11, nv.getChucVu());
-			ps.setString(12, nv.getNoiLamViec());
 			
-			
-			//Thực thi query
 			result = ps.executeUpdate();
-			
-			//Đóng tài nguyên
-			ps.close();
 			
 		}catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
-		}finally {
+		} finally {
 			jdbc.closeConnection();
 		}
 		
@@ -142,21 +185,15 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	}
 
 	@Override
-	public int delete(NhanVienDTO nv) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int update(NhanVienDTO nv) {
 		int result = 0;
-		
+
 		try {
-			
+
 			jdbc.openConnection();
-			
-			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, hinhAnh=?, vaiTro=?, matKhau=?, trangThai=?, maCV=?, noiLamViec=?";
-			
+
+			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, hinhAnh=?, matKhau=?, trangThai=?, maCV=?, noiLamViec=? where maNV=?";
+
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getHoTen());
 			ps.setDate(2, nv.getNgaySinh());
@@ -165,17 +202,84 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			ps.setString(5, nv.getSoDienThoai());
 			ps.setString(6, nv.getEmail());
 			ps.setBytes(7, nv.getHinhAnh());
-			ps.setString(9, nv.getEmail());
-			
-			
-		}catch (Exception e) {
+			ps.setString(8,  nv.getMatKhau());
+			ps.setString(9, nv.getTrangThai());
+			ps.setString(10, nv.getChucVu());
+			ps.setString(11, nv.getNoiLamViec());
+			ps.setString(12, nv.getMaNV());
+
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
-		}finally {
+		} finally {
 			jdbc.closeConnection();
 		}
-		
+
+		return result;
+	}
+
+	//Hàm update khi ta không sửa ảnh của nhân viên trong quá trình cập nhật thông tin nhân viên
+	public int updateWithoutChangingImage(NhanVienDTO nv) {
+		int result = 0;
+
+		try {
+
+			jdbc.openConnection();
+
+			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, matKhau=?, trangThai=?, maCV=?, noiLamViec=? where maNV=?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, nv.getHoTen());
+			ps.setDate(2, nv.getNgaySinh());
+			ps.setString(3, nv.getGioiTinh());
+			ps.setString(4, nv.getDiaChi());
+			ps.setString(5, nv.getSoDienThoai());
+			ps.setString(6, nv.getEmail());
+			ps.setString(7, nv.getMatKhau());
+			ps.setString(8, nv.getTrangThai());
+			ps.setString(9, nv.getChucVu());
+			ps.setString(10, nv.getNoiLamViec());
+			ps.setString(11, nv.getMaNV());
+			
+			result = ps.executeUpdate();
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
+		}
+		System.out.println(result);
 		return result;
 	}
 	
+	
+	public Double getBaseSalaryByRoleID(String maCV) {
+		Double baseSalary = 0.0;
+		try {
+
+			jdbc.openConnection();
+
+			String query = "select luongCB from chucvu where maCV = ?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maCV);
+
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				baseSalary = rs.getDouble("luongCB");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
+		}
+		return baseSalary;
+	}
+
 }

@@ -1,5 +1,4 @@
 package GUI;
-
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -14,23 +13,21 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.Parent;
+
 public class AdminView {
-
-    private JPanel contentPanel; // contentPanel để hiển thị các giao diện
-
-    public AdminView() {
-
-        // Dùng thư viện FlatLaf để làm giao diện đẹp hơn
-        FlatRobotoFont.install();
+	
+	private JPanel contentPanel; // contentPanel để hiển thị các giao diện
+	
+	public AdminView() {
+		
+		//Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+    	FlatRobotoFont.install();
         FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
         FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
         FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
         FlatIntelliJLaf.registerCustomDefaultsSource("style");
         FlatIntelliJLaf.setup();
-
+		
         // Tạo JFrame
         JFrame f = new JFrame("Admin");
         f.setSize(1500, 800);
@@ -43,15 +40,14 @@ public class AdminView {
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(Color.BLUE);
 
-        // ======================= Menu Panel (Chứa 3 phần)
-        // ============================//
+        //======================= Menu Panel (Chứa 3 phần) ============================//
         menuPanel = new JPanel();
         menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
         menuPanel.setBackground(Color.green);
-        // menuPanel.setPreferredSize(new Dimension(200, 800));
+//        menuPanel.setPreferredSize(new Dimension(200, 800));
         GridBagConstraints gbc = new GridBagConstraints();
 
-        // ======================= 1. Info Panel (0.3) ============================//
+        //======================= 1. Info Panel (0.3) ============================//
         JPanel infoPanel = new JPanel();
         infoPanel.setBackground(Color.decode("#01BFF4"));
         infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
@@ -61,8 +57,9 @@ public class AdminView {
         gbc.gridx = 0;
         gbc.gridy = 0;
         menuPanel.add(infoPanel, gbc);
+        
 
-        // ======================= 2. Menu Panel (0.6) ============================//
+        //======================= 2. Menu Panel (0.6) ============================//
         JPanel menuBarPanel = new JPanel();
         menuBarPanel.setLayout(new BoxLayout(menuBarPanel, BoxLayout.Y_AXIS));
         menuBarPanel.setBackground(Color.white);
@@ -70,24 +67,23 @@ public class AdminView {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.Y_AXIS));
 
-        // ================================ MENU ITEMS
-        // ================================//
+        // ================================ MENU ITEMS ================================//
         JMenu menuProducts = createRightAlignedMenu("SẢN PHẨM");
-
+        
         JMenu menuSuppliers = createRightAlignedMenu("NHÀ CUNG CẤP");
-
+        	
         JMenu menuStockReceipt = createRightAlignedMenu("NHẬP HÀNG");
         JMenuItem importMenuItem = new JMenuItem("Tạo phiếu nhập");
         JMenuItem stockReceipt = new JMenuItem("Phiếu nhập");
         menuStockReceipt.add(importMenuItem);
         menuStockReceipt.add(stockReceipt);
-
+        
         JMenu menuStockRelease = createRightAlignedMenu("XUẤT HÀNG");
         JMenuItem exportMenuItem = new JMenuItem("Tạo phiếu xuất");
         JMenuItem stockRelease = new JMenuItem("Phiếu xuất");
         menuStockRelease.add(exportMenuItem);
         menuStockRelease.add(stockRelease);
-
+        
         JMenu menuEmployeeManagement = createRightAlignedMenu("NHÂN VIÊN");
         JMenuItem employeeMenuItem = new JMenuItem("Danh sách nhân viên");
         JMenuItem timesheetMenuItem = new JMenuItem("Bảng công");
@@ -99,9 +95,9 @@ public class AdminView {
         JMenu menuCheckAttendanceManagement = createRightAlignedMenu("CHẤM CÔNG");
         
         JMenu menuCreateLeaveRequest = createRightAlignedMenu("TẠO ĐƠN");
-
+        
         JMenu menuWarehouse = createRightAlignedMenu("KHO");
-
+        
         JMenu menuStatistics = createRightAlignedMenu("THỐNG KÊ");
 
         // Thêm vào menuBar
@@ -114,10 +110,11 @@ public class AdminView {
         menuBar.add(menuCreateLeaveRequest);
         menuBar.add(menuWarehouse);
         menuBar.add(menuStatistics);
+        
 
         // Thêm menuBar vào menuBarPanel
         menuBarPanel.add(menuBar);
-
+        
         gbc.weightx = 1.0;
         gbc.weighty = 0.6;
         gbc.fill = GridBagConstraints.BOTH;
@@ -125,46 +122,50 @@ public class AdminView {
         gbc.gridy = 1;
         menuPanel.add(menuBarPanel, gbc);
 
-        // ======================= 3. Logout Panel (0.1) ============================//
+        //======================= 3. Logout Panel (0.1) ============================//
         JPanel logoutPanel = new JPanel();
         logoutPanel.setBackground(Color.YELLOW);
         logoutPanel.setLayout(new GridBagLayout());
 
+        
         JButton changeInfoButton = new JButton("Personal Information");
         changeInfoButton.setBorderPainted(false);
         changeInfoButton.setPreferredSize(new Dimension(logoutPanel.getWidth(), 50));
         gbc.gridx = 0;
         gbc.gridy = 0;
         logoutPanel.add(changeInfoButton, gbc);
-
+        
         JButton logoutButton = new JButton("Logout");
         logoutButton.setBorderPainted(false);
         logoutButton.setPreferredSize(new Dimension(logoutPanel.getWidth(), 50));
         gbc.gridx = 0;
         gbc.gridy = 1;
         logoutPanel.add(logoutButton, gbc);
-
-        // Set tỷ lệ và vị trí hiển thị của logoutPanel
+        
+        
+        //Set tỷ lệ và vị trí hiển thị của logoutPanel
         gbc.weightx = 1.0;
         gbc.weighty = 0.1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 2;
         menuPanel.add(logoutPanel, gbc);
+        
+        
 
-        // ============================ Content Panel ============================//
+        //============================ Content Panel ============================//
         contentPanel = new JPanel(new CardLayout());
         contentPanel.setBackground(Color.DARK_GRAY);
         contentPanel.setPreferredSize(new Dimension(1400, 900));
         mainPanel.add(menuPanel, BorderLayout.WEST);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
-        // Thiết lập tỷ lệ hiển thị cho menuPanel và contentPanel
+        //Thiết lập tỷ lệ hiển thị cho menuPanel và contentPanel
         int menuWidth = f.getWidth() / 8; // Chiều rộng của thanhDieuHuong là 1/4 của frame
         int contentWidth = f.getWidth() - menuWidth; // Chiều rộng của noiDung
         menuPanel.setPreferredSize(new Dimension(menuWidth, f.getHeight())); // Đặt kích thước cho menuPanel
         contentPanel.setPreferredSize(new Dimension(contentWidth, f.getHeight())); // Đặt kích thước cho contentPanel
-
+        
         // Định danh cho các thẻ giao diện
         final String productsMenu_Identification = "PRODUCTS";
         final String suppliersMenu_Identification = "SUPPLIERS";
@@ -184,187 +185,192 @@ public class AdminView {
         final String warehouseMenu_Identification = "WAREHOUSE";
         final String statisticsMenu_Identification = "STATISTICS";
         final String personalInfoButton_Identification = "Personal Information";
-
+        
         f.add(mainPanel);
         f.setResizable(false);
         f.setVisible(true);
+        
+        
+        
+        
+//=========================================== Khu vực add Listener cho các nút/menu/menuItem ==========================================================//
+   
+        //mouseListener cho nút changeInfoButton
+		changeInfoButton.addMouseListener(new MouseAdapter() {
 
-        // =========================================== Khu vực add Listener cho các
-        // nút/menu/menuItem
-        // ==========================================================//
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				changeInfoButton.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
+				changeInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			
+    		
+    		@Override
+    		public void mouseExited(MouseEvent e) {
+    			changeInfoButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
+    		}
+		});
+		
+		//mouseListener cho nút logoutButton
+		logoutButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				logoutButton.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
+				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			
+    		
+    		@Override
+    		public void mouseExited(MouseEvent e) {
+    			logoutButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
+    		}
 
-        // mouseListener cho nút changeInfoButton
-        changeInfoButton.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                changeInfoButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
-                changeInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                changeInfoButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
-            }
-        });
-
-        // mouseListener cho nút logoutButton
-        logoutButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                logoutButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
-                logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                logoutButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
-            }
-
-        });
-
-        // mouseListener cho menu "PRODUCTS"
-        menuProducts.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
-                    ProductsGUI productObj = new ProductsGUI();
-                    Parent content = productObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
-                    javafx.application.Platform.runLater(() -> {
-                        fxPanel.setScene(new Scene(content));
-                    });
-                    contentPanel.add(fxPanel, productsMenu_Identification);
-                    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                    cardLayout.show(contentPanel, productsMenu_Identification);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        // MouseListener cho menu "SUPPLIERS"
-        menuSuppliers.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                SuppliersGUI supplierObj = new SuppliersGUI();
-                contentPanel.add(supplierObj, suppliersMenu_Identification);
-                CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                cardLayout.show(contentPanel, suppliersMenu_Identification);
-            }
-        });
-
-        // ActionListener cho Imports. Vì menuItem thì kích hoạt sự kiện bằng
-        // ActionListener chứ k phải MouseListener
-        importMenuItem.addActionListener(e -> {
-            NhapHangGUI importObj = new NhapHangGUI(); // Tạo instance của ImportGUI
-            contentPanel.add(importObj, importMenuItem_Identification); // Thêm vào contentPanel
-            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-            cardLayout.show(contentPanel, importMenuItem_Identification); // Chuyển sang ImportGUI
-        });
-
-        // ActionListener cho menuItem Stock Inward Slip
-        stockReceipt.addActionListener(e -> {
-            PhieuNhapGUI phieuNhapObj = new PhieuNhapGUI();
-            contentPanel.add(phieuNhapObj, phieuNhapMenuItem_Identification);
-            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-            cardLayout.show(contentPanel, phieuNhapMenuItem_Identification);
-        });
-
-        // ActionListener cho menuItem Export
-        exportMenuItem.addActionListener(e -> {
-            XuatHangGUI exportObj = new XuatHangGUI();
-            contentPanel.add(exportObj, employeeListMenuItem_Identification);
-            CardLayout cartLayout = (CardLayout) contentPanel.getLayout();
-            cartLayout.show(contentPanel, employeeListMenuItem_Identification);
-        });
-
-        // ActionListener cho menuItem Stock Outward Slip
-        stockRelease.addActionListener(e -> {
-            PhieuXuatGUI stockOutwardSlipObj = new PhieuXuatGUI();
-            contentPanel.add(stockOutwardSlipObj, stockOutwardSlipMenuItem_Identification);
-            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-            cardLayout.show(contentPanel, stockOutwardSlipMenuItem_Identification);
-        });
-
-        // ActionListener cho menuItem Employees
-        employeeMenuItem.addActionListener(e -> {
-            NhanVienGUI employeeObj = new NhanVienGUI();
-            contentPanel.add(employeeObj, employeeListMenuItem_Identification);
-            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-            cardLayout.show(contentPanel, employeeListMenuItem_Identification);
-        });
-
-        // ActionListener cho menuItem Timesheet
-        timesheetMenuItem.addActionListener(e -> {
-            TimesheetGUI timesheetObj = new TimesheetGUI();
-            contentPanel.add(timesheetObj, timesheetMenuItem_Identification);
-            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-            cardLayout.show(contentPanel, timesheetMenuItem_Identification);
-        });
-
-        // ActionListener cho menuItem Leave Requests
-        leaveRequestMenuItem.addActionListener(e -> {
-            LeaveRequestGUI leaveRequestObj = new LeaveRequestGUI();
-            contentPanel.add(leaveRequestObj, leaveRequestMenu_Identification);
-            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-            cardLayout.show(contentPanel, leaveRequestMenu_Identification);
-        });
-
-        // MouseListener cho menu Create Leave Request
-        menuCreateLeaveRequest.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                CreateLeaveRequestGUI createLeaveRequestObj = new CreateLeaveRequestGUI();
-                contentPanel.add(createLeaveRequestObj, leaveRequestMenu_Identification);
-                CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                cardLayout.show(contentPanel, leaveRequestMenu_Identification);
-            }
-        });
-
-        // MouseListener cho menu Statistics
-        menuStatistics.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                StatisticsGUI statisticsObj = new StatisticsGUI();
-                contentPanel.add(statisticsObj, statisticsMenu_Identification);
-                CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                cardLayout.show(contentPanel, statisticsMenu_Identification);
-            }
-        });
-
-        // ActionListener cho button Personal Information
-        changeInfoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PersonalInformationGUI personalInformationObj = new PersonalInformationGUI();
-                contentPanel.add(personalInformationObj, personalInfoButton_Identification);
-                CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                cardLayout.show(contentPanel, personalInfoButton_Identification);
-            }
-        });
-
-        // MouseListener cho menu Warehouse
-        menuWarehouse.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                WarehouseGUI warehouseObj = new WarehouseGUI();
-                contentPanel.add(warehouseObj, warehouseMenu_Identification);
-                CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                cardLayout.show(contentPanel, warehouseMenu_Identification);
-            }
-        });
-        // ==========================================================================================================================================================//
-
-        changeInfoButton.setOpaque(true);
-        changeInfoButton.setBackground(Color.WHITE);
-
-        logoutButton.setOpaque(true);
-        logoutButton.setBackground(Color.WHITE);
-    }
+		});
+	
+		//mouseListener cho menu "PRODUCTS"
+		menuProducts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ProductsGUI productObj = new ProductsGUI();	//tạo 1 instance của ProductsGUI
+				contentPanel.add(productObj, productsMenu_Identification);	//thêm instance đó vào contentPanel kèm với định danh của nó
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout(); //dùng CardLayout để hiển thị giao diện của lớp ProductsGUI khi click vào menu
+				cardLayout.show(contentPanel, productsMenu_Identification);
+				
+			}
+		});
+		
+		//MouseListener cho menu "SUPPLIERS"
+		menuSuppliers.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					SuppliersGUI supplierObj = new SuppliersGUI();
+					contentPanel.add(supplierObj, suppliersMenu_Identification);
+					CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+					cardLayout.show(contentPanel, suppliersMenu_Identification);
+				}
+		});
+		
+		//ActionListener cho Imports. Vì menuItem thì kích hoạt sự kiện bằng ActionListener chứ k phải MouseListener
+		importMenuItem.addActionListener(e -> {
+		    NhapHangGUI importObj = new NhapHangGUI(); // Tạo instance của ImportGUI
+		    contentPanel.add(importObj, importMenuItem_Identification); // Thêm vào contentPanel
+		    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+		    cardLayout.show(contentPanel, importMenuItem_Identification); // Chuyển sang ImportGUI
+		});
+		
+		//ActionListener cho menuItem Stock Inward Slip
+		stockReceipt.addActionListener(e ->{
+			PhieuNhapGUI phieuNhapObj = new PhieuNhapGUI();
+			contentPanel.add(phieuNhapObj, phieuNhapMenuItem_Identification);
+			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+			cardLayout.show(contentPanel, phieuNhapMenuItem_Identification);
+		});
+		
+		//ActionListener cho menuItem Export 
+		exportMenuItem.addActionListener(e ->{
+			XuatHangGUI exportObj = new XuatHangGUI();
+			contentPanel.add(exportObj, employeeListMenuItem_Identification);
+			CardLayout cartLayout = (CardLayout)contentPanel.getLayout();
+			cartLayout.show(contentPanel,employeeListMenuItem_Identification);
+		});
+		
+		//ActionListener cho menuItem Stock Outward Slip
+		stockRelease.addActionListener(e ->{
+			PhieuXuatGUI stockOutwardSlipObj = new PhieuXuatGUI();
+			contentPanel.add(stockOutwardSlipObj, stockOutwardSlipMenuItem_Identification);
+			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+			cardLayout.show(contentPanel, stockOutwardSlipMenuItem_Identification);
+		});
+		
+		//ActionListener cho menuItem Employees
+		employeeMenuItem.addActionListener(e -> {
+			NhanVienGUI employeeObj = new NhanVienGUI();
+			contentPanel.add(employeeObj, employeeListMenuItem_Identification);
+			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+			cardLayout.show(contentPanel, employeeListMenuItem_Identification);
+		});
+		
+		
+		//ActionListener cho menuItem Bang cham cong
+		timesheetMenuItem.addActionListener(e -> {
+			BangChamCongGUI timesheetObj = new BangChamCongGUI();
+			contentPanel.add(timesheetObj, timesheetMenuItem_Identification);
+			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+			cardLayout.show(contentPanel, timesheetMenuItem_Identification);
+		});
+		
+		menuCheckAttendanceManagement.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				ChamCongGUI chamCongObj = new ChamCongGUI();
+				contentPanel.add(chamCongObj, checkAttendanceMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, checkAttendanceMenu_Identification);
+			}
+		});
+		
+		//ActionListener cho menuItem Leave Requests
+		leaveRequestMenuItem.addActionListener(e -> {
+			LeaveRequestGUI leaveRequestObj = new LeaveRequestGUI();
+			contentPanel.add(leaveRequestObj, leaveRequestMenu_Identification);
+			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+			cardLayout.show(contentPanel, leaveRequestMenu_Identification);
+		});
+		
+		//MouseListener cho menu Create Leave Request
+		menuCreateLeaveRequest.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				CreateLeaveRequestGUI createLeaveRequestObj = new CreateLeaveRequestGUI();
+				contentPanel.add(createLeaveRequestObj, leaveRequestMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, leaveRequestMenu_Identification);
+			}
+		});
+		
+		// MouseListener cho menu Statistics
+		menuStatistics.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				StatisticsGUI statisticsObj = new StatisticsGUI();
+				contentPanel.add(statisticsObj, statisticsMenu_Identification);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, statisticsMenu_Identification);
+			}
+		});
+		
+		//ActionListener cho button Personal Information
+		changeInfoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PersonalInformationGUI personalInformationObj = new PersonalInformationGUI();
+				contentPanel.add(personalInformationObj, personalInfoButton_Identification);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, personalInfoButton_Identification);
+			}
+		});
+		
+		//MouseListener cho menu Warehouse
+		menuWarehouse.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				WarehouseGUI warehouseObj = new WarehouseGUI();
+				contentPanel.add(warehouseObj, warehouseMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, warehouseMenu_Identification);
+			}
+		});
+//==========================================================================================================================================================//
+		
+		changeInfoButton.setOpaque(true);
+		changeInfoButton.setBackground(Color.WHITE);
+		
+		logoutButton.setOpaque(true);
+		logoutButton.setBackground(Color.WHITE);
+	}
 
     private JMenu createRightAlignedMenu(String title) {
-        JMenu menu = new JMenu(title);
+    	JMenu menu = new JMenu(title);
         menu.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái theo BoxLayout
         menu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Full chiều ngang, tăng chiều cao
         menu.setPreferredSize(new Dimension(200, 50)); // Điều chỉnh chiều cao theo ý muốn
@@ -375,21 +381,23 @@ public class AdminView {
         menu.setHorizontalAlignment(SwingConstants.CENTER);
         JPopupMenu popupMenu = menu.getPopupMenu();
 
+        
         // Thêm MouseListener để thay đổi con trỏ chuột
         menu.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                menu.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
-                menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                menu.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
-            }
-
+        		@Override
+        		public void mouseEntered(MouseEvent e) {
+        			menu.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
+        			menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        		}
+        		
+        		@Override
+        		public void mouseExited(MouseEvent e) {
+        			menu.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
+        		}
+        	
         });
-
+        
+        
         // Lắng nghe sự kiện mở menu để hiển thị popup đúng vị trí
         menu.addMenuListener(new MenuListener() {
             @Override
@@ -404,25 +412,24 @@ public class AdminView {
             }
 
             @Override
-            public void menuDeselected(MenuEvent e) {
-            }
+            public void menuDeselected(MenuEvent e) {}
 
             @Override
-            public void menuCanceled(MenuEvent e) {
-            }
-
+            public void menuCanceled(MenuEvent e) {}
+            
         });
 
         return menu;
     }
 
-    // public void showProductsGUI() {
-    //     contentPanel.removeAll(); // Xóa giao diện cũ
-    //     contentPanel.add(new ProductsGUI()); // Thêm giao diện ProductsGUI
-    //     contentPanel.revalidate();
-    //     contentPanel.repaint();
-    // }
-
+    public void showProductsGUI() {
+    	contentPanel.removeAll();	//Xóa giao diện cũ
+    	contentPanel.add(new ProductsGUI()); //Thêm giao diện ProductsGUI
+    	contentPanel.revalidate();
+    	contentPanel.repaint();
+    }
+    
+    
     public static void main(String[] args) {
         new AdminView();
     }
