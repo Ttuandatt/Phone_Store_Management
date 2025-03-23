@@ -47,13 +47,13 @@
     <classpathentry kind="lib" path="jars/java-dotenv-5.2.2.jar"/>
 
     <!-- Thêm các JAR của JavaFX -->
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.base.jar"/>
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.controls.jar"/>
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.fxml.jar"/>
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.graphics.jar"/>
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.swing.jar"/>
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.media.jar"/> 
-    <classpathentry kind="lib" path="javs/javafx-sdk-23.0.2/lib/javafx.web.jar"/> 
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.base.jar"/>
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.controls.jar"/>
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.fxml.jar"/>
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.graphics.jar"/>
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.swing.jar"/>
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.media.jar"/> 
+    <classpathentry kind="lib" path="jars/javafx-sdk-23.0.2/lib/javafx.web.jar"/> 
 
     <!-- Thư mục đầu ra -->
     <classpathentry kind="output" path="bin"/>
