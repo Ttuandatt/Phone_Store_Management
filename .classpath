@@ -44,6 +44,7 @@
     <classpathentry kind="lib" path="jars/swingx-all-1.6.5-1.jar"/>
     <classpathentry kind="lib" path="jars/swtgraphics2d.jar"/>
     <classpathentry kind="lib" path="jars/xmlbeans-3.0.2.jar"/>
+    <classpathentry kind="lib" path="jars/java-dotenv-5.2.2.jar"/>
 
     <!-- Thêm các JAR của JavaFX -->
     <classpathentry kind="lib" path="E:/Learn/Code_2/java_advanced/thuvienjava/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.base.jar"/>
