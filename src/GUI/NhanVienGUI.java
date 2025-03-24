@@ -1741,7 +1741,6 @@ public class NhanVienGUI extends JPanel{
         	middleLeftPanel.add(txtPassword);
         	
         	//bottomLeftPanel
-
         	
         	
         	//Lấy giá trị từ csdl và truyền vào các trường dữ liệu
