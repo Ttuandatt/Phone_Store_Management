@@ -74,7 +74,7 @@ public class ThongKeGUI extends JPanel{
         add(productContent, gbc); // Thêm vào ProductsGUI
         
         setSize(UIScale.scale(new Dimension(1366, 800)));
-        GlassPanePopup.install(this);
+//        GlassPanePopup.install(this);
 
         // Thay đổi: Thêm trực tiếp DashboardForm vào JFrame
         DashboardForm dashboard = new DashboardForm();

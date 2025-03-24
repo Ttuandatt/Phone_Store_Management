@@ -55,5 +55,6 @@
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.swing.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.web.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx-swt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/java-dotenv-5.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
