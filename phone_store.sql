@@ -1,9 +1,9 @@
-﻿create database phonestore;
+create database phonestore;
+drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 --DROP DATABASE phonestore;
-use phonestore;
-
+use phonestore
 
 
 -- Bảng Thương Hiệu
@@ -65,13 +65,8 @@ DROP TABLE NHACUNGCAP;
 CREATE TABLE CHUCVU (
     maCV VARCHAR(50) NOT NULL,
     tenCV NVARCHAR(255) NOT NULL,
-<<<<<<< HEAD
-    luongCB DECIMAL(18,2) NOT NULL,
-    heSo FLOAT NOT NULL,
-=======
     luongCB FLOAT,
     heSo FLOAT,
->>>>>>> 5909d00282f6cc9d4ce412b99a6888bc9d7a0f65
 	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
 
@@ -115,14 +110,15 @@ DROP TABLE NHANVIEN;
 CREATE TABLE PHIEUNHAP (
     maPN VARCHAR(50) NOT NULL,
     ngayTao DATE NOT NULL,
-    kho NVARCHAR(255),
     tongTien DECIMAL(18,2),
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 	maNV VARCHAR(50) NOT NULL,
+	maKho VARCHAR(50) NOT NULL,
 	maNCC VARCHAR(50) NOT NULL,
 
 	PRIMARY KEY(maPN),
     CONSTRAINT FK_PHIEUNHAP_NHANVIEN FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUNHAP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
     CONSTRAINT FK_PHIEUNHAP_NHACUNGCAP FOREIGN KEY(maNCC) REFERENCES NHACUNGCAP(maNCC) ON DELETE NO ACTION
 );
 DROP TABLE PHIEUNHAP;
@@ -164,8 +160,10 @@ CREATE TABLE PHIEUXUAT (
     httt NVARCHAR(50),
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
+	maKho VARCHAR(50) NOT NULL,
 	maKH VARCHAR(50) NOT NULL,
 	CONSTRAINT FK_PHIEUXUAT_NHANVIEN FOREIGN KEY (maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUXUAT_KHO FOREIGN KEY (maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
 	CONSTRAINT FK_PHIEUXUAT_KHACHHANG FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
 );
 DROP TABLE PHIEUXUAT;
@@ -302,6 +300,14 @@ VALUES
 ('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 15, 'on', 'SP003'),
 ('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 12, 'on', 'SP004'),
 ('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 7, 'on', 'SP005');
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP) 
+VALUES
+('PBSP006', N'Xám', '12GB', '512GB', 28000000.00, 5, 'on', 'SP002'),
+('PBSP007', N'Xanh dương', '6GB', '128GB', 16000000.00, 9, 'on', 'SP003'),
+('PBSP008', N'Hồng', '8GB', '256GB', 21000000.00, 6, 'on', 'SP004'),
+('PBSP009', N'Bạc', '12GB', '1TB', 32000000.00, 4, 'on', 'SP002'),
+('PBSP010', N'Đỏ', '8GB', '128GB', 19000000.00, 11, 'on', 'SP005'),
+('PBSP011', N'Xanh lá', '6GB', '64GB', 14000000.00, 7, 'on', 'SP001');
 
 
 -- Insert vào bảng NHACUNGCAP
@@ -316,15 +322,9 @@ INSERT INTO NHACUNGCAP (maNCC, tenNCC, sdt, email, diaChi, trangThai) VALUES
 INSERT INTO CHUCVU (maCV, tenCV, luongCB, heSo, trangThai) 
 VALUES 
 ('CV001', N'Quản lý kho', 15000000, 2.0, 'on'),
-<<<<<<< HEAD
-('CV002', N'Nhân viên kho', 8000000, 1.2, 'on'),
-('CV003', N'Quản lý nhân sự', 9000000, 1.3, 'on');
-
-=======
 ('CV002', N'Quản lý nhân sự', 8000000, 1.2, 'on'),
 ('CV003', N'Nhân viên kho', 9000000, 1.3, 'on'),
 ('CV004', N'Admin', 0, 0, 'on');
->>>>>>> 5909d00282f6cc9d4ce412b99a6888bc9d7a0f65
 
 -- Insert bảng KHO
 INSERT INTO KHO (maKho, tenKho, diaChi, sdt) 
@@ -364,37 +364,61 @@ VALUES
 ('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off'),
 ('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on');
 
-INSERT INTO PHIEUNHAP (maPN, ngayTao, kho, tongTien, trangThai, maNV, maNCC)
-VALUES
-('PN001', '2024-03-01', N'Kho Hà Nội', 5000000.00, 'on', 'NV001', 'NCC001'),
-('PN002', '2024-03-05', N'Kho HCM', 7500000.00, 'off', 'NV002', 'NCC002'),
-('PN003', '2024-03-10', N'Kho Đà Nẵng', 6000000.00, 'on', 'NV003', 'NCC003'),
-('PN004', '2024-03-15', N'Kho Hải Phòng', 4500000.00, 'off', 'NV004', 'NCC004'),
-('PN005', '2024-03-20', N'Kho Bình Dương', 7000000.00, 'on', 'NV005', 'NCC005');
+-- Chèn dữ liệu vào bảng PHIEUNHAP
+INSERT INTO PHIEUNHAP (maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC) 
+VALUES 
+('PN001', '2024-03-01', 5000000, 'on', 'NV001', 'KHO001', 'NCC001'),
+('PN002', '2024-03-05', 3200000, 'on', 'NV002', 'KHO002', 'NCC002'),
+('PN003', '2024-03-10', 4500000, 'off', 'NV003', 'KHO001', 'NCC003'),
+('PN004', '2024-03-15', 2800000, 'on', 'NV004', 'KHO003', 'NCC001'),
+('PN005', '2024-03-20', 6000000, 'off', 'NV005', 'KHO002', 'NCC002');
 
-INSERT INTO CTPN (soLuong, giaNhap, maPN, maPBSP)
-VALUES
-(10, 500000.00, 'PN001', 'PBSP001'),
-(15, 600000.00, 'PN002', 'PBSP002'),
-(20, 700000.00, 'PN003', 'PBSP003'),
-(25, 550000.00, 'PN004', 'PBSP004'),
-(30, 750000.00, 'PN005', 'PBSP005');
+-- Chèn dữ liệu vào bảng CTPN
+INSERT INTO CTPN (soLuong, giaNhap, maPN, maPBSP) 
+VALUES 
+-- PN001 có 3 chi tiết
+(10, 500000, 'PN001', 'PBSP001'),
+(15, 520000, 'PN001', 'PBSP006'),
+(8, 490000, 'PN001', 'PBSP007'),
 
-INSERT INTO PHIEUXUAT (maPX, ngayTao, diaChi, tongTien, httt, trangThai, maNV, maKH)
-VALUES
-('PX001', '2024-03-02', N'Hà Nội', 5500000.00, N'Tiền mặt', 'on', 'NV001', 'KH001'),
-('PX002', '2024-03-06', N'Hồ Chí Minh', 8000000.00, N'Chuyển khoản', 'off', 'NV002', 'KH002'),
-('PX003', '2024-03-11', N'Đà Nẵng', 6500000.00, N'Tiền mặt', 'on', 'NV003', 'KH003'),
-('PX004', '2024-03-16', N'Hải Phòng', 5000000.00, N'Chuyển khoản', 'off', 'NV004', 'KH004'),
-('PX005', '2024-03-21', N'Bình Dương', 7500000.00, N'Tiền mặt', 'on', 'NV005', 'KH005');
+-- PN002 có 3 chi tiết
+(5, 640000, 'PN002', 'PBSP002'),
+(12, 630000, 'PN002', 'PBSP008'),
+(9, 650000, 'PN002', 'PBSP009'),
 
-INSERT INTO CTPX (soLuong, giaXuat, maPX, maPBSP)
-VALUES
-(5, 600000.00, 'PX001', 'PBSP001'),
-(10, 650000.00, 'PX002', 'PBSP002'),
-(15, 750000.00, 'PX003', 'PBSP003'),
-(20, 700000.00, 'PX004', 'PBSP004'),
-(25, 850000.00, 'PX005', 'PBSP005');
+-- PN003 có 3 chi tiết
+(8, 550000, 'PN003', 'PBSP003'),
+(10, 530000, 'PN003', 'PBSP010'),
+(6, 540000, 'PN003', 'PBSP011'),
+
+-- PN004 có 3 chi tiết
+(12, 230000, 'PN004', 'PBSP004'),
+(14, 250000, 'PN004', 'PBSP005'),
+(9, 240000, 'PN004', 'PBSP009'),
+
+-- PN005 có 3 chi tiết
+(7, 870000, 'PN005', 'PBSP005'),
+(11, 860000, 'PN005', 'PBSP011'),
+(13, 880000, 'PN005', 'PBSP010');
+
+-- Chèn dữ liệu vào bảng PHIEUXUAT
+INSERT INTO PHIEUXUAT (maPX, ngayTao, diaChi, tongTien, httt, trangThai, maNV, maKho, maKH) 
+VALUES 
+('PX001', '2024-03-01', N'12 Nguyễn Trãi, Hà Nội', 7500000, N'Tiền mặt', 'on', 'NV001', 'KHO001', 'KH001'),
+('PX002', '2024-03-05', N'45 Lê Lợi, TP.HCM', 4200000, N'Chuyển khoản', 'on', 'NV002', 'KHO002', 'KH002'),
+('PX003', '2024-03-10', N'78 Trần Phú, Đà Nẵng', 5200000, N'Tiền mặt', 'off', 'NV003', 'KHO001', 'KH003'),
+('PX004', '2024-03-15', N'90 Phạm Văn Đồng, Hải Phòng', 6100000, N'Thanh toán khi nhận hàng', 'on', 'NV004', 'KHO003', 'KH004'),
+('PX005', '2024-03-20', N'33 Võ Văn Kiệt, Cần Thơ', 8300000, N'Chuyển khoản', 'off', 'NV005', 'KHO002', 'KH005');
+
+-- Chèn dữ liệu vào bảng CTPX
+INSERT INTO CTPX (soLuong, giaXuat, maPX, maPBSP) 
+VALUES 
+(3, 2500000, 'PX001', 'PBSP001'),
+(2, 2100000, 'PX002', 'PBSP002'),
+(5, 1040000, 'PX003', 'PBSP003'),
+(4, 1525000, 'PX004', 'PBSP004'),
+(6, 1380000, 'PX005', 'PBSP005');
+
 
 -- Chèn dữ liệu vào bảng BANGCHAMCONG
 INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiPhep, soNgayNghiKhongPhep, soGioOT, maNV) VALUES
@@ -456,20 +480,10 @@ select * from khachhang;
 select * from bangchamcong;
 select * from bangluong;
 select * from ghichu;
-<<<<<<< HEAD
-=======
 select * from lschinhsua;
->>>>>>> 5909d00282f6cc9d4ce412b99a6888bc9d7a0f65
+select * from donyeucau;
 
-
-
-SELECT maCV FROM NHANVIEN;
-
-
-SELECT name, definition
-FROM sys.check_constraints
-WHERE parent_object_id = OBJECT_ID('NHACUNGCAP');
-
+SELECT @@VERSION;
 
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;
@@ -596,4 +610,25 @@ EXEC sp_themNhanVien
 -- Đối với sản phẩm:
 -- Đối với kho:
 -- Đối với nhà cung cấp:
+
+
+-- Xem database được cấu hình làm distributor 
+EXEC sp_get_distributor;
+
+-- Gỡ bỏ distribution trên damian/mssqlserver01
+-- 1️. Xóa các Publications và Subscriptions trước (nếu có)
+-- ✅ Xóa tất cả Subscriptions
+EXEC sp_dropsubscription @publication = 'Tên_Publication', @subscriber = 'all';
+-- Hoặc nếu không biết tên Publication, bạn có thể liệt kê bằng lệnh:
+EXEC sp_helppublication;
+-- ✅ Xóa tất cả Publications
+EXEC sp_droppublication @publication = 'Tên_Publication';
+
+-- 2️. Xóa Distributor
+USE master;
+EXEC sp_dropdistributor @no_checks = 1, @ignore_distributor = 1;
+
+-- 3️. Xóa cấu hình Distribution từ Publisher
+EXEC sp_dropdistpublisher @publisher = 'DAMIAN\MSSQLSERVER01';
+
 
