@@ -332,7 +332,7 @@ public class AdminView {
 		menuStatistics.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				StatisticsGUI statisticsObj = new StatisticsGUI();
+				ThongKeGUI statisticsObj = new ThongKeGUI();
 				contentPanel.add(statisticsObj, statisticsMenu_Identification);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, statisticsMenu_Identification);

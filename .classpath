@@ -6,17 +6,14 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/flatlaf-3.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/flatlaf-extras-3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/flatlaf-fonts-roboto-2.137.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/flatlaf-swingx-3.5.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/flatlaf-theme-editor-3.5.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/jcalendar-1.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/commons-codec-1.11.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/commons-collections4-4.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/commons-compress-1.18.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/datechooser-swing-1.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-3.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-extras-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-extras-3.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-fonts-roboto-2.137.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-swingx-3.5.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/flatlaf-theme-editor-3.5.4.jar"/>
@@ -27,7 +24,10 @@
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/jfreechart-1.0.19-experimental.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/jfreechart-1.0.19-swt.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/jfreesvg-2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/jsvg-1.4.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/miglayout-core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/miglayout-swing.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/mssql-jdbc-12.8.1.jre8.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/mssql-jdbc-12.8.1.jre8-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/mssql-jdbc-12.8.1.jre8-sources.jar"/>
@@ -42,8 +42,18 @@
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/poi-ooxml-schemas-4.0.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/servlet.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/svgSalamander-1.1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/swing-chart-1.1.0-beta.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/swing-glasspane-popup-1.5.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/swingx-all-1.6.5-1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/ITstudies/JAVA_BACKEND/JAVA PROJECTS/Phone_Store_Management_HTTTDN/Phone_Store_Management/jars/xmlbeans-3.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.base.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.media.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx.web.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ACER/Dropbox/My PC (LAPTOP-UGP9QJUT)/Documents/NetBeansProjects/jar/javafx-swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

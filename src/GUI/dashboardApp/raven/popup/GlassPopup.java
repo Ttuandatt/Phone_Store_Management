@@ -34,7 +34,7 @@ public class GlassPopup extends JComponent {
         initAnimator();
     }
 
-    GlassPopup(GlassPanePopup aThis, raven.popup.GlassPaneChild component, Option option) {
+    GlassPopup(GlassPanePopup aThis, GUI.dashboardApp.raven.popup.GlassPaneChild component, Option option) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
