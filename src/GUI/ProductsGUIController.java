@@ -6,9 +6,27 @@ import java.util.ResourceBundle;
 
 import javax.print.DocFlavor.URL;
 
+<<<<<<< HEAD
 import BUS.SanPhamBUS;
 import DTO.PhienBanSanPhamDTO;
 import DTO.SanPhamDTO;
+=======
+<<<<<<< HEAD
+import BUS.SanPhamBUS;
+import DTO.PhienBanSanPhamDTO;
+import DTO.SanPhamDTO;
+=======
+<<<<<<< HEAD
+import BUS.SanPhamBUS;
+import DTO.PhienBanSanPhamDTO;
+import DTO.SanPhamDTO;
+=======
+import BUS.ProductsBUS;
+import DTO.PBSPDTO;
+import DTO.ProductsDTO;
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,7 +42,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 public class ProductsGUIController {
+<<<<<<< HEAD
     private SanPhamBUS productsBUS = new SanPhamBUS();
+=======
+<<<<<<< HEAD
+    private SanPhamBUS productsBUS = new SanPhamBUS();
+=======
+<<<<<<< HEAD
+    private SanPhamBUS productsBUS = new SanPhamBUS();
+=======
+    private ProductsBUS productsBUS = new ProductsBUS();
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 
     @FXML
     private Pane versionPane;
@@ -35,6 +65,13 @@ public class ProductsGUIController {
     @FXML
     private ImageView imageView;
     @FXML
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
     private TableColumn<SanPhamDTO, String> tb_c_camsau;
 
     @FXML
@@ -57,6 +94,36 @@ public class ProductsGUIController {
 
     @FXML
     private TableView<SanPhamDTO> tb_products;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+    private TableColumn<ProductsDTO, String> tb_c_camsau;
+
+    @FXML
+    private TableColumn<ProductsDTO, String> tb_c_camtruoc;
+
+    @FXML
+    private TableColumn<ProductsDTO, String> tb_c_masp;
+
+    @FXML
+    private TableColumn<ProductsDTO, String> tb_c_os;
+
+    @FXML
+    private TableColumn<ProductsDTO, String> tb_c_pin;
+
+    @FXML
+    private TableColumn<ProductsDTO, String> tb_c_tensp;
+
+    @FXML
+    private TableColumn<ProductsDTO, String> tb_c_xuatxu;
+
+    @FXML
+    private TableView<ProductsDTO> tb_products;
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
     @FXML
     private TextField textFieldTimKiem;
     @FXML
@@ -81,6 +148,13 @@ public class ProductsGUIController {
     private TextField tf_xuatxu;
 
     @FXML
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
     private TableColumn<PhienBanSanPhamDTO, Integer> tb_c2_giaban;
 
     @FXML
@@ -103,6 +177,36 @@ public class ProductsGUIController {
 
     @FXML
     private TableView<PhienBanSanPhamDTO> tb_pbsp;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+    private TableColumn<PBSPDTO, Integer> tb_c2_giaban;
+
+    @FXML
+    private TableColumn<PBSPDTO, String> tb_c2_mapb;
+
+    @FXML
+    private TableColumn<PBSPDTO, String> tb_c2_mausac;
+
+    @FXML
+    private TableColumn<PBSPDTO, String> tb_c2_ram;
+
+    @FXML
+    private TableColumn<PBSPDTO, String> tb_c2_rom;
+
+    @FXML
+    private TableColumn<PBSPDTO, Integer> tb_c2_soluong;
+
+    @FXML
+    private TableColumn<PBSPDTO, String> tb_c2_trangthai;
+
+    @FXML
+    private TableView<PBSPDTO> tb_pbsp;
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 
     @FXML
     private TextField tf_vs_giaban;
@@ -127,7 +231,19 @@ public class ProductsGUIController {
 
     @FXML
     public void initialize() {
+<<<<<<< HEAD
         ArrayList<SanPhamDTO> arr = productsBUS.selectAll();
+=======
+<<<<<<< HEAD
+        ArrayList<SanPhamDTO> arr = productsBUS.selectAll();
+=======
+<<<<<<< HEAD
+        ArrayList<SanPhamDTO> arr = productsBUS.selectAll();
+=======
+        ArrayList<ProductsDTO> arr = productsBUS.getAllProducts();
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
         insertIntoTableSanPham(arr);
     }
 
@@ -136,8 +252,23 @@ public class ProductsGUIController {
         productPane.setVisible(true);
         versionPane.setVisible(false);
 
+<<<<<<< HEAD
         SanPhamDTO product = tb_products.getSelectionModel().getSelectedItem();
 //        insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
+=======
+<<<<<<< HEAD
+        SanPhamDTO product = tb_products.getSelectionModel().getSelectedItem();
+//        insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
+=======
+<<<<<<< HEAD
+        SanPhamDTO product = tb_products.getSelectionModel().getSelectedItem();
+//        insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
+=======
+        ProductsDTO product = tb_products.getSelectionModel().getSelectedItem();
+        insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
         tf_masp.setText(product.getMaSP());
         tf_tensp.setText(product.getTenSP());
         tf_pin.setText(product.getPin());
@@ -147,8 +278,23 @@ public class ProductsGUIController {
         tf_xuatxu.setText(product.getXuatXu());
     }
 
+<<<<<<< HEAD
     public void insertIntoTableSanPham(ArrayList<SanPhamDTO> a) {
         ObservableList<SanPhamDTO> dataListSanPham = FXCollections.observableArrayList();
+=======
+<<<<<<< HEAD
+    public void insertIntoTableSanPham(ArrayList<SanPhamDTO> a) {
+        ObservableList<SanPhamDTO> dataListSanPham = FXCollections.observableArrayList();
+=======
+<<<<<<< HEAD
+    public void insertIntoTableSanPham(ArrayList<SanPhamDTO> a) {
+        ObservableList<SanPhamDTO> dataListSanPham = FXCollections.observableArrayList();
+=======
+    public void insertIntoTableSanPham(ArrayList<ProductsDTO> a) {
+        ObservableList<ProductsDTO> dataListSanPham = FXCollections.observableArrayList();
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
         dataListSanPham.addAll(a);
         tb_products.getColumns().clear();
         tb_c_masp.setCellValueFactory(new PropertyValueFactory<>("maSP"));
@@ -165,8 +311,23 @@ public class ProductsGUIController {
                 tb_c_xuatxu);
     }
 
+<<<<<<< HEAD
     public void insertIntoTablePBSP(ArrayList<PhienBanSanPhamDTO> a) {
         ObservableList<PhienBanSanPhamDTO> dataListPBSP = FXCollections.observableArrayList();
+=======
+<<<<<<< HEAD
+    public void insertIntoTablePBSP(ArrayList<PhienBanSanPhamDTO> a) {
+        ObservableList<PhienBanSanPhamDTO> dataListPBSP = FXCollections.observableArrayList();
+=======
+<<<<<<< HEAD
+    public void insertIntoTablePBSP(ArrayList<PhienBanSanPhamDTO> a) {
+        ObservableList<PhienBanSanPhamDTO> dataListPBSP = FXCollections.observableArrayList();
+=======
+    public void insertIntoTablePBSP(ArrayList<PBSPDTO> a) {
+        ObservableList<PBSPDTO> dataListPBSP = FXCollections.observableArrayList();
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
         dataListPBSP.addAll(a);
         tb_pbsp.getColumns().clear();
         tb_c2_mapb.setCellValueFactory(new PropertyValueFactory<>("maPBSP"));
@@ -186,7 +347,19 @@ public class ProductsGUIController {
 
     @FXML
     void handleClickTableVersion(MouseEvent event) {
+<<<<<<< HEAD
     	PhienBanSanPhamDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
+=======
+<<<<<<< HEAD
+    	PhienBanSanPhamDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
+=======
+<<<<<<< HEAD
+    	PhienBanSanPhamDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
+=======
+        PBSPDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
         tf_vs_mapb.setText(version.getMaPBSP());
         tf_vs_mausac.setText(version.getMauSac());
         tf_vs_ram.setText(version.getRam());

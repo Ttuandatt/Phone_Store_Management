@@ -65,8 +65,13 @@ DROP TABLE NHACUNGCAP;
 CREATE TABLE CHUCVU (
     maCV VARCHAR(50) NOT NULL,
     tenCV NVARCHAR(255) NOT NULL,
+<<<<<<< HEAD
+    luongCB DECIMAL(18,2) NOT NULL,
+    heSo FLOAT NOT NULL,
+=======
     luongCB FLOAT,
     heSo FLOAT,
+>>>>>>> 5909d00282f6cc9d4ce412b99a6888bc9d7a0f65
 	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
 
@@ -322,9 +327,15 @@ INSERT INTO NHACUNGCAP (maNCC, tenNCC, sdt, email, diaChi, trangThai) VALUES
 INSERT INTO CHUCVU (maCV, tenCV, luongCB, heSo, trangThai) 
 VALUES 
 ('CV001', N'Quản lý kho', 15000000, 2.0, 'on'),
+<<<<<<< HEAD
+('CV002', N'Nhân viên kho', 8000000, 1.2, 'on'),
+('CV003', N'Quản lý nhân sự', 9000000, 1.3, 'on');
+
+=======
 ('CV002', N'Quản lý nhân sự', 8000000, 1.2, 'on'),
 ('CV003', N'Nhân viên kho', 9000000, 1.3, 'on'),
 ('CV004', N'Admin', 0, 0, 'on');
+>>>>>>> 5909d00282f6cc9d4ce412b99a6888bc9d7a0f65
 
 -- Insert bảng KHO
 INSERT INTO KHO (maKho, tenKho, diaChi, sdt) 
@@ -480,8 +491,9 @@ select * from khachhang;
 select * from bangchamcong;
 select * from bangluong;
 select * from ghichu;
+<<<<<<< HEAD
+=======
 select * from lschinhsua;
-select * from donyeucau;
 
 SELECT @@VERSION;
 

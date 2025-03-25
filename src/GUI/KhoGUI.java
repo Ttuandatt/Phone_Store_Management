@@ -1,22 +1,24 @@
 package GUI;
 
+<<<<<<< HEAD
 import DTO.KhoDTO;
+=======
+<<<<<<< HEAD
+import DTO.KhoDTO;
+=======
+<<<<<<< HEAD:src/GUI/KhoGUI.java
+import DTO.KhoDTO;
+=======
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7:src/GUI/ProductsGUI.java
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+public class ProductsGUI {
+    private Parent root;
 
+<<<<<<< HEAD:src/GUI/KhoGUI.java
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -532,10 +534,19 @@ public class KhoGUI extends JPanel{
 //===================================================== END BOTTOM PANEL =======================================================================================================//   
 
         
+=======
+    public ProductsGUI() {
+        // Không load FXML trong constructor
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7:src/GUI/ProductsGUI.java
     }
 
-    
-    private void loadSanPhamList() {
-    	
+    public Parent getContent() throws Exception {
+        if (root == null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ProductsGUI.fxml"));
+            root = loader.load();
+            ProductsGUIController controller = loader.getController();
+            controller.initialize(); // Khởi tạo dữ liệu
+        }
+        return root;
     }
 }

@@ -169,7 +169,12 @@ public class QuanLyNhanSuView {
         
 //=========================================== Khu vực add Listener cho các nút/menu/menuItem ==========================================================//
    
+<<<<<<< HEAD
         
+=======
+		
+		
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 		// ActionListener cho menuItem Danh sách nhân viên
 		menuItemDanhSachNhanVien.addActionListener(e -> {
 			NhanVienGUI employeeObj = new NhanVienGUI();
@@ -311,6 +316,7 @@ public class QuanLyNhanSuView {
         		}
         		
         		@Override
+<<<<<<< HEAD
                 public void mouseClicked(MouseEvent e) {
         			menu.setBackground(Color.decode("#F38B2B")); //để đổi màu khi nhấn chuột
                 }
@@ -328,6 +334,8 @@ public class QuanLyNhanSuView {
         		}
 
         		@Override
+=======
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
         		public void mouseExited(MouseEvent e) {
         			menu.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
         		}
@@ -339,7 +347,11 @@ public class QuanLyNhanSuView {
         menu.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
+<<<<<<< HEAD
                 menu.setBackground(Color.decode("#F38B2B")); // Khi click vào, đổi màu cam
+=======
+                menu.setBackground(Color.decode("#F38B2B"));
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
                 if (!popupMenu.isVisible()) {
                     SwingUtilities.invokeLater(() -> {
                         Point location = menu.getLocationOnScreen();
@@ -350,6 +362,7 @@ public class QuanLyNhanSuView {
             }
 
             @Override
+<<<<<<< HEAD
             public void menuDeselected(MenuEvent e) {
                 menu.setBackground(Color.white); 
             }
@@ -358,6 +371,12 @@ public class QuanLyNhanSuView {
             public void menuCanceled(MenuEvent e) {
                 menu.setBackground(Color.white); 
             }
+=======
+            public void menuDeselected(MenuEvent e) {}
+
+            @Override
+            public void menuCanceled(MenuEvent e) {}
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
             
         });
 

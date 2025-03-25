@@ -1,6 +1,10 @@
 package GUI;
 
+<<<<<<< HEAD
 import BUS.BangChamCongBUS;
+=======
+import BUS.SanPhamBUS;
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 import Components.ShadowButton;
 import DTO.*;
 import DAO.SanPhamDAO;
@@ -42,10 +46,17 @@ import javax.swing.table.TableColumnModel;
 
 public class BangChamCongGUI extends JPanel{
 
+<<<<<<< HEAD
 	BangChamCongBUS bccBUS = new BangChamCongBUS();
     JTable bangChamCongTable;
     DefaultTableModel bangChamCongModel = new DefaultTableModel();
     ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+=======
+	SanPhamBUS productBUS = new SanPhamBUS();
+    JTable table = new JTable();
+    DefaultTableModel model = new DefaultTableModel();
+    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
     private JComboBox sortComboBox;
     private JPanel bangChamCongContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;

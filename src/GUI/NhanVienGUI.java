@@ -4,7 +4,13 @@ import BUS.BangChamCongBUS;
 import BUS.ChucVuBUS;
 import BUS.KhoBUS;
 import BUS.NhanVienBUS;
+<<<<<<< HEAD
 import DTO.*;
+=======
+import BUS.SanPhamBUS;
+import DTO.*;
+import DAO.SanPhamDAO;
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -1728,7 +1734,6 @@ public class NhanVienGUI extends JPanel{
         	middleLeftPanel.add(txtPassword);
         	
         	//bottomLeftPanel
-
         	
         	
         	//Lấy giá trị từ csdl và truyền vào các trường dữ liệu
