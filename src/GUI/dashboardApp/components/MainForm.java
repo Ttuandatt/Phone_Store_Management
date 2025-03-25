@@ -10,9 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import net.miginfocom.swing.MigLayout;
-import raven.swing.slider.PanelSlider;
-import raven.swing.slider.SimpleTransition;
-import raven.swing.slider.SliderTransition;
+import GUI.dashboardApp.raven.swing.slider.PanelSlider;
+import GUI.dashboardApp.raven.swing.slider.SimpleTransition;
+import GUI.dashboardApp.raven.swing.slider.SliderTransition;
 
 
 public class MainForm extends JPanel {

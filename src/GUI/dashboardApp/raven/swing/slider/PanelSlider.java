@@ -1,5 +1,5 @@
 
-package raven.swing.slider;
+package GUI.dashboardApp.raven.swing.slider;
 
 import com.formdev.flatlaf.util.Animator;
 import com.formdev.flatlaf.util.CubicBezierEasing;

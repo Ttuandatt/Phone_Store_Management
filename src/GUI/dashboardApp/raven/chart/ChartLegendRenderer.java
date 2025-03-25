@@ -1,5 +1,5 @@
 
-package raven.chart;
+package GUI.dashboardApp.raven.chart;
 
 import javax.swing.*;
 import java.awt.*;

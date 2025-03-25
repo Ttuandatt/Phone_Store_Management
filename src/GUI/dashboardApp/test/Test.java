@@ -30,7 +30,7 @@ public class Test extends JFrame {
             setUndecorated(UNDECORATED);
             setBackground(new Color(0, 0, 0, 0));
         } else {
-            getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
+        	getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
         }
         setTitle("Chart tổng hợp Test");
         GlassPanePopup.install(this);
