@@ -4,9 +4,9 @@ import BUS.BangChamCongBUS;
 import BUS.ChucVuBUS;
 import BUS.KhoBUS;
 import BUS.NhanVienBUS;
-import BUS.ProductsBUS;
+import BUS.SanPhamBUS;
 import DTO.*;
-import DAO.ProductsDAO;
+import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

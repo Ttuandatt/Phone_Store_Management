@@ -300,6 +300,14 @@ VALUES
 ('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 15, 'on', 'SP003'),
 ('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 12, 'on', 'SP004'),
 ('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 7, 'on', 'SP005');
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP) 
+VALUES
+('PBSP006', N'Xám', '12GB', '512GB', 28000000.00, 5, 'on', 'SP002'),
+('PBSP007', N'Xanh dương', '6GB', '128GB', 16000000.00, 9, 'on', 'SP003'),
+('PBSP008', N'Hồng', '8GB', '256GB', 21000000.00, 6, 'on', 'SP004'),
+('PBSP009', N'Bạc', '12GB', '1TB', 32000000.00, 4, 'on', 'SP002'),
+('PBSP010', N'Đỏ', '8GB', '128GB', 19000000.00, 11, 'on', 'SP005'),
+('PBSP011', N'Xanh lá', '6GB', '64GB', 14000000.00, 7, 'on', 'SP001');
 
 
 -- Insert vào bảng NHACUNGCAP
@@ -368,11 +376,30 @@ VALUES
 -- Chèn dữ liệu vào bảng CTPN
 INSERT INTO CTPN (soLuong, giaNhap, maPN, maPBSP) 
 VALUES 
+-- PN001 có 3 chi tiết
 (10, 500000, 'PN001', 'PBSP001'),
+(15, 520000, 'PN001', 'PBSP006'),
+(8, 490000, 'PN001', 'PBSP007'),
+
+-- PN002 có 3 chi tiết
 (5, 640000, 'PN002', 'PBSP002'),
+(12, 630000, 'PN002', 'PBSP008'),
+(9, 650000, 'PN002', 'PBSP009'),
+
+-- PN003 có 3 chi tiết
 (8, 550000, 'PN003', 'PBSP003'),
+(10, 530000, 'PN003', 'PBSP010'),
+(6, 540000, 'PN003', 'PBSP011'),
+
+-- PN004 có 3 chi tiết
 (12, 230000, 'PN004', 'PBSP004'),
-(7, 870000, 'PN005', 'PBSP005');
+(14, 250000, 'PN004', 'PBSP005'),
+(9, 240000, 'PN004', 'PBSP009'),
+
+-- PN005 có 3 chi tiết
+(7, 870000, 'PN005', 'PBSP005'),
+(11, 860000, 'PN005', 'PBSP011'),
+(13, 880000, 'PN005', 'PBSP010');
 
 -- Chèn dữ liệu vào bảng PHIEUXUAT
 INSERT INTO PHIEUXUAT (maPX, ngayTao, diaChi, tongTien, httt, trangThai, maNV, maKho, maKH) 
