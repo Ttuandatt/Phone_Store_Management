@@ -1,9 +1,9 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.BangChamCongBUS;
 import Components.ShadowButton;
 import DTO.*;
-import DAO.ProductsDAO;
+import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,10 +42,10 @@ import javax.swing.table.TableColumnModel;
 
 public class BangChamCongGUI extends JPanel{
 
-	ProductsBUS productBUS = new ProductsBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+	BangChamCongBUS bccBUS = new BangChamCongBUS();
+    JTable bangChamCongTable;
+    DefaultTableModel bangChamCongModel = new DefaultTableModel();
+    ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel bangChamCongContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
@@ -87,8 +87,8 @@ public class BangChamCongGUI extends JPanel{
         bangChamCongContent.add(topPanel, gbc);
         
         middlePanel = new JPanel();
-        middlePanel.setLayout(null);
-        middlePanel.setBackground(Color.white);
+        middlePanel.setLayout(new GridBagLayout());
+        middlePanel.setBackground(Color.green);
         middlePanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
         gbc.weightx = 1.0;
         gbc.weighty = 0.61;
@@ -99,14 +99,12 @@ public class BangChamCongGUI extends JPanel{
         bangChamCongContent.add(middlePanel, gbc);
         
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(null);
+        bottomPanel.setLayout(new GridBagLayout());
         bottomPanel.setBackground(Color.white);
         // Tạo viền với độ dày 3px và màu xám
         Border lineBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
-
         // Tạo TitledBorder với tiêu đề "Thông tin chi tiết"
         TitledBorder titledBorder = BorderFactory.createTitledBorder(lineBorder, "Thông tin chi tiết");
-
         // Chỉnh cỡ chữ, kiểu chữ
         titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
         titledBorder.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
@@ -521,25 +519,6 @@ public class BangChamCongGUI extends JPanel{
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
         
-        
-//        String[] genders = {"Giới tính", "Nam", "Nữ"};
-//        genderCombobox = new JComboBox<String>(genders);
-//        genderCombobox.setBounds(90,  24,  90, 25);
-//        searchInputPanel.add(genderCombobox);
-//        
-//     
-//        roleCombobox = new JComboBox<String>(roles);
-//        roleCombobox.setBounds(185, 24, 150, 25);
-//        searchInputPanel.add(roleCombobox);
-//        roleCombobox.addItemListener(e -> {
-//        	if(e.getStateChange() == ItemEvent.SELECTED) {
-//        		String selected = (String)roleCombobox.getSelectedItem();
-//        		if("Thêm chức vụ...".equals(selected)) {
-//        			newRoleDialog();
-//        		}
-//        	}
-//        	
-//        });
 
         
         JTextField searchInputTF = new JTextField();
@@ -633,11 +612,45 @@ public class BangChamCongGUI extends JPanel{
         btnRefresh.setBounds(45, 15, 40, 40);
         searchButtonPanel.add(btnRefresh);
 
-        
+        //========================= Table =========================//
+        bangChamCongTable = new JTable();
+        JScrollPane sp = new JScrollPane(bangChamCongTable);
+        gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		middlePanel.add(sp, gbc);
     }
 
     
-    private void loadBangChamCongList() {
+	private void loadBangChamCongList() {
+		bangChamCongTable.setDefaultEditor(Object.class, null);
+
+		bangChamCongTable.setModel(bangChamCongModel);
+		bangChamCongModel.addColumn("Mã BCC");
+		bangChamCongModel.addColumn("Tháng CC");
+		bangChamCongModel.addColumn("Năm CC");
+		bangChamCongModel.addColumn("Số ngày làm");
+    	bangChamCongModel.addColumn("Số ngày nghỉ phép");
+    	bangChamCongModel.addColumn("Số ngày nghỉ không phép");
+    	bangChamCongModel.addColumn("Số giờ tăng ca");
+    	bangChamCongModel.addColumn("Mã NV"); 
     	
-    }
+    	
+    	
+    	//Điều chỉnh kích thước các cột
+    	TableColumnModel tcm = bangChamCongTable.getColumnModel();
+    	tcm.getColumn(0).setPreferredWidth(100);
+		tcm.getColumn(1).setPreferredWidth(40);
+		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(3).setPreferredWidth(100);
+		tcm.getColumn(4).setPreferredWidth(200);
+		tcm.getColumn(5).setPreferredWidth(200);
+		tcm.getColumn(6).setPreferredWidth(100);
+		tcm.getColumn(7).setPreferredWidth(70);
+		
+		bangChamCongTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
+	}
 }

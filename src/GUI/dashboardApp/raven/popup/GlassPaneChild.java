@@ -1,5 +1,5 @@
 
-package raven.popup;
+package GUI.dashboardApp.raven.popup;
 
 import javax.swing.*;
 
