@@ -1,14 +1,8 @@
 package GUI;
 
-<<<<<<< HEAD
 import BUS.BangChamCongBUS;
-=======
-<<<<<<< HEAD
-import BUS.BangChamCongBUS;
-=======
 import BUS.SanPhamBUS;
->>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
+
 import Components.ShadowButton;
 import DTO.*;
 import DAO.SanPhamDAO;
