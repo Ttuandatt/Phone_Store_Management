@@ -1,9 +1,9 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.BangChamCongBUS;
 import Components.ShadowButton;
 import DTO.*;
-import DAO.ProductsDAO;
+import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,6 +25,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -42,10 +44,10 @@ import javax.swing.table.TableColumnModel;
 
 public class BangChamCongGUI extends JPanel{
 
-	ProductsBUS productBUS = new ProductsBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+	BangChamCongBUS bccBUS = new BangChamCongBUS();
+    JTable bangChamCongTable;
+    DefaultTableModel bangChamCongModel = new DefaultTableModel();
+    ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel bangChamCongContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
@@ -80,18 +82,18 @@ public class BangChamCongGUI extends JPanel{
         topPanel.setLayout(new GridBagLayout());
         topPanel.setBackground(Color.white);
         gbc.weightx = 1.0;
-        gbc.weighty = 0.09;
+        gbc.weighty = 0.24;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
         bangChamCongContent.add(topPanel, gbc);
         
         middlePanel = new JPanel();
-        middlePanel.setLayout(null);
+        middlePanel.setLayout(new GridBagLayout());
         middlePanel.setBackground(Color.white);
         middlePanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
         gbc.weightx = 1.0;
-        gbc.weighty = 0.61;
+        gbc.weighty = 0.3;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -99,14 +101,12 @@ public class BangChamCongGUI extends JPanel{
         bangChamCongContent.add(middlePanel, gbc);
         
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(null);
+        bottomPanel.setLayout(new GridBagLayout());
         bottomPanel.setBackground(Color.white);
         // Tạo viền với độ dày 3px và màu xám
         Border lineBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
-
         // Tạo TitledBorder với tiêu đề "Thông tin chi tiết"
         TitledBorder titledBorder = BorderFactory.createTitledBorder(lineBorder, "Thông tin chi tiết");
-
         // Chỉnh cỡ chữ, kiểu chữ
         titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
         titledBorder.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
@@ -114,7 +114,7 @@ public class BangChamCongGUI extends JPanel{
         // Áp dụng border cho bottomPanel
         bottomPanel.setBorder(titledBorder);
         gbc.weightx = 1.0;
-        gbc.weighty = 0.3;
+        gbc.weighty = 0.4;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -216,7 +216,7 @@ public class BangChamCongGUI extends JPanel{
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                newEmployeeDialog();
+                newBangChamCongDialog();
             }
         });
         btnAdd.addMouseListener(new MouseAdapter() {
@@ -521,25 +521,6 @@ public class BangChamCongGUI extends JPanel{
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
         
-        
-//        String[] genders = {"Giới tính", "Nam", "Nữ"};
-//        genderCombobox = new JComboBox<String>(genders);
-//        genderCombobox.setBounds(90,  24,  90, 25);
-//        searchInputPanel.add(genderCombobox);
-//        
-//     
-//        roleCombobox = new JComboBox<String>(roles);
-//        roleCombobox.setBounds(185, 24, 150, 25);
-//        searchInputPanel.add(roleCombobox);
-//        roleCombobox.addItemListener(e -> {
-//        	if(e.getStateChange() == ItemEvent.SELECTED) {
-//        		String selected = (String)roleCombobox.getSelectedItem();
-//        		if("Thêm chức vụ...".equals(selected)) {
-//        			newRoleDialog();
-//        		}
-//        	}
-//        	
-//        });
 
         
         JTextField searchInputTF = new JTextField();
@@ -633,11 +614,107 @@ public class BangChamCongGUI extends JPanel{
         btnRefresh.setBounds(45, 15, 40, 40);
         searchButtonPanel.add(btnRefresh);
 
-        
+        //========================= Table =========================//
+        bangChamCongTable = new JTable();
+        JScrollPane sp = new JScrollPane(bangChamCongTable);
+        gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		middlePanel.add(sp, gbc);
     }
 
     
-    private void loadBangChamCongList() {
+	private void loadBangChamCongList() {
+		bangChamCongTable.setDefaultEditor(Object.class, null);
+
+		bangChamCongTable.setModel(bangChamCongModel);
+		bangChamCongModel.addColumn("Mã bảng chấm công");
+		bangChamCongModel.addColumn("Tháng chấm công");
+		bangChamCongModel.addColumn("Năm chấm công");
+		bangChamCongModel.addColumn("Số ngày làm");
+    	bangChamCongModel.addColumn("Số ngày nghỉ phép");
+    	bangChamCongModel.addColumn("Số ngày nghỉ không phép");
+    	bangChamCongModel.addColumn("Số giờ tăng ca");
+    	bangChamCongModel.addColumn("Mã nhân viên"); 
     	
-    }
+    	arrBangChamCong = bccBUS.selectAll();
+    	for(int i=0; i<arrBangChamCong.size(); i++) {
+    		BangChamCongDTO bcc = arrBangChamCong.get(i);
+    		String maBCC = bcc.getMaBCC();
+    		int thangCC = bcc.getThangCC();
+    		int namCC = bcc.getNamCC();
+    		int soNgayLam = bcc.getSoNgayLam();
+    		int soNgayNghiPhep = bcc.getSoNgayNghiPhep();
+    		int soNgayNghiKhongPhep = bcc.getSoNgayNghiKhongPhep();
+    		int soGioTangCa = bcc.getSoGioOT();
+    		String maNV = bcc.getMaNV();
+    		
+    		Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiPhep, soNgayNghiKhongPhep, soGioTangCa, maNV};
+    		bangChamCongModel.addRow(row);
+    		
+    	}
+    	
+    	//Điều chỉnh kích thước các cột
+    	TableColumnModel tcm = bangChamCongTable.getColumnModel();
+    	tcm.getColumn(0).setPreferredWidth(200);
+		tcm.getColumn(1).setPreferredWidth(150);
+		tcm.getColumn(2).setPreferredWidth(150);
+		tcm.getColumn(3).setPreferredWidth(150);
+		tcm.getColumn(4).setPreferredWidth(200);
+		tcm.getColumn(5).setPreferredWidth(200);
+		tcm.getColumn(6).setPreferredWidth(107);
+		tcm.getColumn(7).setPreferredWidth(110);
+		
+		bangChamCongTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
+	}
+	
+	private void newBangChamCongDialog() {
+		JDialog newBangChamCongDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm bảng chấm công", true);
+		newBangChamCongDialog.setSize(300, 300);
+		newBangChamCongDialog.setLayout(null);
+
+		JLabel lblMaBCC, lblThangCC, lblNamCC, lblMaNV;
+		lblMaBCC = new JLabel("Mã bảng chấm công");
+		lblMaBCC.setBounds(10, 10, 150, 20);
+		newBangChamCongDialog.add(lblMaBCC);
+		
+		lblThangCC = new JLabel("Tháng chấm công");
+		lblThangCC.setBounds(10, 60, 150, 20);
+		newBangChamCongDialog.add(lblThangCC);
+		
+		lblNamCC = new JLabel("Năm chấm công");
+		lblNamCC.setBounds(10, 110, 150, 20);
+		newBangChamCongDialog.add(lblNamCC);
+		
+		lblMaNV = new JLabel("Mã nhân viên");
+		lblMaNV.setBounds(10, 160, 150, 20);
+		newBangChamCongDialog.add(lblMaNV);
+		
+		JTextField txtMaBCC, txtThangCC, txtNamCC, txtMaNV;
+		txtMaBCC = new JTextField();
+		txtMaBCC.setBounds(10, 30, 260, 25);
+		newBangChamCongDialog.add(txtMaBCC);
+		
+		txtThangCC = new JTextField();
+		txtThangCC.setBounds(10, 80, 260, 25);
+		newBangChamCongDialog.add(txtThangCC);
+		
+		txtNamCC = new JTextField();
+		txtNamCC.setBounds(10, 130, 260, 25);
+		newBangChamCongDialog.add(txtNamCC);
+		
+		txtMaNV = new JTextField();
+		txtMaNV.setBounds(10, 180, 260, 25);
+		newBangChamCongDialog.add(txtMaNV);
+		
+		JButton btnSave = new ShadowButton("Lưu");
+		btnSave.setBounds(200, 230, 70, 25);
+		newBangChamCongDialog.add(btnSave);
+		
+		newBangChamCongDialog.setLocationRelativeTo(this);
+		newBangChamCongDialog.setVisible(true);
+	}
 }

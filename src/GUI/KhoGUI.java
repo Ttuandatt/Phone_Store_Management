@@ -1,8 +1,6 @@
 package GUI;
 
-import BUS.ProductsBUS;
-import DTO.*;
-import DAO.ProductsDAO;
+import DTO.KhoDTO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,19 +34,18 @@ import javax.swing.table.TableColumnModel;
 
 
 
-public class ProductsGUI extends JPanel{
+public class KhoGUI extends JPanel{
 
-	ProductsBUS productBUS = new ProductsBUS();
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<KhoDTO> productArr = new ArrayList<KhoDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
 	
 	
 	//Constructor
-    public ProductsGUI(){
+    public KhoGUI(){
         initComponents();
         loadSanPhamList();
     }
@@ -84,7 +81,7 @@ public class ProductsGUI extends JPanel{
         
         bottomPanel = new JPanel();
         bottomPanel.setLayout(null);
-        bottomPanel.setBackground(Color.decode("#07004D"));
+        bottomPanel.setBackground(Color.decode("#853BA5"));
         gbc.weightx = 1.0;
         gbc.weighty = 0.91;
         gbc.fill = GridBagConstraints.BOTH;
@@ -189,9 +186,9 @@ public class ProductsGUI extends JPanel{
         btnUpdate.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
-        		btnUpdate.setBackground(Color.decode("#D2E4EE")); // Đổi màu khi hover vào
+        		btnUpdate.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		updateButtonPanel.setBackground(Color.decode("#D2E4EE"));
+        		updateButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -237,9 +234,9 @@ public class ProductsGUI extends JPanel{
         btnDelete.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
-        		btnDelete.setBackground(Color.decode("#D2E4EE")); // Đổi màu khi hover vào
+        		btnDelete.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		deleteButtonPanel.setBackground(Color.decode("#D2E4EE"));
+        		deleteButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -466,7 +463,7 @@ public class ProductsGUI extends JPanel{
         btnSearch.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnSearch.setBackground(Color.decode("#D2E4EE")); // Màu khi hover vào
+                btnSearch.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
                 btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
@@ -509,7 +506,7 @@ public class ProductsGUI extends JPanel{
         btnRefresh.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-            	btnRefresh.setBackground(Color.decode("#D2E4EE")); // Màu khi hover vào
+            	btnRefresh.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
             	btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 

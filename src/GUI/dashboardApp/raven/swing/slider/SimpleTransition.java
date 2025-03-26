@@ -1,5 +1,5 @@
 
-package raven.swing.slider;
+package GUI.dashboardApp.raven.swing.slider;
 
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;

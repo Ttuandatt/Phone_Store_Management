@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import GUI.dashboardApp.components.MainForm;
 import GUI.dashboardApp.components.SimpleForm;
-import raven.swing.slider.PanelSlider;
-import raven.swing.slider.SimpleTransition;
+import GUI.dashboardApp.raven.swing.slider.PanelSlider;
+import GUI.dashboardApp.raven.swing.slider.SimpleTransition;
 import GUI.dashboardApp.utils.UndoRedo;
 
 public class FormManager {

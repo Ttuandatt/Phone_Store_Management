@@ -27,7 +27,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setNamCC(rs.getInt("namCC"));
 				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
 				bcc.setSoNgayNghiPhep(rs.getInt("soNgayNghiPhep"));
-				bcc.setSoNgayNghiKhongPhep(rs.getInt("setSoNgayNghiKhongPhep"));
+				bcc.setSoNgayNghiKhongPhep(rs.getInt("SoNgayNghiKhongPhep"));
 				bcc.setSoGioOT(rs.getInt("soGioOT"));
 				bcc.setMaNV(rs.getString("maNV"));
 				

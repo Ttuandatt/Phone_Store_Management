@@ -4,15 +4,12 @@ import BUS.BangChamCongBUS;
 import BUS.ChucVuBUS;
 import BUS.KhoBUS;
 import BUS.NhanVienBUS;
-import BUS.ProductsBUS;
 import DTO.*;
-import DAO.ProductsDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,19 +22,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,7 +48,6 @@ import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
@@ -83,7 +73,7 @@ public class NhanVienGUI extends JPanel{
     ArrayList<KhoDTO> arrNoiLamViec = khoBUS.selectAll();
     String[] roles = new String[arrChucVu.size()];
     String[] workplaces =  new String[arrNoiLamViec.size()];
-    JPanel productContent;
+    JPanel nhanVienContent;
     JTextField tfTimKiem;
 	
 	final byte[][] imageBytes = new byte[1][];
@@ -92,7 +82,7 @@ public class NhanVienGUI extends JPanel{
 	//Constructor
     public NhanVienGUI(){
         initComponents();
-        loadEmployeeList();
+        loadNhanVienList();
         for(String kho: workplaces) {
         	System.out.println(kho);
         }
@@ -106,16 +96,16 @@ public class NhanVienGUI extends JPanel{
     private void initComponents() {
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
-        productContent = new JPanel();
-        productContent.setBackground(Color.white);
-        productContent.setLayout(new GridBagLayout());
+        nhanVienContent = new JPanel();
+        nhanVienContent.setBackground(Color.white);
+        nhanVienContent.setLayout(new GridBagLayout());
         
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(productContent, gbc); // Thêm vào ProductsGUI
+        add(nhanVienContent, gbc); // Thêm vào ProductsGUI
         
         //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
         JPanel topPanel, bottomPanel;
@@ -128,7 +118,7 @@ public class NhanVienGUI extends JPanel{
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        productContent.add(topPanel, gbc);
+        nhanVienContent.add(topPanel, gbc);
         
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridBagLayout());
@@ -140,7 +130,7 @@ public class NhanVienGUI extends JPanel{
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
-        productContent.add(bottomPanel, gbc);
+        nhanVienContent.add(bottomPanel, gbc);
         
 //==================================================== TOP PANEL =============================================================================================//
         JPanel functionsPanel, searchPanel;
@@ -693,10 +683,7 @@ public class NhanVienGUI extends JPanel{
         
         
         
-        
-//====================================================================== BOTTOM PANEL ==============================================================//
-
-        //========================= table =========================//
+        //========================= Table =========================//
         employeeTable = new JTable();
         JScrollPane sp = new JScrollPane(employeeTable);
         gbc.weightx = 0.55;
@@ -762,7 +749,7 @@ public class NhanVienGUI extends JPanel{
     }
 
     
-    private void loadEmployeeList() {
+    private void loadNhanVienList() {
     	employeeTable.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
     	
     	employeeTable.setModel(employeeModel);
@@ -1824,7 +1811,7 @@ public class NhanVienGUI extends JPanel{
         // Xóa tất cả các dòng trong mô hình bảng
         employeeModel.setRowCount(0);
         employeeModel.setColumnCount(0);
-        loadEmployeeList();
+        loadNhanVienList();
         sortComboBox.setSelectedIndex(0);
         genderCombobox.setSelectedIndex(0);
         roleCombobox.setSelectedIndex(0);
