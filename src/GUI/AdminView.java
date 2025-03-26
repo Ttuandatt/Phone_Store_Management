@@ -368,8 +368,99 @@ public class AdminView {
 	
 		
 		
+<<<<<<< HEAD
 		personalInfoButton.setOpaque(true);
 		personalInfoButton.setBackground(Color.WHITE);
+=======
+<<<<<<< HEAD
+		personalInfoButton.setOpaque(true);
+		personalInfoButton.setBackground(Color.WHITE);
+=======
+<<<<<<< HEAD
+		personalInfoButton.setOpaque(true);
+		personalInfoButton.setBackground(Color.WHITE);
+=======
+<<<<<<< HEAD
+		personalInfoButton.setOpaque(true);
+		personalInfoButton.setBackground(Color.WHITE);
+=======
+		//ActionListener cho menuItem Bang cham cong
+		timesheetMenuItem.addActionListener(e -> {
+			BangChamCongGUI timesheetObj = new BangChamCongGUI();
+			contentPanel.add(timesheetObj, timesheetMenuItem_Identification);
+			CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+			cardLayout.show(contentPanel, timesheetMenuItem_Identification);
+		});
+		
+		menuCheckAttendanceManagement.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				ChamCongGUI chamCongObj = new ChamCongGUI();
+				contentPanel.add(chamCongObj, checkAttendanceMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, checkAttendanceMenu_Identification);
+			}
+		});
+		
+		//ActionListener cho menuItem Leave Requests
+		leaveRequestMenuItem.addActionListener(e -> {
+			LeaveRequestGUI leaveRequestObj = new LeaveRequestGUI();
+			contentPanel.add(leaveRequestObj, leaveRequestMenu_Identification);
+			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+			cardLayout.show(contentPanel, leaveRequestMenu_Identification);
+		});
+		
+		//MouseListener cho menu Create Leave Request
+		menuCreateLeaveRequest.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				CreateLeaveRequestGUI createLeaveRequestObj = new CreateLeaveRequestGUI();
+				contentPanel.add(createLeaveRequestObj, leaveRequestMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, leaveRequestMenu_Identification);
+			}
+		});
+		
+		// MouseListener cho menu Statistics
+		menuStatistics.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ThongKeGUI statisticsObj = new ThongKeGUI();
+				contentPanel.add(statisticsObj, statisticsMenu_Identification);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, statisticsMenu_Identification);
+			}
+		});
+		
+		//ActionListener cho button Personal Information
+		changeInfoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PersonalInformationGUI personalInformationObj = new PersonalInformationGUI();
+				contentPanel.add(personalInformationObj, personalInfoButton_Identification);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, personalInfoButton_Identification);
+			}
+		});
+		
+		//MouseListener cho menu Warehouse
+		menuWarehouse.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				WarehouseGUI warehouseObj = new WarehouseGUI();
+				contentPanel.add(warehouseObj, warehouseMenu_Identification);
+				CardLayout cardLayout = (CardLayout)contentPanel.getLayout();
+				cardLayout.show(contentPanel, warehouseMenu_Identification);
+			}
+		});
+//==========================================================================================================================================================//
+		
+		changeInfoButton.setOpaque(true);
+		changeInfoButton.setBackground(Color.WHITE);
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
+>>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 		
 		logoutButton.setOpaque(true);
 		logoutButton.setBackground(Color.WHITE);

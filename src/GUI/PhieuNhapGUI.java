@@ -3,7 +3,23 @@ package GUI;
 import BUS.ChiTietPhieuNhapBUS;
 import BUS.PhienBanSanPhamBUS;
 import BUS.PhieuNhapBUS;
+<<<<<<< HEAD
 import BUS.SanPhamBUS;
+=======
+<<<<<<< HEAD
+import BUS.SanPhamBUS;
+=======
+<<<<<<< HEAD
+import BUS.SanPhamBUS;
+=======
+<<<<<<< HEAD
+import BUS.SanPhamBUS;
+=======
+import BUS.ProductsBUS;
+>>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
+>>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
+>>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
+>>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 import Components.ShadowButton;
 import DTO.*;
 import net.miginfocom.layout.Grid;
