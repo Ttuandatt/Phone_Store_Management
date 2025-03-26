@@ -1,22 +1,12 @@
 package GUI;
 
-<<<<<<< HEAD
 import BUS.BangChamCongBUS;
-=======
-<<<<<<< HEAD
-import BUS.BangChamCongBUS;
-=======
-import BUS.SanPhamBUS;
->>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 import Components.ShadowButton;
 import DTO.*;
-import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -24,7 +14,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -52,23 +41,10 @@ import javax.swing.table.TableColumnModel;
 
 public class BangChamCongGUI extends JPanel{
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 	BangChamCongBUS bccBUS = new BangChamCongBUS();
     JTable bangChamCongTable;
     DefaultTableModel bangChamCongModel = new DefaultTableModel();
     ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-<<<<<<< HEAD
-=======
-=======
-	SanPhamBUS productBUS = new SanPhamBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
->>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
     private JComboBox sortComboBox;
     private JPanel bangChamCongContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
@@ -111,11 +87,7 @@ public class BangChamCongGUI extends JPanel{
         
         middlePanel = new JPanel();
         middlePanel.setLayout(new GridBagLayout());
-<<<<<<< HEAD
         middlePanel.setBackground(Color.white);
-=======
-        middlePanel.setBackground(Color.green);
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
         middlePanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
         gbc.weightx = 1.0;
         gbc.weighty = 0.3;
@@ -655,20 +627,13 @@ public class BangChamCongGUI extends JPanel{
 		bangChamCongTable.setDefaultEditor(Object.class, null);
 
 		bangChamCongTable.setModel(bangChamCongModel);
-<<<<<<< HEAD
 		bangChamCongModel.addColumn("Mã bảng chấm công");
 		bangChamCongModel.addColumn("Tháng chấm công");
 		bangChamCongModel.addColumn("Năm chấm công");
-=======
-		bangChamCongModel.addColumn("Mã BCC");
-		bangChamCongModel.addColumn("Tháng CC");
-		bangChamCongModel.addColumn("Năm CC");
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 		bangChamCongModel.addColumn("Số ngày làm");
     	bangChamCongModel.addColumn("Số ngày nghỉ phép");
     	bangChamCongModel.addColumn("Số ngày nghỉ không phép");
     	bangChamCongModel.addColumn("Số giờ tăng ca");
-<<<<<<< HEAD
     	bangChamCongModel.addColumn("Mã nhân viên"); 
     	
     	arrBangChamCong = bccBUS.selectAll();
@@ -698,27 +663,10 @@ public class BangChamCongGUI extends JPanel{
 		tcm.getColumn(5).setPreferredWidth(200);
 		tcm.getColumn(6).setPreferredWidth(107);
 		tcm.getColumn(7).setPreferredWidth(110);
-=======
-    	bangChamCongModel.addColumn("Mã NV"); 
-    	
-    	
-    	
-    	//Điều chỉnh kích thước các cột
-    	TableColumnModel tcm = bangChamCongTable.getColumnModel();
-    	tcm.getColumn(0).setPreferredWidth(100);
-		tcm.getColumn(1).setPreferredWidth(40);
-		tcm.getColumn(2).setPreferredWidth(50);
-		tcm.getColumn(3).setPreferredWidth(100);
-		tcm.getColumn(4).setPreferredWidth(200);
-		tcm.getColumn(5).setPreferredWidth(200);
-		tcm.getColumn(6).setPreferredWidth(100);
-		tcm.getColumn(7).setPreferredWidth(70);
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 		
 		bangChamCongTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 
 	}
-<<<<<<< HEAD
 	
 	private void newBangChamCongDialog() {
 		JDialog newBangChamCongDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm bảng chấm công", true);
@@ -766,6 +714,4 @@ public class BangChamCongGUI extends JPanel{
 		newBangChamCongDialog.setLocationRelativeTo(this);
 		newBangChamCongDialog.setVisible(true);
 	}
-=======
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
 }

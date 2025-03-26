@@ -1,36 +1,12 @@
 package GUI;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
->>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
+
 import BUS.SanPhamBUS;
 import DTO.*;
 import GUI.dashboardApp.raven.forms.DashboardForm;
 import raven.popup.GlassPanePopup;
 import DAO.SanPhamDAO;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-=======
-import BUS.ProductsBUS;
-import DTO.*;
-import GUI.dashboardApp.raven.forms.DashboardForm;
-import raven.popup.GlassPanePopup;
-import DAO.ProductsDAO;
->>>>>>> 6191ecdcdd96a8462964e30445b416b9c62f3cf7
->>>>>>> f2a8c620b20729783c4ed4c0304242dfb7d6b4f9
->>>>>>> 59a70570a1617ba4a09498c7fd48841322b0010b
->>>>>>> 53e252ce0081b140258bbc26b7c778f1cf08c8d0
+
 
 import java.awt.BorderLayout;
 import java.awt.Color;
