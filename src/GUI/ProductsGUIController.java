@@ -1,6 +1,11 @@
 package GUI;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -9,10 +14,12 @@ import javax.print.DocFlavor.URL;
 import BUS.ProductsBUS;
 import DTO.PBSPDTO;
 import DTO.ProductsDTO;
+import DTO.ThuongHieuDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -22,12 +29,23 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 
 public class ProductsGUIController {
     private ProductsBUS productsBUS = new ProductsBUS();
-
+    private byte[] selectedImageBytes = null;
+    private ProductsDTO product=new ProductsDTO();
     @FXML
     private Pane versionPane;
+
+    @FXML
+    private Button bt_sua_sp;
+
+    @FXML
+    private Button bt_xoa_sp;   
+
+    @FXML
+    private Button bt_show_pannel_pb;
 
     @FXML
     private Pane productPane;
@@ -123,33 +141,52 @@ public class ProductsGUIController {
     private TextField tf_vs_soluong;
 
     @FXML
-    private TextField tf_vs_trangthai;
+    private ComboBox<ThuongHieuDTO> cbb_thuonghieu;
+
+    @FXML
+    private TextField tf_vs_masp;
+
 
     @FXML
     public void initialize() {
         ArrayList<ProductsDTO> arr = productsBUS.getAllProducts();
+        selectedImageBytes = null;
         insertIntoTableSanPham(arr);
+        upsetComboBoxThuongHieu(null);
+
     }
 
     @FXML
     void handleClickTableProducts(MouseEvent event) {
-        productPane.setVisible(true);
-        versionPane.setVisible(false);
-
-        ProductsDTO product = tb_products.getSelectionModel().getSelectedItem();
-        insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
-        tf_masp.setText(product.getMaSP());
-        tf_tensp.setText(product.getTenSP());
-        tf_pin.setText(product.getPin());
-        tf_os.setText(product.getOS());
-        tf_camtruoc.setText(product.getCamTruoc());
-        tf_camsau.setText(product.getCamSau());
-        tf_xuatxu.setText(product.getXuatXu());
+        product = tb_products.getSelectionModel().getSelectedItem();
+        if(product!=null){
+            productPane.setVisible(true);
+            versionPane.setVisible(false);
+            insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
+            tf_masp.setText(product.getMaSP());
+            tf_tensp.setText(product.getTenSP());
+            tf_pin.setText(product.getPin());
+            tf_os.setText(product.getOS());
+            tf_camtruoc.setText(product.getCamTruoc());
+            tf_camsau.setText(product.getCamSau());
+            tf_xuatxu.setText(product.getXuatXu());
+            upsetComboBoxThuongHieu(product.getMaTH());
+            // bt_show_pannel_pb.setVisible(true);
+            setupButtonSP(true);
+            selectedImageBytes=product.getHinhAnh();
+            ByteArrayInputStream bis = new ByteArrayInputStream(selectedImageBytes);
+            Image image = new Image(bis);
+            imageView.setImage(image); 
+            tf_vs_masp.setText(product.getMaSP());
+        }
+        else 
+        setupButtonSP(false);
+        // bt_show_pannel_pb.setVisible(false);
     }
 
     public void insertIntoTableSanPham(ArrayList<ProductsDTO> a) {
-        ObservableList<ProductsDTO> dataListSanPham = FXCollections.observableArrayList();
-        dataListSanPham.addAll(a);
+        ObservableList<ProductsDTO> dataListSanPham = FXCollections.observableArrayList(a);
+
         tb_products.getColumns().clear();
         tb_c_masp.setCellValueFactory(new PropertyValueFactory<>("maSP"));
         tb_c_tensp.setCellValueFactory(new PropertyValueFactory<>("tenSP"));
@@ -175,28 +212,29 @@ public class ProductsGUIController {
         tb_c2_rom.setCellValueFactory(new PropertyValueFactory<>("rom"));
         tb_c2_giaban.setCellValueFactory(new PropertyValueFactory<>("giaBan"));
         tb_c2_soluong.setCellValueFactory(new PropertyValueFactory<>("soLuong"));
-        tb_c2_trangthai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
 
         tb_pbsp.setItems(dataListPBSP);
 
-        tb_pbsp.getColumns().addAll(tb_c2_mapb, tb_c2_mausac, tb_c2_ram, tb_c2_rom, tb_c2_giaban, tb_c2_soluong,
-                tb_c2_trangthai);
+        tb_pbsp.getColumns().addAll(tb_c2_mapb, tb_c2_mausac, tb_c2_ram, tb_c2_rom, tb_c2_giaban, tb_c2_soluong);
         return;
     }
 
     @FXML
     void handleClickTableVersion(MouseEvent event) {
         PBSPDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
-        tf_vs_mapb.setText(version.getMaPBSP());
-        tf_vs_mausac.setText(version.getMauSac());
-        tf_vs_ram.setText(version.getRam());
-        tf_vs_rom.setText(version.getRom());
-        tf_vs_giaban.setText(version.getGiaBan() + "");
-        tf_vs_soluong.setText(version.getSoLuong() + "");
-        tf_vs_trangthai.setText(version.getTrangThai());
+        if (version!=null) {
+            tf_vs_mapb.setText(version.getMaPBSP());
+            tf_vs_mausac.setText(version.getMauSac());
+            tf_vs_ram.setText(version.getRam());
+            tf_vs_rom.setText(version.getRom());
+            tf_vs_giaban.setText(version.getGiaBan() + "");
+            tf_vs_soluong.setText(version.getSoLuong() + "");
+            
+            versionPane.setVisible(true);
+            productPane.setVisible(false);
+        }
+        
 
-        versionPane.setVisible(true);
-        productPane.setVisible(false);
     }
 
     @FXML
@@ -212,11 +250,13 @@ public class ProductsGUIController {
         tf_vs_rom.setText("");
         tf_vs_giaban.setText("");
         tf_vs_soluong.setText("");
-        tf_vs_trangthai.setText("");
     }
 
     @FXML
     void handleClickButtonResetProduct(MouseEvent event) {
+        ResetProduct();
+    }
+    void ResetProduct() {
         tf_masp.setText("");
         tf_tensp.setText("");
         tf_pin.setText("");
@@ -224,5 +264,101 @@ public class ProductsGUIController {
         tf_camtruoc.setText("");
         tf_camsau.setText("");
         tf_xuatxu.setText("");
+        selectedImageBytes =null;
+        imageView.setImage(null);
+        setupButtonSP(false);
+        // bt_show_pannel_pb.setVisible(false);
+    }
+    void upsetComboBoxThuongHieu(String maTH) {
+        ObservableList<ThuongHieuDTO> listComboBoxthuonghieu = FXCollections.observableArrayList(productsBUS.getAllThuongHieu());
+        cbb_thuonghieu.setItems(listComboBoxthuonghieu);
+        if(maTH!=null) {
+            for (ThuongHieuDTO item : listComboBoxthuonghieu) {
+                if (item.getMaTH().equals(maTH)) {
+                    cbb_thuonghieu.setValue(item);
+                    break;
+                }
+            }
+        }
+        else {
+            cbb_thuonghieu.setValue(listComboBoxthuonghieu.get(0));
+        }
+    }
+
+    @FXML
+    void handleCilckChooseFile(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Chọn ảnh", "*.png", "*.jpg", "*.jpeg"));
+
+        File file = fileChooser.showOpenDialog(null); // Hiển thị hộp thoại chọn tệp
+        if (file != null) {
+            try {
+                selectedImageBytes  = Files.readAllBytes(file.toPath());
+                Image image = new Image(file.toURI().toString());
+                imageView.setImage(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    
+        }
+
+    }
+
+    @FXML
+    void handleClickAddProduct(MouseEvent event) {
+        int flag = productsBUS.addProduct(new ProductsDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(),selectedImageBytes,cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+        if(flag==1){
+            ResetProduct();
+            initialize();
+        }else if (flag==-1) {
+            productsBUS.showInfoMessage("Mã sản phẩm đã tồn tại!");
+        }
+    }
+    @FXML
+    void handleCilckQLPB(MouseEvent event) {
+        versionPane.setVisible(true);
+        productPane.setVisible(false);
+    }
+
+    @FXML
+    void handleClickSuaSP(MouseEvent event) {
+        int flag = productsBUS.updateProduct(new ProductsDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(), selectedImageBytes, cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+        if(flag==1){
+            ResetProduct();
+            initialize();
+        }else if (flag==-1) {
+            productsBUS.showInfoMessage("Sửa sản phẩm không thành công, hãy thử lại!");
+        }
+        
+    }
+    @FXML
+    void handleClickXoaSP(MouseEvent event) {
+        if(productsBUS.showConfirmation("Bạn có chắc muốn xóa sản phẩm có mã sản phẩm là "+tf_masp.getText()+" không ?")){
+            int flag = productsBUS.deleteProduct(new ProductsDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(), selectedImageBytes, cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+            if(flag==1){
+                ResetProduct();
+                initialize();
+            }else if (flag==-1) {
+                productsBUS.showInfoMessage("Xóa sản phẩm không thành công, hãy thử lại!");
+            }
+        }
+    }
+    void setupButtonSP(boolean turn_on) {
+        bt_show_pannel_pb.setVisible(turn_on);
+        bt_sua_sp.setDisable(!turn_on);
+        bt_xoa_sp.setDisable(!turn_on);
+    }
+    @FXML
+    void handleCilckSuaPB(MouseEvent event) {
+
+    }
+
+    @FXML
+    void handleCilckXoaPB(MouseEvent event) {
+
+    }
+    @FXML
+    void handleCilckAddPB(MouseEvent event) {
+
     }
 }
