@@ -91,7 +91,6 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
     }
     @Override
     public int insert(SanPhamDTO product) {
-        System.out.println("vào này");
         int rowsInserted = 0;
         try {
             jdbc.openConnection();
