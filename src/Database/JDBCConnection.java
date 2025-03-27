@@ -4,34 +4,34 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class JDBCConnection {
-	private String dbUrl = "jdbc:sqlserver://localhost:1433;databaseName=phonestore;encrypt=false;trustServerCertificate=true";
-	private String username = "sa";
-	private String password = "KVy@070303";
+	private String dbUrl = "jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false";
+	private String username = "";
+	private String password = "";
 	private Connection con;
-
-	// Hàm thiết lập kết nối tới CSDL
+	
+	//Hàm thiết lập kết nối tới CSDL
 	public boolean openConnection() {
 		boolean result = false;
-
+		
 		try {
 			con = DriverManager.getConnection(dbUrl, username, password);
 			return true;
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-
-	// Hàm ngắt kết nối tới CSDL
+	
+	//Hàm ngắt kết nối tới CSDL
 	public void closeConnection() {
 		try {
-			if (con != null)
+			if(con!=null)
 				con.close();
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	// Hàm trả về đối tượng Connection
 	public Connection getConnection() {
 		return con;

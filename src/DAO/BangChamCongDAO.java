@@ -79,10 +79,40 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 	}
 
 	@Override
-	public int insert(BangChamCongDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insert(BangChamCongDTO bcc) {
+		int result = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "insert into bangchamcong values (?,?,?,?,?,?,?,?)";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, bcc.getMaBCC());
+			ps.setInt(2, bcc.getThangCC());
+			ps.setInt(3, bcc.getNamCC());
+			ps.setInt(4, bcc.getSoNgayLam());
+			ps.setInt(5, bcc.getSoNgayNghiPhep());
+			ps.setInt(6, bcc.getSoNgayNghiKhongPhep());
+			ps.setInt(7, bcc.getSoGioOT());
+			ps.setString(8, bcc.getMaNV());
+			
+			result = ps.executeUpdate();
+			
+			ps.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			// Đóng kết nối CSDL
+			jdbc.closeConnection();
+		}
+		
+		
+		return result;
 	}
+	
 
 	@Override
 	public int delete(BangChamCongDTO t) {

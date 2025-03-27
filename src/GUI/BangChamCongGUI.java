@@ -591,7 +591,7 @@ public class BangChamCongGUI extends JPanel{
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+                refreshList();
             }
         });
         btnRefresh.addMouseListener(new MouseAdapter() {
@@ -711,7 +711,35 @@ public class BangChamCongGUI extends JPanel{
 		btnSave.setBounds(200, 230, 70, 25);
 		newBangChamCongDialog.add(btnSave);
 		
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				BangChamCongDTO bcc = new BangChamCongDTO();
+				bcc.setMaBCC(txtMaBCC.getText());
+				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
+				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
+				bcc.setSoNgayLam(0);
+				bcc.setSoNgayNghiPhep(0);
+				bcc.setSoNgayNghiKhongPhep(0);
+				bcc.setSoGioOT(0);
+				bcc.setMaNV(txtMaNV.getText());
+				
+				String message = bccBUS.insert(bcc);
+				JOptionPane.showMessageDialog(null, message);
+			}
+		});
+		
+		
 		newBangChamCongDialog.setLocationRelativeTo(this);
 		newBangChamCongDialog.setVisible(true);
 	}
+	
+	private void refreshList(){
+        // Xóa tất cả các dòng trong mô hình bảng
+        bangChamCongModel.setRowCount(0);
+        bangChamCongModel.setColumnCount(0);
+        loadBangChamCongList();
+        sortComboBox.setSelectedIndex(0);
+    }
 }
