@@ -11,9 +11,9 @@ import java.util.ResourceBundle;
 
 import javax.print.DocFlavor.URL;
 
-import BUS.ProductsBUS;
-import DTO.PBSPDTO;
-import DTO.ProductsDTO;
+import BUS.SanPhamBUS;
+import DTO.PhienBanSanPhamDTO;
+import DTO.SanPhamDTO;
 import DTO.ThuongHieuDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,9 +32,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 public class ProductsGUIController {
-    private ProductsBUS productsBUS = new ProductsBUS();
+    private SanPhamBUS SanPhamBUS = new SanPhamBUS();
     private byte[] selectedImageBytes = null;
-    private ProductsDTO product=new ProductsDTO();
+    private SanPhamDTO product=new SanPhamDTO();
     @FXML
     private Pane versionPane;
 
@@ -53,28 +53,28 @@ public class ProductsGUIController {
     @FXML
     private ImageView imageView;
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_camsau;
+    private TableColumn<SanPhamDTO, String> tb_c_camsau;
 
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_camtruoc;
+    private TableColumn<SanPhamDTO, String> tb_c_camtruoc;
 
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_masp;
+    private TableColumn<SanPhamDTO, String> tb_c_masp;
 
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_os;
+    private TableColumn<SanPhamDTO, String> tb_c_os;
 
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_pin;
+    private TableColumn<SanPhamDTO, String> tb_c_pin;
 
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_tensp;
+    private TableColumn<SanPhamDTO, String> tb_c_tensp;
 
     @FXML
-    private TableColumn<ProductsDTO, String> tb_c_xuatxu;
+    private TableColumn<SanPhamDTO, String> tb_c_xuatxu;
 
     @FXML
-    private TableView<ProductsDTO> tb_products;
+    private TableView<SanPhamDTO> tb_products;
     @FXML
     private TextField textFieldTimKiem;
     @FXML
@@ -99,28 +99,28 @@ public class ProductsGUIController {
     private TextField tf_xuatxu;
 
     @FXML
-    private TableColumn<PBSPDTO, Integer> tb_c2_giaban;
+    private TableColumn<PhienBanSanPhamDTO, Integer> tb_c2_giaban;
 
     @FXML
-    private TableColumn<PBSPDTO, String> tb_c2_mapb;
+    private TableColumn<PhienBanSanPhamDTO, String> tb_c2_mapb;
 
     @FXML
-    private TableColumn<PBSPDTO, String> tb_c2_mausac;
+    private TableColumn<PhienBanSanPhamDTO, String> tb_c2_mausac;
 
     @FXML
-    private TableColumn<PBSPDTO, String> tb_c2_ram;
+    private TableColumn<PhienBanSanPhamDTO, String> tb_c2_ram;
 
     @FXML
-    private TableColumn<PBSPDTO, String> tb_c2_rom;
+    private TableColumn<PhienBanSanPhamDTO, String> tb_c2_rom;
 
     @FXML
-    private TableColumn<PBSPDTO, Integer> tb_c2_soluong;
+    private TableColumn<PhienBanSanPhamDTO, Integer> tb_c2_soluong;
 
     @FXML
-    private TableColumn<PBSPDTO, String> tb_c2_trangthai;
+    private TableColumn<PhienBanSanPhamDTO, String> tb_c2_trangthai;
 
     @FXML
-    private TableView<PBSPDTO> tb_pbsp;
+    private TableView<PhienBanSanPhamDTO> tb_pbsp;
 
     @FXML
     private TextField tf_vs_giaban;
@@ -149,7 +149,7 @@ public class ProductsGUIController {
 
     @FXML
     public void initialize() {
-        ArrayList<ProductsDTO> arr = productsBUS.getAllProducts();
+        ArrayList<SanPhamDTO> arr = SanPhamBUS.getAllProducts();
         selectedImageBytes = null;
         insertIntoTableSanPham(arr);
         upsetComboBoxThuongHieu(null);
@@ -162,7 +162,7 @@ public class ProductsGUIController {
         if(product!=null){
             productPane.setVisible(true);
             versionPane.setVisible(false);
-            insertIntoTablePBSP(productsBUS.getAllPBSMBymaSP(product.getMaSP()));
+            insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(product.getMaSP()));
             tf_masp.setText(product.getMaSP());
             tf_tensp.setText(product.getTenSP());
             tf_pin.setText(product.getPin());
@@ -184,8 +184,8 @@ public class ProductsGUIController {
         // bt_show_pannel_pb.setVisible(false);
     }
 
-    public void insertIntoTableSanPham(ArrayList<ProductsDTO> a) {
-        ObservableList<ProductsDTO> dataListSanPham = FXCollections.observableArrayList(a);
+    public void insertIntoTableSanPham(ArrayList<SanPhamDTO> a) {
+        ObservableList<SanPhamDTO> dataListSanPham = FXCollections.observableArrayList(a);
 
         tb_products.getColumns().clear();
         tb_c_masp.setCellValueFactory(new PropertyValueFactory<>("maSP"));
@@ -202,8 +202,8 @@ public class ProductsGUIController {
                 tb_c_xuatxu);
     }
 
-    public void insertIntoTablePBSP(ArrayList<PBSPDTO> a) {
-        ObservableList<PBSPDTO> dataListPBSP = FXCollections.observableArrayList();
+    public void insertIntoTablePBSP(ArrayList<PhienBanSanPhamDTO> a) {
+        ObservableList<PhienBanSanPhamDTO> dataListPBSP = FXCollections.observableArrayList();
         dataListPBSP.addAll(a);
         tb_pbsp.getColumns().clear();
         tb_c2_mapb.setCellValueFactory(new PropertyValueFactory<>("maPBSP"));
@@ -221,7 +221,7 @@ public class ProductsGUIController {
 
     @FXML
     void handleClickTableVersion(MouseEvent event) {
-        PBSPDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
+        PhienBanSanPhamDTO version = tb_pbsp.getSelectionModel().getSelectedItem();
         if (version!=null) {
             tf_vs_mapb.setText(version.getMaPBSP());
             tf_vs_mausac.setText(version.getMauSac());
@@ -270,7 +270,7 @@ public class ProductsGUIController {
         // bt_show_pannel_pb.setVisible(false);
     }
     void upsetComboBoxThuongHieu(String maTH) {
-        ObservableList<ThuongHieuDTO> listComboBoxthuonghieu = FXCollections.observableArrayList(productsBUS.getAllThuongHieu());
+        ObservableList<ThuongHieuDTO> listComboBoxthuonghieu = FXCollections.observableArrayList(SanPhamBUS.getAllThuongHieu());
         cbb_thuonghieu.setItems(listComboBoxthuonghieu);
         if(maTH!=null) {
             for (ThuongHieuDTO item : listComboBoxthuonghieu) {
@@ -306,12 +306,12 @@ public class ProductsGUIController {
 
     @FXML
     void handleClickAddProduct(MouseEvent event) {
-        int flag = productsBUS.addProduct(new ProductsDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(),selectedImageBytes,cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+        int flag = SanPhamBUS.addProduct(new SanPhamDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(),selectedImageBytes,cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
         if(flag==1){
             ResetProduct();
             initialize();
         }else if (flag==-1) {
-            productsBUS.showInfoMessage("Mã sản phẩm đã tồn tại!");
+            SanPhamBUS.showInfoMessage("Mã sản phẩm đã tồn tại!");
         }
     }
     @FXML
@@ -322,24 +322,24 @@ public class ProductsGUIController {
 
     @FXML
     void handleClickSuaSP(MouseEvent event) {
-        int flag = productsBUS.updateProduct(new ProductsDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(), selectedImageBytes, cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+        int flag = SanPhamBUS.updateProduct(new SanPhamDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(), selectedImageBytes, cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
         if(flag==1){
             ResetProduct();
             initialize();
         }else if (flag==-1) {
-            productsBUS.showInfoMessage("Sửa sản phẩm không thành công, hãy thử lại!");
+            SanPhamBUS.showInfoMessage("Sửa sản phẩm không thành công, hãy thử lại!");
         }
         
     }
     @FXML
     void handleClickXoaSP(MouseEvent event) {
-        if(productsBUS.showConfirmation("Bạn có chắc muốn xóa sản phẩm có mã sản phẩm là "+tf_masp.getText()+" không ?")){
-            int flag = productsBUS.deleteProduct(new ProductsDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(), selectedImageBytes, cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+        if(SanPhamBUS.showConfirmation("Bạn có chắc muốn xóa sản phẩm có mã sản phẩm là "+tf_masp.getText()+" không ?")){
+            int flag = SanPhamBUS.deleteProduct(new SanPhamDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(), selectedImageBytes, cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
             if(flag==1){
                 ResetProduct();
                 initialize();
             }else if (flag==-1) {
-                productsBUS.showInfoMessage("Xóa sản phẩm không thành công, hãy thử lại!");
+                SanPhamBUS.showInfoMessage("Xóa sản phẩm không thành công, hãy thử lại!");
             }
         }
     }

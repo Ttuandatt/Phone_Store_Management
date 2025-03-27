@@ -1,10 +1,10 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.SanPhamBUS;
 import Components.ShadowButton;
 import DTO.*;
 import net.miginfocom.layout.Grid;
-import DAO.ProductsDAO;
+import DAO.SanPhamDAO;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -54,7 +54,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class XuatHangGUI extends JPanel {
 
-	ProductsBUS productBUS = new ProductsBUS();
+	SanPhamBUS productBUS = new SanPhamBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
 	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO

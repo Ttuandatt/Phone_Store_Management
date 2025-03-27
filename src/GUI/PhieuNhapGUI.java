@@ -1,10 +1,13 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.ChiTietPhieuNhapBUS;
+import BUS.PhienBanSanPhamBUS;
+import BUS.PhieuNhapBUS;
+import BUS.SanPhamBUS;
 import Components.ShadowButton;
 import DTO.*;
 import net.miginfocom.layout.Grid;
-import DAO.ProductsDAO;
+import DAO.SanPhamDAO;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -20,6 +23,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.sql.Date;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -50,14 +54,20 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class PhieuNhapGUI extends JPanel {
 
-	ProductsBUS productBUS = new ProductsBUS();
+	PhieuNhapBUS pnBUS = new PhieuNhapBUS();
+	ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
+	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
 	JTable slipTable, slipDetailTable;
 	DefaultTableModel slipModel, slipDetailModel;
-	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<PhieuNhapDTO> arrPhieuNhap = new ArrayList<PhieuNhapDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<ChiTietPhieuNhapDTO> arrCTPN = new ArrayList<ChiTietPhieuNhapDTO>();
+	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>();
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
 	JLabel imageLabel;
@@ -615,23 +625,46 @@ public class PhieuNhapGUI extends JPanel {
 	}
 
 	private void loadInwardSlipList() {
+		slipTable.setDefaultEditor(Object.class, null);
+		
 		slipModel = new DefaultTableModel();
 		slipTable.setModel(slipModel);
-		slipModel.addColumn("ID");
-		slipModel.addColumn("Date");
-		slipModel.addColumn("Warehouse");
-		slipModel.addColumn("Total");
-		slipModel.addColumn("Status");
+		slipModel.addColumn("Mã PN");
+		slipModel.addColumn("Ngày tạo");
+		slipModel.addColumn("Tổng tiền");
+		slipModel.addColumn("Trạng thái");
+		slipModel.addColumn("Kho");
+		slipModel.addColumn("Người tạo");
+		slipModel.addColumn("Nhà cung cấp");
 
-
+		arrPhieuNhap = pnBUS.selectAll();
+		for(int i=0; i<arrPhieuNhap.size(); i++) {
+			PhieuNhapDTO pn = arrPhieuNhap.get(i);
+			String maPN = pn.getMaPN();
+			Date ngayTao = pn.getNgayTao();
+			Double tongTien = pn.getTongTien();
+			String trangThai = pn.getTrangThai();
+			String maNV = pn.getMaNV();
+			String maKho = pn.getMaKho();
+			String maNCC = pn.getMaNCC();
+			
+			Object[] row = {maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC};
+			slipModel.addRow(row);
+		}
+		
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = slipTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(100);
-		tcm.getColumn(1).setPreferredWidth(100);
-		tcm.getColumn(2).setPreferredWidth(200);
-		tcm.getColumn(3).setPreferredWidth(115);
+		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(1).setPreferredWidth(80);
+		tcm.getColumn(2).setPreferredWidth(105);
+		tcm.getColumn(3).setPreferredWidth(70);
 		tcm.getColumn(4).setPreferredWidth(99);
+		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(6).setPreferredWidth(100);
+
+
+		
 		
 		slipTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 
@@ -640,15 +673,14 @@ public class PhieuNhapGUI extends JPanel {
 	private void loadSlipDetail() {
 		slipDetailModel  = new DefaultTableModel();
 		slipDetailTable.setModel(slipDetailModel);
-		slipDetailModel.addColumn("ID");
-		slipDetailModel.addColumn("Name");
+		slipDetailModel.addColumn("Mã PBSP");
+		slipDetailModel.addColumn("Tên sản phẩm");
+		slipDetailModel.addColumn("Color");
 		slipDetailModel.addColumn("RAM");
 		slipDetailModel.addColumn("ROM");
-		slipDetailModel.addColumn("Color");
-		slipDetailModel.addColumn("Price");
-		slipDetailModel.addColumn("Quantity");
+		slipDetailModel.addColumn("Giá");
+		slipDetailModel.addColumn("Số lượng");
 
-		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = slipDetailTable.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(60);
@@ -660,6 +692,11 @@ public class PhieuNhapGUI extends JPanel {
 		tcm.getColumn(6).setPreferredWidth(54);
 		
 		slipDetailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
-
+		
+		viewDetail();
+	}
+	
+	private void viewDetail() {
+		int selectedRow = slipTable.getSelectedRow();
 	}
 }
