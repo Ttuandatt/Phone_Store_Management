@@ -89,4 +89,7 @@ public class SanPhamBUS {
         }
         return -1;
     }
+    public ArrayList<SanPhamDTO> timKiem(String search_query) {
+        return SanPhamDAO.TimKiemTheoTen(search_query);
+    }
 }

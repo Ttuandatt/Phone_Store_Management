@@ -23,7 +23,14 @@ public class ValidateProducts {
             strings.add(message + " không hợp lệ");
         }
     }
-
+    public void isNumber(String data, String message){
+        try {
+            Integer.parseInt(data);
+        } catch (Exception e) {
+            // TODO: handle exception
+            strings.add(message + " phải là số!");
+        }
+    }
     public String toString() {
         String stringError = new String();
         for (String string : strings) {

@@ -40,7 +40,6 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 products.add(pd);
             }
             rs.close();
-            ps.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +68,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 pd.setMauSac(rs.getString("mauSac"));
                 pd.setRam(rs.getString("ram"));
                 pd.setRom(rs.getString("rom"));
-                pd.setGiaBan(rs.getDouble("giaBan"));
+                pd.setGiaBan(rs.getInt("giaBan"));
                 pd.setSoLuong(rs.getInt("soLuong"));
                 pd.setMaSP(rs.getString("maSP"));
                 pd.setMaSP(rs.getString("maSP"));
@@ -176,5 +175,38 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             jdbc.closeConnection();
         }
         return rowsUpdate;
+    }
+    public ArrayList<SanPhamDTO> TimKiemTheoTen(String search_query) {
+        ArrayList<SanPhamDTO> listSanPham=new ArrayList<>();
+        try {
+            jdbc.openConnection();
+            String query = "SELECT * FROM SANPHAM WHERE trangThai='on' AND tenSP like ?";
+
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, "%"+ search_query +"%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                DTO.SanPhamDTO products = new DTO.SanPhamDTO();
+                products.setMaSP(rs.getString("maSP"));
+                products.setTenSP(rs.getString("tenSP"));
+                products.setPin(rs.getString("pin"));
+                products.setOS(rs.getString("OS"));
+                products.setCamTruoc(rs.getString("camTruoc"));
+                products.setCamSau(rs.getString("camSau"));
+                products.setXuatXu(rs.getString("xuatXu"));
+                products.setTrangThai(rs.getString("trangThai"));
+                products.setMaTH(rs.getString("maTH"));
+                products.setHinhAnh(rs.getBytes("hinhAnh"));
+
+                listSanPham.add(products);
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        } finally {
+            jdbc.closeConnection();
+        }
+        return listSanPham;
     }
 }
