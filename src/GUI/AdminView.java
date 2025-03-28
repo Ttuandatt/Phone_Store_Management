@@ -220,7 +220,7 @@ public class AdminView {
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				SuppliersGUI supplierObj = new SuppliersGUI();
+				NhaCungCapGUI supplierObj = new NhaCungCapGUI();
 				contentPanel.add(supplierObj, nhaCungCap_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, nhaCungCap_Identity);

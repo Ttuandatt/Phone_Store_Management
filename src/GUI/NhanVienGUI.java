@@ -296,7 +296,7 @@ public class NhanVienGUI extends JPanel{
         
         
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
         Image newImgDelete = imgDelete.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -595,7 +595,7 @@ public class NhanVienGUI extends JPanel{
         
         
         //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
         Image newImgSearch = imgSearch.getScaledInstance(20,20, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
@@ -637,7 +637,7 @@ public class NhanVienGUI extends JPanel{
         btnSearch.setBounds(0, 15, 40, 40);
         searchButtonPanel.add(btnSearch);
         
-        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
         Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {

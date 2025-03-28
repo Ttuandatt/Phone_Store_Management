@@ -67,6 +67,7 @@ public class NhanVienBUS {
 	public Double getBaseSalaryByRoleID(String maCV) {
 		return nvDAO.getBaseSalaryByRoleID(maCV);
 	}
+	
 	public String deleteEmployee(NhanVienDTO nv) {
 		if(nvDAO.delete(nv)>0)
 			return "Xóa nhân viên thành công";

@@ -1,12 +1,10 @@
 package GUI;
 
-
 import BUS.SanPhamBUS;
 import DTO.*;
 import GUI.dashboardApp.raven.forms.DashboardForm;
 import raven.popup.GlassPanePopup;
 import DAO.SanPhamDAO;
-
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,8 +40,8 @@ import com.formdev.flatlaf.util.UIScale;
 
 
 public class ThongKeGUI extends JPanel{
-	SanPhamBUS productBUS = new SanPhamBUS();
 
+	SanPhamBUS productBUS = new SanPhamBUS();
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
     ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
@@ -65,9 +63,7 @@ public class ThongKeGUI extends JPanel{
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
         productContent = new JPanel();
-
         productContent.setBackground(Color.white);
-
         productContent.setLayout(new GridBagLayout());
         
         gbc.weightx = 1.0;
@@ -77,9 +73,6 @@ public class ThongKeGUI extends JPanel{
         gbc.gridy = 0;
         add(productContent, gbc); // Thêm vào ProductsGUI
         
-        setSize(UIScale.scale(new Dimension(1366, 800)));
-//        GlassPanePopup.install(this);
-
         // Thay đổi: Thêm trực tiếp DashboardForm vào JFrame
         DashboardForm dashboard = new DashboardForm();
         gbc.weightx = 1.0;
