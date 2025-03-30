@@ -7,7 +7,7 @@ public class BangChamCongDTO {
 	private int soNgayLam;
 	private int soNgayNghiPhep;
 	private int soNgayNghiKhongPhep;
-	private int soGioOT;
+	private float soGioOT;
 	private String maNV;
 	
 	
@@ -18,7 +18,7 @@ public class BangChamCongDTO {
 	}
 
 	public BangChamCongDTO(String maBCC, int thangCC, int namCC, int soNgayLam, int soNgayNghiPhep,
-			int soNgayNghiKhongPhep, int soGioOT, String maNV) {
+			int soNgayNghiKhongPhep, float soGioOT, String maNV) {
 		super();
 		this.maBCC = maBCC;
 		this.thangCC = thangCC;
@@ -79,11 +79,11 @@ public class BangChamCongDTO {
 		this.soNgayNghiKhongPhep = soNgayNghiKhongPhep;
 	}
 
-	public int getSoGioOT() {
+	public float getSoGioOT() {
 		return soGioOT;
 	}
 
-	public void setSoGioOT(int soGioOT) {
+	public void setSoGioOT(float soGioOT) {
 		this.soGioOT = soGioOT;
 	}
 

@@ -94,7 +94,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 			ps.setInt(4, bcc.getSoNgayLam());
 			ps.setInt(5, bcc.getSoNgayNghiPhep());
 			ps.setInt(6, bcc.getSoNgayNghiKhongPhep());
-			ps.setInt(7, bcc.getSoGioOT());
+			ps.setFloat(7, bcc.getSoGioOT());
 			ps.setString(8, bcc.getMaNV());
 			
 			result = ps.executeUpdate();
