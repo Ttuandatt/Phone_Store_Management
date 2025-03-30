@@ -1818,8 +1818,7 @@ public class NhanVienGUI extends JPanel{
     }
     
     
-    @SuppressWarnings("unchecked")
-	private void searchPerformed(JTable tb){
+    private void searchPerformed(JTable tb){
         String searchContent = tfTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
         if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
             ArrayList<NhanVienDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
@@ -1830,7 +1829,6 @@ public class NhanVienGUI extends JPanel{
                 // Kiểm tra xem thông tin của sản phẩm có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
                 if (nv.getMaNV().toLowerCase().contains(searchContent.toLowerCase()) ||
                     nv.getHoTen().toLowerCase().contains(searchContent.toLowerCase())||
-                  
                     nv.getGioiTinh().toLowerCase().contains(searchContent.toLowerCase())||
                     nv.getDiaChi().toLowerCase().contains(searchContent.toLowerCase())||
                     nv.getSoDienThoai().toLowerCase().contains(searchContent.toLowerCase())||
