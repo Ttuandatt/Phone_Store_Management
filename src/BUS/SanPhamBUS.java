@@ -10,4 +10,8 @@ public class SanPhamBUS {
 	public ArrayList<SanPhamDTO> selectAll(){
         return spDAO.selectAll();
     }
+	
+	public String getTenSanPhamByMaPBSP(String maPBSP) {
+		return spDAO.getTenSanPhamByMaPBSP(maPBSP);
+	}
 }
