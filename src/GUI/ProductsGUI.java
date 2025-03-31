@@ -2,8 +2,9 @@ package GUI;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javax.swing.JPanel;
 
-public class ProductsGUI {
+public class ProductsGUI extends JPanel{
     private Parent root;
 
     public ProductsGUI() {
