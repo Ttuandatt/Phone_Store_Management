@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.PhienBanSanPhamBUS;
 import BUS.SanPhamBUS;
 import Components.ShadowButton;
 import DTO.*;
@@ -20,6 +21,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -54,10 +56,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NhapHangGUI extends JPanel {
 
-	SanPhamBUS productBUS = new SanPhamBUS();
+	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
+	SanPhamBUS spBUS = new SanPhamBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
-	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<SanPhamDTO> arrSP = new ArrayList<SanPhamDTO>();
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel productContent;
 	JLabel imageLabel;
@@ -533,14 +537,14 @@ public class NhapHangGUI extends JPanel {
 	// Hàm hiển thị JDialog để nhập sản phẩm mới
 	private void newProductDialog() {
 		JDialog newProductDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm sản phẩm", true);
-		newProductDialog.setSize(600, 400);
+		newProductDialog.setSize(600, 450);
 		newProductDialog.setLayout(null);
 
 		JLabel lblId = new JLabel("Mã sản phẩm:");
 		lblId.setBounds(10, 20, 100, 20);
 		newProductDialog.add(lblId);
 		JTextField txtId = new JTextField();
-		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để tạo mã, k cho nhập tự động
+//		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để tạo mã, k cho nhập tự động
 		txtId.setBounds(110, 20, 150, 20);
 		newProductDialog.add(txtId);
 
@@ -635,25 +639,50 @@ public class NhapHangGUI extends JPanel {
 		txtBackCam.setBounds(110, 195, 150, 20);
 		newProductDialog.add(txtBackCam);
 
+		
+		//nhập thông tin phiên bản sản phẩm
+		JLabel lblMauSac = new JLabel("Màu sắc:");
+		lblMauSac.setBounds(10, 245, 100, 20);
+		newProductDialog.add(lblMauSac);
+		JTextField txtMauSac = new JTextField();
+		txtMauSac.setBounds(110, 245, 150, 20);
+		newProductDialog.add(txtMauSac);
+		
+		JLabel lblRam = new JLabel("RAM:");
+		lblRam.setBounds(10, 270, 100, 20);
+		newProductDialog.add(lblRam);
+		JTextField txtRam = new JTextField();
+		txtRam.setBounds(110, 270, 150, 20);
+		newProductDialog.add(txtRam);
+		
+		JLabel lblRom = new JLabel("ROM:");
+		lblRom.setBounds(10, 295, 100, 20);
+		newProductDialog.add(lblRom);
+		JTextField txtRom = new JTextField();
+		txtRom.setBounds(110, 295, 150, 20);
+		newProductDialog.add(txtRom);
+		
 		JLabel lblPrice = new JLabel("Giá:");
-		lblPrice.setBounds(10, 220, 100, 20);
+		lblPrice.setBounds(10, 320, 100, 20);
 		newProductDialog.add(lblPrice);
 		JTextField txtPrice = new JTextField();
-		txtPrice.setBounds(110, 220, 150, 20);
+		txtPrice.setBounds(110, 320, 150, 20);
 		newProductDialog.add(txtPrice);
+		
 
+		
 		JLabel lbStatus = new JLabel("Trạng thái:");
-		lbStatus.setBounds(10, 245, 100, 20);
+		lbStatus.setBounds(10, 345, 100, 20);
 		newProductDialog.add(lbStatus);
 		JRadioButton rbOn = new JRadioButton("On");
-		rbOn.setBounds(110, 245, 50, 20);
+		rbOn.setBounds(110, 345, 50, 20);
 		newProductDialog.add(rbOn);
 		JRadioButton rbOff = new JRadioButton("Off");
-		rbOff.setBounds(160, 245, 70, 20);
+		rbOff.setBounds(160, 345, 70, 20);
 		newProductDialog.add(rbOff);
 
 		JButton btnSave = new ShadowButton("Lưu");
-		btnSave.setBounds(330, 320, 70, 25);
+		btnSave.setBounds(395, 380, 70, 25);
 		btnSave.setBorderPainted(false);
 		btnSave.setBackground(Color.decode("#01BFF4"));
 		btnSave.addActionListener(e -> {
@@ -693,7 +722,7 @@ public class NhapHangGUI extends JPanel {
 		newProductDialog.add(btnSave);
 
 		JButton btnRefresh = new ShadowButton("Làm mới");
-		btnRefresh.setBounds(410, 320, 100, 25);
+		btnRefresh.setBounds(470, 380, 100, 25);
 		btnRefresh.setBorderPainted(false);
 		btnRefresh.setBackground(Color.decode("#01BFF4"));
 		btnRefresh.addActionListener(new ActionListener() {
@@ -781,25 +810,52 @@ public class NhapHangGUI extends JPanel {
 	}
 
 	private void loadProductList() {
+		productTable.setDefaultEditor(Object.class, null);
+		
 		productModel = new DefaultTableModel();
 		productTable.setModel(productModel);
-		productModel.addColumn("ID");
-		productModel.addColumn("Name");
+		productModel.addColumn("Mã PBSP");
+		productModel.addColumn("Tên sản phẩm");
+		productModel.addColumn("Màu sắc");
 		productModel.addColumn("RAM");
 		productModel.addColumn("ROM");
-		productModel.addColumn("Color");
-		productModel.addColumn("Price");
-		productModel.addColumn("Quantity");
+		productModel.addColumn("Giá");
+		productModel.addColumn("Số lượng");
+		productModel.addColumn("Trạng thái");
 
+		
+		DecimalFormat df = new DecimalFormat("#,###"); // Định dạng số có dấu phân cách
+		arrPBSP = pbspBUS.selectAll();
+//		arrSP = 
+		for(int i=0; i<arrPBSP.size(); i++) {
+			PhienBanSanPhamDTO pbsp = arrPBSP.get(i);
+			String maPBSP = pbsp.getMaPBSP();
+			// Gọi BUS để lấy tên sản phẩm
+			String tenSP = spBUS.getTenSanPhamByMaPBSP(maPBSP);
+			String mauSac = pbsp.getMauSac();
+			String ram = pbsp.getRam();
+			String rom = pbsp.getRom();
+			Double giaBan = pbsp.getGiaBan();
+			int soLuong = pbsp.getSoLuong();
+			String trangThai = pbsp.getTrangThai();
+			// Format giá trước khi thêm vào bảng
+		    String formattedGiaBan = df.format(giaBan);
+			
+			
+			
+			Object[] row = {maPBSP, tenSP, mauSac, ram, rom, formattedGiaBan, soLuong, trangThai};
+			productModel.addRow(row);
+		}
+		
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = productTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(60);
-		tcm.getColumn(1).setPreferredWidth(250);
-		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(0).setPreferredWidth(80);
+		tcm.getColumn(1).setPreferredWidth(200);
+		tcm.getColumn(2).setPreferredWidth(80);
 		tcm.getColumn(3).setPreferredWidth(50);
 		tcm.getColumn(4).setPreferredWidth(50);
-		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(5).setPreferredWidth(90);
 		tcm.getColumn(6).setPreferredWidth(54);
 
 		productTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize

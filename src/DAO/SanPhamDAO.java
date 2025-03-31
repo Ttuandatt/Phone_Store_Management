@@ -104,4 +104,33 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         return 0;
 
     }
+    
+    public String getTenSanPhamByMaPBSP(String maPBSP) {
+    	String tenSP = "";
+    	
+    	try {
+    		jdbc.openConnection();
+    		
+    		String query = "select tensp from sanpham join pbsp on sanpham.masp = pbsp.masp where pbsp.mapbsp=?";
+    	
+    		PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+    		ps.setString(1, maPBSP);
+    	
+    		
+    		ResultSet rs = ps.executeQuery();
+    		if(rs.next()) {
+    			tenSP = rs.getString("tenSP");
+    		}
+    		
+    		ps.close();
+    		rs.close();
+    	}catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        } finally {
+            jdbc.closeConnection();
+        }
+    	
+    	return tenSP;
+    }
 }
