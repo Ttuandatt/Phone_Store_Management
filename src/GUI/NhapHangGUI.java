@@ -458,8 +458,7 @@ public class NhapHangGUI extends JPanel {
 		
 
 		// Điền giá trị vào các txt
-		String maPN = pnBUS.getMaPNMoiNhat();
-		txtMaPN.setText(maPN);
+
 		txtNgayTao.setText(formattedDate);
 		
 		
@@ -495,7 +494,7 @@ public class NhapHangGUI extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Fix quantity button clicked!");
+				changeQuantity(chosenProductTable);
 			}
 		});
 
@@ -517,7 +516,7 @@ public class NhapHangGUI extends JPanel {
 		btnRemoveProduct.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Remove product button clicked!");
+				removeFromChosenTable(chosenProductTable);
 			}
 		});
 
@@ -545,10 +544,10 @@ public class NhapHangGUI extends JPanel {
 
 		JLabel lblTotal;
 		lblTotal = new JLabel("Total: ");
-		lblTotal.setBounds(400, 20, 50, 25);
+		lblTotal.setBounds(350, 20, 50, 25);
 		optionRightPanel.add(lblTotal);
-		lblTotalValue = new JLabel("0d"); // cai nay se lay tong tien setText lai sau, khi da co csdl
-		lblTotalValue.setBounds(450, 20, 50, 25);
+		lblTotalValue = new JLabel("0đ"); // cai nay se lay tong tien setText lai sau, khi da co csdl
+		lblTotalValue.setBounds(390, 20, 300, 25);
 		optionRightPanel.add(lblTotalValue);
 
 
@@ -929,7 +928,7 @@ public class NhapHangGUI extends JPanel {
 				if(ma.equals(maSP)) { // Nếu sản phẩm đã tồn tại
 					isDuplicate = true;
 					// 5. Nếu sản phẩm đã có trong bảng nhập (chosenProductTable), cập nhật số lượng và giá tiền
-					String oldValue = (String) model.getValueAt(selectedRow, 5);
+					String oldValue = (String) model.getValueAt(selectedRow, 4);
 					oldValue = oldValue.replaceAll("\\,", "");
 					oldValue = oldValue.replaceFirst("đ", "");
 					int newQuantity = Integer.parseInt(txtSoLuong.getText()) + Integer.parseInt((String) model.getValueAt(i, 2));
@@ -970,7 +969,7 @@ public class NhapHangGUI extends JPanel {
 
 				money = money.substring(0, money.length() - 1);
 				money = money.replaceAll("\\,", "");
-				txtSoLuong.setText(NumberFormat.getInstance().format(Integer.parseInt(money) + value) + "đ");
+				lblTotalValue.setText(NumberFormat.getInstance().format(Integer.parseInt(money) + value) + "đ");
 
 			}
 
@@ -981,11 +980,60 @@ public class NhapHangGUI extends JPanel {
 		}
 	}
 	
-	private String taoMaPNMoi(String maPNCu) {
-		String maPNMoi = "";
-		
-		//lấy ra 
-		
-		return maPNMoi;
+	private void removeFromChosenTable(JTable table) {
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			// Trừ đi số tiền của sản phẩm mà ta muốn loại bỏ
+			String dongia = (String) model.getValueAt(selectedRow, 6);
+			dongia = dongia.replaceAll("\\,", "");
+			dongia = dongia.replaceFirst("đ", "");
+			String oldMoney = lblTotalValue.getText();
+			oldMoney = oldMoney.replaceAll("\\,", "");
+			oldMoney = oldMoney.replaceFirst("đ", "");
+			int val = Integer.parseInt(oldMoney);
+			val = val - Integer.parseInt(dongia);
+			lblTotalValue.setText(NumberFormat.getInstance().format(val) + "đ");
+			model.removeRow(selectedRow);
+			table.repaint();
+		}else {
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần xóa!");
+		}
 	}
+	
+	private void changeQuantity(JTable table) {
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel model = (DefaultTableModel)table.getModel();
+			String maPBSP = (String) model.getValueAt(selectedRow, 0);
+			String soLuongMoi = JOptionPane.showInputDialog("Vui lòng nhập số lượng mới cho " + maPBSP);
+			if(soLuongMoi.equals("") || soLuongMoi.matches("%[a-zA-Z]%") || soLuongMoi.equals("0")) {
+				JOptionPane.showMessageDialog(null, "Số lượng không hợp lệ");
+			}else {
+				String mapbsp = (String) model.getValueAt(selectedRow, 0);
+				String tensp = (String) model.getValueAt(selectedRow, 1);
+				String dongia = (String) model.getValueAt(selectedRow, 6);
+				model.setValueAt(table, selectedRow, selectedRow);
+				dongia = dongia.replaceAll("\\,", "");
+				dongia = dongia.replaceFirst("đ", "");
+				int soluong = Integer.parseInt((String) model.getValueAt(selectedRow, 5));	//cột số 5 là cột số lượng, đếm từ 0
+				int val = Integer.parseInt(dongia) / soluong;
+				int soluongmoi = Integer.parseInt(soLuongMoi);
+				model.setValueAt(mapbsp, selectedRow, 0);
+				model.setValueAt(tensp, selectedRow, 1);
+				model.setValueAt(Integer.toString(soluongmoi), selectedRow, 5);
+				model.setValueAt(NumberFormat.getInstance().format(val * soluongmoi)+"đ", selectedRow, 6);
+
+				String oldMoney = lblTotalValue.getText();
+				oldMoney = oldMoney.replaceAll("\\,", "");
+				oldMoney = oldMoney.replaceFirst("đ", "");
+				int oldMoneyInt = Integer.parseInt(oldMoney);
+				int newMoney = oldMoneyInt - Integer.parseInt(dongia) + (val * soluongmoi);
+				lblTotalValue.setText(NumberFormat.getInstance().format(newMoney) + "đ"); 
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần sửa!");
+		}
+	}
+
 }
