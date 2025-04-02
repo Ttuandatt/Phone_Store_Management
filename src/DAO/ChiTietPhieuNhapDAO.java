@@ -69,4 +69,38 @@ public class ChiTietPhieuNhapDAO implements DAOInterface<ChiTietPhieuNhapDTO>{
 		return 0;
 	}
 
+	public ArrayList<ChiTietPhieuNhapDTO> getThongTinCTPN(String maPN){
+		ArrayList<ChiTietPhieuNhapDTO> arrCTPN = new ArrayList<ChiTietPhieuNhapDTO>();
+		try {
+			jdbc.openConnection();
+			
+			String query = "select soluong, gianhap, mapbsp from ctpn where mapn=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maPN);
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				ChiTietPhieuNhapDTO ctpn = new ChiTietPhieuNhapDTO();
+				
+				ctpn.setSoLuong(rs.getInt("soLuong"));
+				ctpn.setGiaNhap(rs.getDouble("giaNhap"));
+				ctpn.setMaPBSP(rs.getString("maPBSP"));
+			
+				
+				arrCTPN.add(ctpn);
+			}
+			
+			ps.close();
+			rs.close();
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return arrCTPN;
+	}
 }

@@ -25,6 +25,13 @@ public class PhieuNhapDTO {
 		this.maNCC = maNCC;
 	}
 	
+	public PhieuNhapDTO(String maPN, String maNV, String maKho, String maNCC) {
+		this.maPN = maPN;
+		this.maNV = maNV;
+		this.maKho = maKho;
+		this.maNCC = maNCC;
+	}
+	
 	//getter, setter
 	public String getMaPN() {
 		return maPN;

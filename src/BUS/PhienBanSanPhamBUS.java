@@ -10,4 +10,8 @@ public class PhienBanSanPhamBUS {
 	public ArrayList<PhienBanSanPhamDTO> selectAll(){
 		return pbspDAO.selectAll();
 	}
+	
+	public ArrayList<PhienBanSanPhamDTO> getThongTinPBSP(String maPBSP){
+		return pbspDAO.getThongTinPBSP(maPBSP);
+	}
 }
