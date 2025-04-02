@@ -61,10 +61,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class PhieuNhapGUI extends JPanel {
 
 	PhieuNhapBUS pnBUS = new PhieuNhapBUS();
+	SanPhamBUS spBUS = new SanPhamBUS();
 	ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
 	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
-	JTable slipTable, slipDetailTable;
-	DefaultTableModel slipModel, slipDetailModel;
+	JTable pnTable, ctpnTable;
+	DefaultTableModel pnModel, ctpnModel;
 	ArrayList<PhieuNhapDTO> arrPhieuNhap = new ArrayList<PhieuNhapDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	ArrayList<ChiTietPhieuNhapDTO> arrCTPN = new ArrayList<ChiTietPhieuNhapDTO>();
 	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>();
@@ -72,13 +73,14 @@ public class PhieuNhapGUI extends JPanel {
 	JPanel productContent;
 	JLabel imageLabel;
 	JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+	JLabel maPNValue, maKhoValue, maNguoiTaoValue, nhaCungCapValue;
 
 	// Constructor
 	public PhieuNhapGUI() {
 		this.setLayout(new GridLayout(1, 2, 10, 10));
 		initComponents();
-		loadInwardSlipList();
-		loadSlipDetail();
+		loadDanhSachPN();
+		loadCTPN();
 	}
 
 	////////////////////////////////////////// METHODS//////////////////////////////////////
@@ -266,12 +268,20 @@ public class PhieuNhapGUI extends JPanel {
 		
 		// ======================= productListLeftPanel =======================//
 		//Thêm table vào panel để hiển thị danh sách sản phẩm
-		slipTable = new JTable();
-		JScrollPane sp = new JScrollPane(slipTable);
+		pnTable = new JTable();
+		JScrollPane sp = new JScrollPane(pnTable);
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
 		productListLeftPanel.add(sp, gbc);
+		pnTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() >= 1) {	//nếu nhấn vào dòng đó từ 1 lần trở lên tức là ta muốn xem chi tiết của PN đó
+					viewDetail();
+				}
+			}
+		});
 		
 		
 		
@@ -317,8 +327,8 @@ public class PhieuNhapGUI extends JPanel {
 		
 		///////////////////////////////////////// productChoseRightPanel ///////////////////////////////////////// 
 		//Thêm bảng vào panel để hiển thị các sản phẩm đã được chọn để nhập
-		slipDetailTable = new JTable();
-		JScrollPane sp2 = new JScrollPane(slipDetailTable);
+		ctpnTable = new JTable();
+		JScrollPane sp2 = new JScrollPane(ctpnTable);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 1.0;
@@ -336,27 +346,27 @@ public class PhieuNhapGUI extends JPanel {
 		gbc.fill = GridBagConstraints.BOTH;
 		productChoseRightPanel.add(informationPanel, gbc);
 		
-		JLabel slipIdLabel, warehouseIdLabel, creatorIdLabel, supplierLabel;
-		slipIdLabel = new JLabel("Mã phiếu nhập:");
-		slipIdLabel.setBounds(10, 10, 100, 20);
-		informationPanel.add(slipIdLabel);
+		JLabel lblMaPN, lblMaKho, lblMaNguoiTao, lblNhaCungCap;
+		lblMaPN = new JLabel("Mã phiếu nhập:");
+		lblMaPN.setBounds(10, 10, 100, 20);
+		informationPanel.add(lblMaPN);
 
-		warehouseIdLabel = new JLabel("Mã kho:");
-		warehouseIdLabel.setBounds(10, 40, 100, 20);
-		informationPanel.add(warehouseIdLabel);
+		lblMaKho = new JLabel("Mã kho:");
+		lblMaKho.setBounds(10, 40, 100, 20);
+		informationPanel.add(lblMaKho);
 
-		creatorIdLabel = new JLabel("Mã người tạo:");
-		creatorIdLabel.setBounds(10, 70, 100, 20);
-		informationPanel.add(creatorIdLabel);
+		lblMaNguoiTao = new JLabel("Mã người tạo:");
+		lblMaNguoiTao.setBounds(10, 70, 100, 20);
+		informationPanel.add(lblMaNguoiTao);
 
-		supplierLabel = new JLabel("Nhà cung cấp:");
-		supplierLabel.setBounds(10, 100, 100, 20);
-		informationPanel.add(supplierLabel); 
+		lblNhaCungCap = new JLabel("Nhà cung cấp:");
+		lblNhaCungCap.setBounds(10, 100, 100, 20);
+		informationPanel.add(lblNhaCungCap); 
 		
-		JLabel maPXValue, maKhoValue, maNguoiTaoValue, khachHangValue;
-		maPXValue = new JLabel("abc");
-		maPXValue.setBounds(100, 10, 50, 20);
-		informationPanel.add(maPXValue);
+		
+		maPNValue = new JLabel("abc");
+		maPNValue.setBounds(100, 10, 50, 20);
+		informationPanel.add(maPNValue);
 		
 		maKhoValue = new JLabel("xyz");
 		maKhoValue.setBounds(100, 40, 50, 20);
@@ -366,9 +376,12 @@ public class PhieuNhapGUI extends JPanel {
 		maNguoiTaoValue.setBounds(100, 70, 50, 20);
 		informationPanel.add(maNguoiTaoValue);
 
-		khachHangValue = new JLabel("hij");
-		khachHangValue.setBounds(100, 100, 50, 20);
-		informationPanel.add(khachHangValue);
+		nhaCungCapValue = new JLabel("hij");
+		nhaCungCapValue.setBounds(100, 100, 50, 20);
+		informationPanel.add(nhaCungCapValue);
+		
+		//set giá trị cho maPNValue, maKhoValue, maNguoiTaoValue, khachHangValue
+		
 
 
 	}
@@ -624,18 +637,18 @@ public class PhieuNhapGUI extends JPanel {
 		}
 	}
 
-	private void loadInwardSlipList() {
-		slipTable.setDefaultEditor(Object.class, null);
+	private void loadDanhSachPN() {
+		pnTable.setDefaultEditor(Object.class, null);
 		
-		slipModel = new DefaultTableModel();
-		slipTable.setModel(slipModel);
-		slipModel.addColumn("Mã PN");
-		slipModel.addColumn("Ngày tạo");
-		slipModel.addColumn("Tổng tiền");
-		slipModel.addColumn("Trạng thái");
-		slipModel.addColumn("Kho");
-		slipModel.addColumn("Người tạo");
-		slipModel.addColumn("Nhà cung cấp");
+		pnModel = new DefaultTableModel();
+		pnTable.setModel(pnModel);
+		pnModel.addColumn("Mã PN");
+		pnModel.addColumn("Ngày tạo");
+		pnModel.addColumn("Tổng tiền");
+		pnModel.addColumn("Trạng thái");
+		pnModel.addColumn("Kho");
+		pnModel.addColumn("Người tạo");
+		pnModel.addColumn("Nhà cung cấp");
 
 		arrPhieuNhap = pnBUS.selectAll();
 		for(int i=0; i<arrPhieuNhap.size(); i++) {
@@ -649,12 +662,12 @@ public class PhieuNhapGUI extends JPanel {
 			String maNCC = pn.getMaNCC();
 			
 			Object[] row = {maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC};
-			slipModel.addRow(row);
+			pnModel.addRow(row);
 		}
 		
 		
 		//Điều chỉnh kích thước các cột
-		TableColumnModel tcm = slipTable.getColumnModel();
+		TableColumnModel tcm = pnTable.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(60);
 		tcm.getColumn(1).setPreferredWidth(80);
 		tcm.getColumn(2).setPreferredWidth(105);
@@ -666,37 +679,77 @@ public class PhieuNhapGUI extends JPanel {
 
 		
 		
-		slipTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+		pnTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 
 	}
 	
-	private void loadSlipDetail() {
-		slipDetailModel  = new DefaultTableModel();
-		slipDetailTable.setModel(slipDetailModel);
-		slipDetailModel.addColumn("Mã PBSP");
-		slipDetailModel.addColumn("Tên sản phẩm");
-		slipDetailModel.addColumn("Color");
-		slipDetailModel.addColumn("RAM");
-		slipDetailModel.addColumn("ROM");
-		slipDetailModel.addColumn("Giá");
-		slipDetailModel.addColumn("Số lượng");
+	private void loadCTPN() {
+		ctpnModel  = new DefaultTableModel();
+		ctpnTable.setModel(ctpnModel);
+		ctpnModel.addColumn("Mã PBSP");
+		ctpnModel.addColumn("Tên sản phẩm");
+		ctpnModel.addColumn("Màu sắc");
+		ctpnModel.addColumn("RAM");
+		ctpnModel.addColumn("ROM");
+		ctpnModel.addColumn("Số lượng");
+		ctpnModel.addColumn("Giá");
 
 		//Điều chỉnh kích thước các cột
-		TableColumnModel tcm = slipDetailTable.getColumnModel();
+		TableColumnModel tcm = ctpnTable.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(60);
-		tcm.getColumn(1).setPreferredWidth(250);
-		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(1).setPreferredWidth(200);
+		tcm.getColumn(2).setPreferredWidth(100);
 		tcm.getColumn(3).setPreferredWidth(50);
 		tcm.getColumn(4).setPreferredWidth(50);
 		tcm.getColumn(5).setPreferredWidth(100);
 		tcm.getColumn(6).setPreferredWidth(54);
 		
-		slipDetailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+		ctpnTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 		
-		viewDetail();
 	}
 	
 	private void viewDetail() {
-		int selectedRow = slipTable.getSelectedRow();
+		int selectedRow = pnTable.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel pnModel = (DefaultTableModel) pnTable.getModel();
+			DefaultTableModel ctpnModel = (DefaultTableModel) ctpnTable.getModel();
+			String maPN = (String) pnModel.getValueAt(selectedRow, 0);
+			ArrayList<ChiTietPhieuNhapDTO> thongTinCTPN = ctpnBUS.getThongTinCTPN(maPN);	//để lấy số lượng & giá nhập của các ctpn, mã pbsp để lấy màu săc, ram, rom
+			ArrayList<PhieuNhapDTO> thongTinPhieuNhap = pnBUS.getThongTinPhieuNhap(maPN);	//để lấy mã pn, mã người tạo, mã kho, mã ncc
+			
+			ctpnModel.setRowCount(0);
+			for(int i = 0; i < thongTinCTPN.size(); i++) {
+			    int soLuong = thongTinCTPN.get(i).getSoLuong();
+			    double giaNhap = thongTinCTPN.get(i).getGiaNhap();
+			    String maPBSP = thongTinCTPN.get(i).getMaPBSP();
+
+			    ArrayList<PhienBanSanPhamDTO> thongTinPBSP = pbspBUS.getThongTinPBSP(maPBSP);
+			    if (thongTinPBSP.size() > 0) {  // Kiểm tra xem danh sách có phần tử không
+			        String mauSac = thongTinPBSP.get(0).getMauSac();
+			        String ram = thongTinPBSP.get(0).getRam();
+			        String rom = thongTinPBSP.get(0).getRom();
+
+			        ArrayList<SanPhamDTO> tenSanPham = spBUS.getTenSanPhamByMaPBSP2(maPBSP);
+			        String tenSP = tenSanPham.size() > 0 ? tenSanPham.get(0).getTenSP() : "N/A";
+
+			        Object[] row = { maPBSP, tenSP, mauSac, ram, rom, soLuong, giaNhap };
+			        ctpnModel.addRow(row);
+			    }
+			}
+
+			// Đặt thông tin phiếu nhập (chỉ lấy phần tử đầu tiên nếu có)
+			if (!thongTinPhieuNhap.isEmpty()) {
+			    maPNValue.setText(thongTinPhieuNhap.get(0).getMaPN());
+			    maKhoValue.setText(thongTinPhieuNhap.get(0).getMaKho());
+			    maNguoiTaoValue.setText(thongTinPhieuNhap.get(0).getMaNV());
+			    nhaCungCapValue.setText(thongTinPhieuNhap.get(0).getMaNCC());
+			}
+			ctpnTable.repaint();
+			
+			
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 phiếu nhập để xem!");
+		}
 	}
 }

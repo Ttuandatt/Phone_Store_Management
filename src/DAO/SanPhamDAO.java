@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import org.apache.poi.ss.formula.functions.T;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import DTO.SanPhamDTO;
 import DTO.PhienBanSanPhamDTO;
 import Database.JDBCConnection;
@@ -120,6 +122,39 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
     		ResultSet rs = ps.executeQuery();
     		if(rs.next()) {
     			tenSP = rs.getString("tenSP");
+    		}
+    		
+    		ps.close();
+    		rs.close();
+    	}catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        } finally {
+            jdbc.closeConnection();
+        }
+    	
+    	return tenSP;
+    }
+    
+    public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
+    	ArrayList<SanPhamDTO> tenSP = new ArrayList<SanPhamDTO>();
+    	
+    	try {
+    		jdbc.openConnection();
+    		
+    		String query = "select tensp from sanpham join pbsp on sanpham.masp = pbsp.masp where pbsp.mapbsp=?";
+    	
+    		PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+    		ps.setString(1, maPBSP);
+    	
+    		
+    		ResultSet rs = ps.executeQuery();
+    		while(rs.next()) {
+    			SanPhamDTO sp = new SanPhamDTO();
+    			
+    			sp.setTenSP(rs.getString("tenSP"));
+    			
+    			tenSP.add(sp);
     		}
     		
     		ps.close();

@@ -11,4 +11,10 @@ public class PhieuNhapBUS {
 	public ArrayList<PhieuNhapDTO> selectAll(){
 		return pnDAO.selectAll();
 	}
+	
+
+	
+	public ArrayList<PhieuNhapDTO> getThongTinPhieuNhap(String maPN){
+		return pnDAO.getThongTinPhieuNhap(maPN);
+	}
 }

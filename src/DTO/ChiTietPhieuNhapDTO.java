@@ -14,6 +14,12 @@ public class ChiTietPhieuNhapDTO {
 		this.maPN = maPN;
 		this.maPBSP = maPBSP;
 	}
+	
+	public ChiTietPhieuNhapDTO(int soLuong, double giaNhap, String maPBSP) {
+		this.soLuong = soLuong;
+		this.giaNhap = giaNhap;
+		this.maPBSP = maPBSP;
+	}
 
 	public ChiTietPhieuNhapDTO() {
 	}

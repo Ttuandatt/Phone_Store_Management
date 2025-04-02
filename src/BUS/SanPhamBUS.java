@@ -14,4 +14,8 @@ public class SanPhamBUS {
 	public String getTenSanPhamByMaPBSP(String maPBSP) {
 		return spDAO.getTenSanPhamByMaPBSP(maPBSP);
 	}
+	
+	public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
+		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
+	}
 }

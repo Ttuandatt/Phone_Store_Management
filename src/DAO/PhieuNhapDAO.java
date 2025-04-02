@@ -34,6 +34,8 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
 				arrPhieuNhap.add(pn);
 			}
 			
+			rs.close();
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
@@ -67,5 +69,38 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	
 
+	public ArrayList<PhieuNhapDTO> getThongTinPhieuNhap(String maPN){
+		ArrayList<PhieuNhapDTO> arrThongTinPN = new ArrayList<PhieuNhapDTO>();
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select mapn, manv, makho, mancc from phieunhap where mapn=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maPN);
+			
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				PhieuNhapDTO pn = new PhieuNhapDTO();
+				
+				pn.setMaPN(rs.getString("maPN"));
+				pn.setMaNV(rs.getString("maNV"));
+				pn.setMaKho(rs.getString("maKho"));
+				pn.setMaNCC(rs.getString("maNCC"));
+
+				arrThongTinPN.add(pn);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return arrThongTinPN;
+	}
 }
