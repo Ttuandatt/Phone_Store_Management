@@ -14,6 +14,10 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 public class AdminView {
 
 	private JPanel contentPanel; // contentPanel để hiển thị các giao diện
@@ -198,18 +202,24 @@ public class AdminView {
 
 		// mouseListener cho menu sản phẩm
 		menuSanPham.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				SanPhamGUI sanPhamObj = new SanPhamGUI(); // tạo 1 instance của SanPhamGUI
-				contentPanel.add(sanPhamObj, sanPham_Identity); // thêm instance đó vào contentPanel kèm với định danh
-																// của nó
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout(); // dùng CardLayout để hiển thị giao diện
-																				// của lớp ProductsGUI khi click vào
-																				// menu
-				cardLayout.show(contentPanel, sanPham_Identity);
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+                    SanPhamGUI productObj = new SanPhamGUI();
+                    Parent content = productObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+                    javafx.application.Platform.runLater(() -> {
+                        fxPanel.setScene(new Scene(content));
+                    });
+                    contentPanel.add(fxPanel, sanPham_Identity);
+                    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+                    cardLayout.show(contentPanel, sanPham_Identity);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
-			}
-		});
 
 		// MouseListener cho menu "SUPPLIERS"
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
