@@ -18,4 +18,6 @@ public class SanPhamBUS {
 	public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
 		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
 	}
+	
+
 }

@@ -1,4 +1,4 @@
-create database phonestore;
+﻿create database phonestore;
 drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -14,6 +14,8 @@ CREATE TABLE THUONGHIEU (
     PRIMARY KEY (maTH)
 );
 DROP TABLE THUONGHIEU;
+
+
 
 -- Bảng Sản Phẩm
 CREATE TABLE SANPHAM (
@@ -33,6 +35,8 @@ CREATE TABLE SANPHAM (
 );
 drop table sanpham;
 
+
+
 -- Bảng Phiên Bản Sản Phẩm
 CREATE TABLE PBSP (
     maPBSP VARCHAR(50) NOT NULL,
@@ -48,6 +52,90 @@ CREATE TABLE PBSP (
     CONSTRAINT FK_PBSP_SANPHAM FOREIGN KEY (maSP) REFERENCES SANPHAM(maSP) ON DELETE NO ACTION
 );
 DROP TABLE PBSP;
+
+
+
+-- Bảng Nhân Viên
+CREATE TABLE NHANVIEN (
+    maNV VARCHAR(50) NOT NULL,
+    hoTen NVARCHAR(255) NOT NULL,
+    ngaySinh DATE NOT NULL,
+    gioiTinh NVARCHAR(3) CHECK (gioiTinh IN (N'Nam', N'Nữ')) NOT NULL,
+    diaChi NVARCHAR(255) NOT NULL,
+    sdt NVARCHAR(20) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+    hinhAnh VARBINARY(MAX),
+    matKhau NVARCHAR(255) NOT NULL,
+    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+    maCV VARCHAR(50) ,
+    noiLamViec VARCHAR(50),
+
+    PRIMARY KEY (maNV),
+    CONSTRAINT FK_NHANVIEN_CHUCVU FOREIGN KEY (maCV) REFERENCES CHUCVU(maCV) ON DELETE NO ACTION,
+    CONSTRAINT FK_NHANVIEN_KHO FOREIGN KEY (noiLamViec) REFERENCES KHO(maKho) ON DELETE NO ACTION
+);
+DROP TABLE NHANVIEN;
+
+
+
+-- Bảng Phiếu Nhập
+CREATE TABLE PHIEUNHAP (
+    maPN VARCHAR(50) NOT NULL,
+    ngayTao DATE NOT NULL,
+    tongTien FLOAT,
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng')) NOT NULL,
+	maNV VARCHAR(50) NOT NULL,
+	maKho VARCHAR(50) NOT NULL,
+	maNCC VARCHAR(50) NOT NULL,
+
+	PRIMARY KEY(maPN),
+    CONSTRAINT FK_PHIEUNHAP_NHANVIEN FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUNHAP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
+    CONSTRAINT FK_PHIEUNHAP_NHACUNGCAP FOREIGN KEY(maNCC) REFERENCES NHACUNGCAP(maNCC) ON DELETE NO ACTION
+);
+DROP TABLE PHIEUNHAP;
+
+-- Bảng Chi Tiết Phiếu Nhập
+CREATE TABLE CTPN (
+    soLuong INT NOT NULL,
+    giaNhap DECIMAL(18,2) NOT NULL,
+    maPN VARCHAR(50) NOT NULL,
+    maPBSP VARCHAR(50) NOT NULL,
+    PRIMARY KEY (maPN, maPBSP),
+    FOREIGN KEY (maPN) REFERENCES PHIEUNHAP(maPN) ON DELETE NO ACTION,
+    FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
+);
+DROP TABLE CTPN;
+
+-- Bảng Phiếu Xuất
+CREATE TABLE PHIEUXUAT (
+    maPX VARCHAR(50) PRIMARY KEY,
+    ngayTao DATE NOT NULL,
+    diaChi NVARCHAR(255),
+    tongTien FLOAT,
+    httt NVARCHAR(50),
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng')) NOT NULL,
+    maNV VARCHAR(50) NOT NULL,
+	maKho VARCHAR(50) NOT NULL,
+	maKH VARCHAR(50) NOT NULL,
+	CONSTRAINT FK_PHIEUXUAT_NHANVIEN FOREIGN KEY (maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUXUAT_KHO FOREIGN KEY (maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
+	CONSTRAINT FK_PHIEUXUAT_KHACHHANG FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
+);
+DROP TABLE PHIEUXUAT;
+
+-- Bảng Chi Tiết Phiếu Xuất
+CREATE TABLE CTPX (
+    soLuong INT NOT NULL,
+    giaXuat DECIMAL(18,2) NOT NULL,
+    maPX VARCHAR(50) NOT NULL,
+    maPBSP VARCHAR(50) NOT NULL,
+    PRIMARY KEY (maPX, maPBSP),
+    FOREIGN KEY (maPX) REFERENCES PHIEUXUAT(maPX) ON DELETE NO ACTION,
+    FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
+);
+DROP TABLE CTPX;
+
 
 -- Bảng Nhà Cung Cấp
 CREATE TABLE NHACUNGCAP (
@@ -80,60 +168,23 @@ CREATE TABLE KHO (
     tenKho NVARCHAR(255) NOT NULL,
     diaChi NVARCHAR(255) NOT NULL,
     sdt VARCHAR(20) NOT NULL,
-
+    trangThai NVARCHAR(50) CHECK (trangThai IN ('On', 'Off')) NOT NULL,
     PRIMARY KEY (maKho)
 );
 DROP TABLE KHO;
 
--- Bảng Nhân Viên
-CREATE TABLE NHANVIEN (
-    maNV VARCHAR(50) NOT NULL,
-    hoTen NVARCHAR(255) NOT NULL,
-    ngaySinh DATE NOT NULL,
-    gioiTinh NVARCHAR(3) CHECK (gioiTinh IN (N'Nam', N'Nữ')) NOT NULL,
-    diaChi NVARCHAR(255) NOT NULL,
-    sdt NVARCHAR(20) NOT NULL,
-    email NVARCHAR(255) NOT NULL,
-    hinhAnh VARBINARY(MAX),
-    matKhau NVARCHAR(255) NOT NULL,
-    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-    maCV VARCHAR(50) ,
-    noiLamViec VARCHAR(50),
-
-    PRIMARY KEY (maNV),
-    CONSTRAINT FK_NHANVIEN_CHUCVU FOREIGN KEY (maCV) REFERENCES CHUCVU(maCV) ON DELETE NO ACTION,
-    CONSTRAINT FK_NHANVIEN_KHO FOREIGN KEY (noiLamViec) REFERENCES KHO(maKho) ON DELETE NO ACTION
-);
-DROP TABLE NHANVIEN;
-
--- Bảng Phiếu Nhập
-CREATE TABLE PHIEUNHAP (
-    maPN VARCHAR(50) NOT NULL,
-    ngayTao DATE NOT NULL,
-    tongTien DECIMAL(18,2),
-    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-	maNV VARCHAR(50) NOT NULL,
-	maKho VARCHAR(50) NOT NULL,
-	maNCC VARCHAR(50) NOT NULL,
-
-	PRIMARY KEY(maPN),
-    CONSTRAINT FK_PHIEUNHAP_NHANVIEN FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
-	CONSTRAINT FK_PHIEUNHAP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
-    CONSTRAINT FK_PHIEUNHAP_NHACUNGCAP FOREIGN KEY(maNCC) REFERENCES NHACUNGCAP(maNCC) ON DELETE NO ACTION
-);
-DROP TABLE PHIEUNHAP;
-
--- Bảng Chi Tiết Phiếu Nhập
-CREATE TABLE CTPN (
+-- Bảng Kho - Phiên Bản Sản Phẩm
+CREATE TABLE KHO_PBSP (
     soLuong INT NOT NULL,
-    giaNhap DECIMAL(18,2) NOT NULL,
-    maPN VARCHAR(50) NOT NULL,
+    maKho VARCHAR(50) NOT NULL,
     maPBSP VARCHAR(50) NOT NULL,
-    PRIMARY KEY (maPN, maPBSP),
-    FOREIGN KEY (maPN) REFERENCES PHIEUNHAP(maPN) ON DELETE NO ACTION,
-    FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
+    ngayCapNhat DATE NOT NULL,
+
+    PRIMARY KEY (maKho, maPBSP),
+    CONSTRAINT FK_KHOPBSP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
+    CONSTRAINT FK_KHOPBSP_PBSP FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
 );
-DROP TABLE CTPN;
+DROP TABLE KHO_PBSP;
 
 -- Bảng Khách Hàng
 CREATE TABLE KHACHHANG (
@@ -151,47 +202,8 @@ CREATE TABLE KHACHHANG (
 );
 DROP TABLE KHACHHANG;
 
--- Bảng Phiếu Xuất
-CREATE TABLE PHIEUXUAT (
-    maPX VARCHAR(50) PRIMARY KEY,
-    ngayTao DATE NOT NULL,
-    diaChi NVARCHAR(255),
-    tongTien DECIMAL(18,2),
-    httt NVARCHAR(50),
-    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-    maNV VARCHAR(50) NOT NULL,
-	maKho VARCHAR(50) NOT NULL,
-	maKH VARCHAR(50) NOT NULL,
-	CONSTRAINT FK_PHIEUXUAT_NHANVIEN FOREIGN KEY (maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
-	CONSTRAINT FK_PHIEUXUAT_KHO FOREIGN KEY (maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
-	CONSTRAINT FK_PHIEUXUAT_KHACHHANG FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
-);
-DROP TABLE PHIEUXUAT;
 
--- Bảng Chi Tiết Phiếu Xuất
-CREATE TABLE CTPX (
-    soLuong INT NOT NULL,
-    giaXuat DECIMAL(18,2) NOT NULL,
-    maPX VARCHAR(50) NOT NULL,
-    maPBSP VARCHAR(50) NOT NULL,
-    PRIMARY KEY (maPX, maPBSP),
-    FOREIGN KEY (maPX) REFERENCES PHIEUXUAT(maPX) ON DELETE NO ACTION,
-    FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
-);
-DROP TABLE CTPX;
 
--- Bảng Kho - Phiên Bản Sản Phẩm
-CREATE TABLE KHO_PBSP (
-    soLuong INT NOT NULL,
-    maKho VARCHAR(50) NOT NULL,
-    maPBSP VARCHAR(50) NOT NULL,
-    ngayCapNhat DATE NOT NULL,
-
-    PRIMARY KEY (maKho, maPBSP),
-    CONSTRAINT FK_KHOPBSP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
-    CONSTRAINT FK_KHOPBSP_PBSP FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
-);
-DROP TABLE KHO_PBSP;
 
 -- Bảng Đơn Yêu Cầu
 CREATE TABLE DONYEUCAU (
@@ -327,33 +339,32 @@ VALUES
 ('CV004', N'Admin', 0, 0, 'on');
 
 -- Insert bảng KHO
-INSERT INTO KHO (maKho, tenKho, diaChi, sdt) 
+INSERT INTO KHO (maKho, tenKho, diaChi, sdt, trangThai) 
 VALUES 
-('KHO001', N'Kho Hồ Chí Minh', N'123 Lê Lợi, Quận 1, TP.HCM', '0901234567'),
-('KHO002', N'Kho Hà Nội', N'456 Hai Bà Trưng, Quận Hoàn Kiếm, Hà Nội', '0912345678'),
-('KHO003', N'Kho Huế', N'789 Nguyễn Huệ, TP. Huế', '0923456789');
+('HCM', N'Kho Hồ Chí Minh', N'123 Lê Lợi, Quận 1, TP.HCM', '0901234567', 'on'),
+('HN', N'Kho Hà Nội', N'456 Hai Bà Trưng, Quận Hoàn Kiếm, Hà Nội', '0912345678', 'on'),
+('DN', N'Kho Đà Nẵng', N'789 Nguyễn Huệ, TP. Đà Nẵng', '0923456789', 'on');
 
 
 -- Insert bảng NHANVIEN
 INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
 VALUES 
-('NV001', N'Nguyễn Văn A', '1990-05-12', N'Nam', N'123 Lê Lợi, TP.HCM', '0901234567', 'nguyenvana@example.com', NULL, '123456', 'on', 'CV001', 'KHO001'),
-('NV002', N'Trần Thị B', '1995-08-22', N'Nữ', N'456 Hai Bà Trưng, Hà Nội', '0912345678', 'tranthib@example.com', NULL, 'abcdef', 'on', 'CV002', 'KHO002'),
-('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'KHO001'),
-('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'KHO003'),
-('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'KHO002');
+('NV001', N'Nguyễn Văn A', '1990-05-12', N'Nam', N'123 Lê Lợi, TP.HCM', '0901234567', 'nguyenvana@example.com', NULL, '123456', 'on', 'CV001', 'HCM'),
+('NV002', N'Trần Thị B', '1995-08-22', N'Nữ', N'456 Hai Bà Trưng, Hà Nội', '0912345678', 'tranthib@example.com', NULL, 'abcdef', 'on', 'CV002', 'HCM'),
+('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'HCM'),
+('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'DN'),
+('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'HN');
 INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec) VALUES
-('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'KHO001'),
-('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'KHO002'),
-('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'KHO003'),
-('NV009', N'Phan Văn I', '1990-12-05', N'Nam', N'321 Điện Biên Phủ, Cần Thơ', '0939012345', 'phanvani@example.com', NULL, 'passi101', 'on', 'CV002', 'KHO001'),
-('NV010', N'Lý Thị J', '1997-04-18', N'Nữ', N'654 Võ Văn Kiệt, Hải Phòng', '0940123456', 'lythij@example.com', NULL, 'passj202', 'on', 'CV002', 'KHO002'),
-('NV011', N'Đặng Văn K', '1994-07-07', N'Nam', N'987 Phan Xích Long, TP.HCM', '0951234567', 'dangvank@example.com', NULL, 'passk303', 'on', 'CV002', 'KHO003'),
-('NV012', N'Huỳnh Thị L', '1991-10-25', N'Nữ', N'246 Hoàng Hoa Thám, Hà Nội', '0962345678', 'huynhthil@example.com', NULL, 'passl404', 'on', 'CV002', 'KHO001'),
-('NV013', N'Tô Văn M', '1998-01-30', N'Nam', N'135 Nguyễn Thượng Hiền, Đà Nẵng', '0973456789', 'tovanm@example.com', NULL, 'passm505', 'on', 'CV002', 'KHO002'),
-('NV014', N'Trịnh Thị N', '1995-05-20', N'Nữ', N'753 Lý Thường Kiệt, Cần Thơ', '0984567890', 'trinhthin@example.com', NULL, 'passn606', 'on', 'CV002', 'KHO003'),
-('NV015', N'Ngô Văn O', '1992-11-11', N'Nam', N'852 Ba Tháng Hai, Hải Phòng', '0995678901', 'ngovano@example.com', NULL, 'passo707', 'on', 'CV002', 'KHO001');
-
+('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'HCM'),
+('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'HN'),
+('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'DN'),
+('NV009', N'Phan Văn I', '1990-12-05', N'Nam', N'321 Điện Biên Phủ, Cần Thơ', '0939012345', 'phanvani@example.com', NULL, 'passi101', 'on', 'CV002', 'HCM'),
+('NV010', N'Lý Thị J', '1997-04-18', N'Nữ', N'654 Võ Văn Kiệt, Hải Phòng', '0940123456', 'lythij@example.com', NULL, 'passj202', 'on', 'CV002', 'HN'),
+('NV011', N'Đặng Văn K', '1994-07-07', N'Nam', N'987 Phan Xích Long, TP.HCM', '0951234567', 'dangvank@example.com', NULL, 'passk303', 'on', 'CV002', 'DN'),
+('NV012', N'Huỳnh Thị L', '1991-10-25', N'Nữ', N'246 Hoàng Hoa Thám, Hà Nội', '0962345678', 'huynhthil@example.com', NULL, 'passl404', 'on', 'CV002', 'HCM'),
+('NV013', N'Tô Văn M', '1998-01-30', N'Nam', N'135 Nguyễn Thượng Hiền, Đà Nẵng', '0973456789', 'tovanm@example.com', NULL, 'passm505', 'on', 'CV002', 'HN'),
+('NV014', N'Trịnh Thị N', '1995-05-20', N'Nữ', N'753 Lý Thường Kiệt, Cần Thơ', '0984567890', 'trinhthin@example.com', NULL, 'passn606', 'on', 'CV002', 'DN'),
+('NV015', N'Ngô Văn O', '1992-11-11', N'Nam', N'852 Ba Tháng Hai, Hải Phòng', '0995678901', 'ngovano@example.com', NULL, 'passo707', 'on', 'CV002', 'HCM');
 
 
 INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai)
@@ -367,11 +378,11 @@ VALUES
 -- Chèn dữ liệu vào bảng PHIEUNHAP
 INSERT INTO PHIEUNHAP (maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC) 
 VALUES 
-('PN001', '2024-03-01', 5000000, 'on', 'NV001', 'KHO001', 'NCC001'),
-('PN002', '2024-03-05', 3200000, 'on', 'NV002', 'KHO002', 'NCC002'),
-('PN003', '2024-03-10', 4500000, 'off', 'NV003', 'KHO001', 'NCC003'),
-('PN004', '2024-03-15', 2800000, 'on', 'NV004', 'KHO003', 'NCC001'),
-('PN005', '2024-03-20', 6000000, 'off', 'NV005', 'KHO002', 'NCC002');
+('PN001', '2024-03-01', 5000000, N'Đã nhận hàng', 'NV001', 'HCM', 'NCC001'),
+('PN002', '2024-03-05', 3200000, N'Đã nhận hàng', 'NV002', 'HN', 'NCC002'),
+('PN003', '2024-03-10', 4500000, N'Đã nhận hàng', 'NV003', 'HCM', 'NCC003'),
+('PN004', '2024-03-15', 2800000, N'Đã xác nhận', 'NV004', 'DN', 'NCC001'),
+('PN005', '2024-03-20', 6000000, N'Đã xác nhận', 'NV005', 'HN', 'NCC002');
 
 -- Chèn dữ liệu vào bảng CTPN
 INSERT INTO CTPN (soLuong, giaNhap, maPN, maPBSP) 
@@ -404,11 +415,11 @@ VALUES
 -- Chèn dữ liệu vào bảng PHIEUXUAT
 INSERT INTO PHIEUXUAT (maPX, ngayTao, diaChi, tongTien, httt, trangThai, maNV, maKho, maKH) 
 VALUES 
-('PX001', '2024-03-01', N'12 Nguyễn Trãi, Hà Nội', 7500000, N'Tiền mặt', 'on', 'NV001', 'KHO001', 'KH001'),
-('PX002', '2024-03-05', N'45 Lê Lợi, TP.HCM', 4200000, N'Chuyển khoản', 'on', 'NV002', 'KHO002', 'KH002'),
-('PX003', '2024-03-10', N'78 Trần Phú, Đà Nẵng', 5200000, N'Tiền mặt', 'off', 'NV003', 'KHO001', 'KH003'),
-('PX004', '2024-03-15', N'90 Phạm Văn Đồng, Hải Phòng', 6100000, N'Thanh toán khi nhận hàng', 'on', 'NV004', 'KHO003', 'KH004'),
-('PX005', '2024-03-20', N'33 Võ Văn Kiệt, Cần Thơ', 8300000, N'Chuyển khoản', 'off', 'NV005', 'KHO002', 'KH005');
+('PX001', '2024-03-01', N'12 Nguyễn Trãi, Hà Nội', 7500000, N'Tiền mặt', N'Đã xác nhận', 'NV001', 'HCM', 'KH001'),
+('PX002', '2024-03-05', N'45 Lê Lợi, TP.HCM', 4200000, N'Chuyển khoản', N'Đã xác nhận', 'NV002', 'HN', 'KH002'),
+('PX003', '2024-03-10', N'78 Trần Phú, Đà Nẵng', 5200000, N'Tiền mặt', N'Đã xác nhận', 'NV003', 'HCM', 'KH003'),
+('PX004', '2024-03-15', N'90 Phạm Văn Đồng, Hải Phòng', 6100000, N'Thanh toán khi nhận hàng', N'Đã nhận hàng', 'NV004', 'DN', 'KH004'),
+('PX005', '2024-03-20', N'33 Võ Văn Kiệt, Cần Thơ', 8300000, N'Chuyển khoản', N'Đã nhận hàng', 'NV005', 'HN', 'KH005');
 
 -- Chèn dữ liệu vào bảng CTPX
 INSERT INTO CTPX (soLuong, giaXuat, maPX, maPBSP) 
@@ -444,16 +455,16 @@ INSERT INTO GHICHU (ngayTao, noiDung, maBCC) VALUES
 ('2024-03-05', N'Nghỉ có phép.', 'BCC005');
 
 INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP, ngayCapNhat) VALUES
-(5, 'KHO001', 'PBSP001', '2024-03-19'),
-(3, 'KHO001', 'PBSP002', '2024-03-19'),
-(7, 'KHO001', 'PBSP003', '2024-03-19'),
-(4, 'KHO002', 'PBSP001', '2024-03-19'),
-(5, 'KHO002', 'PBSP004', '2024-03-19'),
-(6, 'KHO002', 'PBSP005', '2024-03-19'),
-(8, 'KHO003', 'PBSP003', '2024-03-19'),
-(2, 'KHO003', 'PBSP002', '2024-03-19'),
-(9, 'KHO003', 'PBSP004', '2024-03-19'),
-(10, 'KHO003', 'PBSP005', '2024-03-19');
+(5, 'HCM', 'PBSP001', '2024-03-19'),
+(3, 'HCM', 'PBSP002', '2024-03-19'),
+(7, 'HCM', 'PBSP003', '2024-03-19'),
+(4, 'HN', 'PBSP001', '2024-03-19'),
+(5, 'HN', 'PBSP004', '2024-03-19'),
+(6, 'HN', 'PBSP005', '2024-03-19'),
+(8, 'DN', 'PBSP003', '2024-03-19'),
+(2, 'DN', 'PBSP002', '2024-03-19'),
+(9, 'DN', 'PBSP004', '2024-03-19'),
+(10, 'DN', 'PBSP005', '2024-03-19');
 
 INSERT INTO DONYEUCAU (maDon, tenDon, ngayTao, loaiDon, chiTiet, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
 ('DYC006', N'Đơn xin nghỉ phép', '2024-03-10', N'Đơn xin nghỉ phép', N'Nghỉ phép 2 ngày để giải quyết công việc gia đình.', N'Có việc riêng cần xử lý.', '2024-03-11', 'on', 'NV006', 'NV001'), -- Quản lý kho duyệt
@@ -467,7 +478,7 @@ INSERT INTO DONYEUCAU (maDon, tenDon, ngayTao, loaiDon, chiTiet, lyDo, ngayDuyet
 select * from nhanvien;
 select * from sanpham;
 select * from pbsp;
-select * from phieunhap;
+select * from phieunhap; 
 select * from ctpn;
 select * from phieuxuat;
 select * from ctpx;
@@ -482,9 +493,7 @@ select * from bangluong;
 select * from ghichu;
 select * from lschinhsua;
 select * from donyeucau;
-
 SELECT @@VERSION;
-
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;
 DELETE FROM BANGCHAMCONG;
@@ -505,6 +514,13 @@ DELETE FROM KHACHHANG;
 DELETE FROM KHO;
 DELETE FROM NHACUNGCAP;
 DELETE FROM CHUCVU;
+
+------------------------------------------ ALTER TABLE --------------------------------------
+-- PHIEUNHAP
+-- Chỉnh lại trạng thái từ chỉ có 'on', 'off' sang 'Chờ xác nhận', 'Đã xác nhận', 'Đã nhận hàng'
+ALTER TABLE PHIEUNHAP 
+ADD CONSTRAINT CK_PHIEUNHAP_TrangThai 
+CHECK (trangThai IN ('Chờ xác nhận', 'Đã xác nhận', 'Đã nhận hàng'));
 
 
 ------------------------------------------ STORED PROCEDURE --------------------------------------
@@ -630,5 +646,7 @@ EXEC sp_dropdistributor @no_checks = 1, @ignore_distributor = 1;
 
 -- 3️. Xóa cấu hình Distribution từ Publisher
 EXEC sp_dropdistpublisher @publisher = 'DAMIAN\MSSQLSERVER01';
+
+
 
 
