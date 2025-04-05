@@ -69,6 +69,32 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 		return 0;
 	}
 	
+	public int updateSoLuong(String maPBSP, int soLuong) {
+		int result=0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "update pbsp set soLuong=soluong + ? where maPBSP=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, soLuong);
+			ps.setString(2,maPBSP);
+			
+			result = ps.executeUpdate();
+			
+			ps.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return result;
+	}
+	
 	public ArrayList<PhienBanSanPhamDTO> getThongTinPBSP(String maPBSP){
 		ArrayList<PhienBanSanPhamDTO> thongTinPBSP = new ArrayList<PhienBanSanPhamDTO>();
 		
@@ -103,6 +129,31 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 		}
 		
 		return thongTinPBSP;
+	}
+	
+	public int tangSoLuong(String maPBSP, int soLuong) {
+		int result = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "update pbsp set soLuong=? where mapbsp=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, soLuong);
+			ps.setString(2, maPBSP);
+			
+			result = ps.executeUpdate();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		
+		return result;
 	}
 
 }
