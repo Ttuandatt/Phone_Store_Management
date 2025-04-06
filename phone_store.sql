@@ -357,7 +357,7 @@ VALUES
 ('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'HCM'),
 ('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'DN'),
 ('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'HN');
-INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec) VALUES
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) VALUES
 ('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'HCM'),
 ('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'HN'),
 ('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'DN'),
@@ -370,13 +370,13 @@ INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhA
 ('NV015', N'Ngô Văn O', '1992-11-11', N'Nam', N'852 Ba Tháng Hai, Hải Phòng', '0995678901', 'ngovano@example.com', NULL, 'passo707', 'on', 'CV002', 'HCM');
 
 
-INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai, chiNhanh)
+INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai)
 VALUES
-('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on', 'HCM'),
-('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off', 'HN'),
-('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on', 'DN'),
-('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off', 'HCM'),
-('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on', 'HN');
+('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on'),
+('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off'),
+('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on'),
+('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off'),
+('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on');
 
 -- Chèn dữ liệu vào bảng PHIEUNHAP
 INSERT INTO PHIEUNHAP (maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC) 
@@ -485,12 +485,6 @@ INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP, ngayCapNhat) VALUES
 (9, 'DN', 'PBSP004', '2024-03-19'),
 (10, 'DN', 'PBSP005', '2024-03-19');
 
-INSERT INTO DONYEUCAU (maDon, tenDon, ngayTao, loaiDon, chiTiet, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
-('DYC006', N'Đơn xin nghỉ phép', '2024-03-10', N'Đơn xin nghỉ phép', N'Nghỉ phép 2 ngày để giải quyết công việc gia đình.', N'Có việc riêng cần xử lý.', '2024-03-11', 'on', 'NV006', 'NV001'), -- Quản lý kho duyệt
-('DYC007', N'Đơn xin tăng lương', '2024-03-15', N'Đơn xin tăng lương', N'Xin xét duyệt tăng lương do hoàn thành tốt công việc.', N'Có đóng góp lớn cho công ty.', '2024-03-20', 'on', 'NV007', 'NV003'), -- Quản lý nhân sự duyệt
-('DYC008', N'Đơn xin nghỉ việc', '2024-03-20', N'Đơn xin nghỉ việc', N'Nghỉ việc để chuyển sang công ty khác.', N'Muốn phát triển trong môi trường mới.', '2024-03-25', 'off', 'NV008', 'NV001'), -- Quản lý kho duyệt
-('DYC009', N'Đơn xin nghỉ phép', '2024-03-25', N'Đơn xin nghỉ phép', N'Nghỉ phép 1 tuần để đi du lịch.', N'Cần thời gian nghỉ ngơi.', '2024-03-26', 'on', 'NV009', 'NV003'), -- Quản lý nhân sự duyệt
-('DYC010', N'Đơn xin điều chuyển công tác', '2024-03-28', N'Đơn xin điều chuyển công tác', N'Muốn chuyển công tác đến chi nhánh khác.', N'Gần gia đình hơn.', '2024-04-01', 'off', 'NV010', 'NV001'); -- Quản lý kho duyệt
 
 
 ------------------------------------------ SELECT --------------------------------------
@@ -580,7 +574,7 @@ CREATE PROCEDURE sp_themNhanVien
     @matKhau NVARCHAR(255),
     @trangThai VARCHAR(10),
     @maCV VARCHAR(50) = NULL, -- Có thể NULL
-    @noiLamViec VARCHAR(50) = NULL -- Có thể NULL
+    @chiNhanh VARCHAR(50) = NULL -- Có thể NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -600,15 +594,15 @@ BEGIN
     END;
 
     -- Kiểm tra nếu nơi làm việc không NULL nhưng không tồn tại trong bảng KHO
-    IF @noiLamViec IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @noiLamViec)
+    IF @chiNhanh IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @chiNhanh)
     BEGIN
         PRINT N'Lỗi: Mã kho (nơi làm việc) không hợp lệ!';
         RETURN -3;
     END;
 
     -- Chèn dữ liệu vào bảng NHANVIEN
-    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
-    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @noiLamViec);
+    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh)
+    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @chiNhanh);
 
     PRINT N'Thêm nhân viên thành công!';
     RETURN 1;
@@ -625,7 +619,7 @@ EXEC sp_themNhanVien
     @matKhau = '123456', 
     @trangThai = 'On', 
     @maCV = 'CV002', 
-    @noiLamViec = 'KHO001';
+    @chiNhanh = 'KHO001';
 
 -- . Cập nhật nhân viên
 -- . Lấy danh sách chức vụ
