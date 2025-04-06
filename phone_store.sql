@@ -44,7 +44,7 @@ CREATE TABLE PBSP (
     ram NVARCHAR(50) NOT NULL,
     rom NVARCHAR(50) NOT NULL,
     giaBan DECIMAL(18,2) NOT NULL,
-    soLuong INT NOT NULL,
+    soLuong INT,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
     maSP VARCHAR(50) NOT NULL,
 
@@ -68,11 +68,11 @@ CREATE TABLE NHANVIEN (
     matKhau NVARCHAR(255) NOT NULL,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
     maCV VARCHAR(50) ,
-    noiLamViec VARCHAR(50),
+    chiNhanh VARCHAR(50),
 
     PRIMARY KEY (maNV),
     CONSTRAINT FK_NHANVIEN_CHUCVU FOREIGN KEY (maCV) REFERENCES CHUCVU(maCV) ON DELETE NO ACTION,
-    CONSTRAINT FK_NHANVIEN_KHO FOREIGN KEY (noiLamViec) REFERENCES KHO(maKho) ON DELETE NO ACTION
+    CONSTRAINT FK_NHANVIEN_KHO FOREIGN KEY (chiNhanh) REFERENCES KHO(maKho) ON DELETE NO ACTION
 );
 DROP TABLE NHANVIEN;
 
@@ -84,9 +84,9 @@ CREATE TABLE PHIEUNHAP (
     ngayTao DATE NOT NULL,
     tongTien FLOAT,
     trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng')) NOT NULL,
-	maNV VARCHAR(50) NOT NULL,
-	maKho VARCHAR(50) NOT NULL,
-	maNCC VARCHAR(50) NOT NULL,
+    maNV VARCHAR(50) NOT NULL,
+    maKho VARCHAR(50) NOT NULL,
+    maNCC VARCHAR(50) NOT NULL,
 
 	PRIMARY KEY(maPN),
     CONSTRAINT FK_PHIEUNHAP_NHANVIEN FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
@@ -116,8 +116,8 @@ CREATE TABLE PHIEUXUAT (
     httt NVARCHAR(50),
     trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
-	maKho VARCHAR(50) NOT NULL,
-	maKH VARCHAR(50) NOT NULL,
+    maKho VARCHAR(50) NOT NULL,
+    maKH VARCHAR(50) NOT NULL,
 	CONSTRAINT FK_PHIEUXUAT_NHANVIEN FOREIGN KEY (maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
 	CONSTRAINT FK_PHIEUXUAT_KHO FOREIGN KEY (maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
 	CONSTRAINT FK_PHIEUXUAT_KHACHHANG FOREIGN KEY (maKH) REFERENCES KHACHHANG(maKH) ON DELETE NO ACTION
@@ -154,7 +154,6 @@ CREATE TABLE CHUCVU (
     maCV VARCHAR(50) NOT NULL,
     tenCV NVARCHAR(255) NOT NULL,
     luongCB FLOAT,
-    heSo FLOAT,
 	trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
 
@@ -178,7 +177,6 @@ CREATE TABLE KHO_PBSP (
     soLuong INT NOT NULL,
     maKho VARCHAR(50) NOT NULL,
     maPBSP VARCHAR(50) NOT NULL,
-    ngayCapNhat DATE NOT NULL,
 
     PRIMARY KEY (maKho, maPBSP),
     CONSTRAINT FK_KHOPBSP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
@@ -205,41 +203,43 @@ DROP TABLE KHACHHANG;
 
 
 
--- Bảng Đơn Yêu Cầu
-CREATE TABLE DONYEUCAU (
+-- Bảng Đơn Xin Nghỉ
+CREATE TABLE DONXINNGHI (
     maDon VARCHAR(50) NOT NULL,
-    tenDon NVARCHAR(255),
     ngayTao DATE NOT NULL,
-    loaiDon NVARCHAR(50),
-    chiTiet NVARCHAR(MAX),
+    ngayBD DATE NOT NULL,
+    ngayKT DATE NOT NULL,
     lyDo NVARCHAR(MAX),
-	ngayDuyet DATE NOT NULL,
-    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
-	maNV VARCHAR(50) NOT NULL,
-	maNguoiDuyet VARCHAR(50) NOT NULL,
+    ngayDuyet DATE NOT NULL,
+    trangThai VARCHAR(20) CHECK (trangThai IN (N'Chờ Duyệt', N'Đã Duyệt', N'Từ chối')) NOT NULL,
+    maNV VARCHAR(50) NOT NULL,
+    maNguoiDuyet VARCHAR(50) NOT NULL,
 
 	PRIMARY KEY(maDon),
-    CONSTRAINT FK_DONYEUCAU_NHANVIEN  FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,	-- khi xóa nhân viên này đi thì giá trị khóa ngoại ở đây sẽ set về null, nhưng vẫn giữ mã người duyệt bên dưới
-    CONSTRAINT FK_DONYEUCAU_NGUOIDUYET FOREIGN KEY(maNguoiDuyet) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION
+    CONSTRAINT FK_DONXINNGHI_NHANVIEN  FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,	-- khi xóa nhân viên này đi thì giá trị khóa ngoại ở đây sẽ set về null, nhưng vẫn giữ mã người duyệt bên dưới
+    CONSTRAINT FK_DONXINNGHI_NGUOIDUYET FOREIGN KEY(maNguoiDuyet) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION
 );
-DROP TABLE DONYEUCAU;
+DROP TABLE DONXINNGHI;
 
--- Bảng Lịch Sử Chỉnh Sửa
+-- Bảng Lịch Sử Chỉnh Sửa chức vụ
 CREATE TABLE LSCHINHSUA (
     maLSCS INT IDENTITY(1,1) PRIMARY KEY,
     maNguoiChinhSua VARCHAR(50) FOREIGN KEY REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
     maNguoiBiChinhSua VARCHAR(50) FOREIGN KEY REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,
     thoiGian DATE NOT NULL,
-    noiDungChinhSua NVARCHAR(MAX)
+    giaTriCu NVARCHAR(MAX) NOT NULL,
+    giaTriMoi NVARCHAR(MAX) NOT NULL
 );
 DROP TABLE LSCHINHSUA;
 
 
 -- Bảng lương
 CREATE TABLE BANGLUONG(
-	maBL varchar(50),
+	maBL varchar(50),	-- = "BL" + thang + nam + manv 
 	thangLuong int,
 	namLuong int,
+	luongCB float,
+	heSo float,
 	phuCapAnTrua float,
 	phuCapDiLai float,
 	thuong float, 
@@ -258,13 +258,13 @@ DROP TABLE BANGLUONG;
 
 -- Bảng chấm công
 CREATE TABLE BANGCHAMCONG(
-	maBCC varchar(50),
+	maBCC varchar(50),   -- = "CC" + thang + nam + manv 
 	thangCC int,
 	namCC int,
 	soNgayLam float,
-	soNgayNghiPhep float,
 	soNgayNghiKhongPhep float,
-	soGioOT float,
+	soNgayNghiPhepCoLuong float,
+	soNgayNghiPhepKhongLuong float,
 	maNV varchar(50),
 
 	PRIMARY KEY(maBCC),
@@ -273,12 +273,15 @@ CREATE TABLE BANGCHAMCONG(
 DROP TABLE BANGCHAMCONG;
 
 -- Bảng ghi chú
-CREATE TABLE GHICHU (
-    maGC INT PRIMARY KEY IDENTITY(1,1), -- Dùng IDENTITY thay cho AUTO_INCREMENT
+CREATE TABLE ChiTietChamCong (
+    maCTCC varchar(50) , 	-- = "CT" + thang + nam + manv 
     ngayTao DATE NOT NULL,
-    noiDung NVARCHAR(1000),
+    loaiChamCong VARCHAR(255) CHECK (trangThai IN (N'Tăng ca ngày lễ', N'Tăng ca chủ nhật', N'Tăng ca ngày thường', 
+	N'Nghỉ phép có lương', N'Nghỉ phép không lương ', N'Nghỉ không phép', N'Nghỉ nửa buổi', N'Nghỉ việc')) NOT NULL, 	-- Thiếu gì bổ sung thêm
+    chiTiet varchar(255),        -- Nếu OT thì chi tiết là số giờ OT, nếu nghỉ thì ghi lý do nghỉ
     maBCC VARCHAR(50),
-    
+	
+    PRIMARY KEY(maCTCC),
     CONSTRAINT FK_GHICHU_BANGCHAMCONG FOREIGN KEY (maBCC) REFERENCES BANGCHAMCONG(maBCC) ON DELETE NO ACTION
 );
 DROP TABLE GHICHU;
@@ -331,12 +334,12 @@ INSERT INTO NHACUNGCAP (maNCC, tenNCC, sdt, email, diaChi, trangThai) VALUES
 ('NCC005', N'Công ty E', '0945678901', 'e@gmail.com', N'Hải Phòng', N'On');
 
 -- Insert bảng CHUCVU
-INSERT INTO CHUCVU (maCV, tenCV, luongCB, heSo, trangThai) 
+INSERT INTO CHUCVU (maCV, tenCV, luongCB, trangThai) 
 VALUES 
-('CV001', N'Quản lý kho', 15000000, 2.0, 'on'),
-('CV002', N'Quản lý nhân sự', 8000000, 1.2, 'on'),
-('CV003', N'Nhân viên kho', 9000000, 1.3, 'on'),
-('CV004', N'Admin', 0, 0, 'on');
+('CV001', N'Quản lý kho', 15000000, 'on'),
+('CV002', N'Quản lý nhân sự', 8000000, 'on'),
+('CV003', N'Nhân viên kho', 9000000, 'on'),
+('CV004', N'Admin', 0, 'on');
 
 -- Insert bảng KHO
 INSERT INTO KHO (maKho, tenKho, diaChi, sdt, trangThai) 
@@ -347,7 +350,7 @@ VALUES
 
 
 -- Insert bảng NHANVIEN
-INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh)
 VALUES 
 ('NV001', N'Nguyễn Văn A', '1990-05-12', N'Nam', N'123 Lê Lợi, TP.HCM', '0901234567', 'nguyenvana@example.com', NULL, '123456', 'on', 'CV001', 'HCM'),
 ('NV002', N'Trần Thị B', '1995-08-22', N'Nữ', N'456 Hai Bà Trưng, Hà Nội', '0912345678', 'tranthib@example.com', NULL, 'abcdef', 'on', 'CV002', 'HCM'),
@@ -367,13 +370,13 @@ INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhA
 ('NV015', N'Ngô Văn O', '1992-11-11', N'Nam', N'852 Ba Tháng Hai, Hải Phòng', '0995678901', 'ngovano@example.com', NULL, 'passo707', 'on', 'CV002', 'HCM');
 
 
-INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai)
+INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai, chiNhanh)
 VALUES
-('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on'),
-('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off'),
-('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on'),
-('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off'),
-('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on');
+('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on', 'HCM'),
+('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off', 'HN'),
+('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on', 'DN'),
+('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off', 'HCM'),
+('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on', 'HN');
 
 -- Chèn dữ liệu vào bảng PHIEUNHAP
 INSERT INTO PHIEUNHAP (maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC) 
@@ -431,21 +434,23 @@ VALUES
 (6, 1380000, 'PX005', 'PBSP005');
 
 
+
+
 -- Chèn dữ liệu vào bảng BANGCHAMCONG
-INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiPhep, soNgayNghiKhongPhep, soGioOT, maNV) VALUES
-('BCC001', 3, 2024, 22, 2, 1, 5, 'NV001'),
-('BCC002', 3, 2024, 20, 3, 2, 4, 'NV002'),
-('BCC003', 3, 2024, 21, 1, 1, 6, 'NV003'),
-('BCC004', 3, 2024, 23, 0, 2, 3, 'NV004'),
-('BCC005', 3, 2024, 19, 4, 3, 2, 'NV005');
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV) VALUES
+('BCC032024001', 3, 2024, 16, 2, 4, 0, 'NV001'),
+('BCC032024002', 3, 2024, 20, 1, 1, 0, 'NV002'),
+('BCC032024003', 3, 2024, 19, 1, 1, 1, 'NV003'),
+('BCC032024004', 3, 2024, 21, 0, 1, 0, 'NV004'),
+('BCC032024005', 3, 2024, 21, 1, 0, 0, 'NV005');
 
 -- Chèn dữ liệu vào bảng BANGLUONG
-INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, phuCapAnTrua, phuCapDiLai, thuong, bhxh, bhyt, bhtn, thueTNCN, tamUng, thucNhan, maNV) VALUES
-('BL001', 3, 2024, 500000, 300000, 200000, 800000, 500000, 200000, 300000, 1000000, 9000000, 'NV001'),
-('BL002', 3, 2024, 450000, 250000, 180000, 750000, 480000, 190000, 280000, 900000, 8500000, 'NV002'),
-('BL003', 3, 2024, 550000, 320000, 250000, 820000, 520000, 220000, 350000, 1100000, 9200000, 'NV003'),
-('BL004', 3, 2024, 480000, 290000, 210000, 780000, 490000, 200000, 320000, 950000, 8800000, 'NV004'),
-('BL005', 3, 2024, 420000, 220000, 170000, 730000, 450000, 180000, 270000, 800000, 8100000, 'NV005');
+INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, luongCB, heSo, phuCapAnTrua, phuCapDiLai, thuong, bhxh, bhyt, bhtn, thueTNCN, tamUng, thucNhan, maNV) VALUES
+('BL032024001', 3, 2024, 8000000, 1, 500000, 300000, 200000, 800000, 500000, 200000, 300000, 1000000, 9000000, 'NV001'),
+('BL032024002', 3, 2024, 8000000, 1.2, 450000, 250000, 180000, 750000, 480000, 190000, 280000, 900000, 8500000, 'NV002'),
+('BL032024003', 3, 2024, 9000000, 1, 320000, 250000, 820000, 520000, 220000, 350000, 1100000, 9200000, 'NV003'),
+('BL032024004', 3, 2024, 9500000, 1, 290000, 210000, 780000, 490000, 200000, 320000, 950000, 8800000, 'NV004'),
+('BL032024005', 3, 2024, 12000000, 1, 420000, 220000, 170000, 730000, 450000, 180000, 270000, 800000, 8100000, 'NV005');
 
 INSERT INTO GHICHU (ngayTao, noiDung, maBCC) VALUES
 ('2024-03-01', N'Đi làm trễ.', 'BCC001'),
