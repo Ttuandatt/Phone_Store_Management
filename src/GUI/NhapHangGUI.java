@@ -18,6 +18,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -72,7 +73,6 @@ public class NhapHangGUI extends JPanel {
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
 	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
-	ArrayList<SanPhamDTO> arrSP = new ArrayList<SanPhamDTO>();
 	JComboBox<String> brandComboBox, supplierComboBox;
 	JPanel pnContent;
 	JLabel imageLabel, lblTongTien, lblMaPN, lblMaKho, lblMaNguoiTao, lblNhaCungCap, lblNgayTao;
@@ -191,9 +191,9 @@ public class NhapHangGUI extends JPanel {
 //		dateChooser.setBounds(10, 22, 150, 25); // Định vị
 //		searchLeftPanel.add(dateChooser);
 
-		JTextField searchTF = new JTextField();
-		searchTF.setBounds(300, 22,235, 25);
-		searchLeftPanel.add(searchTF);
+		txtTimKiem = new JTextField();
+		txtTimKiem.setBounds(300, 22,235, 25);
+		searchLeftPanel.add(txtTimKiem);
 
 		// Tạo nút Search
 		ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png"));
@@ -215,7 +215,7 @@ public class NhapHangGUI extends JPanel {
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Search button clicked!");
+				searchPerformed(productTable);
 			}
 		});
 		btnSearch.addMouseListener(new MouseAdapter() {
@@ -253,7 +253,7 @@ public class NhapHangGUI extends JPanel {
 		btnRefresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+				refreshList();
 			}
 		});
 		btnRefresh.addMouseListener(new MouseAdapter() {
@@ -939,7 +939,7 @@ public class NhapHangGUI extends JPanel {
 					oldValue = oldValue.replaceFirst("đ", "");
 					int newQuantity = Integer.parseInt(txtSoLuong.getText()) + Integer.parseInt((String) model.getValueAt(i, 5));
 					String soluong = Integer.toString(newQuantity);
-					int value = newQuantity * Integer.parseInt(giaSP);
+					Double value = newQuantity * Double.parseDouble(giaSP);
 					String dongia = NumberFormat.getInstance().format(value) + "đ";
 					
 					// Cập nhật tổng tiền của đơn hàng
@@ -954,7 +954,7 @@ public class NhapHangGUI extends JPanel {
 				}
 			}
 			if (!isDuplicate) {
-				int value = Integer.parseInt(txtSoLuong.getText()) * Integer.parseInt(giaSP);
+				Double value = Double.parseDouble(txtSoLuong.getText()) * Double.parseDouble(giaSP);
 				String tensp = (String) productTable.getModel().getValueAt(selectedRow, 1);
 				String soluong = txtSoLuong.getText();
 				String dongia = NumberFormat.getInstance().format(value) + "đ";
@@ -1090,6 +1090,58 @@ public class NhapHangGUI extends JPanel {
 		}
 			
 	}
+	
+	
+	private void searchPerformed(JTable tb){
+        String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
+            ArrayList<PhienBanSanPhamDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
+
+            // Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm kiếm
+            boolean found = false;
+            for (PhienBanSanPhamDTO pbsp: arrPBSP) {
+                // Kiểm tra xem thông tin của pbsp có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
+                if (pbsp.getMaPBSP().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                	pbsp.getMauSac().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                	pbsp.getRam().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                	pbsp.getRom().toLowerCase().contains(searchContent.toLowerCase().trim()))
+                 {
+                    dsTimKiem.add(pbsp); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
+                    found = true;
+                }
+                
+            }
+            // Kiểm tra nếu không tìm thấy sản phẩm nào
+            if(!found){
+                JOptionPane.showMessageDialog(this, "Không tìm thấy phiên bản sản phẩm");
+                refreshList();
+                return; // Kết thúc phương thức sau khi hiển thị thông báo
+            }
+            
+            // Xóa tất cả các dòng hiện có trong bảng
+            DefaultTableModel tableModel = (DefaultTableModel) tb.getModel();
+            tableModel.setRowCount(0);
+
+            // Thêm các sản phẩm thỏa mãn vào bảng
+            for (PhienBanSanPhamDTO pbsp : dsTimKiem) {
+    			String maPBSP = pbsp.getMaPBSP();
+    			String tenSP = spBUS.getTenSanPhamByMaPBSP(maPBSP);
+    			String mauSac = pbsp.getMauSac();
+    			String ram = pbsp.getRam();
+    			String rom = pbsp.getRom();
+    			int soLuong = pbsp.getSoLuong();
+    		    String gia = String.valueOf((long) pbsp.getGiaBan());
+    			String trangThai = pbsp.getTrangThai();
+    			
+    		    Object[] row = {maPBSP, tenSP, mauSac, ram, rom, gia, soLuong, trangThai};
+                tableModel.addRow(row);
+            }
+        } else {
+            // Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển thị tất cả sản phẩm
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
+            refreshList();
+        }
+    }
 
 	public static java.sql.Date convertToSQLDate(String dateString) {
 		try {
@@ -1107,6 +1159,14 @@ public class NhapHangGUI extends JPanel {
 			return null;
 		}
 	}
+	
+	private void refreshList(){
+        // Xóa tất cả các dòng trong mô hình bảng
+        productModel.setRowCount(0);
+        loadProductList();
+        supplierComboBox.setSelectedIndex(0);
+        txtTimKiem.setText("");
+    }
 	
 	public static void log(String message) {
 	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();

@@ -1,4 +1,4 @@
-﻿create database phonestore;
+﻿﻿create database phonestore;
 drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -370,13 +370,13 @@ INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhA
 ('NV015', N'Ngô Văn O', '1992-11-11', N'Nam', N'852 Ba Tháng Hai, Hải Phòng', '0995678901', 'ngovano@example.com', NULL, 'passo707', 'on', 'CV002', 'HCM');
 
 
-INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai)
+INSERT INTO KHACHHANG (maKH, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, trangThai, chiNhanh)
 VALUES
-('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on'),
-('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off'),
-('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on'),
-('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off'),
-('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on');
+('KH001', N'Nguyễn Văn X', '1995-02-14', N'Nam', N'Hà Nội', '0967890123', 'x@gmail.com', 'on', 'HCM'),
+('KH002', N'Trần Thị Y', '1998-06-10', N'Nữ', N'Đà Nẵng', '0978901234', 'y@gmail.com', 'off', 'HN'),
+('KH003', N'Phạm Văn Z', '1992-09-25', N'Nam', N'Hồ Chí Minh', '0989012345', 'z@gmail.com', 'on', 'DN'),
+('KH004', N'Lê Thị U', '1985-12-05', N'Nữ', N'Hải Phòng', '0990123456', 'u@gmail.com', 'off', 'HCM'),
+('KH005', N'Hoàng Văn T', '2000-04-18', N'Nam', N'Bình Dương', '0901234568', 't@gmail.com', 'on', 'HN');
 
 -- Chèn dữ liệu vào bảng PHIEUNHAP
 INSERT INTO PHIEUNHAP (maPN, ngayTao, tongTien, trangThai, maNV, maKho, maNCC) 
@@ -506,6 +506,7 @@ select * from bangluong;
 select * from ghichu;
 select * from lschinhsua;
 select * from donyeucau;
+select * from chitietchamcong;
 SELECT @@VERSION;
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;
@@ -528,6 +529,9 @@ DELETE FROM KHO;
 DELETE FROM NHACUNGCAP;
 DELETE FROM CHUCVU;
 
+------------------------------------------ UPDATE --------------------------------------
+
+update nhanvien set maCV='CV004' where manv='NV001'
 ------------------------------------------ ALTER TABLE --------------------------------------
 -- PHIEUNHAP
 -- Chỉnh lại trạng thái từ chỉ có 'on', 'off' sang 'Chờ xác nhận', 'Đã xác nhận', 'Đã nhận hàng'

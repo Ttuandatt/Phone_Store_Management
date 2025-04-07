@@ -690,9 +690,9 @@ public class BangChamCongGUI extends JPanel{
 		bangChamCongModel.addColumn("Tháng chấm công");
 		bangChamCongModel.addColumn("Năm chấm công");
 		bangChamCongModel.addColumn("Số ngày làm");
-    	bangChamCongModel.addColumn("Số ngày nghỉ phép");
     	bangChamCongModel.addColumn("Số ngày nghỉ không phép");
-    	bangChamCongModel.addColumn("Số giờ tăng ca");
+    	bangChamCongModel.addColumn("Số ngày nghỉ phép có lương");
+    	bangChamCongModel.addColumn("Số ngày nghỉ phép không lương");
     	bangChamCongModel.addColumn("Mã nhân viên"); 
     	
     	arrBangChamCong = bccBUS.selectAll();
@@ -702,25 +702,25 @@ public class BangChamCongGUI extends JPanel{
     		int thangCC = bcc.getThangCC();
     		int namCC = bcc.getNamCC();
     		int soNgayLam = bcc.getSoNgayLam();
-    		int soNgayNghiPhep = bcc.getSoNgayNghiPhep();
     		int soNgayNghiKhongPhep = bcc.getSoNgayNghiKhongPhep();
-    		float soGioTangCa = bcc.getSoGioOT();
+    		int soNgayNghiPhepCoLuong = bcc.getSoNgayNghiPhepCoLuong();
+    		int soNgayNghiPhepKhongLuong = bcc.getSoNgayNghiPhepKhongLuong();
     		String maNV = bcc.getMaNV();
     		
-    		Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiPhep, soNgayNghiKhongPhep, soGioTangCa, maNV};
+    		Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV};
     		bangChamCongModel.addRow(row);
     		
     	}
     	
     	//Điều chỉnh kích thước các cột
     	TableColumnModel tcm = bangChamCongTable.getColumnModel();
-    	tcm.getColumn(0).setPreferredWidth(200);
+    	tcm.getColumn(0).setPreferredWidth(150);
 		tcm.getColumn(1).setPreferredWidth(150);
 		tcm.getColumn(2).setPreferredWidth(150);
-		tcm.getColumn(3).setPreferredWidth(150);
+		tcm.getColumn(3).setPreferredWidth(100);
 		tcm.getColumn(4).setPreferredWidth(200);
 		tcm.getColumn(5).setPreferredWidth(200);
-		tcm.getColumn(6).setPreferredWidth(107);
+		tcm.getColumn(6).setPreferredWidth(208);
 		tcm.getColumn(7).setPreferredWidth(110);
 		
 		bangChamCongTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
@@ -798,9 +798,9 @@ public class BangChamCongGUI extends JPanel{
 				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
 				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
 				bcc.setSoNgayLam(0);
-				bcc.setSoNgayNghiPhep(0);
 				bcc.setSoNgayNghiKhongPhep(0);
-				bcc.setSoGioOT(0);
+				bcc.setSoNgayNghiPhepCoLuong(0);
+				bcc.setSoNgayNghiPhepKhongLuong(0);
 				bcc.setMaNV(txtMaNV.getText());
 				
 				String message = bccBUS.insert(bcc);
@@ -818,7 +818,7 @@ public class BangChamCongGUI extends JPanel{
 		updateBangChamCongDialog.setSize(600, 300);
 		updateBangChamCongDialog.setLayout(null);
 		
-		JLabel lblMaBCC, lblThangCC, lblNamCC, lblMaNV, lblSoNgayLam, lblSoNgayNghiPhep, lblSoNgayNghiKhongPhep, lblSoGioOT;
+		JLabel lblMaBCC, lblThangCC, lblNamCC, lblMaNV, lblSoNgayLam, lblSoNgayNghiKhongPhep, lblSoNgayNghiPhepCoLuong, lblSoNgayNghiPhepKhongLuong;
 		lblMaBCC = new JLabel("Mã bảng chấm công");
 		lblMaBCC.setBounds(10, 10, 150, 20);
 		updateBangChamCongDialog.add(lblMaBCC);
@@ -839,17 +839,17 @@ public class BangChamCongGUI extends JPanel{
 		lblSoNgayLam.setBounds(170, 10, 150, 20);
 		updateBangChamCongDialog.add(lblSoNgayLam);
 		
-		lblSoNgayNghiPhep = new JLabel("Số ngày nghỉ phép");
-		lblSoNgayNghiPhep.setBounds(170, 60, 150, 20);
-		updateBangChamCongDialog.add(lblSoNgayNghiPhep);
-		
 		lblSoNgayNghiKhongPhep = new JLabel("Số ngày nghỉ không phép");
-		lblSoNgayNghiKhongPhep.setBounds(170, 110, 150, 20);
+		lblSoNgayNghiKhongPhep.setBounds(170, 60, 150, 20);
 		updateBangChamCongDialog.add(lblSoNgayNghiKhongPhep);
 		
-		lblSoGioOT = new JLabel("Số giờ tăng ca");
-		lblSoGioOT.setBounds(170, 160, 150, 20);
-		updateBangChamCongDialog.add(lblSoGioOT);
+		lblSoNgayNghiPhepCoLuong = new JLabel("Số ngày nghỉ phép có lương");
+		lblSoNgayNghiPhepCoLuong.setBounds(170, 110, 150, 20);
+		updateBangChamCongDialog.add(lblSoNgayNghiPhepCoLuong);
+		
+		lblSoNgayNghiPhepKhongLuong = new JLabel("Số ngày nghỉ phép không lương");
+		lblSoNgayNghiPhepKhongLuong.setBounds(170, 160, 170, 20);
+		updateBangChamCongDialog.add(lblSoNgayNghiPhepKhongLuong);
 		
 		JTextField txtMaBCC, txtThangCC, txtNamCC, txtMaNV;
 		txtMaBCC = new JTextField();
@@ -881,9 +881,9 @@ public class BangChamCongGUI extends JPanel{
 				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
 				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
 				bcc.setSoNgayLam(0);
-				bcc.setSoNgayNghiPhep(0);
 				bcc.setSoNgayNghiKhongPhep(0);
-				bcc.setSoGioOT(0);
+				bcc.setSoNgayNghiPhepCoLuong(0);
+				bcc.setSoNgayNghiPhepKhongLuong(0);
 				bcc.setMaNV(txtMaNV.getText());
 				
 				String message = bccBUS.insert(bcc);
@@ -913,9 +913,9 @@ public class BangChamCongGUI extends JPanel{
                 else if(bcc.getThangCC()==Integer.parseInt(searchContent.trim()) || 
                 	bcc.getNamCC()==Integer.parseInt(searchContent.trim()) ||
                 	bcc.getSoNgayLam()==Integer.parseInt(searchContent.trim()) ||
-                	bcc.getSoNgayNghiPhep()==Integer.parseInt(searchContent.trim()) ||
                 	bcc.getSoNgayNghiKhongPhep()==Integer.parseInt(searchContent.trim()) ||
-                	bcc.getSoGioOT()==Float.parseFloat(searchContent.trim())||
+                	bcc.getSoNgayNghiPhepCoLuong()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNgayNghiPhepKhongLuong()==Integer.parseInt(searchContent.trim())||
                 	bcc.getMaNV().toLowerCase().contains(searchContent.toLowerCase())){
                 	dsTimKiem.add(bcc); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
                     found = true;
@@ -939,14 +939,14 @@ public class BangChamCongGUI extends JPanel{
     			int thangCC = bcc.getThangCC();
     			int namCC = bcc.getNamCC();
     			int soNgayLam = bcc.getSoNgayLam();
-    			int soNgayNghiPhep = bcc.getSoNgayNghiPhep();
     			int soNgayNghiKhongPhep = bcc.getSoNgayNghiKhongPhep();
-    			float soGioOT = bcc.getSoGioOT();
+    			int soNgayNghiPhepCoLuong = bcc.getSoNgayNghiPhepCoLuong();
+    			int soNgayNghiPhepKhongLuong = bcc.getSoNgayNghiPhepKhongLuong();
     			String maNV = bcc.getMaNV();
 
     			
     			
-    		    Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiPhep, soNgayNghiKhongPhep, soGioOT, maNV};
+    		    Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV};
                 tableModel.addRow(row);
             }
         } else {

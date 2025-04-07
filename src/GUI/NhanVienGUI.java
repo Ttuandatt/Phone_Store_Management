@@ -72,9 +72,10 @@ public class NhanVienGUI extends JPanel{
     ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
     ArrayList<KhoDTO> arrNoiLamViec = khoBUS.selectAll();
     String[] roles = new String[arrChucVu.size()];
+    boolean comboboxClicked = false;
     String[] workplaces =  new String[arrNoiLamViec.size()];
     JPanel nhanVienContent;
-    JTextField tfTimKiem;
+    JTextField txtTimKiem;
 	
 	final byte[][] imageBytes = new byte[1][];
 	String selectedFilePathName;	//biến lưu đường dẫn của ảnh được chọn
@@ -577,6 +578,24 @@ public class NhanVienGUI extends JPanel{
         roleCombobox.setBounds(185, 24, 140, 25);
     	fillRoleCombobox(roleCombobox);
         searchInputPanel.add(roleCombobox);
+        roleCombobox.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		comboboxClicked = true;
+        	}
+        });
+        roleCombobox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(comboboxClicked) {
+					String role = roleCombobox.getSelectedItem().toString(); 
+					log("role="+role);
+					sortRole(role);
+					comboboxClicked = false;
+					
+				}
+			}
+		});
         roleCombobox.addItemListener(e -> {
         	if(e.getStateChange() == ItemEvent.SELECTED) {
         		String selected = (String)roleCombobox.getSelectedItem();
@@ -588,9 +607,9 @@ public class NhanVienGUI extends JPanel{
         });
 
         
-        tfTimKiem = new JTextField();
-        tfTimKiem.setBounds(375,  24,  260, 25);
-        searchInputPanel.add(tfTimKiem);
+        txtTimKiem = new JTextField();
+        txtTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(txtTimKiem);
         
         
         
@@ -1814,25 +1833,25 @@ public class NhanVienGUI extends JPanel{
         loadNhanVienList();
         sortComboBox.setSelectedIndex(0);
         genderCombobox.setSelectedIndex(0);
-        roleCombobox.setSelectedIndex(0);
+        roleCombobox.setSelectedItem("");
     }
     
     
     private void searchPerformed(JTable tb){
-        String searchContent = tfTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
         if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
             ArrayList<NhanVienDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
 
             // Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm kiếm
             boolean found = false;
             for (NhanVienDTO nv: arrNhanVien) {
-                // Kiểm tra xem thông tin của sản phẩm có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
-                if (nv.getMaNV().toLowerCase().contains(searchContent.toLowerCase()) ||
-                    nv.getHoTen().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getGioiTinh().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getDiaChi().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getSoDienThoai().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getChucVu().toLowerCase().contains(searchContent.toLowerCase()))
+                // Kiểm tra xem thông tin của nhân viên có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
+                if (nv.getMaNV().toLowerCase().contains(searchContent.toLowerCase().trim()) ||
+                    nv.getHoTen().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getGioiTinh().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getDiaChi().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getSoDienThoai().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getChucVu().toLowerCase().contains(searchContent.toLowerCase().trim()))
                  {
                     dsTimKiem.add(nv); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
                     found = true;
@@ -1929,7 +1948,48 @@ public class NhanVienGUI extends JPanel{
         sorter.sort();
     }
     
-    private void sortRole() {
+    private void sortRole(String role) {
+    	ArrayList<NhanVienDTO> dsTimKiem = nvBUS.selectAllByRoleName(role);
     	
+    	// Xóa tất cả các dòng hiện có trong bảng
+        DefaultTableModel tableModel = (DefaultTableModel) employeeTable.getModel();
+        tableModel.setRowCount(0);
+
+        // Thêm các sản phẩm thỏa mãn vào bảng
+        for (NhanVienDTO nv : dsTimKiem) {
+			String maNV = nv.getMaNV();
+			String hoTen = nv.getHoTen();
+			Date ngaySinh = nv.getNgaySinh();
+			String gioiTinh = nv.getGioiTinh();
+			String diaChi = nv.getDiaChi();
+			String chucVu = nv.getChucVu();
+			String matKhau = nv.getMatKhau();
+			String trangThai = nv.getTrangThai();
+			// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
+		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
+		    ImageIcon imageIcon = null;
+		    if (imageData != null) {
+		        // Chuyển đổi byte[] thành ImageIcon
+		        Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+		        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize ảnh
+		        imageIcon = new ImageIcon(scaledImage);
+		    }
+			
+			
+		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon};
+            tableModel.addRow(row);
+        }
+    
     }
+    
+    
+    
+    
+  //hàm hiển thị thông tin dòng code
+  	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
 }

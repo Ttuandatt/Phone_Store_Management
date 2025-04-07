@@ -17,6 +17,8 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 public class QuanLyKhoView {
 	
 	private JPanel contentPanel; // contentPanel để hiển thị các giao diện
+	JLabel lblMaNV, lblHoTen, lblChucVu, lblKho, dataMaNV, dataHoTen, dataChucVu, dataKho;
+
 	
 	public QuanLyKhoView() {
 		init();
@@ -52,7 +54,7 @@ public class QuanLyKhoView {
         GridBagConstraints gbc = new GridBagConstraints();
 
         //======================= 1. Info Panel (0.3) ============================//
-        JPanel infoPanel = new JPanel();
+        JPanel infoPanel = new JPanel(null);
         infoPanel.setBackground(Color.decode("#01BFF4"));
         infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
         gbc.weightx = 1.0;
@@ -62,6 +64,34 @@ public class QuanLyKhoView {
         gbc.gridy = 0;
         menuPanel.add(infoPanel, gbc);
         
+        
+        lblMaNV = new JLabel("Mã NV: ");
+		lblMaNV.setBounds(5, 5, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataMaNV = new JLabel("ABC");
+		dataMaNV.setBounds(55, 5, 50, 20);
+		infoPanel.add(dataMaNV);
+		
+		lblMaNV = new JLabel("Họ tên: ");
+		lblMaNV.setBounds(5, 22, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataHoTen = new JLabel("DEF");
+		dataHoTen.setBounds(55, 22, 50, 20);
+		infoPanel.add(dataHoTen);
+		
+		lblMaNV = new JLabel("Chức vụ: ");
+		lblMaNV.setBounds(5, 37, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataChucVu = new JLabel("GHI");
+		dataChucVu.setBounds(55, 37, 50, 20);
+		infoPanel.add(dataChucVu);
+		
+		lblMaNV = new JLabel("Kho: ");
+		lblMaNV.setBounds(5, 52, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataKho = new JLabel("JKL");
+		dataKho.setBounds(55, 52, 50, 20);
+		infoPanel.add(dataKho);
 
         //======================= 2. Menu Panel (0.6) ============================//
         JPanel menuBarPanel = new JPanel();
@@ -385,6 +415,13 @@ public class QuanLyKhoView {
     	contentPanel.revalidate();
     	contentPanel.repaint();
     }
+    
+    public void hienThiThongTinNguoiDung(String maNV, String hoTen, String chucVu, String maKho) {
+		dataMaNV.setText(maNV);
+		dataHoTen.setText(hoTen);
+		dataChucVu.setText(chucVu);
+		dataKho.setText(maKho);
+	}
     
     
     public static void main(String[] args) {

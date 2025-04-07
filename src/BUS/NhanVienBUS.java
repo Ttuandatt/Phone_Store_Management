@@ -73,4 +73,8 @@ public class NhanVienBUS {
 			return "Xóa nhân viên thành công";
 		return "Xóa nhân viên thất bại";
 	}
+	
+	public ArrayList<NhanVienDTO> selectAllByRoleName(String role){
+		return nvDAO.selectAllByRoleName(role);
+	}
 }
