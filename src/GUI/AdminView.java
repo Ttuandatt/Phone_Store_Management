@@ -21,7 +21,9 @@ import javafx.scene.Scene;
 public class AdminView {
 
 	private JPanel contentPanel; // contentPanel để hiển thị các giao diện
-
+	JLabel lblMaNV, lblHoTen, lblChucVu, lblKho, dataMaNV, dataHoTen, dataChucVu, dataKho;
+	
+	
 	public AdminView() {
 		init();
 	}
@@ -56,15 +58,44 @@ public class AdminView {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		// ======================= 1. Info Panel (0.3) ============================//
-		JPanel infoPanel = new JPanel();
+		JPanel infoPanel = new JPanel(null);
 		infoPanel.setBackground(Color.decode("#01BFF4"));
 		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
 		gbc.weightx = 1.0;
-		gbc.weighty = 0.25;
+		gbc.weighty = 0.3;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		menuPanel.add(infoPanel, gbc);
+		
+		lblMaNV = new JLabel("Mã NV: ");
+		lblMaNV.setBounds(5, 5, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataMaNV = new JLabel("ABC");
+		dataMaNV.setBounds(55, 5, 50, 20);
+		infoPanel.add(dataMaNV);
+		
+		lblMaNV = new JLabel("Họ tên: ");
+		lblMaNV.setBounds(5, 22, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataHoTen = new JLabel("DEF");
+		dataHoTen.setBounds(55, 22, 200, 20);
+		infoPanel.add(dataHoTen);
+		
+		lblMaNV = new JLabel("Chức vụ: ");
+		lblMaNV.setBounds(5, 37, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataChucVu = new JLabel("GHI");
+		dataChucVu.setBounds(55, 37, 50, 20);
+		infoPanel.add(dataChucVu);
+		
+		lblMaNV = new JLabel("Kho: ");
+		lblMaNV.setBounds(5, 52, 50, 20);
+		infoPanel.add(lblMaNV);
+		dataKho = new JLabel("JKL");
+		dataKho.setBounds(55, 52, 50, 20);
+		infoPanel.add(dataKho);
+		
 
 		// ======================= 2. Menu Panel (0.6) ============================//
 		JPanel menuBarPanel = new JPanel();
@@ -439,7 +470,24 @@ public class AdminView {
 		contentPanel.revalidate();
 		contentPanel.repaint();
 	}
+	
+	
+	public void hienThiThongTinNguoiDung(String maNV, String hoTen, String chucVu, String maKho) {
+		dataMaNV.setText(maNV);
+		dataHoTen.setText(hoTen);
+		dataChucVu.setText(chucVu);
+		dataKho.setText(maKho);
+	}
 
+	//hàm hiển thị thông tin dòng code
+	public static void log(String message) {
+	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+	    System.out.println(element.getClassName() + " | method: " 
+	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+	}
+	
+	
 	public static void main(String[] args) {
 		new AdminView();
 	}

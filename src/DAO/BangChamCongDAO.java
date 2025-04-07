@@ -26,9 +26,9 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setThangCC(rs.getInt("thangCC"));
 				bcc.setNamCC(rs.getInt("namCC"));
 				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
-				bcc.setSoNgayNghiPhep(rs.getInt("soNgayNghiPhep"));
-				bcc.setSoNgayNghiKhongPhep(rs.getInt("SoNgayNghiKhongPhep"));
-				bcc.setSoGioOT(rs.getInt("soGioOT"));
+				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKhongPhep"));
+				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNgayNghiPhepCoLuong"));
+				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNgayNghiPhepKhongLuong"));
 				bcc.setMaNV(rs.getString("maNV"));
 				
 				arrBangChamCong.add(bcc);
@@ -56,17 +56,16 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 			ps.setString(1, maNV);
 			
 			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
+			if(rs.next()) {				
 				bcc.setMaBCC(rs.getString("maBCC"));
 				bcc.setThangCC(rs.getInt("thangCC"));
 				bcc.setNamCC(rs.getInt("namCC"));
 				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
-				bcc.setSoNgayNghiPhep(rs.getInt("soNgayNghiPhep"));
-				bcc.setSoNgayNghiKhongPhep(rs.getInt("setSoNgayNghiKhongPhep"));
-				bcc.setSoGioOT(rs.getInt("soGioOT"));
+				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKhongPhep"));
+				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNgayNghiKhongPhepCoLuong"));
+				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNgayNghiKhongPhepKhongLuong"));
 				bcc.setMaNV(rs.getString("maNV"));
 				
-
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -92,9 +91,9 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 			ps.setInt(2, bcc.getThangCC());
 			ps.setInt(3, bcc.getNamCC());
 			ps.setInt(4, bcc.getSoNgayLam());
-			ps.setInt(5, bcc.getSoNgayNghiPhep());
-			ps.setInt(6, bcc.getSoNgayNghiKhongPhep());
-			ps.setFloat(7, bcc.getSoGioOT());
+			ps.setInt(5, bcc.getSoNgayNghiKhongPhep());
+			ps.setInt(6, bcc.getSoNgayNghiPhepCoLuong());
+			ps.setInt(7, bcc.getSoNgayNghiPhepKhongLuong());
 			ps.setString(8, bcc.getMaNV());
 			
 			result = ps.executeUpdate();

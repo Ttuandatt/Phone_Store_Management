@@ -8,7 +8,7 @@ public class SanPhamDTO {
 	private String camTruoc;
 	private String camSau;
 	private String xuatXu;
-	private String hinhAnh;
+	private byte[] hinhAnh;
 	private String trangThai;
 	private String maTH;
 	
@@ -17,7 +17,7 @@ public class SanPhamDTO {
 	public SanPhamDTO() {
 	}
 	public SanPhamDTO(String maSP, String tenSP, String pin, String oS, String camTruoc, String camSau, String xuatXu,
-			String hinhAnh, String trangThai, String maTH) {
+			byte[] hinhAnh, String trangThai, String maTH) {
 		this.maSP = maSP;
 		this.tenSP = tenSP;
 		this.pin = pin;
@@ -32,6 +32,10 @@ public class SanPhamDTO {
 	
 	
 	
+	public SanPhamDTO(String text, String text2, String text3, String text4, String text5, String text6, String text7,
+			byte[] selectedImageBytes, String maTH2) {
+		
+	}
 	//getter, setter
 	public String getMaSP() {
 		return maSP;
@@ -75,10 +79,10 @@ public class SanPhamDTO {
 	public void setXuatXu(String xuatXu) {
 		this.xuatXu = xuatXu;
 	}
-	public String getHinhAnh() {
+	public byte[] getHinhAnh() {
 		return hinhAnh;
 	}
-	public void setHinhAnh(String hinhAnh) {
+	public void setHinhAnh(byte[] hinhAnh) {
 		this.hinhAnh = hinhAnh;
 	}
 	public String getTrangThai() {

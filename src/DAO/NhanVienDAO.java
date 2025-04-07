@@ -56,7 +56,50 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			// Đóng kết nối CSDL
 			jdbc.closeConnection();
 		}
+		
 
+		return arrNhanVien;
+	}
+	
+	public ArrayList<NhanVienDTO> selectAllByRoleName(String role){
+		ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select * from nhanvien inner join chucvu on nhanvien.maCV = chucvu.maCV where chucvu.tenCV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, role);
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				NhanVienDTO nv = new NhanVienDTO();
+				nv.setMaNV(rs.getString("maNV"));
+				nv.setHoTen(rs.getString("hoTen"));
+				nv.setNgaySinh(rs.getDate("ngaySinh"));
+				nv.setGioiTinh(rs.getString("gioiTinh"));
+				nv.setDiaChi(rs.getString("diaChi"));
+				nv.setSoDienThoai(rs.getString("sdt"));
+				nv.setEmail(rs.getString("email"));
+				nv.setTrangThai(rs.getString("trangThai"));
+				nv.setChucVu(rs.getString("maCV"));
+				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setMatKhau(rs.getString("matKhau"));
+				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
+
+				// Thêm vào danh sách
+				arrNhanVien.add(nv);
+
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			// Đóng kết nối CSDL
+			jdbc.closeConnection();
+		}
+		
 		return arrNhanVien;
 	}
 
