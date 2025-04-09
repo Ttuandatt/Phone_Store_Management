@@ -361,7 +361,7 @@ VALUES
 ('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'HCM'),
 ('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'DN'),
 ('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'HN');
-INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec) VALUES
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) VALUES
 ('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'HCM'),
 ('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'HN'),
 ('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'DN'),
@@ -441,20 +441,20 @@ VALUES
 
 
 -- Chèn dữ liệu vào bảng BANGCHAMCONG
-INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
 ('BCC0325NV001', 3, 2024, 16, 2, 4, 0, 0, 3.0, 0, 'NV001'),
 ('BCC0325NV002', 3, 2024, 20, 1, 1, 0, 0, 0, 2.0, 'NV002'),
 ('BCC0325NV003', 3, 2024, 19, 1, 1, 1, 0, 0, 0, 'NV003'),
 ('BCC0325NV004', 3, 2024, 21, 0, 1, 0, 0, 0, 0, 'NV004'),
 ('BCC0325NV005', 3, 2024, 21, 1, 0, 0, 1.5, 0, 0, 'NV005');
-INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV) VALUES
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
 ('BCC0325NV006', 3, 2024, 18, 1, 2, 1, 0, 0, 0, 'NV006'),
 ('BCC0325NV007', 3, 2024, 20, 0, 3, 0, 0, 0, 0, 'NV007'),
 ('BCC0325NV008', 3, 2024, 22, 0, 0, 1, 0, 0, 0, 'NV008'),
 ('BCC0325NV009', 3, 2024, 19, 1, 2, 0, 2.0, 0, 0, 'NV009'),
 ('BCC0325NV010', 3, 2024, 17, 2, 1, 2, 0, 0, 0, 'NV010');
 
-INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioTangCa) VALUES 
+INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT) VALUES 
 ('CT032025NV001', '2025-03-01', N'Tăng ca ngày lễ', null, 'BCC0425NV001', 3.0),
 ('CT032025NV002', '2025-03-02', N'Tăng ca chủ nhật', null, 'BCC0425NV002', 2.0),
 ('CT032025NV003', '2025-03-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003', 0),
@@ -545,13 +545,6 @@ DELETE FROM CHUCVU;
 ------------------------------------------ UPDATE --------------------------------------
 
 update nhanvien set maCV='CV004' where manv='NV001'
------------------------------------------- ALTER TABLE --------------------------------------
--- PHIEUNHAP
--- Chỉnh lại trạng thái từ chỉ có 'on', 'off' sang 'Chờ xác nhận', 'Đã xác nhận', 'Đã nhận hàng'
-ALTER TABLE PHIEUNHAP 
-ADD CONSTRAINT CK_PHIEUNHAP_TrangThai 
-CHECK (trangThai IN ('Chờ xác nhận', 'Đã xác nhận', 'Đã nhận hàng'));
-
 
 ------------------------------------------ STORED PROCEDURE --------------------------------------
 -- 1. Lấy danh sách nhân viên
