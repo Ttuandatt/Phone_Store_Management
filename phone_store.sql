@@ -1,4 +1,4 @@
-﻿﻿create database phonestore;
+﻿create database phonestore;
 drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
