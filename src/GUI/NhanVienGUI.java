@@ -69,6 +69,7 @@ public class NhanVienGUI extends JPanel{
     DefaultTableModel employeeModel = new DefaultTableModel();
     ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>(); 
     JComboBox<String> sortComboBox, genderCombobox, roleCombobox, workplaceCombobox;
+	JComboBox<Integer> monthCombobox, yearCombobox;
     ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
     ArrayList<KhoDTO> arrNoiLamViec = khoBUS.selectAll();
     String[] roles = new String[arrChucVu.size()];
@@ -76,6 +77,8 @@ public class NhanVienGUI extends JPanel{
     String[] workplaces =  new String[arrNoiLamViec.size()];
     JPanel nhanVienContent;
     JTextField txtTimKiem;
+	JLabel dataSoNgayCong, dataSoNgayNghiPhepCoLuong, dataSoNgayNghiPhepKhongLuong, dataSoNgayNghiKhongPhep, dataSoGioOT, dataTongSoNgayTinhLuong, lblTongSoNgayTinhLuong;
+	
 	
 	final byte[][] imageBytes = new byte[1][];
 	String selectedFilePathName;	//biến lưu đường dẫn của ảnh được chọn
@@ -711,6 +714,16 @@ public class NhanVienGUI extends JPanel{
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		bottomPanel.add(sp, gbc);
+		employeeTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()>=1) {	//nếu nhấn vào dòng đó từ 1 lần trở lên
+					hienThiThongTinChamCong(employeeTable);
+				}
+			}
+		});
+		
+		
 		
 		JPanel attendancePanel = new JPanel(new GridBagLayout());
 		attendancePanel.setBackground(Color.white);
@@ -746,24 +759,79 @@ public class NhanVienGUI extends JPanel{
 		attendancePanel.add(bottomAttendancePanel, gbc);
 		
 		//topAttendancePanel
-		JLabel lblSoNgayCong, lblSoNgayNghiPhep, lblSoNgayNghiKhongPhep, lblSoGioOT;
+		//combobox tháng
+		JLabel lblThang, lblNam;
+		
+		lblThang = new JLabel("Tháng");
+		lblThang.setBounds(10,10,50,20);
+		topAttendancePanel.add(lblThang);
+		
+		lblNam = new JLabel("Năm");
+		lblNam.setBounds(90,10,50,20);
+		topAttendancePanel.add(lblNam);
+		
+		Integer[] thang = {1,2,3,4,5,6,7,8,9,10,11,12};
+		monthCombobox = new JComboBox<Integer>(thang);
+		monthCombobox.setBounds(10,30,70,20);
+		topAttendancePanel.add(monthCombobox);
+		
+		//combobox năm
+		Integer[] nam = new Integer[100];
+		for(int i=0; i<nam.length; i++) {
+			nam[i] = 2000 + i;
+		}
+		yearCombobox = new JComboBox<Integer>(nam);
+		yearCombobox.setBounds(90,30,70,20);
+		topAttendancePanel.add(yearCombobox);
+		
+		
+		
+		JLabel lblSoNgayCong, lblSoNgayNghiPhepCoLuong, lblSoNgayNghiPhepKhongLuong, lblSoNgayNghiKhongPhep, lblSoGioOT;
+
 		
 		lblSoNgayCong = new JLabel("Số ngày công: ");
-		lblSoNgayCong.setBounds(10, 10, 100, 20);
+		lblSoNgayCong.setBounds(10, 80, 100, 20);
 		topAttendancePanel.add(lblSoNgayCong);
+		dataSoNgayCong = new JLabel("0");
+		dataSoNgayCong.setBounds(190,80,50,20);
+		topAttendancePanel.add(dataSoNgayCong);
 		
-		lblSoNgayNghiPhep = new JLabel("Số ngày nghỉ phép: ");
-		lblSoNgayNghiPhep.setBounds(10, 40, 150, 20);
-		topAttendancePanel.add(lblSoNgayNghiPhep);
+		
+		lblSoNgayNghiPhepCoLuong = new JLabel("Số ngày nghỉ phép có lương: ");
+		lblSoNgayNghiPhepCoLuong.setBounds(10, 110, 200, 20);
+		topAttendancePanel.add(lblSoNgayNghiPhepCoLuong);
+		dataSoNgayNghiPhepCoLuong = new JLabel("0");
+		dataSoNgayNghiPhepCoLuong.setBounds(190,110,50,20);
+		topAttendancePanel.add(dataSoNgayNghiPhepCoLuong);
+		
+		lblSoNgayNghiPhepKhongLuong = new JLabel("Số ngày nghỉ phép không lương: ");
+		lblSoNgayNghiPhepKhongLuong.setBounds(10, 140, 200, 20);
+		topAttendancePanel.add(lblSoNgayNghiPhepKhongLuong);
+		dataSoNgayNghiPhepKhongLuong = new JLabel("0");
+		dataSoNgayNghiPhepKhongLuong.setBounds(190,140,50,20);
+		topAttendancePanel.add(dataSoNgayNghiPhepKhongLuong);
+		
 		
 		lblSoNgayNghiKhongPhep = new JLabel("Số ngày nghỉ không phép: ");
-		lblSoNgayNghiKhongPhep.setBounds(10, 70, 150, 20);
+		lblSoNgayNghiKhongPhep.setBounds(10, 170, 150, 20);
 		topAttendancePanel.add(lblSoNgayNghiKhongPhep);
+		dataSoNgayNghiKhongPhep = new JLabel("0");
+		dataSoNgayNghiKhongPhep.setBounds(190,170,50,20);
+		topAttendancePanel.add(dataSoNgayNghiKhongPhep);
 		
 		lblSoGioOT = new JLabel("Số giờ tăng ca: ");
-		lblSoGioOT.setBounds(10, 100, 150, 20);
+		lblSoGioOT.setBounds(10, 200, 150, 20);
 		topAttendancePanel.add(lblSoGioOT);
+		dataSoGioOT = new JLabel("0.0");
+		dataSoGioOT.setBounds(190,200,50,20);
+		topAttendancePanel.add(dataSoGioOT);
 				
+		
+		
+		lblTongSoNgayTinhLuong = new JLabel("");
+		lblTongSoNgayTinhLuong.setBounds(10, 240, 300, 20);
+		topAttendancePanel.add(lblTongSoNgayTinhLuong);
+
 
     }
 
@@ -1982,7 +2050,29 @@ public class NhanVienGUI extends JPanel{
     
     }
     
-    
+    private void hienThiThongTinChamCong(JTable table) {
+    	int selectedRow = table.getSelectedRow();
+    	if(selectedRow!=-1) {
+    		DefaultTableModel model = (DefaultTableModel)table.getModel();
+    		String maNV = (String)model.getValueAt(selectedRow, 0);
+    		int thangCC = Integer.parseInt(monthCombobox.getSelectedItem().toString());
+    		int namCC = Integer.parseInt(yearCombobox.getSelectedItem().toString());
+    		log("maNV=" + maNV);
+    		
+    		dataSoNgayCong.setText(String.valueOf(nvBUS.getSoNgayCong(thangCC, namCC, maNV)));
+    		dataSoNgayNghiPhepCoLuong.setText(String.valueOf(nvBUS.getSoNgayNghiPhepCoLuong(thangCC, namCC, maNV)));
+    		dataSoNgayNghiPhepKhongLuong.setText(String.valueOf(nvBUS.getSoNgayNghiPhepKhongLuong(thangCC, namCC, maNV)));
+    		dataSoNgayNghiKhongPhep.setText(String.valueOf(nvBUS.getSoNgayNghiKhongPhep(thangCC, namCC, maNV)));
+    		dataSoGioOT.setText(String.valueOf(nvBUS.getSoGioTangCa(thangCC, namCC, maNV)));
+    		
+    		int soNgayCong = Integer.parseInt(dataSoNgayCong.getText());
+    		log("soNgayCong=" + soNgayCong);
+    		int soNgayNghiPhepCoLuong = Integer.parseInt(dataSoNgayNghiPhepCoLuong.getText());
+    		log("soNgayNghiPhepCoLuong=" + soNgayNghiPhepCoLuong);
+    		int tong = soNgayCong + soNgayNghiPhepCoLuong;
+    		lblTongSoNgayTinhLuong.setText("Tổng số ngày tính lương = " + soNgayCong + " + " + soNgayNghiPhepCoLuong + " = " + tong);
+    	}
+    }
     
     
   //hàm hiển thị thông tin dòng code

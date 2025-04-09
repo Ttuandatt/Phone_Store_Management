@@ -1,8 +1,7 @@
 package GUI;
 
-import BUS.SanPhamBUS;
+import BUS.NhaCungCapBUS;
 import DTO.*;
-import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,11 +36,13 @@ import javax.swing.table.TableColumnModel;
 
 
 public class NhaCungCapGUI extends JPanel{
-
-	SanPhamBUS productBUS = new SanPhamBUS();
+   JTable suppliersTable;
+   
+    NhaCungCapBUS suppliersBUS = new NhaCungCapBUS();
     JTable table = new JTable();
+        DefaultTableModel suppliersModel = new DefaultTableModel();
     DefaultTableModel model = new DefaultTableModel();
-    ArrayList<NhaCungCapDTO> productArr = new ArrayList<NhaCungCapDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<NhaCungCapDTO> suppliersArr = new ArrayList<NhaCungCapDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
@@ -50,7 +51,7 @@ public class NhaCungCapGUI extends JPanel{
 	//Constructor
     public NhaCungCapGUI(){
         initComponents();
-        loadSanPhamList();
+        loadNhaCungCapList();
     }
     
     
@@ -91,6 +92,17 @@ public class NhaCungCapGUI extends JPanel{
         gbc.gridx = 0;
         gbc.gridy = 1;
         productContent.add(bottomPanel, gbc);
+        
+//        TABLE
+        suppliersTable = new JTable();
+        JScrollPane ncc = new JScrollPane(suppliersTable);
+        gbc.weightx = 0.55;
+        gbc.weighty = 1.0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        bottomPanel.add(ncc,gbc);
+        
         
 //==================================================== TOP PANEL =============================================================================================//
         JPanel functionsPanel, searchPanel;
@@ -161,7 +173,7 @@ public class NhaCungCapGUI extends JPanel{
         //======================================= Đặt các nút chức năng vào các panel ==========================================================//
         //======================================== Nút update ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconUpdate = new ImageIcon(getClass().getResource("/img/update.png")); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconUpdate = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\update.png\\"); // Đặt đường dẫn ảnh ở đây
         Image imgUpdate = iconUpdate.getImage();
         Image newImgUpdate = imgUpdate.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconUpdate.getIconWidth() == -1) {
@@ -209,7 +221,7 @@ public class NhaCungCapGUI extends JPanel{
         
         //======================================== Nút delete ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
         Image newImgDelete = imgDelete.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -260,7 +272,7 @@ public class NhaCungCapGUI extends JPanel{
      
         //======================================== Nút detail ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDetail = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\info.png\\"); // Đặt đường dẫn ảnh ở đây
         Image imgDetail = iconDetail.getImage();
         Image newImgDetail = imgDetail.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -312,7 +324,7 @@ public class NhaCungCapGUI extends JPanel{
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconExcel = new ImageIcon(getClass().getResource("/img/excel.png")); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconExcel = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\excel.png\\"); // Đặt đường dẫn ảnh ở đây
         Image imgExcel = iconExcel.getImage();
         Image newImgExcel = imgExcel.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconExcel.getIconWidth() == -1) {
@@ -437,7 +449,7 @@ public class NhaCungCapGUI extends JPanel{
         
         
         //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
         Image newImgSearch = imgSearch.getScaledInstance(30,30, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
@@ -480,7 +492,7 @@ public class NhaCungCapGUI extends JPanel{
         btnSearch.setBounds(0, 0, 65, 60);
         searchButtonPanel.add(btnSearch);
         
-        ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
         Image newImgRefresh = imgRefresh.getScaledInstance(30,30, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {
@@ -538,7 +550,35 @@ public class NhaCungCapGUI extends JPanel{
     }
 
     
-    private void loadSanPhamList() {
-    	
+       private void loadNhaCungCapList(){
+           suppliersTable.setDefaultEditor(Object.class,null);
+           suppliersTable.setModel(suppliersModel);
+           suppliersModel.addColumn("ID");
+           suppliersModel.addColumn("Tên NCC");
+           suppliersModel.addColumn("SDT");
+           suppliersModel.addColumn("Email");
+           suppliersModel.addColumn("Địa chỉ");
+           suppliersModel.addColumn("Trạng thái");
+           suppliersArr = suppliersBUS.getAllNhaCungCap();
+           for(int i = 0 ; i < suppliersArr.size() ; i++  ){
+               NhaCungCapDTO ncc = suppliersArr.get(i);
+               String maNCC = ncc.getMaNCC();
+               String tenNCC = ncc.getTenNCC();
+               String sdt = ncc.getSdt();
+               String email = ncc.getEmail();
+               String diaChi = ncc.getDiaChi();
+               int trangThai = ncc.getTrangthai();
+               Object[] row = {maNCC,tenNCC,sdt,email,diaChi,trangThai};
+               suppliersModel.addRow(row);
+           }
+           TableColumnModel tcm = suppliersTable.getColumnModel();
+           tcm.getColumn(0).setPreferredWidth(50);
+             tcm.getColumn(1).setPreferredWidth(120);
+               tcm.getColumn(2).setPreferredWidth(100);
+                 tcm.getColumn(3).setPreferredWidth(70);
+                   tcm.getColumn(4).setPreferredWidth(200);
+                     tcm.getColumn(5).setPreferredWidth(50);
+             
     }
+
 }
