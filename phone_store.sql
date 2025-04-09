@@ -1,4 +1,4 @@
-﻿﻿create database phonestore;
+﻿create database phonestore;
 drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -287,7 +287,7 @@ CREATE TABLE ChiTietChamCong (
 DROP TABLE ChiTietChamCong;
 
 -------------------------------------------- ALTER TABLE -------------------------------------------------
-
+alter table ChiTietChamCong add soGioTangCa float;
 
 
 ------------------------------------------ INSERT --------------------------------------
@@ -357,7 +357,7 @@ VALUES
 ('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'HCM'),
 ('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'DN'),
 ('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'HN');
-INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) VALUES
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec) VALUES
 ('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'HCM'),
 ('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'HN'),
 ('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'DN'),
@@ -450,6 +450,18 @@ INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep,
 ('BCC0425NV009', 3, 2024, 19, 1, 2, 0, 'NV009'),
 ('BCC0425NV010', 3, 2024, 17, 2, 1, 2, 'NV010');
 
+INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioTangCa) VALUES 
+('CT042025NV001', '2025-04-01', N'Tăng ca ngày lễ', N'3 giờ OT', 'BCC0425NV001', 3.0),
+('CT042025NV002', '2025-04-02', N'Tăng ca chủ nhật', N'2 giờ OT', 'BCC0425NV002', 2.0),
+('CT042025NV003', '2025-04-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003', 0),
+('CT042025NV004', '2025-04-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004', 0),
+('CT042025NV005', '2025-04-05', N'Tăng ca ngày thường', N'1.5 giờ OT', 'BCC0425NV005', 1.5),
+('CT042025NV006', '2025-04-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006', 4.0),
+('CT042025NV007', '2025-04-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007', 5.0),
+('CT042025NV008', '2025-04-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008', 0),
+('CT042025NV009', '2025-04-09', N'Tăng ca ngày thường', N'2 giờ OT', 'BCC0425NV009', 2.0),
+('CT042025NV010', '2025-04-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010', 0);
+
 
 
 -- Chèn dữ liệu vào bảng BANGLUONG
@@ -460,17 +472,7 @@ INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, luongCB, heSo, phuCapAnTrua, 
 ('BL032024004', 3, 2024, 9500000, 1, 290000, 210000, 780000, 490000, 200000, 320000, 950000, 8800000, 'NV004'),
 ('BL032024005', 3, 2024, 12000000, 1, 420000, 220000, 170000, 730000, 450000, 180000, 270000, 800000, 8100000, 'NV005');
 
-INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC) VALUES
-('CT042025NV001', '2025-04-01', N'Tăng ca ngày lễ', '3 giờ OT', 'BCC0425NV001'),
-('CT042025NV002', '2025-04-02', N'Tăng ca chủ nhật', '2 giờ OT', 'BCC0425NV002'),
-('CT042025NV003', '2025-04-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003'),
-('CT042025NV004', '2025-04-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004'),
-('CT042025NV005', '2025-04-05', N'Tăng ca ngày thường', '1.5 giờ OT', 'BCC0425NV005'),
-('CT042025NV006', '2025-04-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006'),
-('CT042025NV007', '2025-04-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007'),
-('CT042025NV008', '2025-04-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008'),
-('CT042025NV009', '2025-04-09', N'Tăng ca ngày thường', '2 giờ OT', 'BCC0425NV009'),
-('CT042025NV010', '2025-04-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010');
+
 
 
 INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP, ngayCapNhat) VALUES
@@ -485,6 +487,12 @@ INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP, ngayCapNhat) VALUES
 (9, 'DN', 'PBSP004', '2024-03-19'),
 (10, 'DN', 'PBSP005', '2024-03-19');
 
+INSERT INTO DONYEUCAU (maDon, tenDon, ngayTao, loaiDon, chiTiet, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
+('DYC006', N'Đơn xin nghỉ phép', '2024-03-10', N'Đơn xin nghỉ phép', N'Nghỉ phép 2 ngày để giải quyết công việc gia đình.', N'Có việc riêng cần xử lý.', '2024-03-11', 'on', 'NV006', 'NV001'), -- Quản lý kho duyệt
+('DYC007', N'Đơn xin tăng lương', '2024-03-15', N'Đơn xin tăng lương', N'Xin xét duyệt tăng lương do hoàn thành tốt công việc.', N'Có đóng góp lớn cho công ty.', '2024-03-20', 'on', 'NV007', 'NV003'), -- Quản lý nhân sự duyệt
+('DYC008', N'Đơn xin nghỉ việc', '2024-03-20', N'Đơn xin nghỉ việc', N'Nghỉ việc để chuyển sang công ty khác.', N'Muốn phát triển trong môi trường mới.', '2024-03-25', 'off', 'NV008', 'NV001'), -- Quản lý kho duyệt
+('DYC009', N'Đơn xin nghỉ phép', '2024-03-25', N'Đơn xin nghỉ phép', N'Nghỉ phép 1 tuần để đi du lịch.', N'Cần thời gian nghỉ ngơi.', '2024-03-26', 'on', 'NV009', 'NV003'), -- Quản lý nhân sự duyệt
+('DYC010', N'Đơn xin điều chuyển công tác', '2024-03-28', N'Đơn xin điều chuyển công tác', N'Muốn chuyển công tác đến chi nhánh khác.', N'Gần gia đình hơn.', '2024-04-01', 'off', 'NV010', 'NV001'); -- Quản lý kho duyệt
 
 
 ------------------------------------------ SELECT --------------------------------------
@@ -503,16 +511,18 @@ select * from thuonghieu;
 select * from khachhang;
 select * from bangchamcong;
 select * from bangluong;
+select * from ghichu;
 select * from lschinhsua;
-select * from donxinnghi;
+select * from donyeucau;
 select * from chitietchamcong;
 SELECT @@VERSION;
 ------------------------------------------ DELETE --------------------------------------
-DELETE FROM CHITIETCHAMCONG;
+DELETE FROM GHICHU;
 DELETE FROM BANGCHAMCONG;
+DELETE FROM CHITIETCHAMCONG;
 DELETE FROM BANGLUONG;
 DELETE FROM LSCHINHSUA;
-DELETE FROM DONXINNGHI;
+DELETE FROM DONYEUCAU;
 DELETE FROM KHO_PBSP;
 DELETE FROM CTPX;
 DELETE FROM PHIEUXUAT;
@@ -577,7 +587,7 @@ CREATE PROCEDURE sp_themNhanVien
     @matKhau NVARCHAR(255),
     @trangThai VARCHAR(10),
     @maCV VARCHAR(50) = NULL, -- Có thể NULL
-    @chiNhanh VARCHAR(50) = NULL -- Có thể NULL
+    @noiLamViec VARCHAR(50) = NULL -- Có thể NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -597,15 +607,15 @@ BEGIN
     END;
 
     -- Kiểm tra nếu nơi làm việc không NULL nhưng không tồn tại trong bảng KHO
-    IF @chiNhanh IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @chiNhanh)
+    IF @noiLamViec IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @noiLamViec)
     BEGIN
         PRINT N'Lỗi: Mã kho (nơi làm việc) không hợp lệ!';
         RETURN -3;
     END;
 
     -- Chèn dữ liệu vào bảng NHANVIEN
-    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh)
-    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @chiNhanh);
+    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
+    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @noiLamViec);
 
     PRINT N'Thêm nhân viên thành công!';
     RETURN 1;
@@ -622,7 +632,7 @@ EXEC sp_themNhanVien
     @matKhau = '123456', 
     @trangThai = 'On', 
     @maCV = 'CV002', 
-    @chiNhanh = 'KHO001';
+    @noiLamViec = 'KHO001';
 
 -- . Cập nhật nhân viên
 -- . Lấy danh sách chức vụ
