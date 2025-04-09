@@ -450,21 +450,21 @@ INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep,
 INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
 ('BCC0325NV006', 3, 2024, 18, 1, 2, 1, 0, 0, 0, 'NV006'),
 ('BCC0325NV007', 3, 2024, 20, 0, 3, 0, 0, 0, 0, 'NV007'),
-('BCC0325NV008', 3, 2024, 22, 0, 0, 1, 0, 0, 0, 'NV008'),
+('BCC0325NV008', 3, 2024, 7, 0, 0, 1, 0, 0, 0, 'NV008'),
 ('BCC0325NV009', 3, 2024, 19, 1, 2, 0, 2.0, 0, 0, 'NV009'),
 ('BCC0325NV010', 3, 2024, 17, 2, 1, 2, 0, 0, 0, 'NV010');
 
 INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT) VALUES 
-('CT032025NV001', '2025-03-01', N'Tăng ca ngày lễ', null, 'BCC0425NV001', 3.0),
-('CT032025NV002', '2025-03-02', N'Tăng ca chủ nhật', null, 'BCC0425NV002', 2.0),
-('CT032025NV003', '2025-03-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003', 0),
-('CT032025NV004', '2025-03-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004', 0),
-('CT032025NV005', '2025-03-05', N'Tăng ca ngày thường', null, 'BCC0425NV005', 1.5),
-('CT032025NV006', '2025-03-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006', 4.0),
-('CT032025NV007', '2025-03-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007', 5.0),
-('CT032025NV008', '2025-03-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008', 0),
-('CT032025NV009', '2025-03-09', N'Tăng ca ngày thường', null, 'BCC0425NV009', 2.0),
-('CT032025NV010', '2025-03-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010', 0);
+('CT032025NV001', '2025-03-01', N'Tăng ca ngày lễ', null, 'BCC0325NV001', 3.0),
+('CT032025NV002', '2025-03-02', N'Tăng ca chủ nhật', null, 'BCC0325NV002', 2.0),
+('CT032025NV003', '2025-03-03', N'Nghỉ phép có lương', N'Nghỉ ốm', 'BCC0325NV003', 0),
+('CT032025NV004', '2025-03-04', N'Nghỉ không phép', null, 'BCC0325NV004', 0),
+('CT032025NV005', '2025-03-05', N'Tăng ca ngày thường', null, 'BCC0325NV005', 1.5),
+('CT032025NV006', '2025-03-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0325NV006', 4.0),
+('CT032025NV007', '2025-03-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0325NV007', 5.0),
+('CT032025NV008', '2025-03-08', N'Nghỉ việc', null, 'BCC0325NV008', 0),
+('CT032025NV009', '2025-03-09', N'Tăng ca ngày thường', null, 'BCC0325NV009', 2.0),
+('CT032025NV010', '2025-03-10', N'Nghỉ phép có lương', N'Nghỉ lễ', 'BCC0325NV010', 0);
 
 
 
