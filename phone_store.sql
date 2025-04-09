@@ -265,6 +265,9 @@ CREATE TABLE BANGCHAMCONG(
 	soNgayNghiKhongPhep float,
 	soNgayNghiPhepCoLuong float,
 	soNgayNghiPhepKhongLuong float,
+	soGioOTNgayThuong float,
+	soGioOTNgayLe float,
+	soGioOTCN float,
 	maNV varchar(50),
 
 	PRIMARY KEY(maBCC),
@@ -437,30 +440,30 @@ VALUES
 
 
 -- Chèn dữ liệu vào bảng BANGCHAMCONG
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
+('BCC0325NV001', 3, 2024, 16, 2, 4, 0, 0, 3.0, 0, 'NV001'),
+('BCC0325NV002', 3, 2024, 20, 1, 1, 0, 0, 0, 2.0, 'NV002'),
+('BCC0325NV003', 3, 2024, 19, 1, 1, 1, 0, 0, 0, 'NV003'),
+('BCC0325NV004', 3, 2024, 21, 0, 1, 0, 0, 0, 0, 'NV004'),
+('BCC0325NV005', 3, 2024, 21, 1, 0, 0, 1.5, 0, 0, 'NV005');
 INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV) VALUES
-('BCC0425NV001', 3, 2024, 16, 2, 4, 0, 'NV001'),
-('BCC0425NV002', 3, 2024, 20, 1, 1, 0, 'NV002'),
-('BCC0425NV003', 3, 2024, 19, 1, 1, 1, 'NV003'),
-('BCC0425NV004', 3, 2024, 21, 0, 1, 0, 'NV004'),
-('BCC0425NV005', 3, 2024, 21, 1, 0, 0, 'NV005');
-INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV) VALUES
-('BCC0425NV006', 3, 2024, 18, 1, 2, 1, 'NV006'),
-('BCC0425NV007', 3, 2024, 20, 0, 3, 0, 'NV007'),
-('BCC0425NV008', 3, 2024, 22, 0, 0, 1, 'NV008'),
-('BCC0425NV009', 3, 2024, 19, 1, 2, 0, 'NV009'),
-('BCC0425NV010', 3, 2024, 17, 2, 1, 2, 'NV010');
+('BCC0325NV006', 3, 2024, 18, 1, 2, 1, 0, 0, 0, 'NV006'),
+('BCC0325NV007', 3, 2024, 20, 0, 3, 0, 0, 0, 0, 'NV007'),
+('BCC0325NV008', 3, 2024, 22, 0, 0, 1, 0, 0, 0, 'NV008'),
+('BCC0325NV009', 3, 2024, 19, 1, 2, 0, 2.0, 0, 0, 'NV009'),
+('BCC0325NV010', 3, 2024, 17, 2, 1, 2, 0, 0, 0, 'NV010');
 
 INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioTangCa) VALUES 
-('CT042025NV001', '2025-04-01', N'Tăng ca ngày lễ', N'3 giờ OT', 'BCC0425NV001', 3.0),
-('CT042025NV002', '2025-04-02', N'Tăng ca chủ nhật', N'2 giờ OT', 'BCC0425NV002', 2.0),
-('CT042025NV003', '2025-04-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003', 0),
-('CT042025NV004', '2025-04-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004', 0),
-('CT042025NV005', '2025-04-05', N'Tăng ca ngày thường', N'1.5 giờ OT', 'BCC0425NV005', 1.5),
-('CT042025NV006', '2025-04-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006', 4.0),
-('CT042025NV007', '2025-04-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007', 5.0),
-('CT042025NV008', '2025-04-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008', 0),
-('CT042025NV009', '2025-04-09', N'Tăng ca ngày thường', N'2 giờ OT', 'BCC0425NV009', 2.0),
-('CT042025NV010', '2025-04-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010', 0);
+('CT032025NV001', '2025-03-01', N'Tăng ca ngày lễ', null, 'BCC0425NV001', 3.0),
+('CT032025NV002', '2025-03-02', N'Tăng ca chủ nhật', null, 'BCC0425NV002', 2.0),
+('CT032025NV003', '2025-03-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003', 0),
+('CT032025NV004', '2025-03-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004', 0),
+('CT032025NV005', '2025-03-05', N'Tăng ca ngày thường', null, 'BCC0425NV005', 1.5),
+('CT032025NV006', '2025-03-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006', 4.0),
+('CT032025NV007', '2025-03-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007', 5.0),
+('CT032025NV008', '2025-03-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008', 0),
+('CT032025NV009', '2025-03-09', N'Tăng ca ngày thường', null, 'BCC0425NV009', 2.0),
+('CT032025NV010', '2025-03-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010', 0);
 
 
 
