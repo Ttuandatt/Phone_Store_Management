@@ -281,7 +281,8 @@ CREATE TABLE ChiTietChamCong (
     ngayTao DATE NOT NULL,
     loaiChamCong NVARCHAR(255) CHECK (loaiChamCong IN (N'Tăng ca ngày lễ', N'Tăng ca chủ nhật', N'Tăng ca ngày thường', 
 	N'Nghỉ phép có lương', N'Nghỉ phép không lương ', N'Nghỉ không phép', N'Nghỉ nửa buổi', N'Nghỉ việc')) NOT NULL, 	-- Thiếu gì bổ sung thêm
-    chiTiet varchar(255),        -- Nếu OT thì chi tiết là số giờ OT, nếu nghỉ thì ghi lý do nghỉ
+    chiTiet varchar(255),        -- Nếu nghỉ thì ghi lý do nghỉ
+    soGioOT float,
     maBCC VARCHAR(50),
 	
     PRIMARY KEY(maCTCC),
