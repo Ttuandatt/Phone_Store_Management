@@ -287,7 +287,7 @@ CREATE TABLE ChiTietChamCong (
 DROP TABLE ChiTietChamCong;
 
 -------------------------------------------- ALTER TABLE -------------------------------------------------
-
+alter table ChiTietChamCong add soGioTangCa float;
 
 
 ------------------------------------------ INSERT --------------------------------------
@@ -450,6 +450,18 @@ INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep,
 ('BCC0425NV009', 3, 2024, 19, 1, 2, 0, 'NV009'),
 ('BCC0425NV010', 3, 2024, 17, 2, 1, 2, 'NV010');
 
+INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioTangCa) VALUES 
+('CT042025NV001', '2025-04-01', N'Tăng ca ngày lễ', N'3 giờ OT', 'BCC0425NV001', 3.0),
+('CT042025NV002', '2025-04-02', N'Tăng ca chủ nhật', N'2 giờ OT', 'BCC0425NV002', 2.0),
+('CT042025NV003', '2025-04-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003', 0),
+('CT042025NV004', '2025-04-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004', 0),
+('CT042025NV005', '2025-04-05', N'Tăng ca ngày thường', N'1.5 giờ OT', 'BCC0425NV005', 1.5),
+('CT042025NV006', '2025-04-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006', 4.0),
+('CT042025NV007', '2025-04-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007', 5.0),
+('CT042025NV008', '2025-04-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008', 0),
+('CT042025NV009', '2025-04-09', N'Tăng ca ngày thường', N'2 giờ OT', 'BCC0425NV009', 2.0),
+('CT042025NV010', '2025-04-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010', 0);
+
 
 
 -- Chèn dữ liệu vào bảng BANGLUONG
@@ -460,17 +472,7 @@ INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, luongCB, heSo, phuCapAnTrua, 
 ('BL032024004', 3, 2024, 9500000, 1, 290000, 210000, 780000, 490000, 200000, 320000, 950000, 8800000, 'NV004'),
 ('BL032024005', 3, 2024, 12000000, 1, 420000, 220000, 170000, 730000, 450000, 180000, 270000, 800000, 8100000, 'NV005');
 
-INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC) VALUES
-('CT042025NV001', '2025-04-01', N'Tăng ca ngày lễ', '3 giờ OT', 'BCC0425NV001'),
-('CT042025NV002', '2025-04-02', N'Tăng ca chủ nhật', '2 giờ OT', 'BCC0425NV002'),
-('CT042025NV003', '2025-04-03', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'BCC0425NV003'),
-('CT042025NV004', '2025-04-04', N'Nghỉ không phép', N'Không thông báo', 'BCC0425NV004'),
-('CT042025NV005', '2025-04-05', N'Tăng ca ngày thường', '1.5 giờ OT', 'BCC0425NV005'),
-('CT042025NV006', '2025-04-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0425NV006'),
-('CT042025NV007', '2025-04-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0425NV007'),
-('CT042025NV008', '2025-04-08', N'Nghỉ việc', N'Nghỉ do thôi việc', 'BCC0425NV008'),
-('CT042025NV009', '2025-04-09', N'Tăng ca ngày thường', '2 giờ OT', 'BCC0425NV009'),
-('CT042025NV010', '2025-04-10', N'Nghỉ phép có lương', N'Nghỉ đi du lịch', 'BCC0425NV010');
+
 
 
 INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP, ngayCapNhat) VALUES
@@ -517,6 +519,7 @@ SELECT @@VERSION;
 ------------------------------------------ DELETE --------------------------------------
 DELETE FROM GHICHU;
 DELETE FROM BANGCHAMCONG;
+DELETE FROM CHITIETCHAMCONG;
 DELETE FROM BANGLUONG;
 DELETE FROM LSCHINHSUA;
 DELETE FROM DONYEUCAU;

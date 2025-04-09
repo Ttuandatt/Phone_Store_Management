@@ -52,7 +52,7 @@ public class DangNhapGUI extends JFrame implements KeyListener {
         pnLeft = new JPanel();
         pnLeft.setPreferredSize(new Dimension(500, 500));
         pnLeft.setLayout(new BorderLayout());
-        lblImage = new JLabel(new FlatSVGIcon("./Images/login2.svg"));
+        lblImage = new JLabel(new FlatSVGIcon("./img/login-image.svg"));
         lblImage.setHorizontalAlignment(JLabel.CENTER);
         pnLeft.add(lblImage, BorderLayout.CENTER);
         this.add(pnLeft, BorderLayout.WEST);

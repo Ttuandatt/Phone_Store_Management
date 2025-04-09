@@ -308,7 +308,7 @@ public class QuanLyKhoView {
 		personalInfoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PersonalInformationGUI personalInformationObj = new PersonalInformationGUI();
+				ThongTinCaNhanGUI personalInformationObj = new ThongTinCaNhanGUI();
 				contentPanel.add(personalInformationObj, thongTinCaNhan_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
