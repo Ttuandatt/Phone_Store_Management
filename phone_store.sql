@@ -153,7 +153,7 @@ DROP TABLE NHACUNGCAP;
 CREATE TABLE CHUCVU (
     maCV VARCHAR(50) NOT NULL,
     tenCV NVARCHAR(255) NOT NULL,
-    luongCB FLOAT,
+    luongCB FLOAT NOT NULL,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
 
 
@@ -207,12 +207,12 @@ CREATE TABLE DONXINNGHI (
     maDon VARCHAR(50) NOT NULL,
     ngayTao DATE NOT NULL,
     ngayBD DATE NOT NULL,
-    ngayKT DATE NOT NULL,
-    lyDo NVARCHAR(MAX),
-    ngayDuyet DATE NOT NULL,
+    ngayKT DATE,
+    lyDo NVARCHAR(MAX) NOT NULL,
+    ngayDuyet DATE,
     trangThai VARCHAR(20) CHECK (trangThai IN (N'Chờ Duyệt', N'Đã Duyệt', N'Từ chối')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
-    maNguoiDuyet VARCHAR(50) NOT NULL,
+    maNguoiDuyet VARCHAR(50),
 
 	PRIMARY KEY(maDon),
     CONSTRAINT FK_DONXINNGHI_NHANVIEN  FOREIGN KEY(maNV) REFERENCES NHANVIEN(maNV) ON DELETE NO ACTION,	-- khi xóa nhân viên này đi thì giá trị khóa ngoại ở đây sẽ set về null, nhưng vẫn giữ mã người duyệt bên dưới
@@ -235,10 +235,10 @@ DROP TABLE LSCHINHSUA;
 -- Bảng lương
 CREATE TABLE BANGLUONG(
 	maBL varchar(50),	-- = "BL" + thang + nam + manv 
-	thangLuong int,
-	namLuong int,
-	luongCB float,
-	heSo float,
+	thangLuong int NOT NULL,
+	namLuong int NOT NULL,
+	luongCB float NOT NULL,
+	heSo float NOT NULL,
 	phuCapAnTrua float,
 	phuCapDiLai float,
 	thuong float, 
@@ -258,8 +258,8 @@ DROP TABLE BANGLUONG;
 -- Bảng chấm công
 CREATE TABLE BANGCHAMCONG(
 	maBCC varchar(50),   -- = "CC" + thang + nam + manv 
-	thangCC int,
-	namCC int,
+	thangCC int NOT NULL,
+	namCC int NOT NULL,
 	soNgayLam float,
 	soNgayNghiKP float,
 	soNPCoLuong float,
@@ -281,8 +281,8 @@ CREATE TABLE ChiTietChamCong (
     loaiChamCong NVARCHAR(255) CHECK (loaiChamCong IN (N'Tăng ca ngày lễ', N'Tăng ca chủ nhật', N'Tăng ca ngày thường', 
 	N'Nghỉ phép có lương', N'Nghỉ phép không lương ', N'Nghỉ không phép', N'Nghỉ nửa buổi', N'Nghỉ việc')) NOT NULL, 	-- Thiếu gì bổ sung thêm
     chiTiet varchar(255),        -- Nếu nghỉ thì ghi lý do nghỉ
-    soGioOT float,
     maBCC VARCHAR(50),
+    soGioOT float,
 	
     PRIMARY KEY(maCTCC),
     CONSTRAINT FK_GHICHU_BANGCHAMCONG FOREIGN KEY (maBCC) REFERENCES BANGCHAMCONG(maBCC) ON DELETE NO ACTION
@@ -456,7 +456,7 @@ INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGi
 ('CT032025NV003', '2025-03-03', N'Nghỉ phép có lương', N'Nghỉ ốm', 'BCC0325NV003', 0),
 ('CT032025NV004', '2025-03-04', N'Nghỉ không phép', null, 'BCC0325NV004', 0),
 ('CT032025NV005', '2025-03-05', N'Tăng ca ngày thường', null, 'BCC0325NV005', 1.5),
-('CT032025NV006', '2025-03-06', N'Nghỉ nửa buổi', N'Nghỉ chiều vì khám bệnh', 'BCC0325NV006', 4.0),
+('CT032025NV006', '2025-03-06', N'Nghỉ nửa buổi', N'Nghỉ khám bệnh', 'BCC0325NV006', 4.0),
 ('CT032025NV007', '2025-03-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0325NV007', 5.0),
 ('CT032025NV008', '2025-03-08', N'Nghỉ việc', null, 'BCC0325NV008', 0),
 ('CT032025NV009', '2025-03-09', N'Tăng ca ngày thường', null, 'BCC0325NV009', 2.0),
@@ -487,12 +487,12 @@ INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP) VALUES
 (9, 'DN', 'PBSP004'),
 (10, 'DN', 'PBSP005');
 
-INSERT INTO DONXINNGHI (maDon, tenDon, ngayTao, loaiDon, chiTiet, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
-('DXN006', N'Đơn xin nghỉ phép', '2024-03-10', N'Đơn xin nghỉ phép', N'Nghỉ phép 2 ngày để giải quyết công việc gia đình.', N'Có việc riêng cần xử lý.', '2024-03-11', 'on', 'NV006', 'NV001'), -- Quản lý kho duyệt
-('DXN007', N'Đơn xin tăng lương', '2024-03-15', N'Đơn xin tăng lương', N'Xin xét duyệt tăng lương do hoàn thành tốt công việc.', N'Có đóng góp lớn cho công ty.', '2024-03-20', 'on', 'NV007', 'NV003'), -- Quản lý nhân sự duyệt
-('DXN008', N'Đơn xin nghỉ việc', '2024-03-20', N'Đơn xin nghỉ việc', N'Nghỉ việc để chuyển sang công ty khác.', N'Muốn phát triển trong môi trường mới.', '2024-03-25', 'off', 'NV008', 'NV001'), -- Quản lý kho duyệt
-('DXN009', N'Đơn xin nghỉ phép', '2024-03-25', N'Đơn xin nghỉ phép', N'Nghỉ phép 1 tuần để đi du lịch.', N'Cần thời gian nghỉ ngơi.', '2024-03-26', 'on', 'NV009', 'NV003'), -- Quản lý nhân sự duyệt
-('DXN010', N'Đơn xin điều chuyển công tác', '2024-03-28', N'Đơn xin điều chuyển công tác', N'Muốn chuyển công tác đến chi nhánh khác.', N'Gần gia đình hơn.', '2024-04-01', 'off', 'NV010', 'NV001'); -- Quản lý kho duyệt
+INSERT INTO DONXINNGHI (maDon, ngayTao, ngayBD, ngayKT, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
+('DXN001', '2024-03-10', '2024-03-11', '2024-03-12', N'Nghỉ lễ', '2024-03-11', 'Đã Duyệt', 'NV008', 'NV003'), 
+('DXN002', '2024-03-15', '2024-03-23', '2024-03-24', N'Nghỉ ốm', '2024-03-20', 'Đã Duyệt', 'NV007', 'NV003'), 
+('DXN003', '2024-03-20', '2024-04-01', null, N'Nghỉ việc', '2024-03-25', 'Từ chối', 'NV008', 'NV003'), 
+('DXN004', '2024-03-25', '2024-03-30', '2024-04-12', N'Nghỉ phép năm', '2024-03-26', 'Đã Duyệt', 'NV009', 'NV003'), 
+('DXN005', '2024-03-28', '2024-03-30', '2024-03-30', N'Nghỉ khám bệnh', '2024-03-28', 'Đã Duyệt', 'NV010', 'NV003'); 
 
 
 ------------------------------------------ SELECT --------------------------------------
