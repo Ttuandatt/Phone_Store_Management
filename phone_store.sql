@@ -521,7 +521,7 @@ DELETE FROM BANGCHAMCONG;
 DELETE FROM CHITIETCHAMCONG;
 DELETE FROM BANGLUONG;
 DELETE FROM LSCHINHSUA;
-DELETE FROM DONYEUCAU;
+DELETE FROM DONXINNGHI;
 DELETE FROM KHO_PBSP;
 DELETE FROM CTPX;
 DELETE FROM PHIEUXUAT;
@@ -579,7 +579,7 @@ CREATE PROCEDURE sp_themNhanVien
     @matKhau NVARCHAR(255),
     @trangThai VARCHAR(10),
     @maCV VARCHAR(50) = NULL, -- Có thể NULL
-    @noiLamViec VARCHAR(50) = NULL -- Có thể NULL
+    @ChiNhanh VARCHAR(50) = NULL -- Có thể NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -624,7 +624,7 @@ EXEC sp_themNhanVien
     @matKhau = '123456', 
     @trangThai = 'On', 
     @maCV = 'CV002', 
-    @noiLamViec = 'KHO001';
+    @chiNhanh = 'KHO001';
 
 -- . Cập nhật nhân viên
 -- . Lấy danh sách chức vụ
