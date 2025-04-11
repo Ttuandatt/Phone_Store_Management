@@ -195,7 +195,76 @@ CREATE TABLE CTPX (
     FOREIGN KEY (maPX) REFERENCES PHIEUXUAT(maPX) ON DELETE NO ACTION,
     FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
 );
+<<<<<<< HEAD:ReplData/phone_store.sql
 --DROP TABLE CTPX;
+=======
+DROP TABLE CTPX;
+
+
+-- Bảng Nhà Cung Cấp
+CREATE TABLE NHACUNGCAP (
+    maNCC VARCHAR(50) NOT NULL,
+    tenNCC NVARCHAR(255) NOT NULL,
+    sdt NVARCHAR(20) NOT NULL,
+    email NVARCHAR(255),
+    diaChi NVARCHAR(255),
+    trangThai NVARCHAR(50) CHECK (trangThai IN ('On', 'Off')) NOT NULL,
+    PRIMARY KEY (maNCC)
+);
+DROP TABLE NHACUNGCAP;
+
+-- Bảng Chức Vụ
+CREATE TABLE CHUCVU (
+    maCV VARCHAR(50) NOT NULL,
+    tenCV NVARCHAR(255) NOT NULL,
+    luongCB FLOAT NOT NULL,
+    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+
+
+    PRIMARY KEY (maCV)
+);
+DROP TABLE CHUCVU;
+
+-- Bảng Kho
+CREATE TABLE KHO (
+    maKho VARCHAR(50) NOT NULL,
+    tenKho NVARCHAR(255) NOT NULL,
+    diaChi NVARCHAR(255) NOT NULL,
+    sdt VARCHAR(20) NOT NULL,
+    trangThai NVARCHAR(50) CHECK (trangThai IN ('On', 'Off')) NOT NULL,
+    PRIMARY KEY (maKho)
+);
+DROP TABLE KHO;
+
+-- Bảng Kho - Phiên Bản Sản Phẩm
+CREATE TABLE KHO_PBSP (
+    soLuong INT NOT NULL,
+    maKho VARCHAR(50) NOT NULL,
+    maPBSP VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (maKho, maPBSP),
+    CONSTRAINT FK_KHOPBSP_KHO FOREIGN KEY(maKho) REFERENCES KHO(maKho) ON DELETE NO ACTION,
+    CONSTRAINT FK_KHOPBSP_PBSP FOREIGN KEY (maPBSP) REFERENCES PBSP(maPBSP) ON DELETE NO ACTION
+);
+DROP TABLE KHO_PBSP;
+
+-- Bảng Khách Hàng
+CREATE TABLE KHACHHANG (
+    maKH VARCHAR(50) NOT NULL,
+    hoTen NVARCHAR(255) NOT NULL,
+    ngaySinh DATE NOT NULL,
+    gioiTinh NVARCHAR(10) NOT NULL,
+    diaChi NVARCHAR(255) NOT NULL,
+    sdt NVARCHAR(20) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+    trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
+
+    PRIMARY KEY(maKH),
+);
+DROP TABLE KHACHHANG;
+
+
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
 
 
 -- Bảng Đơn Xin Nghỉ
@@ -206,7 +275,11 @@ CREATE TABLE DONXINNGHI (
     ngayKT DATE,
     lyDo NVARCHAR(MAX) NOT NULL,
     ngayDuyet DATE,
+<<<<<<< HEAD:ReplData/phone_store.sql
     trangThai NVARCHAR(20) CHECK (trangThai IN (N'Chờ duyệt', N'Đã duyệt', N'Từ chối')) NOT NULL,
+=======
+    trangThai VARCHAR(20) CHECK (trangThai IN (N'Chờ Duyệt', N'Đã Duyệt', N'Từ chối')) NOT NULL,
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
     maNV VARCHAR(50) NOT NULL,
     maNguoiDuyet VARCHAR(50),
 
@@ -276,14 +349,22 @@ CREATE TABLE CHITIETCHAMCONG (
     ngayTao DATE NOT NULL,
     loaiChamCong NVARCHAR(255) CHECK (loaiChamCong IN (N'Tăng ca ngày lễ', N'Tăng ca chủ nhật', N'Tăng ca ngày thường', 
 	N'Nghỉ phép có lương', N'Nghỉ phép không lương ', N'Nghỉ không phép', N'Nghỉ nửa buổi', N'Nghỉ việc')) NOT NULL, 	-- Thiếu gì bổ sung thêm
+<<<<<<< HEAD:ReplData/phone_store.sql
     chiTiet nvarchar(255),        -- Nếu nghỉ thì ghi lý do nghỉ
+=======
+    chiTiet varchar(255),        -- Nếu nghỉ thì ghi lý do nghỉ
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
     maBCC VARCHAR(50),
     soGioOT float,
 	
     PRIMARY KEY(maCTCC),
     CONSTRAINT FK_GHICHU_BANGCHAMCONG FOREIGN KEY (maBCC) REFERENCES BANGCHAMCONG(maBCC) ON DELETE NO ACTION
 );
+<<<<<<< HEAD:ReplData/phone_store.sql
 --DROP TABLE ChiTietChamCong;
+=======
+DROP TABLE ChiTietChamCong;
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
 
 
 ------------------------------------------ INSERT --------------------------------------
@@ -351,11 +432,19 @@ VALUES
 ('NV001', N'Nguyễn Văn A', '1990-05-12', N'Nam', N'123 Lê Lợi, TP.HCM', '0901234567', 'nguyenvana@example.com', NULL, '123456', 'on', 'CV004', 'HCM'),
 ('NV002', N'Trần Thị B', '1995-08-22', N'Nữ', N'456 Hai Bà Trưng, Hà Nội', '0912345678', 'tranthib@example.com', NULL, 'abcdef', 'on', 'CV002', 'HCM'),
 ('NV003', N'Phạm Văn C', '1988-11-03', N'Nam', N'789 Nguyễn Huệ, Đà Nẵng', '0923456789', 'phamvanc@example.com', NULL, 'password', 'off', 'CV003', 'HCM'),
+<<<<<<< HEAD:ReplData/phone_store.sql
 ('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV003', 'DN'),
 ('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV003', 'HN');
 INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) VALUES
 ('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV003', 'HCM'),
 ('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV003', 'HN'),
+=======
+('NV004', N'Lê Thị D', '1992-03-15', N'Nữ', N'321 Lạc Long Quân, Cần Thơ', '0934567890', 'lethid@example.com', NULL, 'letidpass', 'on', 'CV002', 'DN'),
+('NV005', N'Hoàng Văn E', '1998-07-29', N'Nam', N'654 Trần Hưng Đạo, Hải Phòng', '0945678901', 'hoangvane@example.com', NULL, 'hoangepass', 'off', 'CV001', 'HN');
+INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) VALUES
+('NV006', N'Nguyễn Thị F', '1996-02-14', N'Nữ', N'123 Nguyễn Trãi, TP.HCM', '0906789012', 'nguyenthif@example.com', NULL, 'passf123', 'on', 'CV002', 'HCM'),
+('NV007', N'Võ Văn G', '1993-06-23', N'Nam', N'456 Lê Văn Sỹ, Hà Nội', '0917890123', 'vovang@example.com', NULL, 'passg456', 'on', 'CV002', 'HN'),
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
 ('NV008', N'Bùi Thị H', '1999-09-10', N'Nữ', N'789 Cách Mạng Tháng 8, Đà Nẵng', '0928901234', 'buithih@example.com', NULL, 'passh789', 'on', 'CV002', 'DN'),
 ('NV009', N'Phan Văn I', '1990-12-05', N'Nam', N'321 Điện Biên Phủ, Cần Thơ', '0939012345', 'phanvani@example.com', NULL, 'passi101', 'on', 'CV003', 'HCM'),
 ('NV010', N'Lý Thị J', '1997-04-18', N'Nữ', N'654 Võ Văn Kiệt, Hải Phòng', '0940123456', 'lythij@example.com', NULL, 'passj202', 'on', 'CV002', 'HN'),
@@ -433,6 +522,7 @@ VALUES
 
 
 -- Chèn dữ liệu vào bảng BANGCHAMCONG
+<<<<<<< HEAD:ReplData/phone_store.sql
 INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV)
 VALUES
 ('CC032025NV001', 3, 2025, 22, 1, 1, 0, 4.5, 2, 1.5, 'NV001'),
@@ -445,6 +535,32 @@ VALUES
 ('CC032025NV008', 3, 2025, 21, 0, 1, 1, 4, 1, 1, 'NV008'),
 ('CC032025NV009', 3, 2025, 18, 3, 0, 3, 2, 0, 2.5, 'NV009'),
 ('CC032025NV010', 3, 2025, 22, 0, 1, 0, 4.5, 2, 1, 'NV010');
+=======
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
+('BCC0325NV001', 3, 2024, 16, 2, 4, 0, 0, 3.0, 0, 'NV001'),
+('BCC0325NV002', 3, 2024, 20, 1, 1, 0, 0, 0, 2.0, 'NV002'),
+('BCC0325NV003', 3, 2024, 19, 1, 1, 1, 0, 0, 0, 'NV003'),
+('BCC0325NV004', 3, 2024, 21, 0, 1, 0, 0, 0, 0, 'NV004'),
+('BCC0325NV005', 3, 2024, 21, 1, 0, 0, 1.5, 0, 0, 'NV005');
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV) VALUES
+('BCC0325NV006', 3, 2024, 18, 1, 2, 1, 0, 0, 0, 'NV006'),
+('BCC0325NV007', 3, 2024, 20, 0, 3, 0, 0, 0, 0, 'NV007'),
+('BCC0325NV008', 3, 2024, 7, 0, 0, 1, 0, 0, 0, 'NV008'),
+('BCC0325NV009', 3, 2024, 19, 1, 2, 0, 2.0, 0, 0, 'NV009'),
+('BCC0325NV010', 3, 2024, 17, 2, 1, 2, 0, 0, 0, 'NV010');
+
+INSERT INTO ChiTietChamCong (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT) VALUES 
+('CT032025NV001', '2025-03-01', N'Tăng ca ngày lễ', null, 'BCC0325NV001', 3.0),
+('CT032025NV002', '2025-03-02', N'Tăng ca chủ nhật', null, 'BCC0325NV002', 2.0),
+('CT032025NV003', '2025-03-03', N'Nghỉ phép có lương', N'Nghỉ ốm', 'BCC0325NV003', 0),
+('CT032025NV004', '2025-03-04', N'Nghỉ không phép', null, 'BCC0325NV004', 0),
+('CT032025NV005', '2025-03-05', N'Tăng ca ngày thường', null, 'BCC0325NV005', 1.5),
+('CT032025NV006', '2025-03-06', N'Nghỉ nửa buổi', N'Nghỉ khám bệnh', 'BCC0325NV006', 4.0),
+('CT032025NV007', '2025-03-07', N'Nghỉ phép không lương', N'Nghỉ việc cá nhân', 'BCC0325NV007', 5.0),
+('CT032025NV008', '2025-03-08', N'Nghỉ việc', null, 'BCC0325NV008', 0),
+('CT032025NV009', '2025-03-09', N'Tăng ca ngày thường', null, 'BCC0325NV009', 2.0),
+('CT032025NV010', '2025-03-10', N'Nghỉ phép có lương', N'Nghỉ lễ', 'BCC0325NV010', 0);
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
 
 -- Chèn dữ liệu vào bảng CHITIETCHAMCONG
 INSERT INTO CHITIETCHAMCONG (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT)
@@ -497,6 +613,7 @@ INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP) VALUES
 (9, 'DN', 'PBSP004'),
 (10, 'DN', 'PBSP005');
 
+<<<<<<< HEAD:ReplData/phone_store.sql
 -- Chèn dữ liệu vào bảng DONXINNGHI
 INSERT INTO DONXINNGHI (maDon, ngayTao, ngayBD, ngayKT, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet)
 VALUES
@@ -510,6 +627,27 @@ VALUES
 ('DON008', '2025-03-09', '2025-03-23', '2025-03-23', N'Nghỉ đi hiến máu', '2025-03-10', N'Đã Duyệt', 'NV008', 'NV005'),
 ('DON009', '2025-03-10', '2025-03-24', '2025-03-25', N'Nghỉ du lịch gia đình', '2025-03-11', N'Từ chối', 'NV009', 'NV008'),
 ('DON010', '2025-03-11', '2025-03-26', NULL, N'Nghỉ không rõ lý do', NULL, N'Chờ Duyệt', 'NV010', NULL);
+=======
+
+INSERT INTO KHO_PBSP (soLuong, maKho, maPBSP) VALUES
+(5, 'HCM', 'PBSP001'),
+(3, 'HCM', 'PBSP002'),
+(7, 'HCM', 'PBSP003'),
+(4, 'HN', 'PBSP001'),
+(5, 'HN', 'PBSP004'),
+(6, 'HN', 'PBSP005'),
+(8, 'DN', 'PBSP003'),
+(2, 'DN', 'PBSP002'),
+(9, 'DN', 'PBSP004'),
+(10, 'DN', 'PBSP005');
+
+INSERT INTO DONXINNGHI (maDon, ngayTao, ngayBD, ngayKT, lyDo, ngayDuyet, trangThai, maNV, maNguoiDuyet) VALUES
+('DXN001', '2024-03-10', '2024-03-11', '2024-03-12', N'Nghỉ lễ', '2024-03-11', 'Đã Duyệt', 'NV008', 'NV003'), 
+('DXN002', '2024-03-15', '2024-03-23', '2024-03-24', N'Nghỉ ốm', '2024-03-20', 'Đã Duyệt', 'NV007', 'NV003'), 
+('DXN003', '2024-03-20', '2024-04-01', null, N'Nghỉ việc', '2024-03-25', 'Từ chối', 'NV008', 'NV003'), 
+('DXN004', '2024-03-25', '2024-03-30', '2024-04-12', N'Nghỉ phép năm', '2024-03-26', 'Đã Duyệt', 'NV009', 'NV003'), 
+('DXN005', '2024-03-28', '2024-03-30', '2024-03-30', N'Nghỉ khám bệnh', '2024-03-28', 'Đã Duyệt', 'NV010', 'NV003'); 
+>>>>>>> a2e2c117794901ad63ae1bd9e387468ce0d4ef56:phone_store.sql
 
 
 ------------------------------------------ SELECT --------------------------------------
