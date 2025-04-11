@@ -466,7 +466,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		try {
 			jdbc.openConnection();
 			
-			String query = "select soGioTang from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			String query = "select soGioTangCa from bangchamcong where thangCC=? and namCC=? and maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setInt(1, thangCC);

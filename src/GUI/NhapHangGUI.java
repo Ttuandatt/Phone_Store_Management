@@ -549,11 +549,11 @@ public class NhapHangGUI extends JPanel {
 		});
 
 		JLabel lblTotal;
-		lblTotal = new JLabel("Total: ");
-		lblTotal.setBounds(350, 20, 50, 25);
+		lblTotal = new JLabel("Tổng tiền: ");
+		lblTotal.setBounds(350, 20, 120, 25);
 		optionRightPanel.add(lblTotal);
 		lblTongTien = new JLabel("0đ"); // cai nay se lay tong tien setText lai sau, khi da co csdl
-		lblTongTien.setBounds(390, 20, 300, 25);
+		lblTongTien.setBounds(420, 20, 300, 25);
 		optionRightPanel.add(lblTongTien);
 
 
