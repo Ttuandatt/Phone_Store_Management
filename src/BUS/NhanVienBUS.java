@@ -67,9 +67,34 @@ public class NhanVienBUS {
 	public Double getBaseSalaryByRoleID(String maCV) {
 		return nvDAO.getBaseSalaryByRoleID(maCV);
 	}
+	
 	public String deleteEmployee(NhanVienDTO nv) {
 		if(nvDAO.delete(nv)>0)
 			return "Xóa nhân viên thành công";
 		return "Xóa nhân viên thất bại";
+	}
+	
+	public ArrayList<NhanVienDTO> selectAllByRoleName(String role){
+		return nvDAO.selectAllByRoleName(role);
+	}
+	
+	public int getSoNgayCong(int thangCC, int namCC, String maNV) {
+		return nvDAO.getSoNgayCong(thangCC, namCC, maNV);
+	}
+	
+	public int getSoNgayNghiPhepCoLuong(int thangCC, int namCC, String maNV) {
+		return nvDAO.getSoNgayNghiPhepCoLuong(thangCC, namCC, maNV);
+	}
+	
+	public int getSoNgayNghiPhepKhongLuong(int thangCC, int namCC, String maNV) {
+		return nvDAO.getSoNgayNghiPhepKhongLuong(thangCC, namCC, maNV);
+	}
+	
+	public int getSoNgayNghiKhongPhep(int thangCC, int namCC, String maNV) {
+		return nvDAO.getSoNgayNghiKhongPhep(thangCC, namCC, maNV);
+	}
+	
+	public double getSoGioTangCa(int thangCC, int namCC, String maNV) {
+		return nvDAO.getSoGioTangCa(thangCC, namCC, maNV);
 	}
 }

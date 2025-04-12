@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import com.mysql.cj.xdevapi.Result;
+
 import Database.*;
 import DTO.NhanVienDTO;
 
@@ -56,7 +58,50 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			// Đóng kết nối CSDL
 			jdbc.closeConnection();
 		}
+		
 
+		return arrNhanVien;
+	}
+	
+	public ArrayList<NhanVienDTO> selectAllByRoleName(String role){
+		ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select * from nhanvien inner join chucvu on nhanvien.maCV = chucvu.maCV where chucvu.tenCV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, role);
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				NhanVienDTO nv = new NhanVienDTO();
+				nv.setMaNV(rs.getString("maNV"));
+				nv.setHoTen(rs.getString("hoTen"));
+				nv.setNgaySinh(rs.getDate("ngaySinh"));
+				nv.setGioiTinh(rs.getString("gioiTinh"));
+				nv.setDiaChi(rs.getString("diaChi"));
+				nv.setSoDienThoai(rs.getString("sdt"));
+				nv.setEmail(rs.getString("email"));
+				nv.setTrangThai(rs.getString("trangThai"));
+				nv.setChucVu(rs.getString("maCV"));
+				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setMatKhau(rs.getString("matKhau"));
+				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
+
+				// Thêm vào danh sách
+				arrNhanVien.add(nv);
+
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			// Đóng kết nối CSDL
+			jdbc.closeConnection();
+		}
+		
 		return arrNhanVien;
 	}
 
@@ -272,6 +317,9 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			if(rs.next()) {
 				baseSalary = rs.getDouble("luongCB");
 			}
+			
+			ps.close();
+			rs.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -282,4 +330,173 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		return baseSalary;
 	}
 
+	public int getSoNgayCong(int thangCC, int namCC, String maNV) {
+		int soNgayCong = 0;
+		log("thangCC="+thangCC);
+		log("namCC="+namCC);
+		log("maNV="+maNV);
+		try {
+			jdbc.openConnection();
+			
+			String query = "select soNgayLam from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, thangCC);
+			ps.setInt(2, namCC);
+			ps.setString(3, maNV);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				soNgayCong = rs.getInt("soNgayLam");
+			}
+			
+			ps.close();
+			rs.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
+		}
+		
+		log("soNgayCong=" + soNgayCong);
+		return soNgayCong;
+	}
+	
+	public int getSoNgayNghiPhepCoLuong(int thangCC, int namCC, String maNV) {
+		int soNgayNghiPhepCoLuong = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select soNgayNghiPhepCoLuong from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, thangCC);
+			ps.setInt(2, namCC);
+			ps.setString(3, maNV);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				soNgayNghiPhepCoLuong = rs.getInt("soNgayNghiPhepCoLuong");
+			}
+			
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			
+		}
+			jdbc.closeConnection();
+		
+		
+		return soNgayNghiPhepCoLuong;
+	}
+	
+	public int getSoNgayNghiPhepKhongLuong(int thangCC, int namCC, String maNV) {
+		int soNgayNghiPhepKhongLuong = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select soNgayNghiPhepKhongLuong from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, thangCC);
+			ps.setInt(2, namCC);
+			ps.setString(3, maNV);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				soNgayNghiPhepKhongLuong = rs.getInt("soNgayNghiPhepKhongLuong");
+			}
+			
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			
+		}
+			jdbc.closeConnection();
+		
+		
+		return soNgayNghiPhepKhongLuong;
+	}
+	
+	public int getSoNgayNghiKhongPhep(int thangCC, int namCC, String maNV) {
+		int soNgayNghiKhongPhep = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select soNgayNghiKhongPhep from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, thangCC);
+			ps.setInt(2, namCC);
+			ps.setString(3, maNV);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				soNgayNghiKhongPhep = rs.getInt("soNgayNghiKhongPhep");
+			}
+			
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			
+		}
+			jdbc.closeConnection();
+		
+		
+		return soNgayNghiKhongPhep;
+	}
+	
+	public double getSoGioTangCa(int thangCC, int namCC, String maNV) {
+		double soGioTangCa = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select soGioTangCa from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, thangCC);
+			ps.setInt(2, namCC);
+			ps.setString(3, maNV);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				soGioTangCa = rs.getDouble("soNgayNghiKhongPhep");
+			}
+			
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			
+		}
+			jdbc.closeConnection();
+		
+		
+		return soGioTangCa;
+	}
+	
+	//hàm hiển thị thông tin dòng code
+  	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
 }

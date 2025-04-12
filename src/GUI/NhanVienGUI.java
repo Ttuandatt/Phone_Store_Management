@@ -4,15 +4,12 @@ import BUS.BangChamCongBUS;
 import BUS.ChucVuBUS;
 import BUS.KhoBUS;
 import BUS.NhanVienBUS;
-import BUS.ProductsBUS;
 import DTO.*;
-import DAO.ProductsDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,19 +22,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,7 +48,6 @@ import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
@@ -79,12 +69,16 @@ public class NhanVienGUI extends JPanel{
     DefaultTableModel employeeModel = new DefaultTableModel();
     ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>(); 
     JComboBox<String> sortComboBox, genderCombobox, roleCombobox, workplaceCombobox;
+	JComboBox<Integer> monthCombobox, yearCombobox;
     ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
     ArrayList<KhoDTO> arrNoiLamViec = khoBUS.selectAll();
     String[] roles = new String[arrChucVu.size()];
+    boolean comboboxClicked = false;
     String[] workplaces =  new String[arrNoiLamViec.size()];
-    JPanel productContent;
-    JTextField tfTimKiem;
+    JPanel nhanVienContent;
+    JTextField txtTimKiem;
+	JLabel dataSoNgayCong, dataSoNgayNghiPhepCoLuong, dataSoNgayNghiPhepKhongLuong, dataSoNgayNghiKhongPhep, dataSoGioOT, dataTongSoNgayTinhLuong, lblTongSoNgayTinhLuong;
+	
 	
 	final byte[][] imageBytes = new byte[1][];
 	String selectedFilePathName;	//biến lưu đường dẫn của ảnh được chọn
@@ -92,7 +86,7 @@ public class NhanVienGUI extends JPanel{
 	//Constructor
     public NhanVienGUI(){
         initComponents();
-        loadEmployeeList();
+        loadNhanVienList();
         for(String kho: workplaces) {
         	System.out.println(kho);
         }
@@ -106,16 +100,16 @@ public class NhanVienGUI extends JPanel{
     private void initComponents() {
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
-        productContent = new JPanel();
-        productContent.setBackground(Color.white);
-        productContent.setLayout(new GridBagLayout());
+        nhanVienContent = new JPanel();
+        nhanVienContent.setBackground(Color.white);
+        nhanVienContent.setLayout(new GridBagLayout());
         
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(productContent, gbc); // Thêm vào ProductsGUI
+        add(nhanVienContent, gbc); // Thêm vào ProductsGUI
         
         //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
         JPanel topPanel, bottomPanel;
@@ -128,7 +122,7 @@ public class NhanVienGUI extends JPanel{
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        productContent.add(topPanel, gbc);
+        nhanVienContent.add(topPanel, gbc);
         
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridBagLayout());
@@ -140,7 +134,7 @@ public class NhanVienGUI extends JPanel{
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
-        productContent.add(bottomPanel, gbc);
+        nhanVienContent.add(bottomPanel, gbc);
         
 //==================================================== TOP PANEL =============================================================================================//
         JPanel functionsPanel, searchPanel;
@@ -306,7 +300,7 @@ public class NhanVienGUI extends JPanel{
         
         
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
         Image newImgDelete = imgDelete.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -587,6 +581,24 @@ public class NhanVienGUI extends JPanel{
         roleCombobox.setBounds(185, 24, 140, 25);
     	fillRoleCombobox(roleCombobox);
         searchInputPanel.add(roleCombobox);
+        roleCombobox.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		comboboxClicked = true;
+        	}
+        });
+        roleCombobox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(comboboxClicked) {
+					String role = roleCombobox.getSelectedItem().toString(); 
+					log("role="+role);
+					sortRole(role);
+					comboboxClicked = false;
+					
+				}
+			}
+		});
         roleCombobox.addItemListener(e -> {
         	if(e.getStateChange() == ItemEvent.SELECTED) {
         		String selected = (String)roleCombobox.getSelectedItem();
@@ -598,14 +610,14 @@ public class NhanVienGUI extends JPanel{
         });
 
         
-        tfTimKiem = new JTextField();
-        tfTimKiem.setBounds(375,  24,  260, 25);
-        searchInputPanel.add(tfTimKiem);
+        txtTimKiem = new JTextField();
+        txtTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(txtTimKiem);
         
         
         
         //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
         Image newImgSearch = imgSearch.getScaledInstance(20,20, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
@@ -647,7 +659,7 @@ public class NhanVienGUI extends JPanel{
         btnSearch.setBounds(0, 15, 40, 40);
         searchButtonPanel.add(btnSearch);
         
-        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
         Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {
@@ -693,10 +705,7 @@ public class NhanVienGUI extends JPanel{
         
         
         
-        
-//====================================================================== BOTTOM PANEL ==============================================================//
-
-        //========================= table =========================//
+        //========================= Table =========================//
         employeeTable = new JTable();
         JScrollPane sp = new JScrollPane(employeeTable);
         gbc.weightx = 0.55;
@@ -705,6 +714,16 @@ public class NhanVienGUI extends JPanel{
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		bottomPanel.add(sp, gbc);
+		employeeTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()>=1) {	//nếu nhấn vào dòng đó từ 1 lần trở lên
+					hienThiThongTinChamCong(employeeTable);
+				}
+			}
+		});
+		
+		
 		
 		JPanel attendancePanel = new JPanel(new GridBagLayout());
 		attendancePanel.setBackground(Color.white);
@@ -740,29 +759,84 @@ public class NhanVienGUI extends JPanel{
 		attendancePanel.add(bottomAttendancePanel, gbc);
 		
 		//topAttendancePanel
-		JLabel lblSoNgayCong, lblSoNgayNghiPhep, lblSoNgayNghiKhongPhep, lblSoGioOT;
+		//combobox tháng
+		JLabel lblThang, lblNam;
+		
+		lblThang = new JLabel("Tháng");
+		lblThang.setBounds(10,10,50,20);
+		topAttendancePanel.add(lblThang);
+		
+		lblNam = new JLabel("Năm");
+		lblNam.setBounds(90,10,50,20);
+		topAttendancePanel.add(lblNam);
+		
+		Integer[] thang = {1,2,3,4,5,6,7,8,9,10,11,12};
+		monthCombobox = new JComboBox<Integer>(thang);
+		monthCombobox.setBounds(10,30,70,20);
+		topAttendancePanel.add(monthCombobox);
+		
+		//combobox năm
+		Integer[] nam = new Integer[100];
+		for(int i=0; i<nam.length; i++) {
+			nam[i] = 2000 + i;
+		}
+		yearCombobox = new JComboBox<Integer>(nam);
+		yearCombobox.setBounds(90,30,70,20);
+		topAttendancePanel.add(yearCombobox);
+		
+		
+		
+		JLabel lblSoNgayCong, lblSoNgayNghiPhepCoLuong, lblSoNgayNghiPhepKhongLuong, lblSoNgayNghiKhongPhep, lblSoGioOT;
+
 		
 		lblSoNgayCong = new JLabel("Số ngày công: ");
-		lblSoNgayCong.setBounds(10, 10, 100, 20);
+		lblSoNgayCong.setBounds(10, 80, 100, 20);
 		topAttendancePanel.add(lblSoNgayCong);
+		dataSoNgayCong = new JLabel("0");
+		dataSoNgayCong.setBounds(190,80,50,20);
+		topAttendancePanel.add(dataSoNgayCong);
 		
-		lblSoNgayNghiPhep = new JLabel("Số ngày nghỉ phép: ");
-		lblSoNgayNghiPhep.setBounds(10, 40, 150, 20);
-		topAttendancePanel.add(lblSoNgayNghiPhep);
+		
+		lblSoNgayNghiPhepCoLuong = new JLabel("Số ngày nghỉ phép có lương: ");
+		lblSoNgayNghiPhepCoLuong.setBounds(10, 110, 200, 20);
+		topAttendancePanel.add(lblSoNgayNghiPhepCoLuong);
+		dataSoNgayNghiPhepCoLuong = new JLabel("0");
+		dataSoNgayNghiPhepCoLuong.setBounds(190,110,50,20);
+		topAttendancePanel.add(dataSoNgayNghiPhepCoLuong);
+		
+		lblSoNgayNghiPhepKhongLuong = new JLabel("Số ngày nghỉ phép không lương: ");
+		lblSoNgayNghiPhepKhongLuong.setBounds(10, 140, 200, 20);
+		topAttendancePanel.add(lblSoNgayNghiPhepKhongLuong);
+		dataSoNgayNghiPhepKhongLuong = new JLabel("0");
+		dataSoNgayNghiPhepKhongLuong.setBounds(190,140,50,20);
+		topAttendancePanel.add(dataSoNgayNghiPhepKhongLuong);
+		
 		
 		lblSoNgayNghiKhongPhep = new JLabel("Số ngày nghỉ không phép: ");
-		lblSoNgayNghiKhongPhep.setBounds(10, 70, 150, 20);
+		lblSoNgayNghiKhongPhep.setBounds(10, 170, 150, 20);
 		topAttendancePanel.add(lblSoNgayNghiKhongPhep);
+		dataSoNgayNghiKhongPhep = new JLabel("0");
+		dataSoNgayNghiKhongPhep.setBounds(190,170,50,20);
+		topAttendancePanel.add(dataSoNgayNghiKhongPhep);
 		
 		lblSoGioOT = new JLabel("Số giờ tăng ca: ");
-		lblSoGioOT.setBounds(10, 100, 150, 20);
+		lblSoGioOT.setBounds(10, 200, 150, 20);
 		topAttendancePanel.add(lblSoGioOT);
+		dataSoGioOT = new JLabel("0.0");
+		dataSoGioOT.setBounds(190,200,50,20);
+		topAttendancePanel.add(dataSoGioOT);
 				
+		
+		
+		lblTongSoNgayTinhLuong = new JLabel("");
+		lblTongSoNgayTinhLuong.setBounds(10, 240, 300, 20);
+		topAttendancePanel.add(lblTongSoNgayTinhLuong);
+
 
     }
 
     
-    private void loadEmployeeList() {
+    private void loadNhanVienList() {
     	employeeTable.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
     	
     	employeeTable.setModel(employeeModel);
@@ -1741,6 +1815,7 @@ public class NhanVienGUI extends JPanel{
         	middleLeftPanel.add(txtPassword);
         	
         	//bottomLeftPanel
+
         	
         	
         	//Lấy giá trị từ csdl và truyền vào các trường dữ liệu
@@ -1823,30 +1898,28 @@ public class NhanVienGUI extends JPanel{
         // Xóa tất cả các dòng trong mô hình bảng
         employeeModel.setRowCount(0);
         employeeModel.setColumnCount(0);
-        loadEmployeeList();
+        loadNhanVienList();
         sortComboBox.setSelectedIndex(0);
         genderCombobox.setSelectedIndex(0);
-        roleCombobox.setSelectedIndex(0);
+        roleCombobox.setSelectedItem("");
     }
     
     
-    @SuppressWarnings("unchecked")
-	private void searchPerformed(JTable tb){
-        String searchContent = tfTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+    private void searchPerformed(JTable tb){
+        String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
         if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
             ArrayList<NhanVienDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
 
             // Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm kiếm
             boolean found = false;
             for (NhanVienDTO nv: arrNhanVien) {
-                // Kiểm tra xem thông tin của sản phẩm có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
-                if (nv.getMaNV().toLowerCase().contains(searchContent.toLowerCase()) ||
-                    nv.getHoTen().toLowerCase().contains(searchContent.toLowerCase())||
-                  
-                    nv.getGioiTinh().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getDiaChi().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getSoDienThoai().toLowerCase().contains(searchContent.toLowerCase())||
-                    nv.getChucVu().toLowerCase().contains(searchContent.toLowerCase()))
+                // Kiểm tra xem thông tin của nhân viên có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
+                if (nv.getMaNV().toLowerCase().contains(searchContent.toLowerCase().trim()) ||
+                    nv.getHoTen().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getGioiTinh().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getDiaChi().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getSoDienThoai().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                    nv.getChucVu().toLowerCase().contains(searchContent.toLowerCase().trim()))
                  {
                     dsTimKiem.add(nv); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
                     found = true;
@@ -1943,7 +2016,70 @@ public class NhanVienGUI extends JPanel{
         sorter.sort();
     }
     
-    private void sortRole() {
+    private void sortRole(String role) {
+    	ArrayList<NhanVienDTO> dsTimKiem = nvBUS.selectAllByRoleName(role);
     	
+    	// Xóa tất cả các dòng hiện có trong bảng
+        DefaultTableModel tableModel = (DefaultTableModel) employeeTable.getModel();
+        tableModel.setRowCount(0);
+
+        // Thêm các sản phẩm thỏa mãn vào bảng
+        for (NhanVienDTO nv : dsTimKiem) {
+			String maNV = nv.getMaNV();
+			String hoTen = nv.getHoTen();
+			Date ngaySinh = nv.getNgaySinh();
+			String gioiTinh = nv.getGioiTinh();
+			String diaChi = nv.getDiaChi();
+			String chucVu = nv.getChucVu();
+			String matKhau = nv.getMatKhau();
+			String trangThai = nv.getTrangThai();
+			// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
+		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
+		    ImageIcon imageIcon = null;
+		    if (imageData != null) {
+		        // Chuyển đổi byte[] thành ImageIcon
+		        Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+		        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize ảnh
+		        imageIcon = new ImageIcon(scaledImage);
+		    }
+			
+			
+		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon};
+            tableModel.addRow(row);
+        }
+    
     }
+    
+    private void hienThiThongTinChamCong(JTable table) {
+    	int selectedRow = table.getSelectedRow();
+    	if(selectedRow!=-1) {
+    		DefaultTableModel model = (DefaultTableModel)table.getModel();
+    		String maNV = (String)model.getValueAt(selectedRow, 0);
+    		int thangCC = Integer.parseInt(monthCombobox.getSelectedItem().toString());
+    		int namCC = Integer.parseInt(yearCombobox.getSelectedItem().toString());
+    		log("maNV=" + maNV);
+    		
+    		dataSoNgayCong.setText(String.valueOf(nvBUS.getSoNgayCong(thangCC, namCC, maNV)));
+    		dataSoNgayNghiPhepCoLuong.setText(String.valueOf(nvBUS.getSoNgayNghiPhepCoLuong(thangCC, namCC, maNV)));
+    		dataSoNgayNghiPhepKhongLuong.setText(String.valueOf(nvBUS.getSoNgayNghiPhepKhongLuong(thangCC, namCC, maNV)));
+    		dataSoNgayNghiKhongPhep.setText(String.valueOf(nvBUS.getSoNgayNghiKhongPhep(thangCC, namCC, maNV)));
+    		dataSoGioOT.setText(String.valueOf(nvBUS.getSoGioTangCa(thangCC, namCC, maNV)));
+    		
+    		int soNgayCong = Integer.parseInt(dataSoNgayCong.getText());
+    		log("soNgayCong=" + soNgayCong);
+    		int soNgayNghiPhepCoLuong = Integer.parseInt(dataSoNgayNghiPhepCoLuong.getText());
+    		log("soNgayNghiPhepCoLuong=" + soNgayNghiPhepCoLuong);
+    		int tong = soNgayCong + soNgayNghiPhepCoLuong;
+    		lblTongSoNgayTinhLuong.setText("Tổng số ngày tính lương = " + soNgayCong + " + " + soNgayNghiPhepCoLuong + " = " + tong);
+    	}
+    }
+    
+    
+  //hàm hiển thị thông tin dòng code
+  	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
 }

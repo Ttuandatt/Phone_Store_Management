@@ -1,8 +1,7 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.NhaCungCapBUS;
 import DTO.*;
-import DAO.ProductsDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,21 +35,23 @@ import javax.swing.table.TableColumnModel;
 
 
 
-public class WarehouseGUI extends JPanel{
-
-	ProductsBUS productBUS = new ProductsBUS();
+public class NhaCungCapGUI extends JPanel{
+   JTable suppliersTable;
+   
+    NhaCungCapBUS suppliersBUS = new NhaCungCapBUS();
     JTable table = new JTable();
+        DefaultTableModel suppliersModel = new DefaultTableModel();
     DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<NhaCungCapDTO> suppliersArr = new ArrayList<NhaCungCapDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
 	
 	
 	//Constructor
-    public WarehouseGUI(){
+    public NhaCungCapGUI(){
         initComponents();
-        loadSanPhamList();
+        loadNhaCungCapList();
     }
     
     
@@ -91,6 +92,17 @@ public class WarehouseGUI extends JPanel{
         gbc.gridx = 0;
         gbc.gridy = 1;
         productContent.add(bottomPanel, gbc);
+        
+//        TABLE
+        suppliersTable = new JTable();
+        JScrollPane ncc = new JScrollPane(suppliersTable);
+        gbc.weightx = 0.55;
+        gbc.weighty = 1.0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        bottomPanel.add(ncc,gbc);
+        
         
 //==================================================== TOP PANEL =============================================================================================//
         JPanel functionsPanel, searchPanel;
@@ -538,7 +550,35 @@ public class WarehouseGUI extends JPanel{
     }
 
     
-    private void loadSanPhamList() {
-    	
+       private void loadNhaCungCapList(){
+           suppliersTable.setDefaultEditor(Object.class,null);
+           suppliersTable.setModel(suppliersModel);
+           suppliersModel.addColumn("ID");
+           suppliersModel.addColumn("Tên NCC");
+           suppliersModel.addColumn("SDT");
+           suppliersModel.addColumn("Email");
+           suppliersModel.addColumn("Địa chỉ");
+           suppliersModel.addColumn("Trạng thái");
+           suppliersArr = suppliersBUS.getAllNhaCungCap();
+           for(int i = 0 ; i < suppliersArr.size() ; i++  ){
+               NhaCungCapDTO ncc = suppliersArr.get(i);
+               String maNCC = ncc.getMaNCC();
+               String tenNCC = ncc.getTenNCC();
+               String sdt = ncc.getSdt();
+               String email = ncc.getEmail();
+               String diaChi = ncc.getDiaChi();
+               int trangThai = ncc.getTrangthai();
+               Object[] row = {maNCC,tenNCC,sdt,email,diaChi,trangThai};
+               suppliersModel.addRow(row);
+           }
+           TableColumnModel tcm = suppliersTable.getColumnModel();
+           tcm.getColumn(0).setPreferredWidth(50);
+             tcm.getColumn(1).setPreferredWidth(120);
+               tcm.getColumn(2).setPreferredWidth(100);
+                 tcm.getColumn(3).setPreferredWidth(70);
+                   tcm.getColumn(4).setPreferredWidth(200);
+                     tcm.getColumn(5).setPreferredWidth(50);
+             
     }
+
 }

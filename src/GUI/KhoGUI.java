@@ -1,8 +1,6 @@
 package GUI;
 
-import BUS.ProductsBUS;
-import DTO.*;
-import DAO.ProductsDAO;
+import DTO.KhoDTO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,19 +34,18 @@ import javax.swing.table.TableColumnModel;
 
 
 
-public class StockOutwardSlipGUI extends JPanel{
+public class KhoGUI extends JPanel{
 
-	ProductsBUS productBUS = new ProductsBUS();
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
-    ArrayList<ProductsDTO> productArr = new ArrayList<ProductsDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<KhoDTO> productArr = new ArrayList<KhoDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
 	
 	
 	//Constructor
-    public StockOutwardSlipGUI(){
+    public KhoGUI(){
         initComponents();
         loadSanPhamList();
     }
@@ -84,7 +81,7 @@ public class StockOutwardSlipGUI extends JPanel{
         
         bottomPanel = new JPanel();
         bottomPanel.setLayout(null);
-        bottomPanel.setBackground(Color.decode("#71706F"));
+        bottomPanel.setBackground(Color.decode("#853BA5"));
         gbc.weightx = 1.0;
         gbc.weighty = 0.91;
         gbc.fill = GridBagConstraints.BOTH;

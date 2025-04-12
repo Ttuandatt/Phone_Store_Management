@@ -2,11 +2,19 @@ package Components.dashboardApp.raven.menu;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+<<<<<<< HEAD:src/Components/dashboardApp/raven/menu/FormManager.java
 import Components.dashboardApp.components.MainForm;
 import Components.dashboardApp.components.SimpleForm;
 import Components.dashboardApp.raven.swing.slider.PanelSlider;
 import Components.dashboardApp.raven.swing.slider.SimpleTransition;
 import Components.dashboardApp.utils.UndoRedo;
+=======
+import GUI.dashboardApp.components.MainForm;
+import GUI.dashboardApp.components.SimpleForm;
+import GUI.dashboardApp.raven.swing.slider.PanelSlider;
+import GUI.dashboardApp.raven.swing.slider.SimpleTransition;
+import GUI.dashboardApp.utils.UndoRedo;
+>>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/dashboardApp/raven/menu/FormManager.java
 
 public class FormManager {
 

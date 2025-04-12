@@ -1,8 +1,8 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.SanPhamBUS;
 import DTO.*;
-import DAO.ProductsDAO;
+import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -38,10 +38,10 @@ import javax.swing.table.TableColumnModel;
 
 public class SuppliersGUI extends JPanel{
 
-	ProductsBUS productBUS = new ProductsBUS();
+	SanPhamBUS productBUS = new SanPhamBUS();
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<NhaCungCapDTO> productArr = new ArrayList<NhaCungCapDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     private JComboBox sortComboBox;
     private JPanel productContent;
     private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
