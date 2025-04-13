@@ -1,38 +1,34 @@
 package GUI;
 
+<<<<<<< HEAD:src/GUI/StatisticsGUI.java
+import Components.dashboardApp.raven.forms.DashboardForm;
+import com.formdev.flatlaf.FlatClientProperties;
+=======
 import BUS.SanPhamBUS;
 import DTO.*;
 import DAO.SanPhamDAO;
 
 import java.awt.BorderLayout;
+>>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/ThongTinCaNhanGUI.java
 import java.awt.Color;
-import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
+import raven.popup.GlassPanePopup;
 
+public class StatisticsGUI extends JPanel {
 
+<<<<<<< HEAD:src/GUI/StatisticsGUI.java
+//    private final boolean UNDECORATED = !true;
+    private JPanel productContent;
+
+    //Constructor
+    public StatisticsGUI() {
+=======
 
 public class ThongTinCaNhanGUI extends JPanel{
 
@@ -47,33 +43,32 @@ public class ThongTinCaNhanGUI extends JPanel{
 	
 	//Constructor
     public ThongTinCaNhanGUI(){
+>>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/ThongTinCaNhanGUI.java
         initComponents();
         loadSanPhamList();
     }
-    
-    
+
     //////////////////////////////////////////METHODS//////////////////////////////////////
     private void initComponents() {
-        setLayout(new GridBagLayout()); //set Layout
+        setPreferredSize(new Dimension(1366, 800)); // Dùng setPreferredSize() thay vì setSize()
+        setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        productContent = new JPanel();
-        productContent.setBackground(Color.green);
-        productContent.setLayout(new GridBagLayout());
         
+        productContent = new JPanel();
+        productContent.setBackground(Color.WHITE);
+        productContent.setLayout(new GridBagLayout());
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(productContent, gbc); // Thêm vào ProductsGUI
-        
-        //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
-        JPanel topPanel, bottomPanel;
-        //set thông số cho 2 panel
-        topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(Color.blue);
+        add(productContent, gbc);
+
+        // Thêm DashboardForm nếu nó là JPanel
+        DashboardForm dashboard = new DashboardForm();
         gbc.weightx = 1.0;
+<<<<<<< HEAD:src/GUI/StatisticsGUI.java
+=======
         gbc.weighty = 0.1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -101,79 +96,18 @@ public class ThongTinCaNhanGUI extends JPanel{
         functionsPanel.setLayout(new GridBagLayout());
         functionsPanel.setBorder(BorderFactory.createTitledBorder("Functions"));	//Tạo border cho panel
         gbc.weightx = 0.4;
+>>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/ThongTinCaNhanGUI.java
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        topPanel.add(functionsPanel,gbc);
-        
-        //chia 2 panel con nữa, leftFunctionPanel cho các nút chức năng, rightFunctionPanel cho nút xuất Excel
-        JPanel leftFunctionPanel, rightFunctionPanel;
-        
-        leftFunctionPanel = new JPanel();
-        leftFunctionPanel.setBackground(Color.yellow);
-        leftFunctionPanel.setLayout(new FlowLayout());
-        gbc.weightx = 0.7;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        functionsPanel.add(leftFunctionPanel, gbc);
-        
-        rightFunctionPanel = new JPanel();
-        rightFunctionPanel.setBackground(Color.decode("#3A96CF"));
-        rightFunctionPanel.setLayout(new GridBagLayout());
-        gbc.weightx = 0.3;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        functionsPanel.add(rightFunctionPanel, gbc);
-        //==================================== End functionsPanel ====================================================//
-        
-        //======================================= seacrhPanel ========================================================//
-        //set thông số cho seacrhPanel
-        searchPanel = new JPanel();
-        searchPanel.setBackground(Color.orange);
-        searchPanel.setLayout(new GridBagLayout());
-        searchPanel.setBorder(BorderFactory.createTitledBorder("Search"));	//Tạo border cho panel
-        gbc.weightx = 0.6;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        topPanel.add(searchPanel,gbc);
-        
-        //chia 2 panel con nữa: searchInputPanel & searchButtonPanel
-        JPanel searchInputPanel, searchButtonPanel;
-        
-        searchInputPanel = new JPanel();
-        searchInputPanel.setBackground(Color.decode("#717568"));
-        searchInputPanel.setLayout(new GridBagLayout());
-        gbc.weightx = 0.8;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        searchPanel.add(searchInputPanel, gbc);
-        
-        searchButtonPanel = new JPanel();
-        searchButtonPanel.setBackground(Color.decode("#A8A8F0"));
-        searchButtonPanel.setLayout(new GridBagLayout());
-        gbc.weightx = 0.2;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        searchPanel.add(searchButtonPanel, gbc);
+        productContent.add(dashboard, gbc);
         //==================================== End searchPanel ====================================================//
-
 //============================================================================================================================================================//   
-        
     }
 
-    
     private void loadSanPhamList() {
-    	
+
     }
+
 }
