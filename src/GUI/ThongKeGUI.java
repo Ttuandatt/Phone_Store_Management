@@ -37,27 +37,15 @@ import javax.swing.table.TableColumnModel;
 
 import com.formdev.flatlaf.util.UIScale;
 
-
-
-public class ThongKeGUI extends JPanel{
-
-	SanPhamBUS productBUS = new SanPhamBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-    private JComboBox cb;
+public class ThongKeGUI extends JPanel {
     private JPanel productContent;
-    private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
-    private final boolean UNDECORATED = !true;
 
-	
-	//Constructor
-    public ThongKeGUI(){
+
+    //Constructor
+    public ThongKeGUI() {
         initComponents();
-//        loadSanPhamList();
     }
-    
-    
+
     //////////////////////////////////////////METHODS//////////////////////////////////////
     private void initComponents() {
         setLayout(new GridBagLayout()); //set Layout
@@ -65,14 +53,14 @@ public class ThongKeGUI extends JPanel{
         productContent = new JPanel();
         productContent.setBackground(Color.white);
         productContent.setLayout(new GridBagLayout());
-        
+
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(productContent, gbc); // Thêm vào ProductsGUI
-        
+
         // Thay đổi: Thêm trực tiếp DashboardForm vào JFrame
         DashboardForm dashboard = new DashboardForm();
         gbc.weightx = 1.0;
@@ -83,11 +71,7 @@ public class ThongKeGUI extends JPanel{
         productContent.add(dashboard, gbc);
         // Hiển thị JFrame
         setVisible(true);
-        
+
     }
 
-    
-    private void loadSanPhamList() {
-    	
-    }
 }
