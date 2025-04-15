@@ -59,7 +59,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "insert into phieunhap values(?,?,?,?,?,?,?)";
+			String query = "insert into phieunhap (maPN,ngayTao,tongTien,trangThai,maNV,maKho,maNCC) values (?,?,?,?,?,?,?)";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, pn.getMaPN());

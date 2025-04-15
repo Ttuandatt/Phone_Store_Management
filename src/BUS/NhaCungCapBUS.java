@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class NhaCungCapBUS {
     NhaCungCapDAO nccDAO = new NhaCungCapDAO();
     
-    public ArrayList<NhaCungCapDTO> getAllNhaCungCap(){
+    public ArrayList<NhaCungCapDTO> selectAll(){
         return nccDAO.selectAll();
     }
     

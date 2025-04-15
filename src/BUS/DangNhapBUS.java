@@ -35,7 +35,7 @@ public class DangNhapBUS {
 	    			maNV = manv;
 	    			hoTen = nv.getHoTen();
 	    			chucVu = nv.getChucVu();
-	    			kho = nv.getNoiLamViec();
+	    			kho = nv.getChiNhanh();
 	    			
 	    			if(chucVu.equalsIgnoreCase("CV001")) {
 	    				QuanLyKhoView qlkView = new QuanLyKhoView();

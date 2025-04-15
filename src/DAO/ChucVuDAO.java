@@ -29,7 +29,7 @@ public class ChucVuDAO implements DAOInterface<ChucVuDTO>{
 				cv.setMaCV(rs.getString("maCV"));
 				cv.setTenCV(rs.getString("tenCV"));
 				cv.setLuongCoBan(rs.getFloat("luongCB"));
-				cv.setHeSoLuong(rs.getFloat("heSo"));
+//				cv.setHeSoLuong(rs.getFloat("heSo"));
 				
 				
 				arrChucVu.add(cv);
@@ -142,14 +142,14 @@ public class ChucVuDAO implements DAOInterface<ChucVuDTO>{
 			
 			jdbc.openConnection();
 			
-			String query = "insert into chucvu values(?,?,?,?,?)";
+			String query = "insert into chucvu values(maCV,tenCV,luongCB,trangThai)";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, cv.getMaCV());
 			ps.setString(2, cv.getTenCV());
 			ps.setFloat(3, cv.getLuongCoBan());
-			ps.setFloat(4, cv.getHeSoLuong());
-			ps.setString(5, "on");
+//			ps.setFloat(4, cv.getHeSoLuong());
+			ps.setString(4, "on");
 			
 			result = ps.executeUpdate();
 			

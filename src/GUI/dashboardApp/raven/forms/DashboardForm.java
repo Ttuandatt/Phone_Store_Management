@@ -1,7 +1,7 @@
 package GUI.dashboardApp.raven.forms;
 
 import BUS.ThongKeBUS;
-import GUI.dashboardApp.components.SimpleForm;
+import Components.dashboardApp.components.SimpleForm;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,7 +18,7 @@ import raven.chart.ChartLegendRenderer;
 import raven.chart.bar.HorizontalBarChart;
 import raven.chart.line.LineChart;
 import raven.chart.pie.PieChart;
-import GUI.dashboardApp.utils.DateCalculator;
+import Components.dashboardApp.utils.DateCalculator;
 import raven.chart.data.category.DefaultCategoryDataset;
 import raven.chart.data.pie.DefaultPieDataset;
 

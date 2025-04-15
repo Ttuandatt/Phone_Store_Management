@@ -1,9 +1,4 @@
-
-<<<<<<< HEAD:src/Components/dashboardApp/raven/swing/slider/SimpleTransition.java
 package Components.dashboardApp.raven.swing.slider;
-=======
-package GUI.dashboardApp.raven.swing.slider;
->>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/dashboardApp/raven/swing/slider/SimpleTransition.java
 
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;

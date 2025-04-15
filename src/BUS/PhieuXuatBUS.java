@@ -14,8 +14,8 @@ public class PhieuXuatBUS {
 	
 	public String insert(PhieuXuatDTO px) {
 		if(pxDAO.insert(px)>0)
-			return "Thêm phiếu nhập thành công!";
-		return "Thêm phiếu nhập thất bại!";
+			return "Thêm phiếu xuất thành công!";
+		return "Thêm phiếu xuất thất bại!";
 	}
 	
 	public ArrayList<PhieuXuatDTO> getThongTinPhieuXuat(String mapx){
