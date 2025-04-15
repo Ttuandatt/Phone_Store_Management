@@ -2,6 +2,7 @@ package GUI;
 
 import BUS.NhaCungCapBUS;
 import Components.ShadowButton;
+import DAO.NhaCungCapDAO;
 import DTO.*;
 
 import java.awt.BorderLayout;
@@ -34,6 +35,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import popup.PopupNhaCungCap;
 
 
 
@@ -535,7 +537,7 @@ public class NhaCungCapGUI extends JPanel{
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchPerformed(employeeTable);
+                searchPerformed(suppliersTable);
             }
         });
         btnSearch.addMouseListener(new MouseAdapter() {
@@ -644,7 +646,256 @@ public class NhaCungCapGUI extends JPanel{
 		suppliersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 
 	}
+         private void addPerformed(JTable tb){
+             PopupNhaCungCap frameThem = new PopupNhaCungCap("Thêm nhà cung cấp", "THÊM NHÀ CUNG CẤP","add");
+    }
+        private void refreshList(){
+        //Xóa tất cả các dòng trong model table
+        suppliersModel.setRowCount(0);
+        loadNhaCungCapList();
+        txtTimKiem.setText("");
+        
+    }
+       private void deletePerformed(JTable tb){
+    int selectedRow = tb.getSelectedRow();
+    if(selectedRow != -1){
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhà cung cấp?", "Xác nhận xóa", JOptionPane.OK_CANCEL_OPTION);
+       if (dialogResult == JOptionPane.OK_OPTION) {
+    String mancc = (String) suppliersModel.getValueAt(selectedRow, 0);
 
+    // Tạo đối tượng DTO để truyền vào BUS
+    NhaCungCapDTO ncc = new NhaCungCapDTO();
+    ncc.setMaNCC(mancc);
+
+    String message = suppliersBUS.deleteNhaCungCap(ncc);
+    if ("Xóa nhà cung cấp thành công".equals(message)) {
+        suppliersModel.removeRow(selectedRow);
+        suppliersArr.remove(selectedRow);
+    }
+    JOptionPane.showMessageDialog(null, message);
+}
+
+    } else {
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 dòng để xóa", "Thông báo", JOptionPane.WARNING_MESSAGE);
+    }
+}
+
+       private void updatePerformed(JTable tb){
+        int selected = suppliersTable.getSelectedRow();
+        if(selected!=-1){
+            PopupNhaCungCap frameSua = new PopupNhaCungCap("Sửa nhà cung cấp", "SỬA NHÀ CUNG CẤP", "fix");
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để sửa", "Thông báo", JOptionPane.WARNING_MESSAGE);
+    }
+       
+          private void searchPerformed(JTable tb){
+        String searchContent = txtTimKiem.getText().trim();
+        if(!searchContent.isEmpty()){
+            ArrayList<NhaCungCapDTO> dsTimKiem = new ArrayList<>();
+            
+            boolean found = false;
+            for(NhaCungCapDTO ncc: suppliersArr){
+                if(ncc.getMaNCC().toLowerCase().contains(searchContent.toLowerCase()) ||
+                   ncc.getTenNCC().toLowerCase().contains(searchContent.toLowerCase())||
+                   ncc.getDiaChi().toLowerCase().contains(searchContent.toLowerCase())||
+                   ncc.getSdt().toLowerCase().contains(searchContent.toLowerCase())||
+                   ncc.getEmail().toLowerCase().contains(searchContent.toLowerCase())
+                        
+                        ) 
+                {
+                    dsTimKiem.add(ncc);
+                    found = true;
+                }
+            }
+            
+            if(!found){
+                JOptionPane.showMessageDialog(this, "Không tìm thấy nhà cung cấp");
+                refreshList();
+                return;
+            }
+            
+            DefaultTableModel tableModel = (DefaultTableModel) tb.getModel();
+            tableModel.setRowCount(0);
+            
+            for(NhaCungCapDTO nhaCungCap: dsTimKiem){
+                Object[] row ={
+                    nhaCungCap.getMaNCC(),
+                    nhaCungCap.getTenNCC(),
+                    nhaCungCap.getDiaChi(),
+                    nhaCungCap.getSdt(),
+                    nhaCungCap.getEmail(),
+                    nhaCungCap.getTrangthai()
+                };
+                tableModel.addRow(row);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this,"Vui lòng nhập thông tin tìm kiếm");
+            refreshList();
+        }
+    }
+
+       
+           private void xemPerformed(JTable tb){
+        int selectedRow = suppliersTable.getSelectedRow();
+        if(selectedRow!=-1){
+            JLabel lbmancc, lbtenncc, lbdiachi, lbsdt , lbemail,lbtrangthai;
+            JTextField tfmancc, tftenncc, tfdiachi, tfsdt ,tfemail,tftrangthai;
+            JFrame f = new JFrame("Thông tin");
+        
+            f.setLayout(new GridBagLayout());
+
+            JPanel banner = new JPanel();
+            banner.setBackground(Color.decode("#56c2f5"));
+            JPanel content = new JPanel();
+            content.setBackground(Color.GREEN);
+            content.setLayout(new GridBagLayout());
+
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.weightx = 1.0;
+            gbc.weighty = 0.15;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            f.add(banner, gbc);
+            gbc.weighty = 0.85;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.gridy = 1;
+            f.add(content, gbc);
+
+            banner.setLayout(new GridBagLayout());
+            JLabel lb = new JLabel("THÔNG TIN NHÀ CUNG CẤP");
+            Font font = new Font("Arial", Font.BOLD, 15);
+            lb.setFont(font);
+            lb.setForeground(Color.WHITE);
+            lb.setHorizontalAlignment(JLabel.CENTER);
+            lb.setVerticalAlignment(JLabel.CENTER);
+            GridBagConstraints gbcLabel = new GridBagConstraints();
+            gbcLabel.weightx = 1.0;
+            gbcLabel.weighty = 1.0;
+            banner.add(lb, gbcLabel);
+
+            JPanel pnMa, pnTen, pnDiaChi, pnSdt,pnEmail,pnTrangThai;
+            pnMa = new JPanel();
+            pnMa.setBackground(Color.WHITE);
+            pnTen = new JPanel();
+            pnTen.setBackground(Color.WHITE);
+            pnDiaChi = new JPanel();
+            pnDiaChi.setBackground(Color.WHITE);
+            pnSdt = new JPanel();
+            pnSdt.setBackground(Color.WHITE);
+              pnEmail = new JPanel();
+            pnEmail.setBackground(Color.WHITE);
+              pnTrangThai = new JPanel();
+            pnTrangThai.setBackground(Color.WHITE);
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            content.add(pnMa, gbc);
+            gbc.gridy = 1;
+            content.add(pnTen, gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            content.add(pnDiaChi, gbc);
+            gbc.gridy = 1;
+            content.add(pnSdt, gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            content.add(pnEmail, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            content.add(pnTrangThai, gbc);
+
+
+            lbmancc = new JLabel("Mã nhà cung cấp");
+            lbtenncc = new JLabel("Tên nhà cung cấp");
+            lbdiachi = new JLabel("Địa chỉ");
+            lbsdt = new JLabel("SĐT");
+            lbemail = new JLabel("Email");
+            lbtrangthai = new JLabel("Trạng thái");
+            tfmancc = new JTextField();
+            tftenncc = new JTextField();
+            tfdiachi = new JTextField();
+            tfsdt = new JTextField();
+            tfemail = new JTextField();
+            tftrangthai = new JTextField();
+            
+
+            lbmancc.setBounds(20,10,100,20);
+            tfmancc.setBounds(20,30,180,30);
+            pnMa.setLayout(null);
+            pnMa.add(lbmancc);  pnMa.add(tfmancc);
+
+            lbtenncc.setBounds(20,10,110,20);
+            tftenncc.setBounds(20,30,250,30);
+            pnTen.setLayout(null);
+            pnTen.add(lbtenncc);    pnTen.add(tftenncc);
+
+            lbdiachi.setBounds(0,10,110,20);
+            tfdiachi.setBounds(0,30,335,30);
+            pnDiaChi.setLayout(null);
+            pnDiaChi.add(lbdiachi); pnDiaChi.add(tfdiachi);
+
+            lbsdt.setBounds(0,10,110,20);
+            tfsdt.setBounds(0,30,100,30);
+            pnSdt.setLayout(null);
+            pnSdt.add(lbsdt);   pnSdt.add(tfsdt);
+            
+              lbemail.setBounds(0,10,110,20);
+            tfemail.setBounds(0,30,100,30);
+            pnEmail.setLayout(null);
+            pnEmail.add(lbemail);   pnEmail.add(tfemail);
+            
+              lbtrangthai.setBounds(0,10,110,20);
+            tftrangthai.setBounds(0,30,100,30);
+            pnTrangThai.setLayout(null);
+            pnTrangThai.add(lbtrangthai);   pnTrangThai.add(tftrangthai);
+
+
+            String maNCC = suppliersTable.getValueAt(selectedRow, 0).toString();
+            NhaCungCapDAO nccDAO = new NhaCungCapDAO();
+            NhaCungCapDTO ncc = nccDAO.selectById(maNCC);
+            if(ncc!=null){
+                tfmancc.setText(ncc.getMaNCC());
+                tftenncc.setText(ncc.getTenNCC());
+                tfdiachi.setText(ncc.getDiaChi());
+                tfsdt.setText(ncc.getSdt());
+                  tfemail.setText(ncc.getEmail());
+                tftrangthai.setText(ncc.getTrangthai());
+            }
+
+            // phương thức setEditable(false) set các textfield ở mode read only
+            tfmancc.setEditable(false);
+            tftenncc.setEditable(false);
+            tfdiachi.setEditable(false);
+            tfsdt.setEditable(false);
+             tfemail.setEditable(false);
+            tftrangthai.setEditable(false);
+
+            // phương thức setFocusable(false) không cho click vào các textfield
+            tfmancc.setFocusable(false);
+            tftenncc.setFocusable(false);
+            tfdiachi.setFocusable(false);
+            tfsdt.setFocusable(false);
+               tfemail.setFocusable(false);
+            tftrangthai.setFocusable(false);
+            
+            f.setSize(720,400);
+            f.setResizable(false);
+            f.setVisible(true);
+        } else{
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 dòng để xem thông tin");
+        }
+        
+    }
+
+       
+       
+       
+       
+       
+       
 	public static void log(String message) {
   	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
   	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
