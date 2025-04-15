@@ -1,4 +1,4 @@
-create database phonestore;
+﻿create database phonestore;
 drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -596,7 +596,7 @@ CREATE PROCEDURE sp_themNhanVien
     @matKhau NVARCHAR(255),
     @trangThai VARCHAR(10),
     @maCV VARCHAR(50) = NULL, -- Có thể NULL
-    @ChiNhanh VARCHAR(50) = NULL -- Có thể NULL
+    @chiNhanh VARCHAR(50) = NULL -- Có thể NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -616,15 +616,15 @@ BEGIN
     END;
 
     -- Kiểm tra nếu nơi làm việc không NULL nhưng không tồn tại trong bảng KHO
-    IF @noiLamViec IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @noiLamViec)
+    IF @chiNhanh IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KHO WHERE maKho = @chiNhanh)
     BEGIN
         PRINT N'Lỗi: Mã kho (nơi làm việc) không hợp lệ!';
         RETURN -3;
     END;
 
     -- Chèn dữ liệu vào bảng NHANVIEN
-    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, noiLamViec)
-    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @noiLamViec);
+    INSERT INTO NHANVIEN (maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh)
+    VALUES (@maNV, @hoTen, @ngaySinh, @gioiTinh, @diaChi, @sdt, @email, @hinhAnh, @matKhau, @trangThai, @maCV, @chiNhanh);
 
     PRINT N'Thêm nhân viên thành công!';
     RETURN 1;

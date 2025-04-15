@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.NhaCungCapBUS;
+import Components.ShadowButton;
 import DTO.*;
 
 import java.awt.BorderLayout;
@@ -12,6 +13,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -36,17 +38,13 @@ import javax.swing.table.TableColumnModel;
 
 
 public class NhaCungCapGUI extends JPanel{
-   JTable suppliersTable;
-   
-    NhaCungCapBUS suppliersBUS = new NhaCungCapBUS();
-    JTable table = new JTable();
-        DefaultTableModel suppliersModel = new DefaultTableModel();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<NhaCungCapDTO> suppliersArr = new ArrayList<NhaCungCapDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-    private JComboBox sortComboBox;
-    private JPanel productContent;
-    private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
-	
+	JTable suppliersTable;
+	NhaCungCapBUS suppliersBUS = new NhaCungCapBUS();
+	DefaultTableModel suppliersModel = new DefaultTableModel();
+	ArrayList<NhaCungCapDTO> suppliersArr = new ArrayList<NhaCungCapDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	private JComboBox sortComboBox;
+	private JPanel nhaCungCapContent;
+	private JTextField txtTimKiem;
 	
 	//Constructor
     public NhaCungCapGUI(){
@@ -59,64 +57,53 @@ public class NhaCungCapGUI extends JPanel{
     private void initComponents() {
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
-        productContent = new JPanel();
-        productContent.setBackground(Color.green);
-        productContent.setLayout(new GridBagLayout());
+        nhaCungCapContent = new JPanel();
+        nhaCungCapContent.setBackground(Color.white);
+        nhaCungCapContent.setLayout(new GridBagLayout());
         
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(productContent, gbc); // Thêm vào ProductsGUI
+        add(nhaCungCapContent, gbc); // Thêm vào ProductsGUI
         
         //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
         JPanel topPanel, bottomPanel;
         //set thông số cho 2 panel
         topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(Color.blue);
+        topPanel.setBackground(Color.white);
         gbc.weightx = 1.0;
-        gbc.weighty = 0.09;
+        gbc.weighty = 0.23;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        productContent.add(topPanel, gbc);
+        nhaCungCapContent.add(topPanel, gbc);
         
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(null);
-        bottomPanel.setBackground(Color.decode("#853BA5"));
+        bottomPanel.setLayout(new GridBagLayout());
+        bottomPanel.setBackground(Color.white);
+        bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
         gbc.weightx = 1.0;
-        gbc.weighty = 0.91;
+        gbc.weighty = 0.77;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        productContent.add(bottomPanel, gbc);
+        gbc.insets = new Insets(5, 5, 5, 5);
+        nhaCungCapContent.add(bottomPanel, gbc);
         
-//        TABLE
-        suppliersTable = new JTable();
-        JScrollPane ncc = new JScrollPane(suppliersTable);
-        gbc.weightx = 0.55;
-        gbc.weighty = 1.0;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.BOTH;
-        bottomPanel.add(ncc,gbc);
         
         
 //==================================================== TOP PANEL =============================================================================================//
-        JPanel functionsPanel, searchPanel;
-        
+		JPanel functionsPanel, searchPanel;        
         
         //======================================= functionsPanel =====================================================//
         //set thông số cho functionsPanel
         functionsPanel = new JPanel();
         functionsPanel.setBackground(Color.white);
         functionsPanel.setLayout(new GridBagLayout());
-        functionsPanel.setBorder(BorderFactory.createTitledBorder(
-        	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Functions" // Tiêu đề của border
-        ));	//Tạo border cho panel
+        functionsPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));	//Tạo border cho panel
         gbc.weightx = 0.4;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -130,7 +117,7 @@ public class NhaCungCapGUI extends JPanel{
         leftFunctionPanel = new JPanel();
         leftFunctionPanel.setBackground(Color.white);
         leftFunctionPanel.setLayout(null);
-        gbc.weightx = 0.7;
+        gbc.weightx = 0.71;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -140,7 +127,7 @@ public class NhaCungCapGUI extends JPanel{
         rightFunctionPanel = new JPanel();
         rightFunctionPanel.setBackground(Color.white);
         rightFunctionPanel.setLayout(null);
-        gbc.weightx = 0.3;
+        gbc.weightx = 0.29;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
@@ -148,45 +135,98 @@ public class NhaCungCapGUI extends JPanel{
         functionsPanel.add(rightFunctionPanel, gbc);
         
         //Chia tiếp các panel con để chứa các nút chức năng ở leftFunctionPanel
-        JPanel updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel;
+        JPanel addButtonPanel, updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel, printButtonPanel;
+        
+        addButtonPanel = new JPanel();
+        addButtonPanel.setBackground(Color.white);
+        addButtonPanel.setBounds(10, 4, 60, 60);
+        leftFunctionPanel.add(addButtonPanel);
         
         updateButtonPanel = new JPanel();
         updateButtonPanel.setBackground(Color.white);
-        updateButtonPanel.setBounds(20, 1, 65, 65);
+        updateButtonPanel.setBounds(79, 4, 60, 60);
         leftFunctionPanel.add(updateButtonPanel);
         
         deleteButtonPanel = new JPanel();
         deleteButtonPanel.setBackground(Color.white);
-        deleteButtonPanel.setBounds(89, 1, 65, 65);
+        deleteButtonPanel.setBounds(148, 4, 60, 60);
         leftFunctionPanel.add(deleteButtonPanel);
         
         detailButtonPanel = new JPanel();
         detailButtonPanel.setBackground(Color.white);
-        detailButtonPanel.setBounds(158, 1, 65, 65);
+        detailButtonPanel.setBounds(217, 4, 60, 60);
         leftFunctionPanel.add(detailButtonPanel);
         
         excelButtonPanel = new JPanel();
         excelButtonPanel.setBackground(Color.white);
-        excelButtonPanel.setBounds(20, 1, 65, 65);
+        excelButtonPanel.setBounds(0, 4, 60, 60);
         rightFunctionPanel.add(excelButtonPanel);
         
+        printButtonPanel = new JPanel();
+        printButtonPanel.setBackground(Color.white);
+        printButtonPanel.setBounds(69, 4, 60, 60);
+        rightFunctionPanel.add(printButtonPanel);
+        
         //======================================= Đặt các nút chức năng vào các panel ==========================================================//
-        //======================================== Nút update ====================================//
+        ImageIcon iconAdd = new ImageIcon(getClass().getResource("/img/plus.png"));
+        Image imgAdd = iconAdd.getImage();
+        Image newImgAdd = imgAdd.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+        if(iconAdd.getIconWidth() == -1) {
+            System.out.println("Không tìm thấy ảnh!");
+        }
+        ImageIcon scaledIconAdd = new ImageIcon(newImgAdd);
+        // Tạo nút Add
+        JButton btnAdd = new ShadowButton("Thêm", scaledIconAdd);
+        btnAdd.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnAdd.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnAdd.setFocusPainted(false);
+        btnAdd.setBorderPainted(true);
+        btnAdd.setContentAreaFilled(false);
+        btnAdd.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+        // Thêm sự kiện click cho nút Update
+        btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                newEmployeeDialog();
+            }
+        });
+        btnAdd.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnAdd.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+        		btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnAdd.setBackground(Color.white);
+        		addButtonPanel.setBackground(Color.white);
+        	}
+        });
+
+        // Thêm nút vào panel
+        addButtonPanel.setLayout(new BorderLayout());
+        addButtonPanel.add(btnAdd, BorderLayout.CENTER);		
+        
+        
+        
+        
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconUpdate = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\update.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconUpdate = new ImageIcon(getClass().getResource("/img/update.png"));
         Image imgUpdate = iconUpdate.getImage();
-        Image newImgUpdate = imgUpdate.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgUpdate = imgUpdate.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconUpdate.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconUpdate = new ImageIcon(newImgUpdate);
 
         // Tạo nút Update
-        JButton btnUpdate = new JButton("Update", scaledIconUpdate);
+        JButton btnUpdate = new ShadowButton("Sửa", scaledIconUpdate);
         btnUpdate.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnUpdate.setHorizontalTextPosition(SwingConstants.CENTER);
         btnUpdate.setFocusPainted(false);
-        btnUpdate.setBorderPainted(false);
+        btnUpdate.setBorderPainted(true);
         btnUpdate.setContentAreaFilled(false);
         btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUpdate.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -195,7 +235,7 @@ public class NhaCungCapGUI extends JPanel{
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Update button clicked!");
+//            	updateEmployeeDialog();
             }
         });
         btnUpdate.addMouseListener(new MouseAdapter() {
@@ -203,7 +243,6 @@ public class NhaCungCapGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnUpdate.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		updateButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -216,25 +255,23 @@ public class NhaCungCapGUI extends JPanel{
         // Thêm nút vào panel
         updateButtonPanel.setLayout(new BorderLayout());
         updateButtonPanel.add(btnUpdate, BorderLayout.CENTER);
-        //========================================== End nút update ==============================//
         
         
-        //======================================== Nút delete ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
-        Image newImgDelete = imgDelete.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgDelete = imgDelete.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconDelete = new ImageIcon(newImgDelete);
 
         // Tạo nút Delete
-        JButton btnDelete = new JButton("Delete", scaledIconDelete);
+        JButton btnDelete = new ShadowButton("Xóa", scaledIconDelete);
         btnDelete.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDelete.setFocusPainted(false);
-        btnDelete.setBorderPainted(false);
+        btnDelete.setBorderPainted(true);
         btnDelete.setContentAreaFilled(false);
         btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnDelete.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -243,7 +280,7 @@ public class NhaCungCapGUI extends JPanel{
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Delete button clicked!");
+//                deleteEmployee(employeeTable);
             }
         });
         btnDelete.addMouseListener(new MouseAdapter() {
@@ -251,7 +288,6 @@ public class NhaCungCapGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnDelete.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		deleteButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -264,28 +300,26 @@ public class NhaCungCapGUI extends JPanel{
         // Thêm nút vào panel
         deleteButtonPanel.setLayout(new BorderLayout());
         deleteButtonPanel.add(btnDelete, BorderLayout.CENTER);
-        //========================================== End nút delete ===========================//
         
         
         
         
      
-        //======================================== Nút detail ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDetail = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\info.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDetail = iconDetail.getImage();
-        Image newImgDetail = imgDetail.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
 
         // Tạo nút Detail
-        JButton btnDetail = new JButton("Info", scaledIconDetail);
+        JButton btnDetail = new ShadowButton("Xem", scaledIconDetail);
         btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDetail.setFocusPainted(false);
-        btnDetail.setBorderPainted(false);
+        btnDetail.setBorderPainted(true);
         btnDetail.setContentAreaFilled(false);
         btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -294,7 +328,7 @@ public class NhaCungCapGUI extends JPanel{
         btnDetail.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Info button clicked!");
+//                employeeDetailDialog();
             }
         });
         btnDetail.addMouseListener(new MouseAdapter() {
@@ -302,7 +336,6 @@ public class NhaCungCapGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		detailButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -316,28 +349,24 @@ public class NhaCungCapGUI extends JPanel{
         // Thêm nút vào panel
         detailButtonPanel.setLayout(new BorderLayout());
         detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
-        //========================================== End nút detail ===========================//
-        
-        
-        
-        
+
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconExcel = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\excel.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconExcel = new ImageIcon(getClass().getResource("/img/excel.png")); // Đặt đường dẫn ảnh ở đây
         Image imgExcel = iconExcel.getImage();
-        Image newImgExcel = imgExcel.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image newImgExcel = imgExcel.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconExcel.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconExcel = new ImageIcon(newImgExcel);
 
         // Tạo nút Detail
-        JButton btnExcel = new JButton("Excel", scaledIconExcel);
+        JButton btnExcel = new ShadowButton("Excel", scaledIconExcel);
         btnExcel.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnExcel.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnExcel.setFocusPainted(false);
-        btnExcel.setBorderPainted(false);
+//        btnExcel.setFocusPainted(false);
+        btnExcel.setBorderPainted(true);
         btnExcel.setContentAreaFilled(false);
         btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
@@ -354,7 +383,6 @@ public class NhaCungCapGUI extends JPanel{
         	public void mouseEntered(MouseEvent e) {
         		btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
         		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		excelButtonPanel.setBackground(Color.decode("#D6D6D6"));
         	}
         	
         	@Override
@@ -368,7 +396,53 @@ public class NhaCungCapGUI extends JPanel{
         // Thêm nút vào panel
         excelButtonPanel.setLayout(new BorderLayout());
         excelButtonPanel.add(btnExcel, BorderLayout.CENTER);
-        //==================================== End functionsPanel ====================================================//
+        
+        
+		// Nút Print
+		// Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
+		ImageIcon iconPrint = new ImageIcon(getClass().getResource("/img/printer.png")); // Đặt đường dẫn ảnh ở đây
+		Image imgPrint = iconPrint.getImage();
+		Image newImgPrint = imgPrint.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		if (iconPrint.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconPrint = new ImageIcon(newImgPrint);
+
+		// Tạo nút Detail
+		JButton btnPrint = new ShadowButton("In", scaledIconPrint);
+		btnPrint.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnPrint.setHorizontalTextPosition(SwingConstants.CENTER);
+//        btnExcel.setFocusPainted(false);
+		btnPrint.setBorderPainted(true);
+		btnPrint.setContentAreaFilled(false);
+		btnPrint.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnPrint.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+		// Thêm sự kiện click cho nút Print
+		btnPrint.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+			}
+		});
+		btnPrint.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnPrint.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+				btnPrint.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnPrint.setBackground(Color.white);
+				printButtonPanel.setBackground(Color.white);
+			}
+		});
+
+		// Thêm nút vào panel
+		printButtonPanel.setLayout(new BorderLayout());
+		printButtonPanel.add(btnPrint, BorderLayout.CENTER);
+
         
         
         
@@ -378,10 +452,7 @@ public class NhaCungCapGUI extends JPanel{
         searchPanel = new JPanel();
         searchPanel.setBackground(Color.white);
         searchPanel.setLayout(new GridBagLayout());
-        searchPanel.setBorder(BorderFactory.createTitledBorder(
-        	    BorderFactory.createLineBorder(Color.lightGray, 2), // Tăng độ dày border lên 3px
-        	    "Functions" // Tiêu đề của border
-        ));	//Tạo border cho panel        
+        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));	//Tạo border cho panel        
         gbc.weightx = 0.6;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -395,7 +466,7 @@ public class NhaCungCapGUI extends JPanel{
         searchInputPanel = new JPanel();
         searchInputPanel.setBackground(Color.white);
         searchInputPanel.setLayout(null);
-        gbc.weightx = 0.8;
+        gbc.weightx = 0.87;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -405,7 +476,7 @@ public class NhaCungCapGUI extends JPanel{
         searchButtonPanel = new JPanel();
         searchButtonPanel.setBackground(Color.white);
         searchButtonPanel.setLayout(null);
-        gbc.weightx = 0.2;
+        gbc.weightx = 0.13;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
@@ -416,63 +487,55 @@ public class NhaCungCapGUI extends JPanel{
         
         
         //==================================== searchInputPanel =======================================================//
-        JLabel sortComboBoxLabel = new JLabel("Sort");
-        sortComboBoxLabel.setBounds(10, 5, 30, 20);
-        searchInputPanel.add(sortComboBoxLabel);
-        String[] sortCriterias = {"All", "A-Z", "Z-A", "Ascending", "Descending"};
+        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A"};
         sortComboBox = new JComboBox<String>(sortCriterias);
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
+        sortComboBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedOption = (String)sortComboBox.getSelectedItem();
+				switch(selectedOption) {
+					case "A-Z":
+//						sortAZ();
+						break;
+					case "Z-A":
+//						sortZA();
+						break;
+				}
+			}
+		});
         
-        JLabel priceLabel = new JLabel("Price");
-        priceLabel.setBounds(113, 5, 30, 20);
-        searchInputPanel.add(priceLabel);
-        JTextField priceStartTF, priceEndTF;
-        priceStartTF = new JTextField();
-        priceStartTF.setBounds(113, 24, 90, 25);
-        searchInputPanel.add(priceStartTF);
-        priceEndTF = new JTextField();
-        priceEndTF.setBounds(215, 24, 90, 25);
-        searchInputPanel.add(priceEndTF);
-        JLabel between = new JLabel("-");
-        between.setBounds(205, 33, 5, 5);
-        searchInputPanel.add(between);
-        
-        JLabel searchLabel = new JLabel("Search");
-        searchLabel.setBounds(330, 5, 50, 20);
-        searchInputPanel.add(searchLabel);
-        JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(330,  24,  210, 25);
-        searchInputPanel.add(searchInputTF);
-        //==================================== End searchInputPanel ===================================================//
-        
-        
+                
+        txtTimKiem = new JTextField();
+        txtTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(txtTimKiem);
         
         //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
-        Image newImgSearch = imgSearch.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+        Image newImgSearch = imgSearch.getScaledInstance(20,20, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
 
         // Tạo nút Detail
-        JButton btnSearch = new JButton("Search", scaledIconSearch);
+        JButton btnSearch = new ShadowButton(scaledIconSearch);
         btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
         btnSearch.setFocusPainted(false);
-        btnSearch.setBorderPainted(false);
-        btnSearch.setContentAreaFilled(true);
+        btnSearch.setBorderPainted(true);
         btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSearch.setBackground(Color.white);
-        btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+        btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 9
         
         
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Search button clicked!");
+                searchPerformed(employeeTable);
             }
         });
         btnSearch.addMouseListener(new MouseAdapter() {
@@ -489,33 +552,32 @@ public class NhaCungCapGUI extends JPanel{
         });
 
         
-        btnSearch.setBounds(0, 0, 65, 60);
+        btnSearch.setBounds(0, 15, 40, 40);
         searchButtonPanel.add(btnSearch);
         
-        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
-        Image newImgRefresh = imgRefresh.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+        Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {
             System.out.println("Không tìm thấy ảnh!");
         }
         ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
 
         // Tạo nút Detail
-        JButton btnRefresh = new JButton("Refresh", scaledIconRefresh);
+        JButton btnRefresh = new ShadowButton(scaledIconRefresh);
         btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
         btnRefresh.setFocusPainted(false);
-        btnRefresh.setBorderPainted(false);
-        btnRefresh.setContentAreaFilled(true);
+        btnRefresh.setBorderPainted(true);
         btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnRefresh.setBackground(Color.white);
-        btnRefresh.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-        
+        btnRefresh.setFont(new Font("Arial", Font.BOLD, 8)); // Đặt kích cỡ chữ là 10
+
         
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+            	refreshList();
             }
         });
         btnRefresh.addMouseListener(new MouseAdapter() {
@@ -532,53 +594,61 @@ public class NhaCungCapGUI extends JPanel{
         });
 
         
-        btnRefresh.setBounds(68, 0, 70, 60);
+        btnRefresh.setBounds(45, 15, 40, 40);
         searchButtonPanel.add(btnRefresh);
-        //==================================== End searchButtonPanel ===================================================//
-
-        //==================================== End searchPanel ====================================================//
-
-//=====================================================END TOP PANEL =====================================================================================================//   
-        
-        
-//==================================================== BOTTOM PANEL =============================================================================================//
-        
-        
-//===================================================== END BOTTOM PANEL =======================================================================================================//   
 
         
+        suppliersTable = new JTable();
+        JScrollPane sp = new JScrollPane(suppliersTable);
+        gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(sp, gbc);
     }
 
     
-       private void loadNhaCungCapList(){
-           suppliersTable.setDefaultEditor(Object.class,null);
-           suppliersTable.setModel(suppliersModel);
-           suppliersModel.addColumn("ID");
-           suppliersModel.addColumn("Tên NCC");
-           suppliersModel.addColumn("SDT");
-           suppliersModel.addColumn("Email");
-           suppliersModel.addColumn("Địa chỉ");
-           suppliersModel.addColumn("Trạng thái");
-           suppliersArr = suppliersBUS.getAllNhaCungCap();
-           for(int i = 0 ; i < suppliersArr.size() ; i++  ){
-               NhaCungCapDTO ncc = suppliersArr.get(i);
-               String maNCC = ncc.getMaNCC();
-               String tenNCC = ncc.getTenNCC();
-               String sdt = ncc.getSdt();
-               String email = ncc.getEmail();
-               String diaChi = ncc.getDiaChi();
-               int trangThai = ncc.getTrangthai();
-               Object[] row = {maNCC,tenNCC,sdt,email,diaChi,trangThai};
-               suppliersModel.addRow(row);
-           }
-           TableColumnModel tcm = suppliersTable.getColumnModel();
-           tcm.getColumn(0).setPreferredWidth(50);
-             tcm.getColumn(1).setPreferredWidth(120);
-               tcm.getColumn(2).setPreferredWidth(100);
-                 tcm.getColumn(3).setPreferredWidth(70);
-                   tcm.getColumn(4).setPreferredWidth(200);
-                     tcm.getColumn(5).setPreferredWidth(50);
-             
-    }
+	private void loadNhaCungCapList() {
+		suppliersTable.setDefaultEditor(Object.class, null);
+		
+		suppliersTable.setModel(suppliersModel);
+		suppliersModel.addColumn("ID");
+		suppliersModel.addColumn("Tên NCC");
+		suppliersModel.addColumn("SDT");
+		suppliersModel.addColumn("Email");
+		suppliersModel.addColumn("Địa chỉ");
+		suppliersModel.addColumn("Trạng thái");
+		
+		suppliersArr = suppliersBUS.selectAll();
+		for (int i = 0; i < suppliersArr.size(); i++) {
+			NhaCungCapDTO ncc = suppliersArr.get(i);
+			String maNCC = ncc.getMaNCC();
+			log("maNCC="+maNCC);
+			String tenNCC = ncc.getTenNCC();
+			String sdt = ncc.getSdt();
+			String email = ncc.getEmail();
+			String diaChi = ncc.getDiaChi();
+			String trangThai = ncc.getTrangthai();
+			Object[] row = { maNCC, tenNCC, sdt, email, diaChi, trangThai };
+			suppliersModel.addRow(row);
+		}
+		TableColumnModel tcm = suppliersTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(100);
+		tcm.getColumn(1).setPreferredWidth(120);
+		tcm.getColumn(2).setPreferredWidth(100);
+		tcm.getColumn(3).setPreferredWidth(70);
+		tcm.getColumn(4).setPreferredWidth(200);
+		tcm.getColumn(5).setPreferredWidth(100);
 
+		suppliersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
+	}
+
+	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
 }

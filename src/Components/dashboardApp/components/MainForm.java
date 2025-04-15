@@ -10,15 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import net.miginfocom.swing.MigLayout;
-<<<<<<< HEAD:src/Components/dashboardApp/components/MainForm.java
 import Components.dashboardApp.raven.swing.slider.PanelSlider;
 import Components.dashboardApp.raven.swing.slider.SimpleTransition;
 import Components.dashboardApp.raven.swing.slider.SliderTransition;
-=======
-import GUI.dashboardApp.raven.swing.slider.PanelSlider;
-import GUI.dashboardApp.raven.swing.slider.SimpleTransition;
-import GUI.dashboardApp.raven.swing.slider.SliderTransition;
->>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/dashboardApp/components/MainForm.java
 
 
 public class MainForm extends JPanel {

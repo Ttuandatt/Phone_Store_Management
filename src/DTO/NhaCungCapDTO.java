@@ -14,7 +14,7 @@ public class NhaCungCapDTO {
     private String diaChi;
     private String sdt;
     private String email;
-    private int trangthai;
+    private String trangthai;
     
     
     //Constructor
@@ -28,7 +28,12 @@ public class NhaCungCapDTO {
         this.sdt = sdt;
     }
     
-    public NhaCungCapDTO(String maNCC, String tenNCC, String diaChi, String sdt, int trangthai){
+    public NhaCungCapDTO(String maNCC){
+        this.maNCC = maNCC;
+    }
+    
+    
+    public NhaCungCapDTO(String maNCC, String tenNCC, String diaChi, String sdt, String trangthai){
         this.maNCC = maNCC;
         this.tenNCC = tenNCC;
         this.diaChi= diaChi;
@@ -70,12 +75,12 @@ public class NhaCungCapDTO {
         this.sdt = sdt; 
     }
 
-    public int getTrangthai() {
+    public String getTrangthai() {
         return trangthai;
     }
 
-    public void setTrangthai(int trangthai) {
-        this.trangthai = trangthai;
+    public void setTrangthai(String trangThai) {
+        this.trangthai = trangThai;
     }
     
 }

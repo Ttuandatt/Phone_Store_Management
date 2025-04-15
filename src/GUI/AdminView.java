@@ -14,6 +14,7 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
+import GUI.SanPhamGUI;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -367,8 +368,8 @@ public class AdminView {
 		personalInfoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ThongTinCaNhanGUI personalInformationObj = new ThongTinCaNhanGUI();
-				contentPanel.add(personalInformationObj, thongTinCaNhan_Identity);
+				ThongTinCaNhanGUI thongTinCaNhanObj = new ThongTinCaNhanGUI();
+				contentPanel.add(thongTinCaNhanObj, thongTinCaNhan_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
 			}

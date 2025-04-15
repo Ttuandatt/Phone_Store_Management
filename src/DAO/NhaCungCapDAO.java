@@ -29,15 +29,17 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
         
             try{
             	jdbc.openConnection();
-                String query = "SELECT * FROM nhacungcap WHERE trangthai = On";
+                String query = "SELECT * FROM nhacungcap";
                 PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
                 ResultSet rs = ps.executeQuery();
                 while(rs.next()){
                     NhaCungCapDTO nhacungcapDTO = new NhaCungCapDTO();
                     nhacungcapDTO.setMaNCC(rs.getString(1));
                     nhacungcapDTO.setTenNCC(rs.getString(2));
-                    nhacungcapDTO.setDiaChiNCC(rs.getString(3));
-                    nhacungcapDTO.setSdt(rs.getString(4));
+                    nhacungcapDTO.setSdt(rs.getString(3));
+                    nhacungcapDTO.setEmail(rs.getString(4));
+                    nhacungcapDTO.setDiaChiNCC(rs.getString(5));
+                    nhacungcapDTO.setTrangthai(rs.getString(6));
                     
                     arr.add(nhacungcapDTO);
                 }

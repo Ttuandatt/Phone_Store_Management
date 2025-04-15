@@ -42,6 +42,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -65,8 +66,9 @@ public class NhanVienGUI extends JPanel{
 	ChucVuBUS cvBUS = new ChucVuBUS();
 	KhoBUS khoBUS = new KhoBUS();
 	BangChamCongBUS bccBUS = new BangChamCongBUS();
-    JTable employeeTable;
+    JTable employeeTable, leaveDetailTable;
     DefaultTableModel employeeModel = new DefaultTableModel();
+    DefaultTableModel leaveDetailModel = new DefaultTableModel();
     ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>(); 
     JComboBox<String> sortComboBox, genderCombobox, roleCombobox, workplaceCombobox;
 	JComboBox<Integer> monthCombobox, yearCombobox;
@@ -87,6 +89,7 @@ public class NhanVienGUI extends JPanel{
     public NhanVienGUI(){
         initComponents();
         loadNhanVienList();
+        loadLeaveDetail();
         for(String kho: workplaces) {
         	System.out.println(kho);
         }
@@ -708,7 +711,7 @@ public class NhanVienGUI extends JPanel{
         //========================= Table =========================//
         employeeTable = new JTable();
         JScrollPane sp = new JScrollPane(employeeTable);
-        gbc.weightx = 0.55;
+        gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -728,7 +731,7 @@ public class NhanVienGUI extends JPanel{
 		JPanel attendancePanel = new JPanel(new GridBagLayout());
 		attendancePanel.setBackground(Color.white);
 //		attendancePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
-		gbc.weightx = 0.45;
+		gbc.weightx = 0.38;
 		gbc.weighty = 1.0;
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -750,7 +753,6 @@ public class NhanVienGUI extends JPanel{
 		
 		bottomAttendancePanel = new JPanel();
 		bottomAttendancePanel.setBackground(Color.white);
-		bottomAttendancePanel.setBorder(BorderFactory.createTitledBorder("Chi tiết"));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.5;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -819,20 +821,40 @@ public class NhanVienGUI extends JPanel{
 		dataSoNgayNghiKhongPhep.setBounds(190,170,50,20);
 		topAttendancePanel.add(dataSoNgayNghiKhongPhep);
 		
-		lblSoGioOT = new JLabel("Số giờ tăng ca: ");
+		lblSoGioOT = new JLabel("Tổng số giờ tăng ca: ");
 		lblSoGioOT.setBounds(10, 200, 150, 20);
 		topAttendancePanel.add(lblSoGioOT);
 		dataSoGioOT = new JLabel("0.0");
 		dataSoGioOT.setBounds(190,200,50,20);
 		topAttendancePanel.add(dataSoGioOT);
-				
-		
 		
 		lblTongSoNgayTinhLuong = new JLabel("");
 		lblTongSoNgayTinhLuong.setBounds(10, 240, 300, 20);
 		topAttendancePanel.add(lblTongSoNgayTinhLuong);
 
+		
+		
+		bottomAttendancePanel.setLayout(new GridBagLayout());
+		bottomAttendancePanel.setBackground(Color.blue);
+		// Tiếp tục từ phần bottomAttendancePanel đã khai báo
+		leaveDetailTable = new JTable(); // Tạo JTable mới
 
+		// Bao bọc JTable trong JScrollPane để có thể cuộn
+		JScrollPane sp2 = new JScrollPane(leaveDetailTable);
+		sp2.setPreferredSize(new Dimension(130, 100));  // Bạn có thể điều chỉnh kích thước bảng theo ý muốn
+
+		// GridBagConstraints cho bottomAttendancePanel
+		GridBagConstraints bottomGbc = new GridBagConstraints();
+		bottomGbc.weightx = 1.0;
+		bottomGbc.weighty = 1.0;
+		bottomGbc.gridx = 0;
+		bottomGbc.gridy = 0;
+		bottomGbc.fill = GridBagConstraints.BOTH; // Đảm bảo JScrollPane chiếm toàn bộ không gian có sẵn
+
+		bottomAttendancePanel.add(sp2, bottomGbc);
+
+		
+		
     }
 
     
@@ -847,8 +869,9 @@ public class NhanVienGUI extends JPanel{
     	employeeModel.addColumn("Địa chỉ");
     	employeeModel.addColumn("Chức vụ");
     	employeeModel.addColumn("Mật khẩu");
-    	employeeModel.addColumn("Trạng thái");
     	employeeModel.addColumn("Hình ảnh");
+    	employeeModel.addColumn("Trạng thái");
+
 
 		arrNhanVien = nvBUS.selectAll();
 		for(int i=0; i<arrNhanVien.size(); i++) {
@@ -872,22 +895,22 @@ public class NhanVienGUI extends JPanel{
 		    }
 			
 			
-		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon};
+		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, imageIcon, trangThai};
 			employeeModel.addRow(row);
 		}
 		
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = employeeTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(50);
+		tcm.getColumn(0).setPreferredWidth(100);
 		tcm.getColumn(1).setPreferredWidth(120);
-		tcm.getColumn(2).setPreferredWidth(100);
+		tcm.getColumn(2).setPreferredWidth(70);
 		tcm.getColumn(3).setPreferredWidth(70);
 		tcm.getColumn(4).setPreferredWidth(200);
 		tcm.getColumn(5).setPreferredWidth(50);
 		tcm.getColumn(6).setPreferredWidth(90);
 		tcm.getColumn(7).setPreferredWidth(70);
-		tcm.getColumn(8).setPreferredWidth(128);
+		tcm.getColumn(8).setPreferredWidth(100);
 		// **Thêm ImageRenderer vào cột "Hình ảnh"**
 	    employeeTable.getColumnModel().getColumn(8).setCellRenderer(new ImageRenderer());
 
@@ -895,7 +918,29 @@ public class NhanVienGUI extends JPanel{
 		employeeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
     }
     
-    public void newRoleDialog() {
+    private void loadLeaveDetail() {
+    	leaveDetailTable.setDefaultEditor(Object.class, null);
+    	
+    	leaveDetailTable.setModel(leaveDetailModel);
+    	leaveDetailModel.addColumn("Mã NV");
+    	leaveDetailModel.addColumn("Bắt đầu");
+    	leaveDetailModel.addColumn("Kết thúc");
+    	leaveDetailModel.addColumn("Lý do");
+    	leaveDetailModel.addColumn("Người duyệt");
+    	
+    	
+		TableColumnModel tcm = employeeTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(40);
+		tcm.getColumn(1).setPreferredWidth(200);
+		tcm.getColumn(2).setPreferredWidth(200);
+		tcm.getColumn(3).setPreferredWidth(70);
+		tcm.getColumn(4).setPreferredWidth(100);
+
+    	leaveDetailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
+    }
+    
+    private void newRoleDialog() {
     	//Tạo Jpanel chứa form nhập
     	JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5)); // row:3, column:2, hgap:5, wgap:5
     	

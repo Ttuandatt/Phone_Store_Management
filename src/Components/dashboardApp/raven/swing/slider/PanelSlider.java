@@ -1,9 +1,4 @@
-
-<<<<<<< HEAD:src/Components/dashboardApp/raven/swing/slider/PanelSlider.java
 package Components.dashboardApp.raven.swing.slider;
-=======
-package GUI.dashboardApp.raven.swing.slider;
->>>>>>> 8fde77a9811b746ce56d98bc66e56fc5b581c1ff:src/GUI/dashboardApp/raven/swing/slider/PanelSlider.java
 
 import com.formdev.flatlaf.util.Animator;
 import com.formdev.flatlaf.util.CubicBezierEasing;

@@ -61,21 +61,29 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuatDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "insert into PhieuXuat values(?,?,?,?,?,?,?,?,?)";
+			String query = "insert into phieuxuat(maPX,ngayTao,diaChi,tongTien,httt,trangThai,maNV,maKho,maKH) values(?,?,?,?,?,?,?,?,?)";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, px.getMaPX());
+			log("maPX="+px.getMaPX());
 			ps.setDate(2, px.getNgayTao());
+			log("ngayTao="+px.getNgayTao());
 			ps.setString(3, px.getDiaChi());
+			log("diaChi="+px.getDiaChi());
 			ps.setDouble(4, px.getTongTien());
+			log("tongTien="+px.getTongTien());
 			ps.setString(5, px.getHttt());
+			log("httt="+px.getHttt());
 			ps.setString(6, px.getTrangThai());
+			log("trangThai="+px.getTrangThai());
 			ps.setString(7, px.getMaNV());
+			log("maNV="+px.getMaNV());
 			ps.setString(8, px.getMaKho());
+			log("maKho="+px.getMaKho());
 			ps.setString(9, px.getMaKH());
+			log("maKH="+px.getMaKH());
 			
 			result = ps.executeUpdate();
-			
 			ps.close();
 			
 		}catch (Exception e) {

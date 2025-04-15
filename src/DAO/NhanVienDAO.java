@@ -41,7 +41,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 				nv.setEmail(rs.getString("email"));
 				nv.setTrangThai(rs.getString("trangThai"));
 				nv.setChucVu(rs.getString("maCV"));
-				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setChiNhanh(rs.getString("chiNhanh"));
 				nv.setMatKhau(rs.getString("matKhau"));
 				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
 
@@ -86,7 +86,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 				nv.setEmail(rs.getString("email"));
 				nv.setTrangThai(rs.getString("trangThai"));
 				nv.setChucVu(rs.getString("maCV"));
-				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setChiNhanh(rs.getString("chiNhanh"));
 				nv.setMatKhau(rs.getString("matKhau"));
 				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
 
@@ -130,7 +130,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
 				nv.setMatKhau(rs.getString("matKhau"));
 				nv.setChucVu(rs.getString("maCV"));
-				nv.setNoiLamViec(rs.getString("noiLamViec"));
+				nv.setChiNhanh(rs.getString("chiNhanh"));
 				nv.setTrangThai(rs.getString("trangThai"));
 
 			}
@@ -153,7 +153,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			jdbc.openConnection();
 
 			// Gọi stored procedure
-			String query = "{ ? = CALL sp_themNhanVien(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
+			String query = "{ ? = CALL sp_themNhanVien(maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) }";
 			CallableStatement cs = jdbc.getConnection().prepareCall(query); // Dùng CallableStatement thay vì
 																			// PreparedStatement vì PreparedStatement
 																			// không thể lấy được giá trị logic được trả
@@ -183,7 +183,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 				cs.setString(12, nv.getChucVu());
 			}
 
-			cs.setString(13, nv.getNoiLamViec());
+			cs.setString(13, nv.getChiNhanh());
 
 			// Thực thi Stored Procedure
 			cs.execute();
@@ -237,7 +237,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 			jdbc.openConnection();
 
-			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, hinhAnh=?, matKhau=?, trangThai=?, maCV=?, noiLamViec=? where maNV=?";
+			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, hinhAnh=?, matKhau=?, trangThai=?, maCV=?, chiNhanh=? where maNV=?";
 
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getHoTen());
@@ -250,7 +250,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			ps.setString(8,  nv.getMatKhau());
 			ps.setString(9, nv.getTrangThai());
 			ps.setString(10, nv.getChucVu());
-			ps.setString(11, nv.getNoiLamViec());
+			ps.setString(11, nv.getChiNhanh());
 			ps.setString(12, nv.getMaNV());
 
 			result = ps.executeUpdate();
@@ -273,7 +273,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 			jdbc.openConnection();
 
-			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, matKhau=?, trangThai=?, maCV=?, noiLamViec=? where maNV=?";
+			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, matKhau=?, trangThai=?, maCV=?, chiNhanh=? where maNV=?";
 
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getHoTen());
@@ -285,7 +285,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			ps.setString(7, nv.getMatKhau());
 			ps.setString(8, nv.getTrangThai());
 			ps.setString(9, nv.getChucVu());
-			ps.setString(10, nv.getNoiLamViec());
+			ps.setString(10, nv.getChiNhanh());
 			ps.setString(11, nv.getMaNV());
 			
 			result = ps.executeUpdate();
@@ -370,7 +370,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		try {
 			jdbc.openConnection();
 			
-			String query = "select soNgayNghiPhepCoLuong from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			String query = "select soNPCoLuong from bangchamcong where thangCC=? and namCC=? and maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setInt(1, thangCC);
@@ -379,7 +379,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				soNgayNghiPhepCoLuong = rs.getInt("soNgayNghiPhepCoLuong");
+				soNgayNghiPhepCoLuong = rs.getInt("soNPCoLuong");
 			}
 			
 			rs.close();
@@ -402,7 +402,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		try {
 			jdbc.openConnection();
 			
-			String query = "select soNgayNghiPhepKhongLuong from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			String query = "select soNPKhongLuong from bangchamcong where thangCC=? and namCC=? and maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setInt(1, thangCC);
@@ -411,7 +411,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				soNgayNghiPhepKhongLuong = rs.getInt("soNgayNghiPhepKhongLuong");
+				soNgayNghiPhepKhongLuong = rs.getInt("soNPKhongLuong");
 			}
 			
 			rs.close();
@@ -434,7 +434,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		try {
 			jdbc.openConnection();
 			
-			String query = "select soNgayNghiKhongPhep from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			String query = "select soNgayNghiKP from bangchamcong where thangCC=? and namCC=? and maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setInt(1, thangCC);
@@ -443,7 +443,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				soNgayNghiKhongPhep = rs.getInt("soNgayNghiKhongPhep");
+				soNgayNghiKhongPhep = rs.getInt("soNgayNghiKP");
 			}
 			
 			rs.close();
@@ -461,12 +461,14 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	}
 	
 	public double getSoGioTangCa(int thangCC, int namCC, String maNV) {
-		double soGioTangCa = 0;
-		
+		double soGioTangCaNgayThuong = 0;
+		double soGioTangCaNgayLe = 0;
+		double soGioTangCaChuNhat = 0;
+		double tongSoGioTangCa=0;
 		try {
 			jdbc.openConnection();
 			
-			String query = "select soGioTangCa from bangchamcong where thangCC=? and namCC=? and maNV=?";
+			String query = "select soGioOTNgayThuong, soGioOTNgayLe, soGioOTCn from bangchamcong where thangCC=? and namCC=? and maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setInt(1, thangCC);
@@ -475,7 +477,10 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				soGioTangCa = rs.getDouble("soNgayNghiKhongPhep");
+				soGioTangCaNgayThuong = rs.getDouble("soGioOTNgayThuong");
+				soGioTangCaNgayLe = rs.getDouble("soGioOTNgayLe");
+				soGioTangCaChuNhat = rs.getDouble("soGioOTCn");
+				tongSoGioTangCa = soGioTangCaNgayThuong + soGioTangCaNgayLe + soGioTangCaChuNhat;
 			}
 			
 			rs.close();
@@ -489,7 +494,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			jdbc.closeConnection();
 		
 		
-		return soGioTangCa;
+		return tongSoGioTangCa;
 	}
 	
 	//hàm hiển thị thông tin dòng code
