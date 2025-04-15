@@ -51,7 +51,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Pane fx:id="productPane" layoutX="862.0" layoutY="39.0" prefHeight="541.0" prefWidth="438.0" visible="false">
+                  <Pane fx:id="productPane" layoutX="862.0" layoutY="39.0" prefHeight="541.0" prefWidth="438.0">
                      <children>
                         <Label alignment="CENTER" layoutX="136.0" layoutY="43.0" prefHeight="21.0" prefWidth="129.0" style="-fx-background-color: white;" text="Chi tiết sản phẩm" textAlignment="RIGHT" textFill="#181818">
                            <font>
@@ -100,9 +100,8 @@
                            </font>
                         </Label>
                         <TextField fx:id="tf_xuatxu" layoutX="120.0" layoutY="317.0" />
-                        <Button layoutX="22.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickAddProduct" style="-fx-background-color: #0d6efd;" text="Thêm sản phẩm" />
-                        <Button fx:id="bt_sua_sp" disable="true" layoutX="146.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickSuaSP" style="-fx-background-color: #ffc107;" text="Sửa sản phẩm" />
-                        <Button fx:id="bt_xoa_sp" disable="true" layoutX="256.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickXoaSP" style="-fx-background-color: #dc3545;" text="Xóa sản phẩm" />
+                        <Button fx:id="bt_sua_sp" disable="true" layoutX="91.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickSuaSP" style="-fx-background-color: #ffc107;" text="Sửa sản phẩm" />
+                        <Button fx:id="bt_xoa_sp" disable="true" layoutX="219.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickXoaSP" style="-fx-background-color: #dc3545;" text="Xóa sản phẩm" />
                         <Button layoutX="23.0" layoutY="432.0" mnemonicParsing="false" onMouseClicked="#handleClickButtonResetProduct" style="-fx-background-color: #fd9843;" text="Reset" />
                         <Label layoutX="25.0" layoutY="357.0" text="Thương Hiệu">
                            <font>
@@ -119,7 +118,7 @@
                         <Button fx:id="bt_show_pannel_pb" layoutX="278.0" layoutY="41.0" mnemonicParsing="false" onMouseClicked="#handleCilckQLPB" text="Quản Lý Phiên Bản" visible="false" />
                      </children>
                   </Pane>
-                  <Pane fx:id="versionPane" layoutX="863.0" layoutY="39.0" prefHeight="450.0" prefWidth="438.0">
+                  <Pane fx:id="versionPane" layoutX="863.0" layoutY="39.0" prefHeight="450.0" prefWidth="438.0" visible="false">
                      <children>
                         <Label alignment="CENTER" layoutX="136.0" layoutY="43.0" prefHeight="21.0" prefWidth="129.0" style="-fx-background-color: white;" text="Chi Tiết Phiên Bản" textAlignment="RIGHT" textFill="#181818">
                            <font>
