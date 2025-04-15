@@ -27,10 +27,10 @@ public class ValidateProducts {
         try {
             Integer.parseInt(data);
         } catch (Exception e) {
-            // TODO: handle exception
             strings.add(message + " phải là số!");
         }
     }
+
     public String toString() {
         String stringError = new String();
         for (String string : strings) {

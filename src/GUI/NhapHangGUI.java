@@ -1,6 +1,10 @@
 package GUI;
 
+import BUS.ChiTietPhieuNhapBUS;
+import BUS.PhienBanSanPhamBUS;
+import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
+import Components.DateConverter;
 import Components.ShadowButton;
 import DTO.*;
 import net.miginfocom.layout.Grid;
@@ -14,13 +18,21 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -54,14 +66,22 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NhapHangGUI extends JPanel {
 
-	SanPhamBUS productBUS = new SanPhamBUS();
+	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
+	SanPhamBUS spBUS = new SanPhamBUS();
+	PhieuNhapBUS pnBUS = new PhieuNhapBUS();
+	ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
-	ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
+	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	JComboBox<String> brandComboBox, supplierComboBox;
-	JPanel productContent;
-	JLabel imageLabel;
-	JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+	JPanel pnContent;
+	JLabel imageLabel, lblTongTien, lblMaPN, lblMaKho, lblMaNguoiTao, lblNhaCungCap, lblNgayTao;
+	JTextField txtTimKiem, txtMaPN, txtMaKho, txtMaNguoiTao, txtNgayTao;
+	// Lấy ngày hiện tại
+	LocalDate currentDate = LocalDate.now();
+	// Định dạng ngày thành dd/MM/yyyy
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	String formattedDate = currentDate.format(formatter);
 
 	// Constructor
 	public NhapHangGUI() {
@@ -82,17 +102,17 @@ public class NhapHangGUI extends JPanel {
 		FlatIntelliJLaf.setup();
 		setLayout(new GridBagLayout()); // set Layout
 		GridBagConstraints gbc = new GridBagConstraints();
-		productContent = new JPanel();
-//		productContent.setBackground(Color.green);
-		productContent.setBackground(Color.white);
-		productContent.setLayout(new GridLayout(1, 2, 15, 15));
+		pnContent = new JPanel();
+//		pnContent.setBackground(Color.green);
+		pnContent.setBackground(Color.white);
+		pnContent.setLayout(new GridLayout(1, 2, 15, 15));
 
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		add(productContent, gbc); // Thêm vào ProductsGUI
+		add(pnContent, gbc); // Thêm vào ProductsGUI
 
 		// tạo 2 panel leftPanel, rightPanel
 		JPanel leftPanel, rightPanel;
@@ -106,7 +126,7 @@ public class NhapHangGUI extends JPanel {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		productContent.add(leftPanel, gbc);
+		pnContent.add(leftPanel, gbc);
 
 		rightPanel = new JPanel();
 		rightPanel.setLayout(new GridBagLayout());
@@ -117,9 +137,9 @@ public class NhapHangGUI extends JPanel {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		productContent.add(rightPanel, gbc);
+		pnContent.add(rightPanel, gbc);
 
-//========================================================== LEFT PANEL =============================================================================================//
+		//LEFT PANEL
 		// Chia 3 panel con searchLeftPanel ở phần trên, productListLeftPanel ở phần
 		// giữa, quantityLeftPanel ở phần dưới;
 		JPanel searchLeftPanel, productListLeftPanel, quantityLeftPanel;
@@ -171,9 +191,9 @@ public class NhapHangGUI extends JPanel {
 //		dateChooser.setBounds(10, 22, 150, 25); // Định vị
 //		searchLeftPanel.add(dateChooser);
 
-		JTextField searchTF = new JTextField();
-		searchTF.setBounds(300, 22,235, 25);
-		searchLeftPanel.add(searchTF);
+		txtTimKiem = new JTextField();
+		txtTimKiem.setBounds(300, 22,235, 25);
+		searchLeftPanel.add(txtTimKiem);
 
 		// Tạo nút Search
 		ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png"));
@@ -195,7 +215,7 @@ public class NhapHangGUI extends JPanel {
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Search button clicked!");
+				searchPerformed(productTable);
 			}
 		});
 		btnSearch.addMouseListener(new MouseAdapter() {
@@ -233,7 +253,7 @@ public class NhapHangGUI extends JPanel {
 		btnRefresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+				refreshList();
 			}
 		});
 		btnRefresh.addMouseListener(new MouseAdapter() {
@@ -275,9 +295,9 @@ public class NhapHangGUI extends JPanel {
 		quantityLabel.setBounds(10, 22, 100, 20);
 		quantityLeftPanel.add(quantityLabel);
 
-		JTextField quantityTF = new JTextField();
-		quantityTF.setBounds(100, 20, 50, 25);
-		quantityLeftPanel.add(quantityTF);
+		JTextField txtSoLuong = new JTextField();
+		txtSoLuong.setBounds(100, 20, 50, 25);
+		quantityLeftPanel.add(txtSoLuong);
 
 		JButton quantityButton = new ShadowButton("OK");
 		quantityButton.setBounds(180, 20, 60, 25);
@@ -293,6 +313,13 @@ public class NhapHangGUI extends JPanel {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				quantityButton.setBackground(Color.white); // Màu khi hover ra
+			}
+			
+			//set hành động sau khi nhập số lượng và click vào nút ok thì sẽ hiển thị thông tin đã chọn qua bên bảng bên phải 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				addToImportTable(productTable, chosenProductTable, txtSoLuong);
+				productTable.clearSelection(); //sau khi chọn xong thì làm mới lại bảng bên trai để k có dòng nào được chọn
 			}
 
 		});
@@ -317,7 +344,7 @@ public class NhapHangGUI extends JPanel {
 		});
 		quantityLeftPanel.add(newProductButton);
 
-		///////////////////////////////// Khu vực thêm các Listener /////////////////////////////////
+		//Khu vực thêm các Listener
 		newProductButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -326,12 +353,11 @@ public class NhapHangGUI extends JPanel {
 			}
 		});
 
-//========================================================== END LEFT PANEL =================================================================================================//   
 
 		
 		
 		
-//========================================================== RIGHT PANEL =============================================================================================//
+		//RIGHT PANEL
 		// Chia 3 panel con informationRightPanel ở phần trên, productChoseRightPanel ở
 		// phần giữa, optionRightPanel ở phần dưới;
 		JPanel informationRightPanel, productChoseRightPanel, optionRightPanel;
@@ -376,23 +402,22 @@ public class NhapHangGUI extends JPanel {
 		rightPanel.add(optionRightPanel, gbc);
 
 		///////////////////////////////////////// informationRightPanel ///////////////////////////////////////// 
-		// Ste các labels, textfield để hiện thông tin phiếu nhập
-		JLabel slipIdLabel, warehouseIdLabel, creatorIdLabel, supplierLabel, dateLabel;
-		slipIdLabel = new JLabel("Mã phiếu nhập:");
-		slipIdLabel.setBounds(10, 10, 100, 20);
-		informationRightPanel.add(slipIdLabel);
+		
+		lblMaPN = new JLabel("Mã phiếu nhập:");
+		lblMaPN.setBounds(10, 10, 100, 20);
+		informationRightPanel.add(lblMaPN);
 
-		warehouseIdLabel = new JLabel("Mã kho:");
-		warehouseIdLabel.setBounds(10, 40, 100, 20);
-		informationRightPanel.add(warehouseIdLabel);
+		lblMaKho = new JLabel("Mã kho:");
+		lblMaKho.setBounds(10, 40, 100, 20);
+		informationRightPanel.add(lblMaKho);
 
-		creatorIdLabel = new JLabel("Mã người tạo:");
-		creatorIdLabel.setBounds(10, 70, 100, 20);
-		informationRightPanel.add(creatorIdLabel);
+		lblMaNguoiTao = new JLabel("Mã người tạo:");
+		lblMaNguoiTao.setBounds(10, 70, 100, 20);
+		informationRightPanel.add(lblMaNguoiTao);
 
-		supplierLabel = new JLabel("Nhà cung cấp:");
-		supplierLabel.setBounds(10, 100, 100, 20);
-		informationRightPanel.add(supplierLabel);
+		lblNhaCungCap = new JLabel("Nhà cung cấp:");
+		lblNhaCungCap.setBounds(10, 100, 100, 20);
+		informationRightPanel.add(lblNhaCungCap);
 
 		// Add combobox suppliers
 		String[] suppliers = { "", "Thêm nhà cung cấp..." };
@@ -408,35 +433,40 @@ public class NhapHangGUI extends JPanel {
 			}
 		});
 		
-		dateLabel = new JLabel("Date:");
-		dateLabel.setBounds(340, 10, 30, 20);
-		informationRightPanel.add(dateLabel);
+		lblNgayTao = new JLabel("Ngày tạo:");
+		lblNgayTao.setBounds(340, 10, 100, 20);
+		informationRightPanel.add(lblNgayTao);
 
-		JTextField slipIdTF, warehouseIdTF, creatorIdTF, dateTF;
-		slipIdTF = new JTextField();
-		slipIdTF.setEditable(false);
-		slipIdTF.setEnabled(false);
-		slipIdTF.setBounds(110, 10, 100, 20);
-		informationRightPanel.add(slipIdTF);
-
-		warehouseIdTF = new JTextField();
-		warehouseIdTF.setEditable(false);
-		warehouseIdTF.setEnabled(false);
-		warehouseIdTF.setBounds(110, 40, 100, 20);
-		informationRightPanel.add(warehouseIdTF);
-
-		creatorIdTF = new JTextField();
-		creatorIdTF.setEditable(false);
-		creatorIdTF.setEnabled(false);
-		creatorIdTF.setBounds(110, 70, 100, 20);
-		informationRightPanel.add(creatorIdTF);
 		
-		dateTF = new JTextField();
-		dateTF.setEditable(false);
-		dateTF.setEnabled(false);
-		dateTF.setBounds(400, 10, 100, 20);
-		informationRightPanel.add(dateTF);
+		txtMaPN = new JTextField();
+		txtMaPN.setBounds(110, 10, 100, 20);
+		informationRightPanel.add(txtMaPN);
 
+		txtMaKho = new JTextField();
+//		txtMaKho.setEditable(false);
+//		txtMaKho.setEnabled(false);
+		txtMaKho.setBounds(110, 40, 100, 20);
+		informationRightPanel.add(txtMaKho);
+
+		txtMaNguoiTao = new JTextField();
+//		txtMaNguoiTao.setEditable(false);
+//		txtMaNguoiTao.setEnabled(false);
+		txtMaNguoiTao.setBounds(110, 70, 100, 20);
+		informationRightPanel.add(txtMaNguoiTao);
+		
+		txtNgayTao = new JTextField();
+		txtNgayTao.setEditable(false);
+		txtNgayTao.setEnabled(false);
+		txtNgayTao.setBounds(400, 10, 100, 20);
+		informationRightPanel.add(txtNgayTao);
+		
+		
+
+		// Điền giá trị vào các txt
+
+		txtNgayTao.setText(formattedDate);
+		
+		
 		
 		///////////////////////////////////////// productChoseRightPanel ///////////////////////////////////////// 
 		//Thêm bảng vào panel để hiển thị các sản phẩm đã được chọn để nhập
@@ -470,7 +500,7 @@ public class NhapHangGUI extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Fix quantity button clicked!");
+				changeQuantity(chosenProductTable);
 			}
 		});
 
@@ -492,7 +522,7 @@ public class NhapHangGUI extends JPanel {
 		btnRemoveProduct.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Remove product button clicked!");
+				removeFromChosenTable(chosenProductTable);
 			}
 		});
 
@@ -514,33 +544,32 @@ public class NhapHangGUI extends JPanel {
 		btnImport.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Import button clicked!");
+				importProduct(chosenProductTable);
 			}
 		});
 
-		JLabel lblTotal, lblTotalValue;
-		lblTotal = new JLabel("Total: ");
-		lblTotal.setBounds(400, 20, 50, 25);
+		JLabel lblTotal;
+		lblTotal = new JLabel("Tổng tiền: ");
+		lblTotal.setBounds(350, 20, 120, 25);
 		optionRightPanel.add(lblTotal);
-		lblTotalValue = new JLabel("0d"); // cai nay se lay tong tien setText lai sau, khi da co csdl
-		lblTotalValue.setBounds(450, 20, 50, 25);
-		optionRightPanel.add(lblTotalValue);
+		lblTongTien = new JLabel("0đ"); // cai nay se lay tong tien setText lai sau, khi da co csdl
+		lblTongTien.setBounds(420, 20, 300, 25);
+		optionRightPanel.add(lblTongTien);
 
-//========================================================== END RIGHT PANEL =================================================================================================//   
 
 	}
 
 	// Hàm hiển thị JDialog để nhập sản phẩm mới
 	private void newProductDialog() {
 		JDialog newProductDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm sản phẩm", true);
-		newProductDialog.setSize(600, 400);
+		newProductDialog.setSize(600, 450);
 		newProductDialog.setLayout(null);
 
 		JLabel lblId = new JLabel("Mã sản phẩm:");
 		lblId.setBounds(10, 20, 100, 20);
 		newProductDialog.add(lblId);
 		JTextField txtId = new JTextField();
-		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để tạo mã, k cho nhập tự động
+//		txtId.setEditable(false); // sẽ lấy id mới nhất của bảng sản phẩm trong csdl ra để tạo mã, k cho nhập tự động
 		txtId.setBounds(110, 20, 150, 20);
 		newProductDialog.add(txtId);
 
@@ -635,25 +664,50 @@ public class NhapHangGUI extends JPanel {
 		txtBackCam.setBounds(110, 195, 150, 20);
 		newProductDialog.add(txtBackCam);
 
+		
+		//nhập thông tin phiên bản sản phẩm
+		JLabel lblMauSac = new JLabel("Màu sắc:");
+		lblMauSac.setBounds(10, 245, 100, 20);
+		newProductDialog.add(lblMauSac);
+		JTextField txtMauSac = new JTextField();
+		txtMauSac.setBounds(110, 245, 150, 20);
+		newProductDialog.add(txtMauSac);
+		
+		JLabel lblRam = new JLabel("RAM:");
+		lblRam.setBounds(10, 270, 100, 20);
+		newProductDialog.add(lblRam);
+		JTextField txtRam = new JTextField();
+		txtRam.setBounds(110, 270, 150, 20);
+		newProductDialog.add(txtRam);
+		
+		JLabel lblRom = new JLabel("ROM:");
+		lblRom.setBounds(10, 295, 100, 20);
+		newProductDialog.add(lblRom);
+		JTextField txtRom = new JTextField();
+		txtRom.setBounds(110, 295, 150, 20);
+		newProductDialog.add(txtRom);
+		
 		JLabel lblPrice = new JLabel("Giá:");
-		lblPrice.setBounds(10, 220, 100, 20);
+		lblPrice.setBounds(10, 320, 100, 20);
 		newProductDialog.add(lblPrice);
 		JTextField txtPrice = new JTextField();
-		txtPrice.setBounds(110, 220, 150, 20);
+		txtPrice.setBounds(110, 320, 150, 20);
 		newProductDialog.add(txtPrice);
+		
 
+		
 		JLabel lbStatus = new JLabel("Trạng thái:");
-		lbStatus.setBounds(10, 245, 100, 20);
+		lbStatus.setBounds(10, 345, 100, 20);
 		newProductDialog.add(lbStatus);
 		JRadioButton rbOn = new JRadioButton("On");
-		rbOn.setBounds(110, 245, 50, 20);
+		rbOn.setBounds(110, 345, 50, 20);
 		newProductDialog.add(rbOn);
 		JRadioButton rbOff = new JRadioButton("Off");
-		rbOff.setBounds(160, 245, 70, 20);
+		rbOff.setBounds(160, 345, 70, 20);
 		newProductDialog.add(rbOff);
 
 		JButton btnSave = new ShadowButton("Lưu");
-		btnSave.setBounds(330, 320, 70, 25);
+		btnSave.setBounds(395, 380, 70, 25);
 		btnSave.setBorderPainted(false);
 		btnSave.setBackground(Color.decode("#01BFF4"));
 		btnSave.addActionListener(e -> {
@@ -693,7 +747,7 @@ public class NhapHangGUI extends JPanel {
 		newProductDialog.add(btnSave);
 
 		JButton btnRefresh = new ShadowButton("Làm mới");
-		btnRefresh.setBounds(410, 320, 100, 25);
+		btnRefresh.setBounds(470, 380, 100, 25);
 		btnRefresh.setBorderPainted(false);
 		btnRefresh.setBackground(Color.decode("#01BFF4"));
 		btnRefresh.addActionListener(new ActionListener() {
@@ -781,25 +835,52 @@ public class NhapHangGUI extends JPanel {
 	}
 
 	private void loadProductList() {
+		productTable.setDefaultEditor(Object.class, null);
+		
 		productModel = new DefaultTableModel();
 		productTable.setModel(productModel);
-		productModel.addColumn("ID");
-		productModel.addColumn("Name");
+		productModel.addColumn("Mã PBSP");
+		productModel.addColumn("Tên sản phẩm");
+		productModel.addColumn("Màu sắc");
 		productModel.addColumn("RAM");
 		productModel.addColumn("ROM");
-		productModel.addColumn("Color");
-		productModel.addColumn("Price");
-		productModel.addColumn("Quantity");
+		productModel.addColumn("Giá");
+		productModel.addColumn("Số lượng");
+		productModel.addColumn("Trạng thái");
 
+		
+		DecimalFormat df = new DecimalFormat("#,###"); // Định dạng số có dấu phân cách
+		arrPBSP = pbspBUS.selectAll();
+//		arrSP = 
+		for(int i=0; i<arrPBSP.size(); i++) {
+			PhienBanSanPhamDTO pbsp = arrPBSP.get(i);
+			String maPBSP = pbsp.getMaPBSP();
+			// Gọi BUS để lấy tên sản phẩm
+			String tenSP = spBUS.getTenSanPhamByMaPBSP(maPBSP);
+			String mauSac = pbsp.getMauSac();
+			String ram = pbsp.getRam();
+			String rom = pbsp.getRom();
+			Double giaBan = pbsp.getGiaBan();
+			int soLuong = pbsp.getSoLuong();
+			String trangThai = pbsp.getTrangThai();
+			// Format giá trước khi thêm vào bảng
+		    String formattedGiaBan = df.format(giaBan);
+			
+			
+			
+			Object[] row = {maPBSP, tenSP, mauSac, ram, rom, formattedGiaBan, soLuong, trangThai};
+			productModel.addRow(row);
+		}
+		
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = productTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(60);
-		tcm.getColumn(1).setPreferredWidth(250);
-		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(0).setPreferredWidth(80);
+		tcm.getColumn(1).setPreferredWidth(200);
+		tcm.getColumn(2).setPreferredWidth(80);
 		tcm.getColumn(3).setPreferredWidth(50);
 		tcm.getColumn(4).setPreferredWidth(50);
-		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(5).setPreferredWidth(90);
 		tcm.getColumn(6).setPreferredWidth(54);
 
 		productTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
@@ -809,26 +890,290 @@ public class NhapHangGUI extends JPanel {
 	private void loadChosenProduct() {
 		chosenProductModel  = new DefaultTableModel();
 		chosenProductTable.setModel(chosenProductModel);
-		chosenProductModel.addColumn("ID");
-		chosenProductModel.addColumn("Name");
+		chosenProductModel.addColumn("Mã PBSP");
+		chosenProductModel.addColumn("Tên SP");
+		chosenProductModel.addColumn("Màu sắc");
 		chosenProductModel.addColumn("RAM");
 		chosenProductModel.addColumn("ROM");
-		chosenProductModel.addColumn("Color");
-		chosenProductModel.addColumn("Price");
-		chosenProductModel.addColumn("Quantity");
+		chosenProductModel.addColumn("Số lượng");
+		chosenProductModel.addColumn("Giá");
 
 		
 		//Điều chỉnh kích thước các cột
 		TableColumnModel tcm = chosenProductTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(60);
-		tcm.getColumn(1).setPreferredWidth(250);
-		tcm.getColumn(2).setPreferredWidth(50);
+		tcm.getColumn(0).setPreferredWidth(80);
+		tcm.getColumn(1).setPreferredWidth(190);
+		tcm.getColumn(2).setPreferredWidth(80);
 		tcm.getColumn(3).setPreferredWidth(50);
 		tcm.getColumn(4).setPreferredWidth(50);
-		tcm.getColumn(5).setPreferredWidth(100);
-		tcm.getColumn(6).setPreferredWidth(54);
-
+		tcm.getColumn(5).setPreferredWidth(90);
+		tcm.getColumn(6).setPreferredWidth(80);
+		
 		chosenProductTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 
 	}
+	
+	private void addToImportTable(JTable productTable, JTable chosenProductTable, JTextField txtSoLuong) {
+		int selectedRow = productTable.getSelectedRow();
+		if(txtSoLuong.getText().equals("")) {	// 1. Kiểm tra đầu vào
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng!");
+		} else if(selectedRow != -1 && Integer.parseInt(txtSoLuong.getText().trim())>0) { // 2. Xử lý khi có hàng được chọn và số lượng hợp lệ
+			// 3. Lấy giá sản phẩm và chuẩn hóa giá trị
+			DefaultTableModel model = (DefaultTableModel) chosenProductTable.getModel();
+			String giaSP = (String) productTable.getModel().getValueAt(selectedRow, 5);		//Lấy giá của sản phẩm vừa chọn ở dòng được chọn, cột thứ 5, ta bắt đầu đếm cột từ 0 (là cột giá)
+			giaSP = giaSP.replaceAll("\\,", "");	//loại bỏ các ký tự dư thừa
+			giaSP = giaSP.replaceFirst("đ", "");
+			giaSP = giaSP.substring(0, giaSP.length());
+			
+			// 4. Kiểm tra xem sản phẩm đã tồn tại trong chosenProductTable chưa
+			Vector<String> data = new Vector<String>();
+			String maSP = (String) productTable.getModel().getValueAt(selectedRow, 0);
+			boolean isDuplicate = false;
+			for(int i=0; i<model.getRowCount(); i++) {
+				String ma = (String) model.getValueAt(i, 0);
+				if(ma.equals(maSP)) { // Nếu sản phẩm đã tồn tại
+					isDuplicate = true;
+					// 5. Nếu sản phẩm đã có trong bảng nhập (chosenProductTable), cập nhật số lượng và giá tiền
+					String oldValue = (String) model.getValueAt(selectedRow, 6);
+					oldValue = oldValue.replaceAll("\\,", "");
+					oldValue = oldValue.replaceFirst("đ", "");
+					int newQuantity = Integer.parseInt(txtSoLuong.getText()) + Integer.parseInt((String) model.getValueAt(i, 5));
+					String soluong = Integer.toString(newQuantity);
+					Double value = newQuantity * Double.parseDouble(giaSP);
+					String dongia = NumberFormat.getInstance().format(value) + "đ";
+					
+					// Cập nhật tổng tiền của đơn hàng
+					String money = lblTongTien.getText();
+					money = money.substring(0, money.length() - 1);
+					money = money.replaceAll("\\,", "");
+					lblTongTien.setText(NumberFormat.getInstance()
+					    .format(Integer.parseInt(money) - Integer.parseInt(oldValue) + value) + "đ");
+					txtSoLuong.setText("");
+//					importCodeTextArea.setText(ma);
+					break;
+				}
+			}
+			if (!isDuplicate) {
+				Double value = Double.parseDouble(txtSoLuong.getText()) * Double.parseDouble(giaSP);
+				String tensp = (String) productTable.getModel().getValueAt(selectedRow, 1);
+				String soluong = txtSoLuong.getText();
+				String dongia = NumberFormat.getInstance().format(value) + "đ";
+				String mauSac = (String) productTable.getModel().getValueAt(selectedRow, 2);
+				String RAM = (String) productTable.getModel().getValueAt(selectedRow, 3);
+				String ROM = (String) productTable.getModel().getValueAt(selectedRow, 4);
+				data.add(maSP);
+				data.add(tensp);
+				data.add(maSP);
+				data.add(RAM);
+				data.add(ROM);
+				data.add(dongia);
+
+				model.addRow(new Object[] { maSP, tensp, mauSac, RAM, ROM, soluong, dongia });
+				txtSoLuong.setText("");
+				chosenProductTable.repaint();
+				String money = lblTongTien.getText();
+
+				money = money.substring(0, money.length() - 1);
+				money = money.replaceAll("\\,", "");
+				lblTongTien.setText(NumberFormat.getInstance().format(Integer.parseInt(money) + value) + "đ");
+
+			}
+
+		}else if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
+			JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0!");
+		} else {
+			JOptionPane.showMessageDialog(null, "Xin hãy chọn 1 sản phẩm!");
+		}
+	}
+	
+	private void removeFromChosenTable(JTable table) {
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			// Trừ đi số tiền của sản phẩm mà ta muốn loại bỏ
+			String dongia = (String) model.getValueAt(selectedRow, 6);
+			dongia = dongia.replaceAll("\\,", "");
+			dongia = dongia.replaceFirst("đ", "");
+			String oldMoney = lblTongTien.getText();
+			oldMoney = oldMoney.replaceAll("\\,", "");
+			oldMoney = oldMoney.replaceFirst("đ", "");
+			int val = Integer.parseInt(oldMoney);
+			val = val - Integer.parseInt(dongia);
+			lblTongTien.setText(NumberFormat.getInstance().format(val) + "đ");
+			model.removeRow(selectedRow);
+			table.repaint();
+		}else {
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần xóa!");
+		}
+	}
+	
+	private void changeQuantity(JTable table) {
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel model = (DefaultTableModel)table.getModel();
+			String maPBSP = (String) model.getValueAt(selectedRow, 0);
+			String soLuongMoi = JOptionPane.showInputDialog("Vui lòng nhập số lượng mới cho " + maPBSP);
+			if(soLuongMoi.equals("") || soLuongMoi.matches("%[a-zA-Z]%") || soLuongMoi.equals("0")) {
+				JOptionPane.showMessageDialog(null, "Số lượng không hợp lệ");
+			}else {
+				String mapbsp = (String) model.getValueAt(selectedRow, 0);
+				String tensp = (String) model.getValueAt(selectedRow, 1);
+				String dongia = (String) model.getValueAt(selectedRow, 6);
+				model.setValueAt(table, selectedRow, selectedRow);
+				dongia = dongia.replaceAll("\\,", "");
+				dongia = dongia.replaceFirst("đ", "");
+				int soluong = Integer.parseInt((String) model.getValueAt(selectedRow, 5));	//cột số 5 là cột số lượng, đếm từ 0
+				int val = Integer.parseInt(dongia) / soluong;
+				int soluongmoi = Integer.parseInt(soLuongMoi);
+				model.setValueAt(mapbsp, selectedRow, 0);
+				model.setValueAt(tensp, selectedRow, 1);
+				model.setValueAt(Integer.toString(soluongmoi), selectedRow, 5);
+				model.setValueAt(NumberFormat.getInstance().format(val * soluongmoi)+"đ", selectedRow, 6);
+
+				String oldMoney = lblTongTien.getText();
+				oldMoney = oldMoney.replaceAll("\\,", "");
+				oldMoney = oldMoney.replaceFirst("đ", "");
+				int oldMoneyInt = Integer.parseInt(oldMoney);
+				int newMoney = oldMoneyInt - Integer.parseInt(dongia) + (val * soluongmoi);
+				lblTongTien.setText(NumberFormat.getInstance().format(newMoney) + "đ"); 
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần sửa!");
+		}
+	}
+	
+	private void importProduct(JTable table) {
+		//Thêm phiếu nhập. Nhưng phiếu nhập lúc này đang ở trạng thái là "Chờ xác nhận", khi nào quản lý kho chuyển trạng thái thành "Đã nhận hàng" thì mới tăng số lượng pbsp lên.
+		//Nên bước tăng số lượng đó thì ta sẽ xử lý ở bên giao diện danh sách các phiếu nhập vì ở đó mới có chức năng thay đổi trạng thái PN
+		PhieuNhapDTO pn = new PhieuNhapDTO();
+		pn.setMaPN(txtMaPN.getText().trim());
+		//Format ngày tạo trước khi insert vào csdl vì date ở csdl chỉ chấp nhận dạng yyyy-mm-dd trong khi input từ txtNgayTao là dạng dd/mm/yyyy
+		String ngayTaoStr = txtNgayTao.getText().trim();
+		java.sql.Date sqlDate = DateConverter.convertToSQLDate(ngayTaoStr);
+		if (sqlDate == null) {
+		    JOptionPane.showMessageDialog(null, "Ngày nhập không hợp lệ! Vui lòng nhập theo định dạng DD/MM/YYYY.");
+		} else {
+		    pn.setNgayTao(sqlDate);
+		}
+		//Format lại giá trị tổng tiền cho chuẩn vì lấy từ giao diện đang ở dạng có dấu phẩy và ký tự "đ". VD: 120,000,000d
+		String tongTienStr = lblTongTien.getText().trim();
+		tongTienStr = tongTienStr.replaceAll("[^0-9.]", ""); // Chỉ giữ lại số và dấu chấm
+		double tongTien = Double.parseDouble(tongTienStr);
+		pn.setTongTien(tongTien);
+		//maNV, maKho, maNCC chờ Minh code xong phần dăng nhập, nhà cung cấp sẽ hoàn thiện
+		pn.setMaNV(txtMaNguoiTao.getText().trim());
+		pn.setMaKho(txtMaKho.getText().trim());
+//		pn.setMaNCC(supplierComboBox.getSelectedItem().toString());	
+		pn.setMaNCC("NCC001");	
+		pn.setTrangThai("Chờ xác nhận");
+		String messagePN = pnBUS.insert(pn);
+		if(messagePN.equalsIgnoreCase("Thêm phiếu nhập thành công!")) {
+			
+			for(int i=0; i<table.getRowCount(); i++) {
+				ChiTietPhieuNhapDTO ctpn = new ChiTietPhieuNhapDTO();
+
+				ctpn.setSoLuong(Integer.parseInt(table.getValueAt(i, 5).toString()));
+				String giaString = table.getValueAt(i, 6).toString();
+				//Loại bỏ các ký tự không phải số
+				giaString = giaString.replaceAll("[^0-9]", "");
+				ctpn.setGiaNhap(Double.parseDouble(giaString));
+				ctpn.setMaPN(txtMaPN.getText());
+				ctpn.setMaPBSP(table.getValueAt(i, 0).toString());
+				
+				int ketQuaThemCTPN = ctpnBUS.insert(ctpn);
+				if(ketQuaThemCTPN>0) {
+					JOptionPane.showMessageDialog(null, messagePN);
+				}
+			}
+		}else if(messagePN.equalsIgnoreCase("Thêm phiếu nhập thất bại!")){
+			JOptionPane.showMessageDialog(null, messagePN);
+		}
+			
+	}
+	
+	
+	private void searchPerformed(JTable tb){
+        String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
+            ArrayList<PhienBanSanPhamDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
+
+            // Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm kiếm
+            boolean found = false;
+            for (PhienBanSanPhamDTO pbsp: arrPBSP) {
+                // Kiểm tra xem thông tin của pbsp có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
+                if (pbsp.getMaPBSP().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                	pbsp.getMauSac().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                	pbsp.getRam().toLowerCase().contains(searchContent.toLowerCase().trim())||
+                	pbsp.getRom().toLowerCase().contains(searchContent.toLowerCase().trim()))
+                 {
+                    dsTimKiem.add(pbsp); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
+                    found = true;
+                }
+                
+            }
+            // Kiểm tra nếu không tìm thấy sản phẩm nào
+            if(!found){
+                JOptionPane.showMessageDialog(this, "Không tìm thấy phiên bản sản phẩm");
+                refreshList();
+                return; // Kết thúc phương thức sau khi hiển thị thông báo
+            }
+            
+            // Xóa tất cả các dòng hiện có trong bảng
+            DefaultTableModel tableModel = (DefaultTableModel) tb.getModel();
+            tableModel.setRowCount(0);
+
+            // Thêm các sản phẩm thỏa mãn vào bảng
+            for (PhienBanSanPhamDTO pbsp : dsTimKiem) {
+    			String maPBSP = pbsp.getMaPBSP();
+    			String tenSP = spBUS.getTenSanPhamByMaPBSP(maPBSP);
+    			String mauSac = pbsp.getMauSac();
+    			String ram = pbsp.getRam();
+    			String rom = pbsp.getRom();
+    			int soLuong = pbsp.getSoLuong();
+    		    String gia = String.valueOf((long) pbsp.getGiaBan());
+    			String trangThai = pbsp.getTrangThai();
+    			
+    		    Object[] row = {maPBSP, tenSP, mauSac, ram, rom, gia, soLuong, trangThai};
+                tableModel.addRow(row);
+            }
+        } else {
+            // Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển thị tất cả sản phẩm
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
+            refreshList();
+        }
+    }
+
+	public static java.sql.Date convertToSQLDate(String dateString) {
+		try {
+			// Định dạng đầu vào và đầu ra
+			SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+			// Chuyển đổi sang định dạng chuẩn
+			Date parsedDate = (Date) inputFormat.parse(dateString);
+			String formattedDate = outputFormat.format(parsedDate);
+
+			return java.sql.Date.valueOf(formattedDate);
+		} catch (Exception e) {
+			System.out.println("Lỗi chuyển đổi ngày: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	private void refreshList(){
+        // Xóa tất cả các dòng trong mô hình bảng
+        productModel.setRowCount(0);
+        loadProductList();
+        supplierComboBox.setSelectedIndex(0);
+        txtTimKiem.setText("");
+    }
+	
+	public static void log(String message) {
+	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+	    System.out.println(element.getClassName() + " | method: " 
+	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+	}
+
+	
 }

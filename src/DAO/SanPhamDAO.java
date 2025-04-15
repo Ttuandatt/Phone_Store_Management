@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import org.apache.poi.ss.formula.functions.T;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import DTO.SanPhamDTO;
 import DTO.PhienBanSanPhamDTO;
 import Database.JDBCConnection;
