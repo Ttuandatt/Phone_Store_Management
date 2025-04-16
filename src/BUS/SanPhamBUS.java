@@ -25,11 +25,6 @@ public class SanPhamBUS {
 		return spDAO.getTenSanPhamByMaPBSP(maPBSP);
 	}
 	
-	public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
-		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
-	}
-	
-	
 	public ArrayList<PhienBanSanPhamDTO> getAllPBSMBymaSP(String maSP) {
         return spDAO.selectPBSPBymaSP(maSP);
     }
@@ -104,6 +99,9 @@ public class SanPhamBUS {
             return 1;
         }
         return -1;
+    }
+    public ArrayList<SanPhamDTO> timKiem(String search_query) {
+        return spDAO.TimKiemTheoTen(search_query);
     }
 
 
