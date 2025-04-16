@@ -1,4 +1,4 @@
-﻿create database phonestore;
+create database phonestore;
 drop database phonestore;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -44,6 +44,7 @@ CREATE TABLE PBSP (
     ram NVARCHAR(50) NOT NULL,
     rom NVARCHAR(50) NOT NULL,
     giaBan DECIMAL(18,2) NOT NULL,
+    soLuong INT,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
     maSP VARCHAR(50) NOT NULL,
 
@@ -143,7 +144,7 @@ CREATE TABLE PHIEUNHAP (
     maPN VARCHAR(50) NOT NULL,
     ngayTao DATE NOT NULL,
     tongTien FLOAT,
-    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng')) NOT NULL,
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng', N'Từ chối')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
     maKho VARCHAR(50) NOT NULL,
     maNCC VARCHAR(50) NOT NULL,
@@ -174,7 +175,7 @@ CREATE TABLE PHIEUXUAT (
     diaChi NVARCHAR(255),
     tongTien FLOAT,
     httt NVARCHAR(50),
-    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã xuất hàng')) NOT NULL,
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã xuất hàng', N'Từ chối')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
     maKho VARCHAR(50) NOT NULL,
     maKH VARCHAR(50) NOT NULL,
@@ -303,21 +304,21 @@ INSERT INTO SANPHAM (maSP, tenSP, pin, OS, camTruoc, camSau, xuatXu, hinhAnh, tr
 ('SP005', N'Vivo X70', '4400mAh', 'Android', '32MP', '50MP + 12MP', 'China', 0x, 'off', 'TH005');
 
 -- Thêm dữ liệu vào bảng PBSP
-INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, trangThai, maSP)
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP)
 VALUES
-('PBSP001', N'Đen', '8GB', '128GB', 20000000.00, 'on', 'SP001'),
-('PBSP002', N'Trắng', '12GB', '256GB', 25000000.00, 'on', 'SP002'),
-('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 'on', 'SP003'),
-('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 'on', 'SP004'),
-('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 'on', 'SP005');
-INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, trangThai, maSP) 
+('PBSP001', N'Đen', '8GB', '128GB', 20000000.00, 10, 'on', 'SP001'),
+('PBSP002', N'Trắng', '12GB', '256GB', 25000000.00, 8, 'on', 'SP002'),
+('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 15, 'on', 'SP003'),
+('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 12, 'on', 'SP004'),
+('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 7, 'on', 'SP005');
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP) 
 VALUES
-('PBSP006', N'Xám', '12GB', '512GB', 28000000.00, 'on', 'SP002'),
-('PBSP007', N'Xanh dương', '6GB', '128GB', 16000000.00, 'on', 'SP003'),
-('PBSP008', N'Hồng', '8GB', '256GB', 21000000.00, 'on', 'SP004'),
-('PBSP009', N'Bạc', '12GB', '1TB', 32000000.00, 'on', 'SP002'),
-('PBSP010', N'Đỏ', '8GB', '128GB', 19000000.00, 'on', 'SP005'),
-('PBSP011', N'Xanh lá', '6GB', '64GB', 14000000.00, 'on', 'SP001');
+('PBSP006', N'Xám', '12GB', '512GB', 28000000.00, 5, 'on', 'SP002'),
+('PBSP007', N'Xanh dương', '6GB', '128GB', 16000000.00, 9, 'on', 'SP003'),
+('PBSP008', N'Hồng', '8GB', '256GB', 21000000.00, 6, 'on', 'SP004'),
+('PBSP009', N'Bạc', '12GB', '1TB', 32000000.00, 4, 'on', 'SP002'),
+('PBSP010', N'Đỏ', '8GB', '128GB', 19000000.00, 11, 'on', 'SP005'),
+('PBSP011', N'Xanh lá', '6GB', '64GB', 14000000.00, 7, 'on', 'SP001');
 
 
 -- Insert vào bảng NHACUNGCAP
