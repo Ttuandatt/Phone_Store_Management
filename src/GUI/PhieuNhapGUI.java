@@ -500,6 +500,7 @@ public class PhieuNhapGUI extends JPanel {
 		int selectedRow = pnTable.getSelectedRow();
 		if(selectedRow != -1) {
 			DefaultTableModel pnModel = (DefaultTableModel) pnTable.getModel();
+			
 			DefaultTableModel ctpnModel = (DefaultTableModel) ctpnTable.getModel();
 			String maPN = (String) pnModel.getValueAt(selectedRow, 0);
 			log("maPN=" + maPN);

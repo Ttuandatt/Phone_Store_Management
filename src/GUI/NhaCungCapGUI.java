@@ -535,7 +535,7 @@ public class NhaCungCapGUI extends JPanel{
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchPerformed(employeeTable);
+//                searchPerformed(employeeTable);
             }
         });
         btnSearch.addMouseListener(new MouseAdapter() {
@@ -577,7 +577,7 @@ public class NhaCungCapGUI extends JPanel{
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	refreshList();
+//            	refreshList();
             }
         });
         btnRefresh.addMouseListener(new MouseAdapter() {

@@ -70,16 +70,19 @@ public class NhanVienGUI extends JPanel{
     DefaultTableModel employeeModel = new DefaultTableModel();
     DefaultTableModel leaveDetailModel = new DefaultTableModel();
     ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>(); 
-    JComboBox<String> sortComboBox, genderCombobox, roleCombobox, workplaceCombobox;
+    JComboBox<String> sortComboBox, genderCombobox, roleCombobox, workplaceCombobox, khoCombobox;
 	JComboBox<Integer> monthCombobox, yearCombobox;
     ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
     ArrayList<KhoDTO> arrNoiLamViec = khoBUS.selectAll();
+    boolean comboboxChucVuClicked = false;
+    boolean comboboxKhoClicked = false;
     String[] roles = new String[arrChucVu.size()];
-    boolean comboboxClicked = false;
     String[] workplaces =  new String[arrNoiLamViec.size()];
     JPanel nhanVienContent;
     JTextField txtTimKiem;
 	JLabel dataSoNgayCong, dataSoNgayNghiPhepCoLuong, dataSoNgayNghiPhepKhongLuong, dataSoNgayNghiKhongPhep, dataSoGioOT, dataTongSoNgayTinhLuong, lblTongSoNgayTinhLuong;
+	
+	
 	
 	
 	final byte[][] imageBytes = new byte[1][];
@@ -581,23 +584,23 @@ public class NhanVienGUI extends JPanel{
         	roles[i] =  arrChucVu.get(i).getTenCV();
         }
         roleCombobox = new JComboBox<String>(roles);
-        roleCombobox.setBounds(185, 24, 140, 25);
-    	fillRoleCombobox(roleCombobox);
+        roleCombobox.setBounds(185, 24, 100, 25);
+    	fillChucVuCombobox(roleCombobox);
         searchInputPanel.add(roleCombobox);
         roleCombobox.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mousePressed(MouseEvent e) {
-        		comboboxClicked = true;
+        		comboboxChucVuClicked = true;
         	}
         });
         roleCombobox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(comboboxClicked) {
+				if(comboboxChucVuClicked) {
 					String role = roleCombobox.getSelectedItem().toString(); 
 					log("role="+role);
 					sortRole(role);
-					comboboxClicked = false;
+					comboboxChucVuClicked = false;
 					
 				}
 			}
@@ -613,8 +616,45 @@ public class NhanVienGUI extends JPanel{
         });
 
         
+        for(int i=0; i<arrNoiLamViec.size(); i++) {
+        	workplaces[i] = arrNoiLamViec.get(i).getTenKho();
+        	log("kho="+workplaces[i]);
+        }
+        khoCombobox = new JComboBox<String>(workplaces);
+        khoCombobox.setBounds(290, 24, 120, 25);
+        fillKhoCombobox(khoCombobox);
+        searchInputPanel.add(khoCombobox);
+        khoCombobox.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		comboboxKhoClicked = true;
+        	}
+        });
+        khoCombobox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(comboboxKhoClicked) {
+					String kho = khoCombobox.getSelectedItem().toString(); 
+					log("kho="+kho);
+					sortKho(kho);
+					comboboxKhoClicked = false;
+					
+				}
+			}
+		});
+        khoCombobox.addItemListener(e -> {
+        	if(e.getStateChange() == ItemEvent.SELECTED) {
+        		String selected = (String)khoCombobox.getSelectedItem();
+        		if("Thêm kho...".equals(selected)) {
+        			newRoleDialog();
+        		}
+        	}
+        	
+        });
+        
+        
         txtTimKiem = new JTextField();
-        txtTimKiem.setBounds(375,  24,  260, 25);
+        txtTimKiem.setBounds(440,  24,  200, 25);
         searchInputPanel.add(txtTimKiem);
         
         
@@ -871,6 +911,7 @@ public class NhanVienGUI extends JPanel{
     	employeeModel.addColumn("Mật khẩu");
     	employeeModel.addColumn("Hình ảnh");
     	employeeModel.addColumn("Trạng thái");
+    	employeeModel.addColumn("Chi nhánh");
 
 
 		arrNhanVien = nvBUS.selectAll();
@@ -893,9 +934,10 @@ public class NhanVienGUI extends JPanel{
 		        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize ảnh
 		        imageIcon = new ImageIcon(scaledImage);
 		    }
+		    String chiNhanh = nv.getChiNhanh();
 			
 			
-		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, imageIcon, trangThai};
+		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon, chiNhanh};
 			employeeModel.addRow(row);
 		}
 		
@@ -1292,7 +1334,7 @@ public class NhanVienGUI extends JPanel{
         }
 	}
     
-    private void fillRoleCombobox(JComboBox<String> combobox) {
+    private void fillChucVuCombobox(JComboBox<String> combobox) {
     	ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
     	roleCombobox.removeAllItems(); // Xóa dữ liệu cũ (nếu có)
     	for(ChucVuDTO cv: arrChucVu) {
@@ -1302,6 +1344,14 @@ public class NhanVienGUI extends JPanel{
     }
     
     
+    private void fillKhoCombobox(JComboBox<String> combobox) {
+    	ArrayList<KhoDTO> arrKho = khoBUS.selectAll();
+    	khoCombobox.removeAllItems(); // Xóa dữ liệu cũ (nếu có)
+    	for(KhoDTO kho: arrKho) {
+    		khoCombobox.addItem(kho.getTenKho());
+    	}
+    	roleCombobox.addItem("Thêm chức vụ...");
+    }
     
     
     private void updateEmployeeDialog() {
@@ -2095,6 +2145,42 @@ public class NhanVienGUI extends JPanel{
     
     }
     
+    private void sortKho(String kho) {
+    	ArrayList<NhanVienDTO> dsTimKiem = nvBUS.selectAllByWarehouseName(kho);
+    	
+    	// Xóa tất cả các dòng hiện có trong bảng
+        DefaultTableModel tableModel = (DefaultTableModel) employeeTable.getModel();
+        tableModel.setRowCount(0);
+
+        // Thêm các sản phẩm thỏa mãn vào bảng
+        for (NhanVienDTO nv : dsTimKiem) {
+			String maNV = nv.getMaNV();
+			String hoTen = nv.getHoTen();
+			Date ngaySinh = nv.getNgaySinh();
+			String gioiTinh = nv.getGioiTinh();
+			String diaChi = nv.getDiaChi();
+			String chucVu = nv.getChucVu();
+			String matKhau = nv.getMatKhau();
+			String trangThai = nv.getTrangThai();
+			// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
+		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
+		    ImageIcon imageIcon = null;
+		    if (imageData != null) {
+		        // Chuyển đổi byte[] thành ImageIcon
+		        Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+		        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize ảnh
+		        imageIcon = new ImageIcon(scaledImage);
+		    }
+		    String chiNhanh = nv.getChiNhanh();
+			
+			
+		    Object[] row = {maNV, hoTen, ngaySinh, gioiTinh, diaChi, chucVu, matKhau, trangThai, imageIcon, chiNhanh};
+            tableModel.addRow(row);
+        }
+    
+    }
+    
+    
     private void hienThiThongTinChamCong(JTable table) {
     	int selectedRow = table.getSelectedRow();
     	if(selectedRow!=-1) {
@@ -2117,6 +2203,10 @@ public class NhanVienGUI extends JPanel{
     		int tong = soNgayCong + soNgayNghiPhepCoLuong;
     		lblTongSoNgayTinhLuong.setText("Tổng số ngày tính lương = " + soNgayCong + " + " + soNgayNghiPhepCoLuong + " = " + tong);
     	}
+    }
+    
+    private void sortKho() {
+    	
     }
     
     

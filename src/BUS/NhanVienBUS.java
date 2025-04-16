@@ -78,6 +78,10 @@ public class NhanVienBUS {
 		return nvDAO.selectAllByRoleName(role);
 	}
 	
+	public ArrayList<NhanVienDTO> selectAllByWarehouseName(String kho){
+		return nvDAO.selectAllByWarehouseName(kho);
+	}
+	
 	public int getSoNgayCong(int thangCC, int namCC, String maNV) {
 		return nvDAO.getSoNgayCong(thangCC, namCC, maNV);
 	}
