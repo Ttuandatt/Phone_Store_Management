@@ -5,9 +5,9 @@ public class BangChamCongDTO {
 	private int thangCC;
 	private int namCC;
 	private int soNgayLam;
-	private int soNgayNghiPhep;
 	private int soNgayNghiKhongPhep;
-	private int soGioOT;
+	private int soNgayNghiPhepCoLuong;
+	private int soNgayNghiPhepKhongLuong;
 	private String maNV;
 	
 	
@@ -17,18 +17,22 @@ public class BangChamCongDTO {
 		super();
 	}
 
-	public BangChamCongDTO(String maBCC, int thangCC, int namCC, int soNgayLam, int soNgayNghiPhep,
-			int soNgayNghiKhongPhep, int soGioOT, String maNV) {
+	
+
+	public BangChamCongDTO(String maBCC, int thangCC, int namCC, int soNgayLam, int soNgayNghiKhongPhep,
+			int soNgayNghiPhepCoLuong, int soNgayNghiPhepKhongLuong, float soGioOT, String maNV) {
 		super();
 		this.maBCC = maBCC;
 		this.thangCC = thangCC;
 		this.namCC = namCC;
 		this.soNgayLam = soNgayLam;
-		this.soNgayNghiPhep = soNgayNghiPhep;
 		this.soNgayNghiKhongPhep = soNgayNghiKhongPhep;
-		this.soGioOT = soGioOT;
+		this.soNgayNghiPhepCoLuong = soNgayNghiPhepCoLuong;
+		this.soNgayNghiPhepKhongLuong = soNgayNghiPhepKhongLuong;
 		this.maNV = maNV;
 	}
+
+
 
 	//getter, setter
 	public String getMaBCC() {
@@ -63,29 +67,42 @@ public class BangChamCongDTO {
 		this.soNgayLam = soNgayLam;
 	}
 
-	public int getSoNgayNghiPhep() {
-		return soNgayNghiPhep;
-	}
-
-	public void setSoNgayNghiPhep(int soNgayNghiPhep) {
-		this.soNgayNghiPhep = soNgayNghiPhep;
-	}
 
 	public int getSoNgayNghiKhongPhep() {
 		return soNgayNghiKhongPhep;
 	}
 
+
+
 	public void setSoNgayNghiKhongPhep(int soNgayNghiKhongPhep) {
 		this.soNgayNghiKhongPhep = soNgayNghiKhongPhep;
 	}
 
-	public int getSoGioOT() {
-		return soGioOT;
+
+
+	public int getSoNgayNghiPhepCoLuong() {
+		return soNgayNghiPhepCoLuong;
 	}
 
-	public void setSoGioOT(int soGioOT) {
-		this.soGioOT = soGioOT;
+
+
+	public void setSoNgayNghiPhepCoLuong(int soNgayNghiPhepCoLuong) {
+		this.soNgayNghiPhepCoLuong = soNgayNghiPhepCoLuong;
 	}
+
+
+
+	public int getSoNgayNghiPhepKhongLuong() {
+		return soNgayNghiPhepKhongLuong;
+	}
+
+
+
+	public void setSoNgayNghiPhepKhongLuong(int soNgayNghiPhepKhongLuong) {
+		this.soNgayNghiPhepKhongLuong = soNgayNghiPhepKhongLuong;
+	}
+
+
 
 	public String getMaNV() {
 		return maNV;

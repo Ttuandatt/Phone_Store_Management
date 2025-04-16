@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javax.swing.JPanel;
 
 public class SanPhamGUI extends JPanel {
     private Parent root;

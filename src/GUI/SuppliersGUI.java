@@ -161,7 +161,7 @@ public class SuppliersGUI extends JPanel{
         //======================================= Đặt các nút chức năng vào các panel ==========================================================//
         //======================================== Nút update ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconUpdate = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\update.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconUpdate = new ImageIcon(getClass().getResource("/img/update.png")); // Đặt đường dẫn ảnh ở đây
         Image imgUpdate = iconUpdate.getImage();
         Image newImgUpdate = imgUpdate.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconUpdate.getIconWidth() == -1) {
@@ -209,7 +209,7 @@ public class SuppliersGUI extends JPanel{
         
         //======================================== Nút delete ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
         Image newImgDelete = imgDelete.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -260,7 +260,7 @@ public class SuppliersGUI extends JPanel{
      
         //======================================== Nút detail ====================================//
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDetail = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\info.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDetail = iconDetail.getImage();
         Image newImgDetail = imgDetail.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -312,7 +312,7 @@ public class SuppliersGUI extends JPanel{
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconExcel = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\excel.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconExcel = new ImageIcon(getClass().getResource("/img/excel.png")); // Đặt đường dẫn ảnh ở đây
         Image imgExcel = iconExcel.getImage();
         Image newImgExcel = imgExcel.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         if (iconExcel.getIconWidth() == -1) {
@@ -437,7 +437,7 @@ public class SuppliersGUI extends JPanel{
         
         
         //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconSearch = new ImageIcon("/img/loupe2.png"); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
         Image newImgSearch = imgSearch.getScaledInstance(30,30, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
@@ -480,7 +480,7 @@ public class SuppliersGUI extends JPanel{
         btnSearch.setBounds(0, 0, 65, 60);
         searchButtonPanel.add(btnSearch);
         
-        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconRefresh = new ImageIcon("/img/refresh.png"); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
         Image newImgRefresh = imgRefresh.getScaledInstance(30,30, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {

@@ -25,6 +25,12 @@ public class PhienBanSanPhamDTO {
 		this.soLuong = soLuong;
 		this.maSP = maSP;
 	}
+	
+	public PhienBanSanPhamDTO(String mauSac, String ram, String rom) {
+		this.mauSac = mauSac;
+		this.ram = ram;
+		this.rom = rom;
+	}
 
 	
 	//getter, setter

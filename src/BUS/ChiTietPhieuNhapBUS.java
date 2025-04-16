@@ -10,4 +10,12 @@ public class ChiTietPhieuNhapBUS {
 	public ArrayList<ChiTietPhieuNhapDTO> selectAllById(String maPN){
 		return ctpnDAO.selectAllById(maPN);
 	}
+	
+	public ArrayList<ChiTietPhieuNhapDTO> getThongTinCTPN(String maPN) {
+		return ctpnDAO.getThongTinCTPN(maPN);
+	}
+	
+	public int insert(ChiTietPhieuNhapDTO ctpn) {
+		return ctpnDAO.insert(ctpn);
+	}
 }

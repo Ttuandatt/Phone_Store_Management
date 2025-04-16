@@ -130,5 +130,92 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
         }
         return rowsUpdate;
 	}
+	
+	public int updateSoLuong(String maPBSP, int soLuong) {
+		int result=0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "update pbsp set soLuong=soluong + ? where maPBSP=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, soLuong);
+			ps.setString(2,maPBSP);
+			
+			result = ps.executeUpdate();
+			
+			ps.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return result;
+	}
+	
+	public ArrayList<PhienBanSanPhamDTO> getThongTinPBSP(String maPBSP){
+		ArrayList<PhienBanSanPhamDTO> thongTinPBSP = new ArrayList<PhienBanSanPhamDTO>();
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select mausac, ram, rom, masp from pbsp where mapbsp=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maPBSP);
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				PhienBanSanPhamDTO pbsp = new PhienBanSanPhamDTO();
+				
+				pbsp.setMauSac(rs.getString("mauSac"));
+				pbsp.setRam(rs.getString("ram"));
+				pbsp.setRom(rs.getString("rom"));
+				pbsp.setMaSP(rs.getString("maSP"));
+				
+				thongTinPBSP.add(pbsp);
+			}
+			
+			ps.close();
+			rs.close();
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return thongTinPBSP;
+	}
+	
+	public int tangSoLuong(String maPBSP, int soLuong) {
+		int result = 0;
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "update pbsp set soLuong=? where mapbsp=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setInt(1, soLuong);
+			ps.setString(2, maPBSP);
+			
+			result = ps.executeUpdate();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		
+		return result;
+	}
 
 }

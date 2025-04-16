@@ -14,6 +14,18 @@ public class SanPhamDTO {
 	public SanPhamDTO() {
 	}
 	public SanPhamDTO(String maSP, String tenSP, String pin, String oS, String camTruoc, String camSau, String xuatXu,
+		byte[] hinhAnh, String trangThai, String maTH) {
+		this.maSP = maSP;
+		this.tenSP = tenSP;
+		this.pin = pin;
+		OS = oS;
+		this.camTruoc = camTruoc;
+		this.camSau = camSau;
+		this.xuatXu = xuatXu;
+		this.hinhAnh = hinhAnh;
+		this.maTH = maTH;
+	}
+	public SanPhamDTO(String maSP, String tenSP, String pin, String oS, String camTruoc, String camSau, String xuatXu,
 			byte[] hinhAnh, String maTH) {
 		this.maSP = maSP;
 		this.tenSP = tenSP;
@@ -25,6 +37,10 @@ public class SanPhamDTO {
 		this.hinhAnh = hinhAnh;
 		this.maTH = maTH;
 	}
+
+	
+	
+	//getter, setter
 	public String getMaSP() {
 		return maSP;
 	}
