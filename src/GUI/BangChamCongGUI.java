@@ -1,6 +1,8 @@
 package GUI;
 
 import BUS.BangChamCongBUS;
+import BUS.ChiTietChamCongBUS;
+import BUS.DonXinNghiBUS;
 import Components.ShadowButton;
 import DTO.*;
 
@@ -44,14 +46,17 @@ import javax.swing.table.TableColumnModel;
 public class BangChamCongGUI extends JPanel{
 
 	BangChamCongBUS bccBUS = new BangChamCongBUS();
+	ChiTietChamCongBUS ctccBUS = new ChiTietChamCongBUS();
+	DonXinNghiBUS dxnBUS = new DonXinNghiBUS();
     JTable bangChamCongTable, ngayNghiTable, tangCaTable;
     DefaultTableModel bangChamCongModel = new DefaultTableModel();
     DefaultTableModel ngayNghiModel = new DefaultTableModel();
     DefaultTableModel tangCaModel = new DefaultTableModel();
     ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<ChiTietPhieuNhapDTO> arrCTCC = new ArrayList<ChiTietPhieuNhapDTO>();
     private JComboBox<String> sortComboBox, sortThangCCCombobox, sortNamCCComboBox;
     private JPanel bangChamCongContent;
-    private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+    private JTextField txtTimKiem, tfPriceStart, tfPriceEnd;
 	
 	
 	//Constructor
@@ -529,9 +534,9 @@ public class BangChamCongGUI extends JPanel{
         
 
         
-        tfTimKiem = new JTextField();
-        tfTimKiem.setBounds(375,  24,  260, 25);
-        searchInputPanel.add(tfTimKiem);
+        txtTimKiem = new JTextField();
+        txtTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(txtTimKiem);
         
         
         
@@ -629,6 +634,15 @@ public class BangChamCongGUI extends JPanel{
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		middlePanel.add(sp, gbc);
+		bangChamCongTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()>=1) {
+					viewNgayNghi();
+					viewTangCa();
+				}
+			}
+		});
 		
 		
 		//bottomPanel
@@ -732,7 +746,8 @@ public class BangChamCongGUI extends JPanel{
 		ngayNghiTable.setDefaultEditor(Object.class, null);
 		
 		ngayNghiTable.setModel(ngayNghiModel);
-		ngayNghiModel.addColumn("Ngày nghỉ");
+		ngayNghiModel.addColumn("Ngày bắt đầu nghỉ");
+		ngayNghiModel.addColumn("Ngày kết thúc nghỉ");
 		ngayNghiModel.addColumn("Loại");
 		ngayNghiModel.addColumn("Lý do");
 	}
@@ -897,7 +912,7 @@ public class BangChamCongGUI extends JPanel{
 	}
 	
 	private void searchPerformed(JTable tb){
-        String searchContent = tfTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
         if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
             ArrayList<BangChamCongDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
 
@@ -962,9 +977,64 @@ public class BangChamCongGUI extends JPanel{
         bangChamCongModel.setColumnCount(0);
         loadBangChamCongList();
         sortComboBox.setSelectedIndex(0);
-        tfTimKiem.setText("");
+        txtTimKiem.setText("");
     }
 	
+	public void viewNgayNghi() {
+		int selectedRow = bangChamCongTable.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel bccModel = (DefaultTableModel)bangChamCongTable.getModel();
+			
 	
+			String maNV = (String) bccModel.getValueAt(selectedRow,7);
+			log("maNV=" + maNV);
+			ArrayList<DonXinNghiDTO> thongTinNgayNghi = dxnBUS.getThongTinNgayNghi(maNV);
+			
+			ngayNghiModel.setRowCount(0);
+			for(int i=0; i<thongTinNgayNghi.size(); i++) {
+				Date ngayBD = thongTinNgayNghi.get(i).getNgayBD();
+				log("ngayBD="+ngayBD);
+				Date ngayKT = thongTinNgayNghi.get(i).getNgayKT();
+				log("ngayKT="+ngayKT);
+				String loai = "";
+				String lyDo = thongTinNgayNghi.get(i).getLyDo();
+				
+				Object[] row = {ngayBD, ngayKT, loai, lyDo};
+				ngayNghiModel.addRow(row);
+			}
+		}
+	}
 	
-}
+	public void viewTangCa() {
+		int selectedRow = bangChamCongTable.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel bccModel = (DefaultTableModel)bangChamCongTable.getModel();
+			
+			String maBCC = (String) bccModel.getValueAt(selectedRow,0);
+			log("maBCC=" + maBCC);
+			ArrayList<ChiTietChamCongDTO> thongTinTangCa = ctccBUS.getThongTinTangCa(maBCC);
+		
+			tangCaModel.setRowCount(0);
+			for(int i=0; i<thongTinTangCa.size(); i++) {
+				Date ngayTangCa = thongTinTangCa.get(i).getNgayTao();
+				String loaiTangCa = thongTinTangCa.get(i).getLoaiChamCong();
+				Double soGioTangCa = thongTinTangCa.get(i).getSoGioOT();
+				
+				Object[] row = {ngayTangCa, loaiTangCa, soGioTangCa};
+				tangCaModel.addRow(row);
+			}
+		
+		}
+	}
+	
+	  //hàm hiển thị thông tin dòng code
+  	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
+ }
+  	
+	
+

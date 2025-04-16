@@ -26,9 +26,9 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setThangCC(rs.getInt("thangCC"));
 				bcc.setNamCC(rs.getInt("namCC"));
 				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
-				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKhongPhep"));
-				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNgayNghiPhepCoLuong"));
-				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNgayNghiPhepKhongLuong"));
+				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKP"));
+				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNPCoLuong"));
+				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNPKhongLuong"));
 				bcc.setMaNV(rs.getString("maNV"));
 				
 				arrBangChamCong.add(bcc);
@@ -67,6 +67,9 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setMaNV(rs.getString("maNV"));
 				
 			}
+			
+			ps.close();
+			rs.close();
 		}catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
@@ -76,6 +79,8 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		
 		return bcc;
 	}
+	
+	
 
 	@Override
 	public int insert(BangChamCongDTO bcc) {
