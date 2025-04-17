@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.print.DocFlavor.URL;
-
+ 
 import BUS.SanPhamBUS;
+import BUS.ValidateProducts;
 import DTO.PhienBanSanPhamDTO;
 import DTO.SanPhamDTO;
 import DTO.ThuongHieuDTO;
@@ -33,8 +34,10 @@ import javafx.stage.FileChooser;
 
 public class ProductsGUIController {
     private SanPhamBUS SanPhamBUS = new SanPhamBUS();
+    private BUS.PhienBanSanPhamBUS PhienBanSanPhamBUS = new BUS.PhienBanSanPhamBUS();
     private byte[] selectedImageBytes = null;
     private SanPhamDTO product=new SanPhamDTO();
+    ValidateProducts validator = new ValidateProducts();
     @FXML
     private Pane versionPane;
 
@@ -149,7 +152,7 @@ public class ProductsGUIController {
 
     @FXML
     public void initialize() {
-        ArrayList<SanPhamDTO> arr = SanPhamBUS.selectAll();
+        ArrayList<SanPhamDTO> arr = SanPhamBUS.getAllProducts();
         selectedImageBytes = null;
         insertIntoTableSanPham(arr);
         upsetComboBoxThuongHieu(null);
@@ -239,11 +242,14 @@ public class ProductsGUIController {
 
     @FXML
     void handlePressTimKiem(KeyEvent event) {
-        System.out.println("checked");
+        insertIntoTableSanPham(SanPhamBUS.timKiem(textFieldTimKiem.getText()));
     }
 
     @FXML
     void handleClickButtonResetVersion(MouseEvent event) {
+        ResetVersion();
+    }
+    void ResetVersion() {
         tf_vs_mapb.setText("");
         tf_vs_mausac.setText("");
         tf_vs_ram.setText("");
@@ -251,7 +257,6 @@ public class ProductsGUIController {
         tf_vs_giaban.setText("");
         tf_vs_soluong.setText("");
     }
-
     @FXML
     void handleClickButtonResetProduct(MouseEvent event) {
         ResetProduct();
@@ -350,15 +355,47 @@ public class ProductsGUIController {
     }
     @FXML
     void handleCilckSuaPB(MouseEvent event) {
-
+        validator.isNumber(tf_vs_giaban.getText(), "Giá bán");
+        validator.isNumber(tf_vs_soluong.getText(), "Số lượng");
+        if(validator.showError())
+            return;
+        int flag=PhienBanSanPhamBUS.updatePhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Integer.parseInt(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
+        if(flag==1){
+            insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(tf_vs_masp.getText()));
+            ResetVersion();
+            return;
+        }
+        else if(flag==-1) PhienBanSanPhamBUS.showInfoMessage("Có lỗi xảy ra vui lòng thử lại!");
     }
 
     @FXML
     void handleCilckXoaPB(MouseEvent event) {
-
+        if(SanPhamBUS.showConfirmation("Bạn có chắc muốn xóa Phiên Bản Sản Phẩm có mã là "+tf_vs_mapb.getText()+" không ?")){
+            validator.isNumber(tf_vs_giaban.getText(), "Giá bán");
+            validator.isNumber(tf_vs_soluong.getText(), "Số lượng");
+            if(validator.showError())
+                return;
+            int flag=PhienBanSanPhamBUS.deletePhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Integer.parseInt(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
+            if(flag==1){
+                insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(tf_vs_masp.getText()));
+                ResetVersion();
+                return;
+            }
+            else if(flag==-1) PhienBanSanPhamBUS.showInfoMessage("Có lỗi xảy ra vui lòng thử lại!");
+        }
     }
     @FXML
     void handleCilckAddPB(MouseEvent event) {
-
+        validator.isNumber(tf_vs_giaban.getText(), "Giá bán");
+        validator.isNumber(tf_vs_soluong.getText(), "Số lượng");
+        if(validator.showError())
+            return;
+        int flag=PhienBanSanPhamBUS.addPhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Integer.parseInt(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
+        if(flag==1){
+            insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(tf_vs_masp.getText()));
+            ResetVersion();
+            return;
+        }
+        else if(flag==-1) PhienBanSanPhamBUS.showInfoMessage("Phiên bản sản phẩm đã tồn tại!");
     }
 }

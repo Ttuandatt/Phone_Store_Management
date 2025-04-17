@@ -7,7 +7,6 @@ public class PBSPDTO {
     private String rom;
     private Integer giaBan;
     private Integer soLuong;
-    private String trangThai;
     private String maSP;
     public String getMaPBSP() {
         return maPBSP;
@@ -44,12 +43,6 @@ public class PBSPDTO {
     }
     public void setSoLuong(Integer soLuong) {
         this.soLuong = soLuong;
-    }
-    public String getTrangThai() {
-        return trangThai;
-    }
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
     }
     public String getMaSP() {
         return maSP;

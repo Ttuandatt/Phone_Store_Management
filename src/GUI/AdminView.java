@@ -14,10 +14,9 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
-import GUI.SanPhamGUI;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Parent;
 
 public class AdminView {
 
@@ -251,8 +250,7 @@ public class AdminView {
                 }
             }
         });
-
-
+		
 		// MouseListener cho menu "SUPPLIERS"
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
 			@Override

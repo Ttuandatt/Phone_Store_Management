@@ -1,6 +1,7 @@
 package DTO;
 
 public class ProductsDTO {
+	
 	private String maSP;
 	private String tenSP;
 	private String pin;
@@ -8,9 +9,23 @@ public class ProductsDTO {
 	private String camTruoc;
 	private String camSau;
 	private String xuatXu;
-	private String hinhAnh;
+	private byte[] hinhAnh;
 	private String trangThai;
 	private String maTH;
+	public ProductsDTO() {
+	}
+	public ProductsDTO(String maSP, String tenSP, String pin, String oS, String camTruoc, String camSau, String xuatXu,
+			byte[] hinhAnh, String maTH) {
+		this.maSP = maSP;
+		this.tenSP = tenSP;
+		this.pin = pin;
+		OS = oS;
+		this.camTruoc = camTruoc;
+		this.camSau = camSau;
+		this.xuatXu = xuatXu;
+		this.hinhAnh = hinhAnh;
+		this.maTH = maTH;
+	}
 	public String getMaSP() {
 		return maSP;
 	}
@@ -53,10 +68,10 @@ public class ProductsDTO {
 	public void setXuatXu(String xuatXu) {
 		this.xuatXu = xuatXu;
 	}
-	public String getHinhAnh() {
+	public byte[] getHinhAnh() {
 		return hinhAnh;
 	}
-	public void setHinhAnh(String hinhAnh) {
+	public void setHinhAnh(byte[] hinhAnh) {
 		this.hinhAnh = hinhAnh;
 	}
 	public String getTrangThai() {
