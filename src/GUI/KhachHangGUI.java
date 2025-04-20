@@ -54,7 +54,7 @@ public class KhachHangGUI extends JPanel{
 	DefaultTableModel KhachHangModel = new DefaultTableModel();
 	ArrayList<KhachHangDTO> KhachHangArr = new ArrayList<KhachHangDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
 	private JComboBox sortComboBox;
-	private JPanel nhaCungCapContent;
+	private JPanel khachHangContent;
 	private JTextField txtTimKiem;
 	
 	//Constructor
@@ -68,16 +68,16 @@ public class KhachHangGUI extends JPanel{
     private void initComponents() {
         setLayout(new GridBagLayout()); //set Layout
         GridBagConstraints gbc = new GridBagConstraints();
-        nhaCungCapContent = new JPanel();
-        nhaCungCapContent.setBackground(Color.white);
-        nhaCungCapContent.setLayout(new GridBagLayout());
+        khachHangContent = new JPanel();
+        khachHangContent.setBackground(Color.white);
+        khachHangContent.setLayout(new GridBagLayout());
         
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(nhaCungCapContent, gbc); // Thêm vào ProductsGUI
+        add(khachHangContent, gbc); // Thêm vào ProductsGUI
         
         //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
         JPanel topPanel, bottomPanel;
@@ -90,7 +90,7 @@ public class KhachHangGUI extends JPanel{
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        nhaCungCapContent.add(topPanel, gbc);
+        khachHangContent.add(topPanel, gbc);
         
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridBagLayout());
@@ -102,7 +102,7 @@ public class KhachHangGUI extends JPanel{
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
-        nhaCungCapContent.add(bottomPanel, gbc);
+        khachHangContent.add(bottomPanel, gbc);
         
         
         
