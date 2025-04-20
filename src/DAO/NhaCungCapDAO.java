@@ -38,7 +38,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
                     nhacungcapDTO.setTenNCC(rs.getString(2));
                     nhacungcapDTO.setSdt(rs.getString(3));
                     nhacungcapDTO.setEmail(rs.getString(4));
-                    nhacungcapDTO.setDiaChiNCC(rs.getString(5));
+                    nhacungcapDTO.setDiaChi(rs.getString(5));
                     nhacungcapDTO.setTrangthai(rs.getString(6));
                     
                     arr.add(nhacungcapDTO);
@@ -148,9 +148,12 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
                     String mancc = rs.getString(1);
                     String tenncc = rs.getString(2);
                     String diachi = rs.getString(3);
-                    String sdt = rs.getString(4);
+                    String sdt = rs.getString(5);
+                    String trangThai = rs.getString(6);
+                    String email = rs.getString(4); 
+                    
                 
-                    ncc = new NhaCungCapDTO(mancc, tenncc, diachi, sdt);
+                    ncc = new NhaCungCapDTO(mancc, tenncc, diachi, email,sdt, trangThai);
                 }
                 
             }catch(Exception e){
@@ -183,7 +186,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
                     NhaCungCapDTO ncc = new NhaCungCapDTO();
                     ncc.setMaNCC(rs.getString(1));
                     ncc.setTenNCC(rs.getString(2));
-                    ncc.setDiaChiNCC(rs.getString(3));
+                    ncc.setDiaChi(rs.getString(3));
                     ncc.setSdt(rs.getString(4));
                     
                     
@@ -223,5 +226,6 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
 		return ncc;
 
 	}
+  
 
 }
