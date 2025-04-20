@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class ChiTietChamCongDTO {
 	private String maCTCC;
-	private Date ngayTao;
+	private Date ngayChamCong;
 	private String loaiChamCong;
 	private String chiTiet;
 	String maBCC;
@@ -17,10 +17,10 @@ public class ChiTietChamCongDTO {
 		super();
 	}
 
-	public ChiTietChamCongDTO(String maCTCC, Date ngayTao, String loaiChamCong, String chiTiet, String maBCC,
+	public ChiTietChamCongDTO(String maCTCC, Date ngayChamCong, String loaiChamCong, String chiTiet, String maBCC,
 			Double soGioOT) {
 		this.maCTCC = maCTCC;
-		this.ngayTao = ngayTao;
+		this.ngayChamCong = ngayChamCong;
 		this.loaiChamCong = loaiChamCong;
 		this.chiTiet = chiTiet;
 		this.maBCC = maBCC;
@@ -35,12 +35,12 @@ public class ChiTietChamCongDTO {
 		this.maCTCC = maCTCC;
 	}
 
-	public Date getNgayTao() {
-		return ngayTao;
+	public Date getngayChamCong() {
+		return ngayChamCong;
 	}
 
-	public void setNgayTao(Date ngayTao) {
-		this.ngayTao = ngayTao;
+	public void setNgayChamCong(Date ngayChamCong) {
+		this.ngayChamCong = ngayChamCong;
 	}
 
 	public String getLoaiChamCong() {

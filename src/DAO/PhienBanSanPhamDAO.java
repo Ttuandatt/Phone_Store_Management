@@ -28,7 +28,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 				pbsp.setMauSac(rs.getString("mauSac"));
 				pbsp.setRam(rs.getString("ram"));
 				pbsp.setRom(rs.getString("rom"));
-				pbsp.setGiaBan(rs.getInt("giaBan"));
+				pbsp.setGiaBan(rs.getDouble("giaBan"));
 				pbsp.setSoLuong(rs.getInt("soLuong"));
 				pbsp.setTrangThai(rs.getString("trangThai"));
 				pbsp.setMaSP(rs.getString("maSP"));
@@ -70,7 +70,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
                 ps.setString(2, pbsp.getMauSac());
                 ps.setString(3, pbsp.getRam());
                 ps.setString(4, pbsp.getRom());
-                ps.setInt(5, pbsp.getGiaBan());
+                ps.setDouble(5, pbsp.getGiaBan());
                 ps.setInt(6, pbsp.getSoLuong());
                 ps.setString(7, pbsp.getMaSP());
                 rowsInserted = ps.executeUpdate();
@@ -115,7 +115,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 			ps.setString(1, pbsp.getMauSac());
 			ps.setString(2, pbsp.getRam());
 			ps.setString(3, pbsp.getRom());
-			ps.setInt(4, pbsp.getGiaBan());
+			ps.setDouble(4, pbsp.getGiaBan());
 			ps.setInt(5, pbsp.getSoLuong());
 			ps.setString(6, pbsp.getMaPBSP());
 

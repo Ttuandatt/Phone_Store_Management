@@ -1,6 +1,8 @@
 package GUI;
 
 import BUS.ChiTietPhieuNhapBUS;
+import BUS.DangNhapBUS;
+import BUS.NhaCungCapBUS;
 import BUS.PhienBanSanPhamBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
@@ -70,10 +72,11 @@ public class NhapHangGUI extends JPanel {
 	SanPhamBUS spBUS = new SanPhamBUS();
 	PhieuNhapBUS pnBUS = new PhieuNhapBUS();
 	ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
+	NhaCungCapBUS nccBUS = new NhaCungCapBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
 	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
-	JComboBox<String> brandComboBox, supplierComboBox;
+	JComboBox<String> brandComboBox, nhaCungCapComboBox;
 	JPanel pnContent;
 	JLabel imageLabel, lblTongTien, lblMaPN, lblMaKho, lblMaNguoiTao, lblNhaCungCap, lblNgayTao;
 	JTextField txtTimKiem, txtMaPN, txtMaKho, txtMaNguoiTao, txtNgayTao;
@@ -81,7 +84,8 @@ public class NhapHangGUI extends JPanel {
 	LocalDate currentDate = LocalDate.now();
 	// Định dạng ngày thành dd/MM/yyyy
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	String formattedDate = currentDate.format(formatter);
+	DangNhapBUS dnBUS = new DangNhapBUS();
+	String maNV = dnBUS.getMaNV();
 
 	// Constructor
 	public NhapHangGUI() {
@@ -89,6 +93,8 @@ public class NhapHangGUI extends JPanel {
 		initComponents();
 		loadProductList();
 		loadChosenProduct();
+	
+		txtMaNguoiTao.setText(maNV);
 	}
 
 	////////////////////////////////////////// METHODS//////////////////////////////////////
@@ -421,21 +427,23 @@ public class NhapHangGUI extends JPanel {
 
 		// Add combobox suppliers
 		String[] suppliers = { "", "Thêm nhà cung cấp..." };
-		supplierComboBox = new JComboBox<String>(suppliers);
-		supplierComboBox.setBounds(110, 100, 200, 20);
-		informationRightPanel.add(supplierComboBox);
-		supplierComboBox.addItemListener(e -> {
+		nhaCungCapComboBox = new JComboBox<String>(suppliers);
+		nhaCungCapComboBox.setBounds(110, 100, 200, 20);
+		informationRightPanel.add(nhaCungCapComboBox);
+		nhaCungCapComboBox.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				String selected = (String) supplierComboBox.getSelectedItem();
+				String selected = (String) nhaCungCapComboBox.getSelectedItem();
 				if ("Thêm nhà cung cấp...".equals(selected)) {
 					newSupplierDialog();
 				}
 			}
 		});
+		fillNhaCungCapCombobox(nhaCungCapComboBox);
 		
 		lblNgayTao = new JLabel("Ngày tạo:");
 		lblNgayTao.setBounds(340, 10, 100, 20);
 		informationRightPanel.add(lblNgayTao);
+		
 
 		
 		txtMaPN = new JTextField();
@@ -450,7 +458,7 @@ public class NhapHangGUI extends JPanel {
 
 		txtMaNguoiTao = new JTextField();
 //		txtMaNguoiTao.setEditable(false);
-//		txtMaNguoiTao.setEnabled(false);
+		txtMaNguoiTao.setEnabled(false);
 		txtMaNguoiTao.setBounds(110, 70, 100, 20);
 		informationRightPanel.add(txtMaNguoiTao);
 		
@@ -459,12 +467,9 @@ public class NhapHangGUI extends JPanel {
 		txtNgayTao.setEnabled(false);
 		txtNgayTao.setBounds(400, 10, 100, 20);
 		informationRightPanel.add(txtNgayTao);
+		String ngayTao = String.valueOf(new java.sql.Date(System.currentTimeMillis()));
+        txtNgayTao.setText(ngayTao);
 		
-		
-
-		// Điền giá trị vào các txt
-
-		txtNgayTao.setText(formattedDate);
 		
 		
 		
@@ -734,7 +739,6 @@ public class NhapHangGUI extends JPanel {
 		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-			    System.out.println("Hovered"); // Kiểm tra xem sự kiện có chạy không
 				btnSave.setBackground(Color.decode("#3A96CF"));
 				btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
@@ -823,8 +827,8 @@ public class NhapHangGUI extends JPanel {
 			String phone = phoneField.getText().trim();
 
 			if (!newSupplier.isEmpty() && !address.isEmpty() && !phone.isEmpty()) {
-				supplierComboBox.insertItemAt(newSupplier, supplierComboBox.getItemCount() - 1);
-				supplierComboBox.setSelectedItem(newSupplier);
+				nhaCungCapComboBox.insertItemAt(newSupplier, nhaCungCapComboBox.getItemCount() - 1);
+				nhaCungCapComboBox.setSelectedItem(newSupplier);
 				JOptionPane.showMessageDialog(this,
 						"Nhà cung cấp đã được thêm:\nTên: " + newSupplier + "\nĐịa chỉ: " + address + "\nSố điện thoại: " + phone);
 			} else {
@@ -1063,7 +1067,7 @@ public class NhapHangGUI extends JPanel {
 		//maNV, maKho, maNCC chờ Minh code xong phần dăng nhập, nhà cung cấp sẽ hoàn thiện
 		pn.setMaNV(txtMaNguoiTao.getText().trim());
 		pn.setMaKho(txtMaKho.getText().trim());
-//		pn.setMaNCC(supplierComboBox.getSelectedItem().toString());	
+//		pn.setMaNCC(nhaCungCapComboBox.getSelectedItem().toString());	
 		pn.setMaNCC("NCC001");	
 		pn.setTrangThai("Chờ xác nhận");
 		String messagePN = pnBUS.insert(pn);
@@ -1130,7 +1134,7 @@ public class NhapHangGUI extends JPanel {
     			String ram = pbsp.getRam();
     			String rom = pbsp.getRom();
     			int soLuong = pbsp.getSoLuong();
-    		    String gia = String.valueOf((long) pbsp.getGiaBan());
+    		    String gia = String.valueOf((Double) pbsp.getGiaBan());
     			String trangThai = pbsp.getTrangThai();
     			
     		    Object[] row = {maPBSP, tenSP, mauSac, ram, rom, gia, soLuong, trangThai};
@@ -1143,29 +1147,22 @@ public class NhapHangGUI extends JPanel {
         }
     }
 
-	public static java.sql.Date convertToSQLDate(String dateString) {
-		try {
-			// Định dạng đầu vào và đầu ra
-			SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
-			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-			// Chuyển đổi sang định dạng chuẩn
-			Date parsedDate = (Date) inputFormat.parse(dateString);
-			String formattedDate = outputFormat.format(parsedDate);
-
-			return java.sql.Date.valueOf(formattedDate);
-		} catch (Exception e) {
-			System.out.println("Lỗi chuyển đổi ngày: " + e.getMessage());
-			return null;
-		}
-	}
 	
 	private void refreshList(){
         // Xóa tất cả các dòng trong mô hình bảng
         productModel.setRowCount(0);
         loadProductList();
-        supplierComboBox.setSelectedIndex(0);
+        nhaCungCapComboBox.setSelectedIndex(0);
         txtTimKiem.setText("");
+    }
+	
+	private void fillNhaCungCapCombobox(JComboBox<String> combobox) {
+    	ArrayList<NhaCungCapDTO> arrNCC = nccBUS.selectAll();
+    	nhaCungCapComboBox.removeAllItems(); // Xóa dữ liệu cũ (nếu có)
+    	for(NhaCungCapDTO ncc: arrNCC) {
+    		nhaCungCapComboBox.addItem(ncc.getTenNCC());
+    	}
+    	nhaCungCapComboBox.addItem("Thêm nhà cung cấp...");
     }
 	
 	public static void log(String message) {

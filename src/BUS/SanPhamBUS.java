@@ -32,6 +32,10 @@ public class SanPhamBUS {
     public ArrayList<ThuongHieuDTO> getAllThuongHieu() {
         return thuongHieuDAO.selectAll();
     }
+    
+    public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
+ 		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
+ 	}
 
     public int addProduct(SanPhamDTO product) {
         // validate

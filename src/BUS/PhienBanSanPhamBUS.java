@@ -18,7 +18,7 @@ public class PhienBanSanPhamBUS {
 		validator.isRequired(pbsp.getMauSac(), "Màu sắc");
 		validator.isRequired(pbsp.getRam(), "RAM");
 		validator.isRequired(pbsp.getRom(), "ROM");
-		validator.isRequired(pbsp.getGiaBan(), "Giá bán");
+		validator.isRequired(String.valueOf(pbsp.getGiaBan()), "Giá bán");
 		validator.isRequired(pbsp.getSoLuong(), "Số lượng");
 		if(validator.showError())
             return 0;
@@ -33,7 +33,7 @@ public class PhienBanSanPhamBUS {
 		validator.isRequired(pbsp.getMauSac(), "Màu sắc");
 		validator.isRequired(pbsp.getRam(), "RAM");
 		validator.isRequired(pbsp.getRom(), "ROM");
-		validator.isRequired(pbsp.getGiaBan(), "Giá bán");
+		validator.isRequired(String.valueOf(pbsp.getGiaBan()), "Giá bán");
 		validator.isRequired(pbsp.getSoLuong(), "Số lượng");
 		if(validator.showError())
             return 0;

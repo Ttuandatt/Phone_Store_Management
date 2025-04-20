@@ -65,12 +65,12 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                DTO.PhienBanSanPhamDTO pd = new DTO.PhienBanSanPhamDTO();
+                PhienBanSanPhamDTO pd = new DTO.PhienBanSanPhamDTO();
                 pd.setMaPBSP(rs.getString("maPBSP"));
                 pd.setMauSac(rs.getString("mauSac"));
                 pd.setRam(rs.getString("ram"));
                 pd.setRom(rs.getString("rom"));
-                pd.setGiaBan(rs.getInt("giaBan"));
+                pd.setGiaBan(rs.getDouble("giaBan"));
                 pd.setSoLuong(rs.getInt("soLuong"));
                 pd.setMaSP(rs.getString("maSP"));
                 pd.setMaSP(rs.getString("maSP"));
@@ -239,4 +239,38 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         }
         return listSanPham;
     }
+    
+    public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
+     	ArrayList<SanPhamDTO> tenSP = new ArrayList<SanPhamDTO>();
+     	
+     	try {
+     		jdbc.openConnection();
+     		
+     		String query = "select tensp from sanpham join pbsp on sanpham.masp = pbsp.masp where pbsp.mapbsp=?";
+     	
+     		PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+     		ps.setString(1, maPBSP);
+     	
+     		
+     		ResultSet rs = ps.executeQuery();
+     		while(rs.next()) {
+     			SanPhamDTO sp = new SanPhamDTO();
+     			
+     			sp.setTenSP(rs.getString("tenSP"));
+     			
+     			tenSP.add(sp);
+     		}
+     		
+     		ps.close();
+     		rs.close();
+     	}catch (Exception e) {
+             e.printStackTrace();
+             e.getMessage();
+         } finally {
+             jdbc.closeConnection();
+         }
+     	
+     	return tenSP;
+     }
+
 }

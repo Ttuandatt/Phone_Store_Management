@@ -76,7 +76,6 @@ public class XuatHangGUI extends JPanel {
 	LocalDate currentDate = LocalDate.now();
 	// Định dạng ngày thành dd/MM/yyyy
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	String formattedDate = currentDate.format(formatter);
 
 	// Constructor
 	public XuatHangGUI() {
@@ -416,7 +415,8 @@ public class XuatHangGUI extends JPanel {
 		txtNgayTao.setEnabled(false);
 		txtNgayTao.setBounds(400, 10, 100, 20);
 		informationRightPanel.add(txtNgayTao);
-		txtNgayTao.setText(formattedDate);
+		String ngayTao = String.valueOf(new java.sql.Date(System.currentTimeMillis()));
+        txtNgayTao.setText(ngayTao);
 
 
 		lblDiaChi = new JLabel("Địa chỉ: ");
@@ -858,7 +858,7 @@ public class XuatHangGUI extends JPanel {
     			String ram = pbsp.getRam();
     			String rom = pbsp.getRom();
     			int soLuong = pbsp.getSoLuong();
-    		    String gia = String.valueOf((long) pbsp.getGiaBan());
+    		    String gia = String.valueOf((Double) pbsp.getGiaBan());
     			String trangThai = pbsp.getTrangThai();
     			
     		    Object[] row = {maPBSP, tenSP, mauSac, ram, rom, gia, soLuong, trangThai};
@@ -871,23 +871,6 @@ public class XuatHangGUI extends JPanel {
         }
     }
 
-	public static java.sql.Date convertToSQLDate(String dateString) {
-		try {
-			// Định dạng đầu vào và đầu ra
-			SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
-			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-			// Chuyển đổi sang định dạng chuẩn
-			Date parsedDate = (Date) inputFormat.parse(dateString);
-			String formattedDate = outputFormat.format(parsedDate);
-
-			return java.sql.Date.valueOf(formattedDate);
-		} catch (Exception e) {
-			System.out.println("Lỗi chuyển đổi ngày: " + e.getMessage());
-			return null;
-		}
-	}
-	
 	private void refreshList(){
         // Xóa tất cả các dòng trong mô hình bảng
         productModel.setRowCount(0);

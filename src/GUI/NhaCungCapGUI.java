@@ -35,7 +35,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import popup.PopupNhaCungCap;
 
 
 
@@ -537,7 +536,7 @@ public class NhaCungCapGUI extends JPanel{
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchPerformed(employeeTable);
+//                searchPerformed(employeeTable);
             }
         });
         btnSearch.addMouseListener(new MouseAdapter() {
@@ -647,7 +646,7 @@ public class NhaCungCapGUI extends JPanel{
 
 	}
          private void addPerformed(JTable tb){
-             PopupNhaCungCap frameThem = new PopupNhaCungCap("Thêm nhà cung cấp", "THÊM NHÀ CUNG CẤP","add");
+//             PopupNhaCungCap frameThem = new PopupNhaCungCap("Thêm nhà cung cấp", "THÊM NHÀ CUNG CẤP","add");
     }
         private void refreshList(){
         //Xóa tất cả các dòng trong model table
@@ -683,7 +682,7 @@ public class NhaCungCapGUI extends JPanel{
        private void updatePerformed(JTable tb){
         int selected = suppliersTable.getSelectedRow();
         if(selected!=-1){
-            PopupNhaCungCap frameSua = new PopupNhaCungCap("Sửa nhà cung cấp", "SỬA NHÀ CUNG CẤP", "fix");
+//            PopupNhaCungCap frameSua = new PopupNhaCungCap("Sửa nhà cung cấp", "SỬA NHÀ CUNG CẤP", "fix");
         }
         else
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để sửa", "Thông báo", JOptionPane.WARNING_MESSAGE);

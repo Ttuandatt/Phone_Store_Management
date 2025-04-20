@@ -359,7 +359,7 @@ public class ProductsGUIController {
         validator.isNumber(tf_vs_soluong.getText(), "Số lượng");
         if(validator.showError())
             return;
-        int flag=PhienBanSanPhamBUS.updatePhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Integer.parseInt(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
+        int flag=PhienBanSanPhamBUS.updatePhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Double.parseDouble(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
         if(flag==1){
             insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(tf_vs_masp.getText()));
             ResetVersion();
@@ -375,7 +375,7 @@ public class ProductsGUIController {
             validator.isNumber(tf_vs_soluong.getText(), "Số lượng");
             if(validator.showError())
                 return;
-            int flag=PhienBanSanPhamBUS.deletePhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Integer.parseInt(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
+            int flag=PhienBanSanPhamBUS.deletePhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Double.parseDouble(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
             if(flag==1){
                 insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(tf_vs_masp.getText()));
                 ResetVersion();
@@ -390,7 +390,7 @@ public class ProductsGUIController {
         validator.isNumber(tf_vs_soluong.getText(), "Số lượng");
         if(validator.showError())
             return;
-        int flag=PhienBanSanPhamBUS.addPhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Integer.parseInt(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
+        int flag=PhienBanSanPhamBUS.addPhienBanSanPham(new PhienBanSanPhamDTO(tf_vs_mapb.getText(),tf_vs_mausac.getText(),tf_vs_ram.getText(),tf_vs_rom.getText(),Double.parseDouble(tf_vs_giaban.getText()),Integer.parseInt(tf_vs_soluong.getText()),tf_vs_masp.getText()));
         if(flag==1){
             insertIntoTablePBSP(SanPhamBUS.getAllPBSMBymaSP(tf_vs_masp.getText()));
             ResetVersion();

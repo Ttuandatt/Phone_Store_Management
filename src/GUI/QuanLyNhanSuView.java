@@ -218,7 +218,7 @@ public class QuanLyNhanSuView {
 
 		// ActionListener cho menuItem Danh sách dơn xin
 		menuItemDanhSachDonXin.addActionListener(e -> {
-			LeaveRequestGUI leaveRequestObj = new LeaveRequestGUI();
+			DanhSachDonXinGUI leaveRequestObj = new DanhSachDonXinGUI();
 			contentPanel.add(leaveRequestObj, danhSachDonXin_Identity);
 			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 			cardLayout.show(contentPanel, danhSachDonXin_Identity);
@@ -239,7 +239,7 @@ public class QuanLyNhanSuView {
 		menuTaoDon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				CreateLeaveRequestGUI createLeaveRequestObj = new CreateLeaveRequestGUI();
+				TaoDonXinGUI createLeaveRequestObj = new TaoDonXinGUI();
 				contentPanel.add(createLeaveRequestObj, taoDon_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, taoDon_Identity);
