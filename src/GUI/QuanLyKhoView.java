@@ -283,7 +283,7 @@ public class QuanLyKhoView {
 		menuTaoDon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				CreateLeaveRequestGUI createLeaveRequestObj = new CreateLeaveRequestGUI();
+				TaoDonXinGUI createLeaveRequestObj = new TaoDonXinGUI();
 				contentPanel.add(createLeaveRequestObj, taoDon_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, taoDon_Identity);

@@ -5,7 +5,7 @@ public class PhienBanSanPhamDTO {
 	private String mauSac;
 	private String ram;
 	private String rom;
-	private double giaBan;
+	private Double giaBan;
 	private int soLuong;
 	private String trangThai;
 	private String maSP;
@@ -14,15 +14,15 @@ public class PhienBanSanPhamDTO {
 	public PhienBanSanPhamDTO() {
 	}
 
-	public PhienBanSanPhamDTO(String maPBSP, String mauSac, String ram, String rom, double giaBan, int soLuong,
-			String trangThai, String maSP) {
+	public PhienBanSanPhamDTO(String maPBSP, String mauSac, String ram, String rom, Double giaBan, int soLuong,
+			 String maSP) {
+		super();
 		this.maPBSP = maPBSP;
 		this.mauSac = mauSac;
 		this.ram = ram;
 		this.rom = rom;
 		this.giaBan = giaBan;
 		this.soLuong = soLuong;
-		this.trangThai = trangThai;
 		this.maSP = maSP;
 	}
 	
@@ -66,11 +66,11 @@ public class PhienBanSanPhamDTO {
 		this.rom = rom;
 	}
 
-	public double getGiaBan() {
+	public Double getGiaBan() {
 		return giaBan;
 	}
 
-	public void setGiaBan(double giaBan) {
+	public void setGiaBan(Double giaBan) {
 		this.giaBan = giaBan;
 	}
 

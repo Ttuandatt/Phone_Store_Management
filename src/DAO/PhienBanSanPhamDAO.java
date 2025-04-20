@@ -17,7 +17,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 		try {
 			jdbc.openConnection();
 
-			String query = "select * from pbsp";
+			String query = "SELECT * FROM PBSP WHERE trangThai='on'";
 
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 
@@ -52,21 +52,83 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 	}
 
 	@Override
-	public int insert(PhienBanSanPhamDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insert(PhienBanSanPhamDTO pbsp) {
+		int rowsInserted = 0;
+		try {
+			jdbc.openConnection();
+			String query = "SELECT * FROM PBSP WHERE maPBSP=?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, pbsp.getMaPBSP());
+			
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+                query="INSERT INTO PBSP(maPBSP,mauSac,ram, rom, giaBan, soLuong, trangThai,maSP) "+
+						" VALUES (?,?,?,?,?,?,'on',?)";
+                ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, pbsp.getMaPBSP());
+                ps.setString(2, pbsp.getMauSac());
+                ps.setString(3, pbsp.getRam());
+                ps.setString(4, pbsp.getRom());
+                ps.setDouble(5, pbsp.getGiaBan());
+                ps.setInt(6, pbsp.getSoLuong());
+                ps.setString(7, pbsp.getMaSP());
+                rowsInserted = ps.executeUpdate();
+            }
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
+
+		return rowsInserted;
 	}
 
 	@Override
-	public int delete(PhienBanSanPhamDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int delete(PhienBanSanPhamDTO pbsp) {
+		int rowsUpdate = 0;
+        try {
+            jdbc.openConnection();
+            String query = "UPDATE PBSP SET trangThai='off' WHERE maPBSP=?";
+
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, pbsp.getMaPBSP());
+            rowsUpdate = ps.executeUpdate();
+            ps.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        } finally {
+            jdbc.closeConnection();
+        }
+        return rowsUpdate;
 	}
 
 	@Override
-	public int update(PhienBanSanPhamDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(PhienBanSanPhamDTO pbsp) {
+		int rowsUpdate = 0;
+        try {
+            jdbc.openConnection();
+            String query = "UPDATE PBSP SET mauSac=?,ram=?,rom=?,giaBan=?,soLuong=? WHERE maPBSP=?";
+
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, pbsp.getMauSac());
+			ps.setString(2, pbsp.getRam());
+			ps.setString(3, pbsp.getRom());
+			ps.setDouble(4, pbsp.getGiaBan());
+			ps.setInt(5, pbsp.getSoLuong());
+			ps.setString(6, pbsp.getMaPBSP());
+
+            rowsUpdate = ps.executeUpdate();
+            ps.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        } finally {
+            jdbc.closeConnection();
+        }
+        return rowsUpdate;
 	}
 	
 	public int updateSoLuong(String maPBSP, int soLuong) {

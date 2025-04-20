@@ -17,18 +17,13 @@ public class SanPhamBUS {
 	SanPhamDAO spDAO = new SanPhamDAO();
 	ValidateProducts validator = new ValidateProducts();
     ThuongHieuDAO thuongHieuDAO = new ThuongHieuDAO();
-	public ArrayList<SanPhamDTO> selectAll(){
+	public ArrayList<SanPhamDTO> getAllProducts(){
         return spDAO.selectAll();
     }
 	
 	public String getTenSanPhamByMaPBSP(String maPBSP) {
 		return spDAO.getTenSanPhamByMaPBSP(maPBSP);
 	}
-	
-	public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
-		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
-	}
-	
 	
 	public ArrayList<PhienBanSanPhamDTO> getAllPBSMBymaSP(String maSP) {
         return spDAO.selectPBSPBymaSP(maSP);
@@ -37,6 +32,10 @@ public class SanPhamBUS {
     public ArrayList<ThuongHieuDTO> getAllThuongHieu() {
         return thuongHieuDAO.selectAll();
     }
+    
+    public ArrayList<SanPhamDTO> getTenSanPhamByMaPBSP2(String maPBSP) {
+ 		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
+ 	}
 
     public int addProduct(SanPhamDTO product) {
         // validate
@@ -104,6 +103,9 @@ public class SanPhamBUS {
             return 1;
         }
         return -1;
+    }
+    public ArrayList<SanPhamDTO> timKiem(String search_query) {
+        return spDAO.TimKiemTheoTen(search_query);
     }
 
 

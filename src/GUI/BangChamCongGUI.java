@@ -746,8 +746,7 @@ public class BangChamCongGUI extends JPanel{
 		ngayNghiTable.setDefaultEditor(Object.class, null);
 		
 		ngayNghiTable.setModel(ngayNghiModel);
-		ngayNghiModel.addColumn("Ngày bắt đầu nghỉ");
-		ngayNghiModel.addColumn("Ngày kết thúc nghỉ");
+		ngayNghiModel.addColumn("Ngày nghỉ");
 		ngayNghiModel.addColumn("Loại");
 		ngayNghiModel.addColumn("Lý do");
 	}
@@ -986,20 +985,21 @@ public class BangChamCongGUI extends JPanel{
 			DefaultTableModel bccModel = (DefaultTableModel)bangChamCongTable.getModel();
 			
 	
-			String maNV = (String) bccModel.getValueAt(selectedRow,7);
-			log("maNV=" + maNV);
-			ArrayList<DonXinNghiDTO> thongTinNgayNghi = dxnBUS.getThongTinNgayNghi(maNV);
+			String maBCC = (String) bccModel.getValueAt(selectedRow,0);
+			log("maBCC=" + maBCC);
+			ArrayList<ChiTietChamCongDTO> thongTinNgayNghi = ctccBUS.getThongTinNgayNghi(maBCC);
 			
 			ngayNghiModel.setRowCount(0);
 			for(int i=0; i<thongTinNgayNghi.size(); i++) {
-				Date ngayBD = thongTinNgayNghi.get(i).getNgayBD();
-				log("ngayBD="+ngayBD);
-				Date ngayKT = thongTinNgayNghi.get(i).getNgayKT();
-				log("ngayKT="+ngayKT);
-				String loai = "";
-				String lyDo = thongTinNgayNghi.get(i).getLyDo();
+				Date ngayChamCong = thongTinNgayNghi.get(i).getngayChamCong();
+				log("ngayChamCong="+ngayChamCong);
+				String loaiChamCong = thongTinNgayNghi.get(i).getLoaiChamCong();
+				log("loaiChamCong="+loaiChamCong);
+				String chiTiet = thongTinNgayNghi.get(i).getChiTiet();
+				log("chiTiet="+chiTiet);
 				
-				Object[] row = {ngayBD, ngayKT, loai, lyDo};
+				
+				Object[] row = {ngayChamCong, loaiChamCong, chiTiet};
 				ngayNghiModel.addRow(row);
 			}
 		}
@@ -1016,7 +1016,7 @@ public class BangChamCongGUI extends JPanel{
 		
 			tangCaModel.setRowCount(0);
 			for(int i=0; i<thongTinTangCa.size(); i++) {
-				Date ngayTangCa = thongTinTangCa.get(i).getNgayTao();
+				Date ngayTangCa = thongTinTangCa.get(i).getngayChamCong();
 				String loaiTangCa = thongTinTangCa.get(i).getLoaiChamCong();
 				Double soGioTangCa = thongTinTangCa.get(i).getSoGioOT();
 				

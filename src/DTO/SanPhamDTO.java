@@ -11,13 +11,10 @@ public class SanPhamDTO {
 	private byte[] hinhAnh;
 	private String trangThai;
 	private String maTH;
-	
-	
-	//constructor
 	public SanPhamDTO() {
 	}
 	public SanPhamDTO(String maSP, String tenSP, String pin, String oS, String camTruoc, String camSau, String xuatXu,
-			byte[] hinhAnh, String trangThai, String maTH) {
+		byte[] hinhAnh, String trangThai, String maTH) {
 		this.maSP = maSP;
 		this.tenSP = tenSP;
 		this.pin = pin;
@@ -26,16 +23,23 @@ public class SanPhamDTO {
 		this.camSau = camSau;
 		this.xuatXu = xuatXu;
 		this.hinhAnh = hinhAnh;
-		this.trangThai = trangThai;
 		this.maTH = maTH;
 	}
-	
-	
-	
-	public SanPhamDTO(String text, String text2, String text3, String text4, String text5, String text6, String text7,
-			byte[] selectedImageBytes, String maTH2) {
-		
+	public SanPhamDTO(String maSP, String tenSP, String pin, String oS, String camTruoc, String camSau, String xuatXu,
+			byte[] hinhAnh, String maTH) {
+		this.maSP = maSP;
+		this.tenSP = tenSP;
+		this.pin = pin;
+		OS = oS;
+		this.camTruoc = camTruoc;
+		this.camSau = camSau;
+		this.xuatXu = xuatXu;
+		this.hinhAnh = hinhAnh;
+		this.maTH = maTH;
 	}
+
+	
+	
 	//getter, setter
 	public String getMaSP() {
 		return maSP;

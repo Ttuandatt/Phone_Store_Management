@@ -8,8 +8,8 @@ import javafx.scene.control.Alert.AlertType;
 public class ValidateProducts {
     private ArrayList<String> strings = new ArrayList<>();
 
-    public void isRequired(String data, String message) {
-        if (data == null || data.trim().isEmpty()) {
+    public void isRequired(String double1, String message) {
+        if (double1 == null || double1.trim().isEmpty()) {
             strings.add(message + " không được để trống");
         }
     }
@@ -21,6 +21,13 @@ public class ValidateProducts {
     public void isRequired(Integer data, String message) {
         if (data == null || data <= 0) {
             strings.add(message + " không hợp lệ");
+        }
+    }
+    public void isNumber(String data, String message){
+        try {
+            Integer.parseInt(data);
+        } catch (Exception e) {
+            strings.add(message + " phải là số!");
         }
     }
 
@@ -45,5 +52,6 @@ public class ValidateProducts {
         this.strings=new ArrayList<>();
         return flag;
     }
+	
 
 }

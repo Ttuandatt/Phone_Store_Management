@@ -44,6 +44,7 @@ CREATE TABLE PBSP (
     ram NVARCHAR(50) NOT NULL,
     rom NVARCHAR(50) NOT NULL,
     giaBan DECIMAL(18,2) NOT NULL,
+    soLuong INT,
     trangThai VARCHAR(10) CHECK (trangThai IN ('on', 'off')) NOT NULL,
     maSP VARCHAR(50) NOT NULL,
 
@@ -143,7 +144,7 @@ CREATE TABLE PHIEUNHAP (
     maPN VARCHAR(50) NOT NULL,
     ngayTao DATE NOT NULL,
     tongTien FLOAT,
-    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng')) NOT NULL,
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã nhận hàng', N'Từ chối')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
     maKho VARCHAR(50) NOT NULL,
     maNCC VARCHAR(50) NOT NULL,
@@ -174,7 +175,7 @@ CREATE TABLE PHIEUXUAT (
     diaChi NVARCHAR(255),
     tongTien FLOAT,
     httt NVARCHAR(50),
-    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã xuất hàng')) NOT NULL,
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Chờ xác nhận', N'Đã xác nhận', N'Đã xuất hàng', N'Từ chối')) NOT NULL,
     maNV VARCHAR(50) NOT NULL,
     maKho VARCHAR(50) NOT NULL,
     maKH VARCHAR(50) NOT NULL,
@@ -272,7 +273,7 @@ CREATE TABLE BANGCHAMCONG(
 -- Bảng ghi chú
 CREATE TABLE CHITIETCHAMCONG (
     maCTCC varchar(50) , 	-- = "CT" + thang + nam + manv 
-    ngayTao DATE NOT NULL,
+    ngayChamCong DATE NOT NULL,
     loaiChamCong NVARCHAR(255) CHECK (loaiChamCong IN (N'Tăng ca ngày lễ', N'Tăng ca chủ nhật', N'Tăng ca ngày thường', 
 	N'Nghỉ phép có lương', N'Nghỉ phép không lương ', N'Nghỉ không phép', N'Nghỉ nửa buổi', N'Nghỉ việc')) NOT NULL, 	-- Thiếu gì bổ sung thêm
     chiTiet nvarchar(255),        -- Nếu nghỉ thì ghi lý do nghỉ
@@ -303,21 +304,21 @@ INSERT INTO SANPHAM (maSP, tenSP, pin, OS, camTruoc, camSau, xuatXu, hinhAnh, tr
 ('SP005', N'Vivo X70', '4400mAh', 'Android', '32MP', '50MP + 12MP', 'China', 0x, 'off', 'TH005');
 
 -- Thêm dữ liệu vào bảng PBSP
-INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, trangThai, maSP)
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP)
 VALUES
-('PBSP001', N'Đen', '8GB', '128GB', 20000000.00, 'on', 'SP001'),
-('PBSP002', N'Trắng', '12GB', '256GB', 25000000.00, 'on', 'SP002'),
-('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 'on', 'SP003'),
-('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 'on', 'SP004'),
-('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 'on', 'SP005');
-INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, trangThai, maSP) 
+('PBSP001', N'Đen', '8GB', '128GB', 20000000.00, 10, 'on', 'SP001'),
+('PBSP002', N'Trắng', '12GB', '256GB', 25000000.00, 8, 'on', 'SP002'),
+('PBSP003', N'Xanh', '8GB', '128GB', 18000000.00, 15, 'on', 'SP003'),
+('PBSP004', N'Vàng', '6GB', '64GB', 12000000.00, 12, 'on', 'SP004'),
+('PBSP005', N'Tím', '8GB', '256GB', 22000000.00, 7, 'on', 'SP005');
+INSERT INTO PBSP (maPBSP, mauSac, ram, rom, giaBan, soLuong, trangThai, maSP) 
 VALUES
-('PBSP006', N'Xám', '12GB', '512GB', 28000000.00, 'on', 'SP002'),
-('PBSP007', N'Xanh dương', '6GB', '128GB', 16000000.00, 'on', 'SP003'),
-('PBSP008', N'Hồng', '8GB', '256GB', 21000000.00, 'on', 'SP004'),
-('PBSP009', N'Bạc', '12GB', '1TB', 32000000.00, 'on', 'SP002'),
-('PBSP010', N'Đỏ', '8GB', '128GB', 19000000.00, 'on', 'SP005'),
-('PBSP011', N'Xanh lá', '6GB', '64GB', 14000000.00, 'on', 'SP001');
+('PBSP006', N'Xám', '12GB', '512GB', 28000000.00, 5, 'on', 'SP002'),
+('PBSP007', N'Xanh dương', '6GB', '128GB', 16000000.00, 9, 'on', 'SP003'),
+('PBSP008', N'Hồng', '8GB', '256GB', 21000000.00, 6, 'on', 'SP004'),
+('PBSP009', N'Bạc', '12GB', '1TB', 32000000.00, 4, 'on', 'SP002'),
+('PBSP010', N'Đỏ', '8GB', '128GB', 19000000.00, 11, 'on', 'SP005'),
+('PBSP011', N'Xanh lá', '6GB', '64GB', 14000000.00, 7, 'on', 'SP001');
 
 
 -- Insert vào bảng NHACUNGCAP
@@ -428,51 +429,57 @@ VALUES
 (4, 1525000, 'PX004', 'PBSP004'),
 (6, 1380000, 'PX005', 'PBSP005');
 
+-- BANGCHAMCONG + BANGLUONG + CHITIETCHAMCONG cho 5 nhân viên
+-- Nhân viên NV001
+INSERT INTO BANGLUONG VALUES ('BL042025NV001', 4, 2025, 8000000, 2.5, 500000, 300000, 1000000, 800000, 400000, 200000, 500000, 2000000, 15000000, 'NV001');
+INSERT INTO BANGCHAMCONG VALUES ('CC042025NV001', 4, 2025, 20, 2, 1, 0, 5, 2, 1.5, 'NV001');
+INSERT INTO CHITIETCHAMCONG VALUES 
+('CT042025NV00101', '2025-04-10', N'Nghỉ không phép', N'Nghỉ việc riêng', 'CC042025NV001', NULL),
+('CT042025NV00102', '2025-04-20', N'Nghỉ không phép', N'Nghỉ trễ không báo', 'CC042025NV001', NULL),
+('CT042025NV00103', '2025-04-05', N'Nghỉ phép có lương', N'Nghỉ đi cưới', 'CC042025NV001', NULL),
+('CT042025NV00104', '2025-04-12', N'Tăng ca ngày thường', N'Tăng ca xử lý đơn hàng', 'CC042025NV001', 5),
+('CT042025NV00105', '2025-04-30', N'Tăng ca ngày lễ', N'Tăng ca lễ 30/4', 'CC042025NV001', 2),
+('CT042025NV00106', '2025-04-13', N'Tăng ca chủ nhật', N'Tăng ca kiểm kho', 'CC042025NV001', 1.5);
+
+-- Nhân viên NV002
+INSERT INTO BANGLUONG VALUES ('BL042025NV002', 4, 2025, 9000000, 2.0, 400000, 250000, 800000, 850000, 420000, 220000, 450000, 1500000, 14000000, 'NV002');
+INSERT INTO BANGCHAMCONG VALUES ('CC042025NV002', 4, 2025, 22, 1, 0, 0, 3, 0, 2, 'NV002');
+INSERT INTO CHITIETCHAMCONG VALUES 
+('CT042025NV00201', '2025-04-18', N'Nghỉ không phép', N'Nghỉ không báo trước', 'CC042025NV002', NULL),
+('CT042025NV00202', '2025-04-07', N'Tăng ca ngày thường', N'Tăng ca đóng gói hàng', 'CC042025NV002', 3),
+('CT042025NV00203', '2025-04-14', N'Tăng ca chủ nhật', N'Tăng ca kiểm kho cuối tuần', 'CC042025NV002', 2);
+
+-- Nhân viên NV003
+INSERT INTO BANGLUONG VALUES ('BL042025NV003', 4, 2025, 8500000, 2.3, 450000, 280000, 900000, 810000, 410000, 210000, 470000, 1800000, 14500000, 'NV003');
+INSERT INTO BANGCHAMCONG VALUES ('CC042025NV003', 4, 2025, 19, 3, 0, 0, 6, 2, 1, 'NV003');
+INSERT INTO CHITIETCHAMCONG VALUES 
+('CT042025NV00301', '2025-04-03', N'Nghỉ không phép', N'Nghỉ việc đột xuất', 'CC042025NV003', NULL),
+('CT042025NV00302', '2025-04-15', N'Nghỉ không phép', N'Không lý do', 'CC042025NV003', NULL),
+('CT042025NV00303', '2025-04-23', N'Nghỉ không phép', N'Nghỉ trễ', 'CC042025NV003', NULL),
+('CT042025NV00304', '2025-04-05', N'Tăng ca ngày thường', N'Tăng ca kiểm tra kho', 'CC042025NV003', 6),
+('CT042025NV00305', '2025-04-30', N'Tăng ca ngày lễ', N'Tăng ca lễ', 'CC042025NV003', 2),
+('CT042025NV00306', '2025-04-14', N'Tăng ca chủ nhật', N'Tăng ca giao hàng', 'CC042025NV003', 1);
+
+-- Nhân viên NV004
+INSERT INTO BANGLUONG VALUES ('BL042025NV004', 4, 2025, 8700000, 2.4, 470000, 270000, 950000, 820000, 430000, 230000, 480000, 1700000, 14200000, 'NV004');
+INSERT INTO BANGCHAMCONG VALUES ('CC042025NV004', 4, 2025, 21, 1, 0, 0, 4, 1, 1, 'NV004');
+INSERT INTO CHITIETCHAMCONG VALUES 
+('CT042025NV00401', '2025-04-10', N'Nghỉ không phép', N'Nghỉ về quê', 'CC042025NV004', NULL),
+('CT042025NV00402', '2025-04-08', N'Tăng ca ngày thường', N'Tăng ca kiểm kho', 'CC042025NV004', 4),
+('CT042025NV00403', '2025-04-30', N'Tăng ca ngày lễ', N'Tăng ca 30/4', 'CC042025NV004', 1),
+('CT042025NV00404', '2025-04-13', N'Tăng ca chủ nhật', N'Tăng ca kiểm tra tồn kho', 'CC042025NV004', 1);
+
+-- Nhân viên NV005
+INSERT INTO BANGLUONG VALUES ('BL042025NV005', 4, 2025, 9200000, 2.7, 550000, 350000, 1100000, 860000, 440000, 240000, 490000, 1600000, 15500000, 'NV005');
+INSERT INTO BANGCHAMCONG VALUES ('CC042025NV005', 4, 2025, 23, 0, 0, 0, 2, 0, 0, 'NV005');
+INSERT INTO CHITIETCHAMCONG VALUES 
+('CT042025NV00501', '2025-04-25', N'Tăng ca ngày thường', N'Tăng ca nhập hàng', 'CC042025NV005', 2);
 
 
 
--- Chèn dữ liệu vào bảng BANGCHAMCONG
-INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV)
-VALUES
-('CC032025NV001', 3, 2025, 22, 1, 1, 0, 4.5, 2, 1.5, 'NV001'),
-('CC032025NV002', 3, 2025, 21, 0, 2, 1, 3, 1, 2, 'NV002'),
-('CC032025NV003', 3, 2025, 20, 2, 1, 1, 5, 0, 1, 'NV003'),
-('CC032025NV004', 3, 2025, 23, 0, 0, 0, 6, 3, 0, 'NV004'),
-('CC032025NV005', 3, 2025, 19, 1, 1, 2, 2.5, 0, 1.5, 'NV005'),
-('CC032025NV006', 3, 2025, 22, 0, 2, 0, 4, 1, 2, 'NV006'),
-('CC032025NV007', 3, 2025, 20, 2, 0, 2, 3, 2, 0, 'NV007'),
-('CC032025NV008', 3, 2025, 21, 0, 1, 1, 4, 1, 1, 'NV008'),
-('CC032025NV009', 3, 2025, 18, 3, 0, 3, 2, 0, 2.5, 'NV009'),
-('CC032025NV010', 3, 2025, 22, 0, 1, 0, 4.5, 2, 1, 'NV010');
-
--- Chèn dữ liệu vào bảng CHITIETCHAMCONG
-INSERT INTO CHITIETCHAMCONG (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT)
-VALUES
-('CT032025NV001', '2025-03-05', N'Tăng ca ngày thường', N'Tăng ca hỗ trợ kho', 'CC032025NV001', 2),
-('CT032025NV002', '2025-03-08', N'Nghỉ phép có lương', N'Nghỉ đám cưới bạn thân', 'CC032025NV002', 0),
-('CT032025NV003', '2025-03-10', N'Nghỉ không phép', N'Không báo trước', 'CC032025NV003', 0),
-('CT032025NV004', '2025-03-12', N'Tăng ca ngày lễ', N'Trực ngày lễ Giỗ Tổ', 'CC032025NV004', 3),
-('CT032025NV005', '2025-03-15', N'Nghỉ phép không lương ', N'Nghỉ chăm người nhà bệnh', 'CC032025NV005', 0),
-('CT032025NV006', '2025-03-18', N'Tăng ca ngày thường', N'Tăng ca hỗ trợ xử lý đơn hàng', 'CC032025NV006', 2.5),
-('CT032025NV007', '2025-03-21', N'Nghỉ việc', N'Nghỉ hẳn không đi làm', 'CC032025NV007', 0),
-('CT032025NV008', '2025-03-23', N'Tăng ca chủ nhật', N'Trực hỗ trợ khách hàng', 'CC032025NV008', 2),
-('CT032025NV009', '2025-03-25', N'Nghỉ nửa buổi', N'Về sớm lo việc gia đình', 'CC032025NV009', 0),
-('CT032025NV010', '2025-03-28', N'Tăng ca ngày lễ', N'Trực ngày 8/3', 'CC032025NV010', 3.5);
 
 
--- Chèn dữ liệu vào bảng BANGLUONG
-INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, luongCB, heSo, phuCapAnTrua, phuCapDiLai, thuong, bhxh, bhyt, bhtn, thueTNCN, tamUng, thucNhan, maNV)
-VALUES
-('BL032025NV001', 3, 2025, 6000000, 1.2, 500000, 400000, 800000, 480000, 240000, 120000, 300000, 1000000, 7220000, 'NV001'),
-('BL032025NV002', 3, 2025, 6200000, 1.1, 450000, 350000, 600000, 496000, 248000, 124000, 270000, 900000, 6986000, 'NV002'),
-('BL032025NV003', 3, 2025, 5800000, 1.3, 400000, 300000, 500000, 452000, 226000, 113000, 250000, 800000, 6839000, 'NV003'),
-('BL032025NV004', 3, 2025, 5900000, 1.25, 550000, 420000, 700000, 472000, 236000, 118000, 280000, 850000, 7172000, 'NV004'),
-('BL032025NV005', 3, 2025, 6100000, 1.15, 500000, 380000, 650000, 488000, 244000, 122000, 260000, 920000, 7039600, 'NV005'),
-('BL032025NV006', 3, 2025, 6000000, 1.2, 480000, 370000, 600000, 480000, 240000, 120000, 240000, 850000, 7030000, 'NV006'),
-('BL032025NV007', 3, 2025, 5900000, 1.1, 450000, 360000, 550000, 472000, 236000, 118000, 230000, 780000, 6775200, 'NV007'),
-('BL032025NV008', 3, 2025, 6200000, 1.3, 520000, 400000, 750000, 496000, 248000, 124000, 290000, 1000000, 7397200, 'NV008'),
-('BL032025NV009', 3, 2025, 6100000, 1.2, 500000, 390000, 680000, 488000, 244000, 122000, 270000, 950000, 7128600, 'NV009'),
-('BL032025NV010', 3, 2025, 6000000, 1.1, 480000, 350000, 620000, 480000, 240000, 120000, 250000, 870000, 6921000, 'NV010');
+
 
 -- Chèn dữ liệu vào bảng LSCHINHSUA
 INSERT INTO LSCHINHSUA (maNguoiChinhSua, maNguoiBiChinhSua, thoiGian, giaTriCu, giaTriMoi)
