@@ -33,11 +33,12 @@ public class NhaCungCapDTO {
     }
     
     
-    public NhaCungCapDTO(String maNCC, String tenNCC, String diaChi, String sdt, String trangthai){
+    public NhaCungCapDTO(String maNCC, String tenNCC, String diaChi,String email, String sdt, String trangthai){
         this.maNCC = maNCC;
         this.tenNCC = tenNCC;
         this.diaChi= diaChi;
         this.sdt = sdt;
+        this.email = email;
         this.trangthai = trangthai;
     }
     
@@ -64,7 +65,7 @@ public class NhaCungCapDTO {
     public String getDiaChi(){
         return this.diaChi;
     }
-    public void setDiaChiNCC(String diaChi){
+    public void setDiaChi(String diaChi){
         this.diaChi = diaChi;
     }
     

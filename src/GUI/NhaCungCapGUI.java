@@ -1,9 +1,11 @@
 package GUI;
 
 import BUS.NhaCungCapBUS;
+import BUS.NhanVienBUS;
 import Components.ShadowButton;
 import DAO.NhaCungCapDAO;
 import DTO.*;
+import com.toedter.calendar.JDateChooser;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,22 +19,29 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -189,7 +198,7 @@ public class NhaCungCapGUI extends JPanel{
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                newEmployeeDialog();
+                newNhaCungCapDialog();
             }
         });
         btnAdd.addMouseListener(new MouseAdapter() {
@@ -233,12 +242,27 @@ public class NhaCungCapGUI extends JPanel{
         btnUpdate.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
         // Thêm sự kiện click cho nút Update
-        btnUpdate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//            	updateEmployeeDialog();
-            }
-        });
+       btnUpdate.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int selectedRow = suppliersTable.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String maNCC = suppliersTable.getValueAt(selectedRow, 0).toString();
+            String tenNCC = suppliersTable.getValueAt(selectedRow, 1).toString();
+            String diaChi = suppliersTable.getValueAt(selectedRow, 2).toString();
+            String email = suppliersTable.getValueAt(selectedRow, 3).toString();
+            String sdt = suppliersTable.getValueAt(selectedRow, 4).toString();
+            String trangThai = suppliersTable.getValueAt(selectedRow, 5).toString();
+
+            NhaCungCapDTO selectedNCC = new NhaCungCapDTO(maNCC, tenNCC, diaChi, email, sdt, trangThai);
+            updateNhaCungCapDialog(selectedNCC);
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn một nhà cung cấp để cập nhật!");
+        }
+    }
+});
+
         btnUpdate.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
@@ -281,7 +305,7 @@ public class NhaCungCapGUI extends JPanel{
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                deleteEmployee(employeeTable);
+               deleteNhaCungCapDialog(suppliersTable);
             }
         });
         btnDelete.addMouseListener(new MouseAdapter() {
@@ -326,12 +350,19 @@ public class NhaCungCapGUI extends JPanel{
         btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
         // Thêm sự kiện click cho nút Detail
-        btnDetail.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                employeeDetailDialog();
-            }
-        });
+      btnDetail.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int selectedRow = suppliersTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String maNCC = suppliersTable.getValueAt(selectedRow, 0).toString(); // Cột 0 là mã nhà cung cấp
+            NhaCungCapDetailDialog(maNCC); // Truyền mã vào dialog
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn một nhà cung cấp để xem chi tiết!");
+        }
+    }
+});
+
         btnDetail.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
@@ -376,7 +407,9 @@ public class NhaCungCapGUI extends JPanel{
         btnExcel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Excel button clicked!");
+                 excelExporter ex = new excelExporter();
+                ex.excelExporterNhaCungCap();
+                JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         btnExcel.addMouseListener(new MouseAdapter() {
@@ -645,9 +678,286 @@ public class NhaCungCapGUI extends JPanel{
 		suppliersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 
 	}
-         private void addPerformed(JTable tb){
-//             PopupNhaCungCap frameThem = new PopupNhaCungCap("Thêm nhà cung cấp", "THÊM NHÀ CUNG CẤP","add");
+        private String generateMaNCC() {
+    int count = new NhaCungCapBUS().getSoLuongNhaCungCap(); // Ví dụ lấy số lượng hiện tại
+    return String.format("NCC%03d", count + 1); // Tạo dạng NCC001, NCC002,...
+}
+
+      private void newNhaCungCapDialog() {
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm nhà cung cấp", true);
+    dialog.setSize(500, 400);
+    dialog.setLayout(new GridBagLayout());
+    dialog.getContentPane().setBackground(Color.white);
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.anchor = GridBagConstraints.WEST;
+
+
+JLabel lblMaNCC = new JLabel("Mã nhà cung cấp:");
+JTextField txtMaNCC = new JTextField(20);
+txtMaNCC.setText(generateMaNCC()); // Gán mã tự động sinh
+txtMaNCC.setEnabled(false); // Không cho nhập
+
+
+    JLabel lblTenNCC = new JLabel("Tên nhà cung cấp:");
+    JTextField txtTenNCC = new JTextField(20);
+
+    JLabel lblSDT = new JLabel("Số điện thoại:");
+    JTextField txtSDT = new JTextField(20);
+
+    JLabel lblEmail = new JLabel("Email:");
+    JTextField txtEmail = new JTextField(20);
+
+    JLabel lblDiaChi = new JLabel("Địa chỉ:");
+    JTextField txtDiaChi = new JTextField(20);
+
+    JLabel lblTrangThai = new JLabel("Trạng thái:");
+    String[] trangThaiOptions = {"On", "Off"};
+    JComboBox<String> cbTrangThai = new JComboBox<>(trangThaiOptions);
+
+    JButton btnSave = new JButton("Lưu");
+
+    // Layout vị trí
+    gbc.gridx = 0; gbc.gridy = 0; dialog.add(lblMaNCC, gbc);
+    gbc.gridx = 1; dialog.add(txtMaNCC, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblTenNCC, gbc);
+    gbc.gridx = 1; dialog.add(txtTenNCC, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblSDT, gbc);
+    gbc.gridx = 1; dialog.add(txtSDT, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblEmail, gbc);
+    gbc.gridx = 1; dialog.add(txtEmail, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblDiaChi, gbc);
+    gbc.gridx = 1; dialog.add(txtDiaChi, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblTrangThai, gbc);
+    gbc.gridx = 1; dialog.add(cbTrangThai, gbc);
+
+    gbc.gridx = 1; gbc.gridy++; gbc.anchor = GridBagConstraints.EAST;
+    dialog.add(btnSave, gbc);
+
+    // Sự kiện lưu
+    btnSave.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                String maNCC = txtMaNCC.getText();
+                String tenNCC = txtTenNCC.getText();
+                String sdt = txtSDT.getText();
+                String email = txtEmail.getText();
+                String diaChi = txtDiaChi.getText();
+                String trangThai = cbTrangThai.getSelectedItem().toString();
+
+                NhaCungCapDTO ncc = new NhaCungCapDTO(maNCC, tenNCC,diaChi,email,sdt, trangThai);
+                NhaCungCapBUS bus = new NhaCungCapBUS();
+                String message = bus.insert(ncc);
+
+                JOptionPane.showMessageDialog(dialog, message);
+                dialog.dispose(); // Đóng dialog nếu thành công
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(dialog, "Lỗi khi thêm nhà cung cấp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    });
+
+    dialog.setLocationRelativeTo(this);
+    dialog.setVisible(true);
+}
+
+ private void updateNhaCungCapDialog(NhaCungCapDTO selectedNCC){
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Cập nhật nhà cung cấp", true);
+    dialog.setSize(500, 400);
+    dialog.setLayout(new GridBagLayout());
+    dialog.getContentPane().setBackground(Color.white);
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.anchor = GridBagConstraints.WEST;
+
+    JLabel lblMaNCC = new JLabel("Mã nhà cung cấp:");
+    JTextField txtMaNCC = new JTextField(20);
+    txtMaNCC.setText(selectedNCC.getMaNCC());
+    txtMaNCC.setEnabled(false); // Không cho chỉnh mã
+
+    JLabel lblTenNCC = new JLabel("Tên nhà cung cấp:");
+    JTextField txtTenNCC = new JTextField(selectedNCC.getTenNCC(), 20);
+
+    JLabel lblSDT = new JLabel("Số điện thoại:");
+    JTextField txtSDT = new JTextField(selectedNCC.getSdt(), 20);
+
+    JLabel lblEmail = new JLabel("Email:");
+    JTextField txtEmail = new JTextField(selectedNCC.getEmail(), 20);
+
+    JLabel lblDiaChi = new JLabel("Địa chỉ:");
+    JTextField txtDiaChi = new JTextField(selectedNCC.getDiaChi(), 20);
+
+    JLabel lblTrangThai = new JLabel("Trạng thái:");
+    String[] trangThaiOptions = {"On", "Off"};
+    JComboBox<String> cbTrangThai = new JComboBox<>(trangThaiOptions);
+    cbTrangThai.setSelectedItem(selectedNCC.getTrangthai());
+
+    JButton btnUpdate = new JButton("Cập nhật");
+
+    // Layout
+    gbc.gridx = 0; gbc.gridy = 0; dialog.add(lblMaNCC, gbc);
+    gbc.gridx = 1; dialog.add(txtMaNCC, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblTenNCC, gbc);
+    gbc.gridx = 1; dialog.add(txtTenNCC, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblSDT, gbc);
+    gbc.gridx = 1; dialog.add(txtSDT, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblEmail, gbc);
+    gbc.gridx = 1; dialog.add(txtEmail, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblDiaChi, gbc);
+    gbc.gridx = 1; dialog.add(txtDiaChi, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblTrangThai, gbc);
+    gbc.gridx = 1; dialog.add(cbTrangThai, gbc);
+
+    gbc.gridx = 1; gbc.gridy++; gbc.anchor = GridBagConstraints.EAST;
+    dialog.add(btnUpdate, gbc);
+
+    // Sự kiện cập nhật
+    btnUpdate.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                String maNCC = txtMaNCC.getText();
+                String tenNCC = txtTenNCC.getText();
+                String sdt = txtSDT.getText();
+                String email = txtEmail.getText();
+                String diaChi = txtDiaChi.getText();
+                String trangThai = cbTrangThai.getSelectedItem().toString();
+
+                NhaCungCapDTO ncc = new NhaCungCapDTO(maNCC, tenNCC, diaChi, email, sdt, trangThai);
+                NhaCungCapBUS bus = new NhaCungCapBUS();
+                String message = bus.updateNhaCungCap(ncc); // Gọi update thay vì insert
+
+                JOptionPane.showMessageDialog(dialog, message);
+                dialog.dispose();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(dialog, "Lỗi khi cập nhật nhà cung cấp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    });
+
+    dialog.setLocationRelativeTo(this);
+    dialog.setVisible(true);
+}
+
+ public void deleteNhaCungCapDialog(JTable suppliersTable) {
+    int selectedRow = suppliersTable.getSelectedRow();
+    
+    if (selectedRow != -1) {
+        int dialogResult = JOptionPane.showConfirmDialog(
+            null, 
+            "Bạn có chắc muốn xóa nhà cung cấp này?", 
+            "Xác nhận xóa", 
+            JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (dialogResult == JOptionPane.OK_OPTION) {
+            String maNCC = (String) suppliersModel.getValueAt(selectedRow, 0); // Lấy mã nhà cung cấp
+            NhaCungCapDTO ncc = new NhaCungCapDTO(maNCC);
+
+            String message = suppliersBUS.deleteNhaCungCap(ncc);
+
+            if (message.equals("Xóa nhà cung cấp thành công")) {
+                if (suppliersModel != null) {
+                    suppliersModel.removeRow(selectedRow); // Xoá khỏi bảng
+                }
+                if (suppliersArr != null) {
+                    suppliersArr.remove(selectedRow); // Xoá khỏi mảng
+                }
+            }
+
+            JOptionPane.showMessageDialog(null, message);
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà cung cấp cần xóa!");
     }
+}
+
+private void NhaCungCapDetailDialog(String maNCC) {
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Chi tiết nhà cung cấp", true);
+    dialog.setSize(500, 400);
+    dialog.setLayout(new GridBagLayout());
+    dialog.getContentPane().setBackground(Color.white);
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.anchor = GridBagConstraints.WEST;
+
+    // Lấy dữ liệu từ BUS
+    NhaCungCapBUS bus = new NhaCungCapBUS();
+    NhaCungCapDTO ncc = bus.selectById(maNCC); // giả sử hàm này đã có
+
+    // Các thành phần
+    JLabel lblMaNCC = new JLabel("Mã nhà cung cấp:");
+    JTextField txtMaNCC = new JTextField(20);
+    txtMaNCC.setText(ncc.getMaNCC());
+    txtMaNCC.setEnabled(false);
+
+    JLabel lblTenNCC = new JLabel("Tên nhà cung cấp:");
+    JTextField txtTenNCC = new JTextField(20);
+    txtTenNCC.setText(ncc.getTenNCC());
+    txtTenNCC.setEditable(false);
+
+    JLabel lblSDT = new JLabel("Số điện thoại:");
+    JTextField txtSDT = new JTextField(20);
+    txtSDT.setText(ncc.getSdt());
+    txtSDT.setEditable(false);
+
+    JLabel lblEmail = new JLabel("Email:");
+    JTextField txtEmail = new JTextField(20);
+    txtEmail.setText(ncc.getEmail());
+    txtEmail.setEditable(false);
+
+    JLabel lblDiaChi = new JLabel("Địa chỉ:");
+    JTextField txtDiaChi = new JTextField(20);
+    txtDiaChi.setText(ncc.getDiaChi());
+    txtDiaChi.setEditable(false);
+
+    JLabel lblTrangThai = new JLabel("Trạng thái:");
+    String[] trangThaiOptions = {"On", "Off"};
+    JComboBox<String> cbTrangThai = new JComboBox<>(trangThaiOptions);
+    cbTrangThai.setSelectedItem(ncc.getTrangthai());
+    cbTrangThai.setEnabled(false);
+
+    // Layout
+    gbc.gridx = 0; gbc.gridy = 0; dialog.add(lblMaNCC, gbc);
+    gbc.gridx = 1; dialog.add(txtMaNCC, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblTenNCC, gbc);
+    gbc.gridx = 1; dialog.add(txtTenNCC, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblSDT, gbc);
+    gbc.gridx = 1; dialog.add(txtSDT, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblEmail, gbc);
+    gbc.gridx = 1; dialog.add(txtEmail, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblDiaChi, gbc);
+    gbc.gridx = 1; dialog.add(txtDiaChi, gbc);
+
+    gbc.gridx = 0; gbc.gridy++; dialog.add(lblTrangThai, gbc);
+    gbc.gridx = 1; dialog.add(cbTrangThai, gbc);
+
+    // Hiển thị dialog
+    gbc.gridx = 1; gbc.gridy++; gbc.anchor = GridBagConstraints.EAST;
+    dialog.setLocationRelativeTo(this);
+    dialog.setVisible(true);
+}
+
+ 
+ 
         private void refreshList(){
         //Xóa tất cả các dòng trong model table
         suppliersModel.setRowCount(0);
@@ -655,38 +965,9 @@ public class NhaCungCapGUI extends JPanel{
         txtTimKiem.setText("");
         
     }
-       private void deletePerformed(JTable tb){
-    int selectedRow = tb.getSelectedRow();
-    if(selectedRow != -1){
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhà cung cấp?", "Xác nhận xóa", JOptionPane.OK_CANCEL_OPTION);
-       if (dialogResult == JOptionPane.OK_OPTION) {
-    String mancc = (String) suppliersModel.getValueAt(selectedRow, 0);
+     
 
-    // Tạo đối tượng DTO để truyền vào BUS
-    NhaCungCapDTO ncc = new NhaCungCapDTO();
-    ncc.setMaNCC(mancc);
-
-    String message = suppliersBUS.deleteNhaCungCap(ncc);
-    if ("Xóa nhà cung cấp thành công".equals(message)) {
-        suppliersModel.removeRow(selectedRow);
-        suppliersArr.remove(selectedRow);
-    }
-    JOptionPane.showMessageDialog(null, message);
-}
-
-    } else {
-        JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 dòng để xóa", "Thông báo", JOptionPane.WARNING_MESSAGE);
-    }
-}
-
-       private void updatePerformed(JTable tb){
-        int selected = suppliersTable.getSelectedRow();
-        if(selected!=-1){
-//            PopupNhaCungCap frameSua = new PopupNhaCungCap("Sửa nhà cung cấp", "SỬA NHÀ CUNG CẤP", "fix");
-        }
-        else
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để sửa", "Thông báo", JOptionPane.WARNING_MESSAGE);
-    }
+      
        
           private void searchPerformed(JTable tb){
         String searchContent = txtTimKiem.getText().trim();
