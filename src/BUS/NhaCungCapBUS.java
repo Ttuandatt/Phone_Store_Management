@@ -34,9 +34,22 @@ public class NhaCungCapBUS {
             return "Cập nhật nhà cung cấp thành công";
         return "Cập nhật nhà cung cấp thất bại";
     }
+ 
+    public int getSoLuongNhaCungCap() {
+    return nccDAO.selectAll().size();
+}
+public String insert(NhaCungCapDTO pn) {
+		if(nccDAO.insert(pn)>0)
+			return "Thêm nhà cung cấp thành công!";
+		return "Thêm nhà cung cấp thất bại!";
+	}
     
     public NhaCungCapDTO getByName(String tenncc) {
     	return nccDAO.getByName(tenncc);
     }
-   
+    public NhaCungCapDTO selectById(String mancc) {
+    	return nccDAO.selectById(mancc);
+    }
+
+  
 }
