@@ -236,6 +236,7 @@ public class AdminView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
+					System.out.println("Clicked on menu San Pham");
                     JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
                     SanPhamGUI productObj = new SanPhamGUI();
                     Parent content = productObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
