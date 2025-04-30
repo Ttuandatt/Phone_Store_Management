@@ -76,13 +76,14 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
         int result = 0;
             try{
             	jdbc.openConnection();
-                String query = "INSERT INTO nhacungcap VALUES (?,?,?,?,?)";
+                String query = "INSERT INTO nhacungcap(maNCC, tenNCC, sdt, email, diaChi, trangThai) VALUES (?,?,?,?,?,?)";
                 PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
                 ps.setString(1, ncc.getMaNCC());
                 ps.setString(2, ncc.getTenNCC());
-                ps.setString(3, ncc.getDiaChi());
-                ps.setString(4, ncc.getSdt());
-                ps.setInt(5, 1);
+                ps.setString(3, ncc.getSdt());
+                ps.setString(4, ncc.getEmail());
+                ps.setString(5, ncc.getDiaChi());
+                ps.setString(6, ncc.getTrangthai());
                     result=ps.executeUpdate();
             }catch(Exception e){
                 e.printStackTrace();

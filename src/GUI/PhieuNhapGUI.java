@@ -248,7 +248,7 @@ public class PhieuNhapGUI extends JPanel {
 		btnRefresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+				refreshList();
 			}
 		});
 		btnRefresh.addMouseListener(new MouseAdapter() {
@@ -388,7 +388,7 @@ public class PhieuNhapGUI extends JPanel {
 		
 		
 		
-		String[] trangThai = {"Chờ xác nhận", "Đã xác nhận", "Đã nhận hàng"};
+		String[] trangThai = {"Chờ xác nhận", "Đã xác nhận", "Đã nhận hàng", "Từ chối"};
 		cbbTrangThai = new JComboBox<String>(trangThai);
 		cbbTrangThai.setBounds(100, 130, 115, 25);
 		informationPanel.add(cbbTrangThai);
@@ -548,7 +548,11 @@ public class PhieuNhapGUI extends JPanel {
 		        }else if(trangThai.equalsIgnoreCase("Đã nhận hàng")) {
 		        	cbbTrangThai.setSelectedIndex(2);
 		        	cbbTrangThai.setEnabled(false);
+		        }else if(trangThai.equalsIgnoreCase("Từ chối")) {
+		        	cbbTrangThai.setSelectedIndex(3);
+		        	cbbTrangThai.setEnabled(false);
 		        }
+		        
 			}
 			ctpnTable.repaint();
 			
@@ -558,6 +562,12 @@ public class PhieuNhapGUI extends JPanel {
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 phiếu nhập để xem!");
 		}
 	}
+	
+	private void refreshList(){
+        // Xóa tất cả các dòng trong mô hình bảng
+        ctpnModel.setRowCount(0);
+        loadDanhSachPN();
+    }
 	
 	//hàm hiển thị thông tin dòng code
 	public static void log(String message) {

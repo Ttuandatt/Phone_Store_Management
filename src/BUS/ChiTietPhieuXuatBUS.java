@@ -11,7 +11,7 @@ public class ChiTietPhieuXuatBUS {
 		return ctpxDAO.selectAllById(maPX);
 	}
 	
-	public ArrayList<ChiTietPhieuXuatDTO> getThongTinctpx(String maPX) {
+	public ArrayList<ChiTietPhieuXuatDTO> getThongTinCTPX(String maPX) {
 		return ctpxDAO.getThongTinCTPX(maPX);
 	}
 	

@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.DangNhapBUS;
 import BUS.DonXinNghiBUS;
 import BUS.NhaCungCapBUS;
 import Components.ShadowButton;
@@ -43,9 +44,13 @@ public class DanhSachDonXinGUI extends JPanel {
 	DonXinNghiBUS donXinBUS = new DonXinNghiBUS();
 	DefaultTableModel donXinModel = new DefaultTableModel();
 	ArrayList<DonXinNghiDTO> donXinArr = new ArrayList<DonXinNghiDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
-	private JComboBox sortComboBox;
-	private JPanel taoDonXinContent;
-	private JTextField txtTimKiem;
+	JComboBox sortComboBox, trangThaiDonXinComboBox;
+	JPanel taoDonXinContent;
+	JTextField txtTimKiem, txtNguoiDuyet;
+	JLabel lblTrangThai, lblNguoiDuyet;
+	DangNhapBUS dnBUS = new DangNhapBUS();
+	boolean comboboxClicked = false;
+	
 
 	// Constructor
 	public DanhSachDonXinGUI() {
@@ -76,7 +81,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		topPanel.setLayout(new GridBagLayout());
 		topPanel.setBackground(Color.white);
 		gbc.weightx = 1.0;
-		gbc.weighty = 0.23;
+		gbc.weighty = 0.26;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -87,14 +92,14 @@ public class DanhSachDonXinGUI extends JPanel {
 		bottomPanel.setBackground(Color.white);
 		bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
 		gbc.weightx = 1.0;
-		gbc.weighty = 0.77;
+		gbc.weighty = 0.74;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		taoDonXinContent.add(bottomPanel, gbc);
 
-//==================================================== TOP PANEL =============================================================================================//
+		//=== TOP PANEL =====//
 		JPanel functionsPanel, searchPanel;
 
 		// ======================================= functionsPanel
@@ -583,6 +588,27 @@ public class DanhSachDonXinGUI extends JPanel {
 		btnRefresh.setBounds(45, 15, 40, 40);
 		searchButtonPanel.add(btnRefresh);
 
+		
+		//==== BOTTOM PANEL ===/
+		JPanel tablePanel, statusPanel;
+		tablePanel = new JPanel(new GridBagLayout());
+		tablePanel.setBackground(Color.white);
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.55;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(tablePanel, gbc);
+		statusPanel = new JPanel(null);
+		statusPanel.setBackground(Color.white);
+		statusPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.35;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(statusPanel, gbc);
+		
 		donXinTable = new JTable();
 		JScrollPane sp = new JScrollPane(donXinTable);
 		gbc.weightx = 1.0;
@@ -590,7 +616,50 @@ public class DanhSachDonXinGUI extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
-		bottomPanel.add(sp, gbc);
+		tablePanel.add(sp, gbc);
+		
+		lblTrangThai = new JLabel("Trạng thái: ");
+		lblTrangThai.setBounds(10, 10, 100, 20);
+		statusPanel.add(lblTrangThai);
+		String[] trangThai = {"Chờ duyệt","Đã duyệt","Xác nhận", "Từ chối"};
+		trangThaiDonXinComboBox = new JComboBox<String>(trangThai);
+		trangThaiDonXinComboBox.setBounds(120, 10, 100, 20);
+		statusPanel.add(trangThaiDonXinComboBox);
+		trangThaiDonXinComboBox.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				comboboxClicked = true;
+			}
+		});
+		
+		trangThaiDonXinComboBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = donXinTable.getSelectedRow();
+				if(selectedRow != -1) {
+					if(comboboxClicked) {
+						DefaultTableModel model = (DefaultTableModel) donXinTable.getModel();
+						String maDon = (String)model.getValueAt(selectedRow, 0);
+						String trangThai = trangThaiDonXinComboBox.getSelectedItem().toString();
+						updateTrangThai(maDon, trangThai);
+						comboboxClicked = false;
+						
+					}
+				}
+				
+			}
+		});
+		lblNguoiDuyet = new JLabel("Người chỉnh sửa: ");
+		lblNguoiDuyet.setBounds(10, 40, 100, 20);
+		statusPanel.add(lblNguoiDuyet);
+		txtNguoiDuyet = new JTextField();
+		txtNguoiDuyet.setEnabled(false);
+		String maNguoiDuyet = dnBUS.getMaNV();
+		txtNguoiDuyet.setText(maNguoiDuyet);
+		txtNguoiDuyet.setBounds(120, 40, 100, 20);
+		statusPanel.add(txtNguoiDuyet);
+		
 	}
 
 	private void loadDonXinNghiList() {
@@ -633,7 +702,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		tcm.getColumn(5).setPreferredWidth(120);
 		tcm.getColumn(6).setPreferredWidth(99);
 		tcm.getColumn(7).setPreferredWidth(100);
-		tcm.getColumn(8).setPreferredWidth(100);
+		tcm.getColumn(8).setPreferredWidth(90);
 
 		donXinTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Ngăn các cột tự resize
 
@@ -883,6 +952,25 @@ public class DanhSachDonXinGUI extends JPanel {
 
 	}
 
+	private void viewDetail() {
+		int selectedRow = donXinTable.getSelectedRow();
+		if(selectedRow != -1) {
+			
+		}
+	}
+	
+	private void updateTrangThai(String maDon, String trangThai) {
+		int selectedIndex = trangThaiDonXinComboBox.getSelectedIndex();
+		if(selectedIndex != -1) {
+			String message = donXinBUS.updateTrangThai(maDon, trangThai);
+			
+			if(message.equalsIgnoreCase("Cập nhật trạng thái thành công!"))
+				JOptionPane.showMessageDialog(null, message);
+			else if(message.equalsIgnoreCase("Cập nhật trạng thái thất bại!"))
+				JOptionPane.showMessageDialog(null, message);
+		}
+	}
+	
 	public static void log(String message) {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller

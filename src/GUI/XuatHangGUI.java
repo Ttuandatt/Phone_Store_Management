@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.ChiTietPhieuXuatBUS;
+import BUS.DangNhapBUS;
 import BUS.ChiTietPhieuXuatBUS;
 import BUS.PhienBanSanPhamBUS;
 import BUS.PhieuXuatBUS;
@@ -64,6 +65,7 @@ public class XuatHangGUI extends JPanel {
 	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
 	SanPhamBUS spBUS = new SanPhamBUS();
 	PhieuXuatBUS pxBUS = new PhieuXuatBUS();
+	DangNhapBUS dnBUS = new DangNhapBUS();
 	ChiTietPhieuXuatBUS ctpxBUS = new ChiTietPhieuXuatBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
@@ -76,13 +78,16 @@ public class XuatHangGUI extends JPanel {
 	LocalDate currentDate = LocalDate.now();
 	// Định dạng ngày thành dd/MM/yyyy
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+	String maNV = dnBUS.getMaNV();
+	
 	// Constructor
 	public XuatHangGUI() {
 		this.setLayout(new GridLayout(1, 2, 10, 10));
 		initComponents();
 		loadProductList();
 		loadChosenProduct();
+		
+		txtMaNguoiTao.setText(maNV);
 	}
 
 	////////////////////////////////////////// METHODS//////////////////////////////////////
@@ -777,13 +782,14 @@ public class XuatHangGUI extends JPanel {
 		px.setMaPX(txtMapx.getText().trim());
 		//Format ngày tạo trước khi insert vào csdl vì date ở csdl chỉ chấp nhận dạng yyyy-mm-dd trong khi input từ txtNgayTao là dạng dd/mm/yyyy
 		String ngayTaoStr = txtNgayTao.getText().trim();
-		java.sql.Date sqlDate = DateConverter.convertToSQLDate(ngayTaoStr);
+		log("ngayTaoStr="+ngayTaoStr);
+		Date sqlDate = Date.valueOf(ngayTaoStr);
+	    log("sqlDate="+sqlDate);
 		if (sqlDate == null) {
-		    JOptionPane.showMessageDialog(null, "Ngày nhập không hợp lệ! Vui lòng nhập theo định dạng DD/MM/YYYY.");
+		    JOptionPane.showMessageDialog(null, "Ngày nhập không hợp lệ! Vui lòng nhập theo định dạng yyyy-mm-dd.");
 		} else {
 		    px.setNgayTao(sqlDate);
-		}
-		//Format lại giá trị tổng tiền cho chuẩn vì lấy từ giao diện đang ở dạng có dấu phẩy và ký tự "đ". VD: 120,000,000d
+		}		//Format lại giá trị tổng tiền cho chuẩn vì lấy từ giao diện đang ở dạng có dấu phẩy và ký tự "đ". VD: 120,000,000d
 		String tongTienStr = lblTongTien.getText().trim();
 		tongTienStr = tongTienStr.replaceAll("[^0-9.]", ""); // Chỉ giữ lại số và dấu chấm
 		double tongTien = Double.parseDouble(tongTienStr);
