@@ -92,7 +92,6 @@ public class NhanVienGUI extends JPanel{
     public NhanVienGUI(){
         initComponents();
         loadNhanVienList();
-        loadLeaveDetail();
         for(String kho: workplaces) {
         	System.out.println(kho);
         }
@@ -751,27 +750,20 @@ public class NhanVienGUI extends JPanel{
         //========================= Table =========================//
         employeeTable = new JTable();
         JScrollPane sp = new JScrollPane(employeeTable);
-        gbc.weightx = 1.0;
+        gbc.weightx = 0.65;
 		gbc.weighty = 1.0;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		bottomPanel.add(sp, gbc);
-		employeeTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount()>=1) {	//nếu nhấn vào dòng đó từ 1 lần trở lên
-					hienThiThongTinChamCong(employeeTable);
-				}
-			}
-		});
+		
 		
 		
 		
 		JPanel attendancePanel = new JPanel(new GridBagLayout());
 		attendancePanel.setBackground(Color.white);
 //		attendancePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
-		gbc.weightx = 0.38;
+		gbc.weightx = 0.35;
 		gbc.weighty = 1.0;
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -779,20 +771,21 @@ public class NhanVienGUI extends JPanel{
 		bottomPanel.add(attendancePanel, gbc);
 		
 		//Chia 2 panel top & bottom trong attendancePanel
-		JPanel topAttendancePanel, bottomAttendancePanel;
+		JPanel avatarPanel, bottomAttendancePanel;
 		
-		topAttendancePanel = new JPanel(null);
-		topAttendancePanel.setBackground(Color.white);
-		topAttendancePanel.setBorder(BorderFactory.createTitledBorder(""));
+		avatarPanel = new JPanel(null);
+		avatarPanel.setBackground(Color.white);
+		avatarPanel.setBorder(BorderFactory.createTitledBorder(""));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.5;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		attendancePanel.add(topAttendancePanel, gbc);
+		attendancePanel.add(avatarPanel, gbc);
 		
-		bottomAttendancePanel = new JPanel();
+		bottomAttendancePanel = new JPanel(null);
 		bottomAttendancePanel.setBackground(Color.white);
+		bottomAttendancePanel.setBorder(BorderFactory.createTitledBorder(""));
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.5;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -800,22 +793,32 @@ public class NhanVienGUI extends JPanel{
 		gbc.gridy = 1;
 		attendancePanel.add(bottomAttendancePanel, gbc);
 		
+		employeeTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()>=1) {	//nếu nhấn vào dòng đó từ 1 lần trở lên
+					hienThiThongTinChamCong(employeeTable);
+					hienThiAnhNhanVien(employeeTable, avatarPanel);
+				}
+			}
+		});
+		
 		//topAttendancePanel
 		//combobox tháng
 		JLabel lblThang, lblNam;
 		
 		lblThang = new JLabel("Tháng");
 		lblThang.setBounds(10,10,50,20);
-		topAttendancePanel.add(lblThang);
+		bottomAttendancePanel.add(lblThang);
 		
 		lblNam = new JLabel("Năm");
 		lblNam.setBounds(90,10,50,20);
-		topAttendancePanel.add(lblNam);
+		bottomAttendancePanel.add(lblNam);
 		
 		Integer[] thang = {1,2,3,4,5,6,7,8,9,10,11,12};
 		monthCombobox = new JComboBox<Integer>(thang);
 		monthCombobox.setBounds(10,30,70,20);
-		topAttendancePanel.add(monthCombobox);
+		bottomAttendancePanel.add(monthCombobox);
 		
 		//combobox năm
 		Integer[] nam = new Integer[100];
@@ -824,7 +827,7 @@ public class NhanVienGUI extends JPanel{
 		}
 		yearCombobox = new JComboBox<Integer>(nam);
 		yearCombobox.setBounds(90,30,70,20);
-		topAttendancePanel.add(yearCombobox);
+		bottomAttendancePanel.add(yearCombobox);
 		
 		
 		
@@ -833,65 +836,47 @@ public class NhanVienGUI extends JPanel{
 		
 		lblSoNgayCong = new JLabel("Số ngày công: ");
 		lblSoNgayCong.setBounds(10, 80, 100, 20);
-		topAttendancePanel.add(lblSoNgayCong);
+		bottomAttendancePanel.add(lblSoNgayCong);
 		dataSoNgayCong = new JLabel("0");
 		dataSoNgayCong.setBounds(190,80,50,20);
-		topAttendancePanel.add(dataSoNgayCong);
+		bottomAttendancePanel.add(dataSoNgayCong);
 		
 		
 		lblSoNgayNghiPhepCoLuong = new JLabel("Số ngày nghỉ phép có lương: ");
 		lblSoNgayNghiPhepCoLuong.setBounds(10, 110, 200, 20);
-		topAttendancePanel.add(lblSoNgayNghiPhepCoLuong);
+		bottomAttendancePanel.add(lblSoNgayNghiPhepCoLuong);
 		dataSoNgayNghiPhepCoLuong = new JLabel("0");
 		dataSoNgayNghiPhepCoLuong.setBounds(190,110,50,20);
-		topAttendancePanel.add(dataSoNgayNghiPhepCoLuong);
+		bottomAttendancePanel.add(dataSoNgayNghiPhepCoLuong);
 		
 		lblSoNgayNghiPhepKhongLuong = new JLabel("Số ngày nghỉ phép không lương: ");
 		lblSoNgayNghiPhepKhongLuong.setBounds(10, 140, 200, 20);
-		topAttendancePanel.add(lblSoNgayNghiPhepKhongLuong);
+		bottomAttendancePanel.add(lblSoNgayNghiPhepKhongLuong);
 		dataSoNgayNghiPhepKhongLuong = new JLabel("0");
 		dataSoNgayNghiPhepKhongLuong.setBounds(190,140,50,20);
-		topAttendancePanel.add(dataSoNgayNghiPhepKhongLuong);
+		bottomAttendancePanel.add(dataSoNgayNghiPhepKhongLuong);
 		
 		
 		lblSoNgayNghiKhongPhep = new JLabel("Số ngày nghỉ không phép: ");
 		lblSoNgayNghiKhongPhep.setBounds(10, 170, 150, 20);
-		topAttendancePanel.add(lblSoNgayNghiKhongPhep);
+		bottomAttendancePanel.add(lblSoNgayNghiKhongPhep);
 		dataSoNgayNghiKhongPhep = new JLabel("0");
 		dataSoNgayNghiKhongPhep.setBounds(190,170,50,20);
-		topAttendancePanel.add(dataSoNgayNghiKhongPhep);
+		bottomAttendancePanel.add(dataSoNgayNghiKhongPhep);
 		
 		lblSoGioOT = new JLabel("Tổng số giờ tăng ca: ");
 		lblSoGioOT.setBounds(10, 200, 150, 20);
-		topAttendancePanel.add(lblSoGioOT);
+		bottomAttendancePanel.add(lblSoGioOT);
 		dataSoGioOT = new JLabel("0.0");
 		dataSoGioOT.setBounds(190,200,50,20);
-		topAttendancePanel.add(dataSoGioOT);
+		bottomAttendancePanel.add(dataSoGioOT);
 		
 		lblTongSoNgayTinhLuong = new JLabel("");
 		lblTongSoNgayTinhLuong.setBounds(10, 240, 300, 20);
-		topAttendancePanel.add(lblTongSoNgayTinhLuong);
+		bottomAttendancePanel.add(lblTongSoNgayTinhLuong);
 
 		
-		
-		bottomAttendancePanel.setLayout(new GridBagLayout());
-		bottomAttendancePanel.setBackground(Color.blue);
-		// Tiếp tục từ phần bottomAttendancePanel đã khai báo
-		leaveDetailTable = new JTable(); // Tạo JTable mới
 
-		// Bao bọc JTable trong JScrollPane để có thể cuộn
-		JScrollPane sp2 = new JScrollPane(leaveDetailTable);
-		sp2.setPreferredSize(new Dimension(130, 100));  // Bạn có thể điều chỉnh kích thước bảng theo ý muốn
-
-		// GridBagConstraints cho bottomAttendancePanel
-		GridBagConstraints bottomGbc = new GridBagConstraints();
-		bottomGbc.weightx = 1.0;
-		bottomGbc.weighty = 1.0;
-		bottomGbc.gridx = 0;
-		bottomGbc.gridy = 0;
-		bottomGbc.fill = GridBagConstraints.BOTH; // Đảm bảo JScrollPane chiếm toàn bộ không gian có sẵn
-
-		bottomAttendancePanel.add(sp2, bottomGbc);
 
 		
 		
@@ -909,8 +894,8 @@ public class NhanVienGUI extends JPanel{
     	employeeModel.addColumn("Địa chỉ");
     	employeeModel.addColumn("Chức vụ");
     	employeeModel.addColumn("Mật khẩu");
-    	employeeModel.addColumn("Hình ảnh");
     	employeeModel.addColumn("Trạng thái");
+    	employeeModel.addColumn("Hình ảnh");
     	employeeModel.addColumn("Chi nhánh");
 
 
@@ -960,27 +945,7 @@ public class NhanVienGUI extends JPanel{
 		employeeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
     }
     
-    private void loadLeaveDetail() {
-    	leaveDetailTable.setDefaultEditor(Object.class, null);
-    	
-    	leaveDetailTable.setModel(leaveDetailModel);
-    	leaveDetailModel.addColumn("Mã NV");
-    	leaveDetailModel.addColumn("Bắt đầu");
-    	leaveDetailModel.addColumn("Kết thúc");
-    	leaveDetailModel.addColumn("Lý do");
-    	leaveDetailModel.addColumn("Người duyệt");
-    	
-    	
-		TableColumnModel tcm = employeeTable.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(40);
-		tcm.getColumn(1).setPreferredWidth(200);
-		tcm.getColumn(2).setPreferredWidth(200);
-		tcm.getColumn(3).setPreferredWidth(70);
-		tcm.getColumn(4).setPreferredWidth(100);
 
-    	leaveDetailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
-
-    }
     
     private void newRoleDialog() {
     	//Tạo Jpanel chứa form nhập
@@ -1939,12 +1904,10 @@ public class NhanVienGUI extends JPanel{
         		
         		// Lấy dữ liệu ảnh từ database (kiểu VARBINARY)
     		    byte[] imageData = nv.getHinhAnh(); // Phương thức này phải trả về byte[]
-    		    ImageIcon imageIcon = null;
     		    if (imageData != null) {
     		        // Chuyển đổi byte[] thành ImageIcon
     		        Image image = Toolkit.getDefaultToolkit().createImage(imageData);
     		        Image scaledImage = image.getScaledInstance(450, 450, Image.SCALE_SMOOTH); // Resize ảnh
-    		        imageIcon = new ImageIcon(scaledImage);
     		        //rightPanel
 					employeeImg.setIcon(new ImageIcon(scaledImage));
 					
@@ -1967,7 +1930,36 @@ public class NhanVienGUI extends JPanel{
     	
     }
     
-    
+    public void hienThiAnhNhanVien(JTable table, JPanel panel) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            String maNV = (String)employeeModel.getValueAt(selectedRow, 0);
+            NhanVienDTO nv = nvBUS.selectById(maNV);
+
+            // Xóa hết thành phần cũ trong panel
+            panel.removeAll();
+            panel.revalidate();
+            panel.repaint();
+
+            JLabel employeeImg = new JLabel();
+            employeeImg.setHorizontalAlignment(JLabel.CENTER);
+            employeeImg.setVerticalAlignment(JLabel.CENTER);
+            employeeImg.setBounds(0, 0, panel.getWidth(), panel.getHeight()); // full panel
+            // (Hoặc bạn vẫn dùng setPreferredSize(new Dimension(200,200)) nếu muốn cố định kích thước)
+
+            byte[] imageData = nv.getHinhAnh();
+            if (imageData != null) {
+                Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+                Image scaledImage = image.getScaledInstance(panel.getWidth(), panel.getHeight(), Image.SCALE_SMOOTH);
+                employeeImg.setIcon(new ImageIcon(scaledImage));
+            }
+
+            panel.add(employeeImg);
+            panel.revalidate();
+            panel.repaint();
+        }
+    }
+
     
     public void deleteEmployee(JTable employeeTable) {
     	int selectedRow = employeeTable.getSelectedRow();

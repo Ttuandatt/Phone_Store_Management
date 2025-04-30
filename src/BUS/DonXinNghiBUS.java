@@ -33,7 +33,12 @@ public class DonXinNghiBUS {
 		return dxnDAO.demSoLanXinNghiConLai(maNV);
 	}
 	
-
+	public String updateTrangThai(String maDon, String trangThai) {
+		if(dxnDAO.updateTrangThai(maDon, trangThai)>0)
+			return "Cập nhật trạng thái đơn thành công!";
+		return "Cập nhật trạng thái đơn thất bại!";
+	}
+	
 	//hàm hiển thị thông tin dòng code
 	public static void log(String message) {
 	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();

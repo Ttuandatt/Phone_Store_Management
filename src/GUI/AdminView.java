@@ -62,7 +62,7 @@ public class AdminView {
 		infoPanel.setBackground(Color.decode("#01BFF4"));
 		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
 		gbc.weightx = 1.0;
-		gbc.weighty = 0.3;
+		gbc.weighty = 0.38;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -111,6 +111,9 @@ public class AdminView {
 
 		JMenu menuNhaCungCap = createRightAlignedMenu("NHÀ CUNG CẤP");
 
+		JMenu menuKhachHang = createRightAlignedMenu("KHÁCH HÀNG");
+
+		
 		JMenu menuNhapHang = createRightAlignedMenu("NHẬP HÀNG");
 		JMenuItem menuItemTaoPhieuNhap = new JMenuItem("Tạo phiếu nhập");
 		JMenuItem menuItemPhieuNhap = new JMenuItem("Phiếu nhập");
@@ -142,6 +145,7 @@ public class AdminView {
 		// Thêm vào menuBar
 		menuBar.add(menuSanPham);
 		menuBar.add(menuNhaCungCap);
+		menuBar.add(menuKhachHang);
 		menuBar.add(menuNhapHang);
 		menuBar.add(menuXuatHang);
 		menuBar.add(menuNhanVien);
@@ -205,6 +209,8 @@ public class AdminView {
 
 		final String nhaCungCap_Identity = "NHA CUNG CAP";
 
+		final String khachHang_Identity = "KHACH HANG";
+		
 		final String nhapHang_Identity = "NHAP HANG";
 		final String phieuNhap_Identity = "PHIEU NHAP";
 
@@ -251,7 +257,7 @@ public class AdminView {
             }
         });
 		
-		// MouseListener cho menu "SUPPLIERS"
+		// MouseListener cho menu "NHÀ CUNG CẤP"
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -259,6 +265,17 @@ public class AdminView {
 				contentPanel.add(supplierObj, nhaCungCap_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, nhaCungCap_Identity);
+			}
+		});
+
+		// MouseListener cho menu "SUPPLIERS"
+		menuKhachHang.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				KhachHangGUI khachHangObj = new KhachHangGUI();
+				contentPanel.add(khachHangObj, khachHang_Identity);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, khachHang_Identity);
 			}
 		});
 

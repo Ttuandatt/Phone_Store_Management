@@ -407,7 +407,7 @@ public class NhaCungCapGUI extends JPanel{
         btnExcel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                 excelExporter ex = new excelExporter();
+                excelExporter ex = new excelExporter();
                 ex.excelExporterNhaCungCap();
                 JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -712,7 +712,7 @@ txtMaNCC.setEnabled(false); // Không cho nhập
     JTextField txtDiaChi = new JTextField(20);
 
     JLabel lblTrangThai = new JLabel("Trạng thái:");
-    String[] trangThaiOptions = {"On", "Off"};
+    String[] trangThaiOptions = {"on", "off"};
     JComboBox<String> cbTrangThai = new JComboBox<>(trangThaiOptions);
 
     JButton btnSave = new JButton("Lưu");

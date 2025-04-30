@@ -780,6 +780,13 @@ public class NhapHangGUI extends JPanel {
 				btnRefresh.setBackground(Color.decode("#01BFF4"));
 			}
 		});
+		btnRefresh.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				refreshList();
+			}
+		});
 		newProductDialog.add(btnRefresh);
 
 		newProductDialog.setLocationRelativeTo(this);
@@ -1053,9 +1060,11 @@ public class NhapHangGUI extends JPanel {
 		pn.setMaPN(txtMaPN.getText().trim());
 		//Format ngày tạo trước khi insert vào csdl vì date ở csdl chỉ chấp nhận dạng yyyy-mm-dd trong khi input từ txtNgayTao là dạng dd/mm/yyyy
 		String ngayTaoStr = txtNgayTao.getText().trim();
-		java.sql.Date sqlDate = DateConverter.convertToSQLDate(ngayTaoStr);
+		log("ngayTaoStr="+ngayTaoStr);
+		Date sqlDate = Date.valueOf(ngayTaoStr);
+	    log("sqlDate="+sqlDate);
 		if (sqlDate == null) {
-		    JOptionPane.showMessageDialog(null, "Ngày nhập không hợp lệ! Vui lòng nhập theo định dạng DD/MM/YYYY.");
+		    JOptionPane.showMessageDialog(null, "Ngày nhập không hợp lệ! Vui lòng nhập theo định dạng yyyy-mm-dd.");
 		} else {
 		    pn.setNgayTao(sqlDate);
 		}
@@ -1067,8 +1076,9 @@ public class NhapHangGUI extends JPanel {
 		//maNV, maKho, maNCC chờ Minh code xong phần dăng nhập, nhà cung cấp sẽ hoàn thiện
 		pn.setMaNV(txtMaNguoiTao.getText().trim());
 		pn.setMaKho(txtMaKho.getText().trim());
-//		pn.setMaNCC(nhaCungCapComboBox.getSelectedItem().toString());	
-		pn.setMaNCC("NCC001");	
+		String maNCC = nccBUS.getByName(nhaCungCapComboBox.getSelectedItem().toString().trim()).getMaNCC();
+		pn.setMaNCC(maNCC);	
+//		pn.setMaNCC("NCC001");	
 		pn.setTrangThai("Chờ xác nhận");
 		String messagePN = pnBUS.insert(pn);
 		if(messagePN.equalsIgnoreCase("Thêm phiếu nhập thành công!")) {
