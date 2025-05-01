@@ -17,7 +17,7 @@ public class ThongTinCaNhanGUI extends JPanel {
         if (root == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PersonalInformationGUI.fxml"));
             root = loader.load();
-            ProductsGUIController controller = loader.getController();
+            PersonalInformationController controller = loader.getController();
             controller.initialize(); // Khởi tạo dữ liệu
         }
         return root;
