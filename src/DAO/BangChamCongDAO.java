@@ -25,10 +25,13 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setMaBCC(rs.getString("maBCC"));
 				bcc.setThangCC(rs.getInt("thangCC"));
 				bcc.setNamCC(rs.getInt("namCC"));
-				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
-				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKP"));
-				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNPCoLuong"));
-				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNPKhongLuong"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayThuong"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayLe"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTCN"));
 				bcc.setMaNV(rs.getString("maNV"));
 				
 				arrBangChamCong.add(bcc);
@@ -60,11 +63,13 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setMaBCC(rs.getString("maBCC"));
 				bcc.setThangCC(rs.getInt("thangCC"));
 				bcc.setNamCC(rs.getInt("namCC"));
-				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
-				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKhongPhep"));
-				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNgayNghiKhongPhepCoLuong"));
-				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNgayNghiKhongPhepKhongLuong"));
-				bcc.setMaNV(rs.getString("maNV"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayThuong"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayLe"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTCN"));
 				
 			}
 			
@@ -95,11 +100,14 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 			ps.setString(1, bcc.getMaBCC());
 			ps.setInt(2, bcc.getThangCC());
 			ps.setInt(3, bcc.getNamCC());
-			ps.setInt(4, bcc.getSoNgayLam());
-			ps.setInt(5, bcc.getSoNgayNghiKhongPhep());
-			ps.setInt(6, bcc.getSoNgayNghiPhepCoLuong());
-			ps.setInt(7, bcc.getSoNgayNghiPhepKhongLuong());
-			ps.setString(8, bcc.getMaNV());
+			ps.setFloat(4, bcc.getSoNgayLam());
+			ps.setFloat(5, bcc.getSoNgayNghiKP());
+			ps.setFloat(6, bcc.getSoNPCoLuong());
+			ps.setFloat(7, bcc.getSoNPKhongLuong());
+                        ps.setFloat(8, bcc.getSoGioOTNgayThuong());
+                        ps.setFloat(9, bcc.getSoGioOTNgayLe());
+                        ps.setFloat(10, bcc.getSoGioOTCN());
+			ps.setString(11, bcc.getMaNV());
 			
 			result = ps.executeUpdate();
 			
