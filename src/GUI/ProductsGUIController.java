@@ -311,11 +311,11 @@ public class ProductsGUIController {
 
     @FXML
     void handleClickAddProduct(MouseEvent event) {
-        int flag = SanPhamBUS.addProduct(new SanPhamDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(),selectedImageBytes,cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
-        if(flag==1){
+        String flag = SanPhamBUS.addProduct(new SanPhamDTO(tf_masp.getText(), tf_tensp.getText(), tf_pin.getText(), tf_os.getText(), tf_camtruoc.getText(), tf_camsau.getText(), tf_xuatxu.getText(),selectedImageBytes,cbb_thuonghieu.getSelectionModel().getSelectedItem().getMaTH()));
+        if(flag.equalsIgnoreCase("Thêm sản phẩm thành công!")){
             ResetProduct();
             initialize();
-        }else if (flag==-1) {
+        }else if (flag.equalsIgnoreCase("Thêm sản phẩm thất bại!")) {
             SanPhamBUS.showInfoMessage("Mã sản phẩm đã tồn tại!");
         }
     }
