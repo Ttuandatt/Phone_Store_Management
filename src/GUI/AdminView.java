@@ -14,10 +14,9 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
-import GUI.SanPhamGUI;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Parent;
 
 public class AdminView {
 
@@ -40,11 +39,9 @@ public class AdminView {
 
 		// Tạo JFrame
 		JFrame f = new JFrame("Admin");
-		//f.setSize(1500, 800);
-		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                f.setSize(screenSize.width, screenSize.height);
-                
+		f.setSize(1500, 800);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		JPanel mainPanel, menuPanel;
 
 		// Main Panel chứa menuPanel và contentPanel
@@ -65,7 +62,7 @@ public class AdminView {
 		infoPanel.setBackground(Color.decode("#01BFF4"));
 		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
 		gbc.weightx = 1.0;
-		gbc.weighty = 0.3;
+		gbc.weighty = 0.38;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -114,6 +111,9 @@ public class AdminView {
 
 		JMenu menuNhaCungCap = createRightAlignedMenu("NHÀ CUNG CẤP");
 
+		JMenu menuKhachHang = createRightAlignedMenu("KHÁCH HÀNG");
+
+		
 		JMenu menuNhapHang = createRightAlignedMenu("NHẬP HÀNG");
 		JMenuItem menuItemTaoPhieuNhap = new JMenuItem("Tạo phiếu nhập");
 		JMenuItem menuItemPhieuNhap = new JMenuItem("Phiếu nhập");
@@ -128,13 +128,11 @@ public class AdminView {
 
 		JMenu menuNhanVien = createRightAlignedMenu("NHÂN VIÊN");
 		JMenuItem menuItemDanhSachNhanVien = new JMenuItem("Danh sách nhân viên");
-		//JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách chấm công");
-		JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin nghỉ");
-                JMenuItem menuItemDanhSachLuong = new JMenuItem("Danh sách lương");
+		JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách bảng chấm công");
+		JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin");
 		menuNhanVien.add(menuItemDanhSachNhanVien);
-		//menuNhanVien.add(menuItemBangChamCong);
+		menuNhanVien.add(menuItemBangChamCong);
 		menuNhanVien.add(menuItemDanhSachDonXin);
-                menuNhanVien.add(menuItemDanhSachLuong);
 
 		JMenu menuChamCong = createRightAlignedMenu("CHẤM CÔNG");
 
@@ -147,6 +145,7 @@ public class AdminView {
 		// Thêm vào menuBar
 		menuBar.add(menuSanPham);
 		menuBar.add(menuNhaCungCap);
+		menuBar.add(menuKhachHang);
 		menuBar.add(menuNhapHang);
 		menuBar.add(menuXuatHang);
 		menuBar.add(menuNhanVien);
@@ -210,6 +209,8 @@ public class AdminView {
 
 		final String nhaCungCap_Identity = "NHA CUNG CAP";
 
+		final String khachHang_Identity = "KHACH HANG";
+		
 		final String nhapHang_Identity = "NHAP HANG";
 		final String phieuNhap_Identity = "PHIEU NHAP";
 
@@ -217,10 +218,10 @@ public class AdminView {
 		final String phieuXuat_Identity = "PHIEU XUAT";
 
 		final String danhSachNhanVien_Identity = "DANH SACH NHAN VIEN";
+		final String danhSachBangChamCong_Identity_ = "DANH SACH BANG CHAM CONG";
 		final String danhSachDonXin_Identity = "DANH SACH DON XIN";
 
 		final String chamCong_Identity = "CHAM CONG";
-                final String dsChamCong_Identity = "DANH SACH CHAM CONG";
 
 		final String taoDon_Identity = "TAO DON";
 
@@ -255,9 +256,8 @@ public class AdminView {
                 }
             }
         });
-
-
-		// MouseListener cho menu "SUPPLIERS"
+		
+		// MouseListener cho menu Nhà cung cấp
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -265,6 +265,17 @@ public class AdminView {
 				contentPanel.add(supplierObj, nhaCungCap_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, nhaCungCap_Identity);
+			}
+		});
+
+		// MouseListener cho menu Khách hàng
+		menuKhachHang.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				KhachHangGUI khachHangObj = new KhachHangGUI();
+				contentPanel.add(khachHangObj, khachHang_Identity);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, khachHang_Identity);
 			}
 		});
 
@@ -277,7 +288,7 @@ public class AdminView {
 			cardLayout.show(contentPanel, nhapHang_Identity); // Chuyển sang ImportGUI
 		});
 
-		// ActionListener cho menuItem phiếu nhập
+		// ActionListener cho menuItem Danh sách phiếu nhập
 		menuItemPhieuNhap.addActionListener(e -> {
 			PhieuNhapGUI phieuNhapObj = new PhieuNhapGUI();
 			contentPanel.add(phieuNhapObj, phieuNhap_Identity);
@@ -285,7 +296,7 @@ public class AdminView {
 			cardLayout.show(contentPanel, phieuNhap_Identity);
 		});
 
-		// ActionListener cho menuItem Export
+		// ActionListener cho menuItem Tạo phiếu xuất
 		menuItemTaoPhieuXuat.addActionListener(e -> {
 			XuatHangGUI exportObj = new XuatHangGUI();
 			contentPanel.add(exportObj, xuatHang_Identity);
@@ -293,7 +304,7 @@ public class AdminView {
 			cartLayout.show(contentPanel, xuatHang_Identity);
 		});
 
-		// ActionListener cho menuItem Stock Outward Slip
+		// ActionListener cho menuItem Danh sách phiếu xuất
 		menuItemPhieuXuat.addActionListener(e -> {
 			PhieuXuatGUI stockOutwardSlipObj = new PhieuXuatGUI();
 			contentPanel.add(stockOutwardSlipObj, phieuXuat_Identity);
@@ -310,42 +321,36 @@ public class AdminView {
 		});
 
 		// ActionListener cho menuItem bảng chấm công
-		/*menuItemBangChamCong.addActionListener(e -> {
-			DSBangChamCongGUI timesheetObj = new DSBangChamCongGUI();
+		menuItemBangChamCong.addActionListener(e -> {
+			BangChamCongGUI timesheetObj = new BangChamCongGUI();
 			contentPanel.add(timesheetObj, danhSachBangChamCong_Identity_);
 			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 			cardLayout.show(contentPanel, danhSachBangChamCong_Identity_);
-		});*/
+		});
 
 		// ActionListener cho menuItem Danh sách dơn xin
 		menuItemDanhSachDonXin.addActionListener(e -> {
-			LeaveRequestGUI leaveRequestObj = new LeaveRequestGUI();
+			DanhSachDonXinGUI leaveRequestObj = new DanhSachDonXinGUI();
 			contentPanel.add(leaveRequestObj, danhSachDonXin_Identity);
 			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 			cardLayout.show(contentPanel, danhSachDonXin_Identity);
 		});
 
-                // 
 		menuChamCong.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-                            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                            DSBangChamCongGUI dschamCongObj = new DSBangChamCongGUI(cardLayout, contentPanel);
-                            contentPanel.add(dschamCongObj, dsChamCong_Identity);  
-                            cardLayout.show(contentPanel, dsChamCong_Identity);
-                            
-                            ChiTietChamCongGUI bcc = new ChiTietChamCongGUI(cardLayout, contentPanel);
-                            contentPanel.add(bcc, chamCong_Identity);
+				ChamCongGUI chamCongObj = new ChamCongGUI();
+				contentPanel.add(chamCongObj, chamCong_Identity);
+				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+				cardLayout.show(contentPanel, chamCong_Identity);
 			}
 		});
-                
-                
 
 		// MouseListener cho menu Tạo đơn
 		menuTaoDon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				CreateLeaveRequestGUI createLeaveRequestObj = new CreateLeaveRequestGUI();
+				TaoDonXinGUI createLeaveRequestObj = new TaoDonXinGUI();
 				contentPanel.add(createLeaveRequestObj, taoDon_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 				cardLayout.show(contentPanel, taoDon_Identity);
