@@ -1,31 +1,30 @@
 package DTO;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class ChiTietChamCongDTO {
 	private String maCTCC;
-	private Date ngayChamCong;
+	private LocalDate ngayTao;
 	private String loaiChamCong;
 	private String chiTiet;
-	String maBCC;
-	Double soGioOT;
-	
-	
-	
+	private String maBCC;
+	private float soGioOT;
 	
 	public ChiTietChamCongDTO() {
 		super();
 	}
 
-	public ChiTietChamCongDTO(String maCTCC, Date ngayChamCong, String loaiChamCong, String chiTiet, String maBCC,
-			Double soGioOT) {
+	public ChiTietChamCongDTO(String maCTCC, LocalDate ngayTao, String loaiChamCong, String chiTiet, String maBCC,
+			float soGioOT) {
 		this.maCTCC = maCTCC;
-		this.ngayChamCong = ngayChamCong;
+		this.ngayTao = ngayTao;
 		this.loaiChamCong = loaiChamCong;
 		this.chiTiet = chiTiet;
 		this.maBCC = maBCC;
 		this.soGioOT = soGioOT;
 	}
+
 
 	public String getMaCTCC() {
 		return maCTCC;
@@ -35,12 +34,12 @@ public class ChiTietChamCongDTO {
 		this.maCTCC = maCTCC;
 	}
 
-	public Date getngayChamCong() {
-		return ngayChamCong;
+	public LocalDate getNgayTao() {
+		return ngayTao;
 	}
 
-	public void setNgayChamCong(Date ngayChamCong) {
-		this.ngayChamCong = ngayChamCong;
+	public void setNgayTao(LocalDate ngayTao) {
+		this.ngayTao = ngayTao;
 	}
 
 	public String getLoaiChamCong() {
@@ -67,11 +66,11 @@ public class ChiTietChamCongDTO {
 		this.maBCC = maBCC;
 	}
 
-	public Double getSoGioOT() {
+	public float getSoGioOT() {
 		return soGioOT;
 	}
 
-	public void setSoGioOT(double d) {
+	public void setSoGioOT(float d) {
 		this.soGioOT = d;
 	}
 	
