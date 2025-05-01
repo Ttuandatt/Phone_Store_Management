@@ -257,7 +257,7 @@ public class AdminView {
             }
         });
 		
-		// MouseListener cho menu "NHÀ CUNG CẤP"
+		// MouseListener cho menu Nhà cung cấp
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -268,7 +268,7 @@ public class AdminView {
 			}
 		});
 
-		// MouseListener cho menu "SUPPLIERS"
+		// MouseListener cho menu Khách hàng
 		menuKhachHang.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -288,7 +288,7 @@ public class AdminView {
 			cardLayout.show(contentPanel, nhapHang_Identity); // Chuyển sang ImportGUI
 		});
 
-		// ActionListener cho menuItem phiếu nhập
+		// ActionListener cho menuItem Danh sách phiếu nhập
 		menuItemPhieuNhap.addActionListener(e -> {
 			PhieuNhapGUI phieuNhapObj = new PhieuNhapGUI();
 			contentPanel.add(phieuNhapObj, phieuNhap_Identity);
@@ -296,7 +296,7 @@ public class AdminView {
 			cardLayout.show(contentPanel, phieuNhap_Identity);
 		});
 
-		// ActionListener cho menuItem Export
+		// ActionListener cho menuItem Tạo phiếu xuất
 		menuItemTaoPhieuXuat.addActionListener(e -> {
 			XuatHangGUI exportObj = new XuatHangGUI();
 			contentPanel.add(exportObj, xuatHang_Identity);
@@ -304,7 +304,7 @@ public class AdminView {
 			cartLayout.show(contentPanel, xuatHang_Identity);
 		});
 
-		// ActionListener cho menuItem Stock Outward Slip
+		// ActionListener cho menuItem Danh sách phiếu xuất
 		menuItemPhieuXuat.addActionListener(e -> {
 			PhieuXuatGUI stockOutwardSlipObj = new PhieuXuatGUI();
 			contentPanel.add(stockOutwardSlipObj, phieuXuat_Identity);

@@ -30,6 +30,7 @@ public class KhoDAO implements DAOInterface<KhoDTO>{
 				kho.setTenKho(rs.getString("tenKho"));
 				kho.setDiaChi(rs.getString("diaChi"));
 				kho.setSdt(rs.getString("sdt"));
+				kho.setTrangThai(rs.getString("trangThai"));
 				
 				arrKho.add(kho);
 			}

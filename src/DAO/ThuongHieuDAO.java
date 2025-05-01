@@ -52,4 +52,27 @@ public class ThuongHieuDAO implements DAOInterface<ThuongHieuDTO> {
 	public int update(ThuongHieuDTO t){
         return 0;
     }
+    
+    public String getIdByName(String tenTH) {
+    	String id = "";
+    	
+    	try {
+    		jdbc.openConnection();
+    		
+    		String query = "select maTH from thuonghieu where tenTH = ?";
+    		PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+    		ps.setString(1, tenTH);
+    		
+    		ResultSet rs = ps.executeQuery();
+    		if(rs.next())
+    			id = rs.getString("maTH");
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+    	
+    	return id;
+    }
 }

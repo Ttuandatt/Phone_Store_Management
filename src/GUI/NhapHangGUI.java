@@ -6,6 +6,7 @@ import BUS.NhaCungCapBUS;
 import BUS.PhienBanSanPhamBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
+import BUS.ThuongHieuBUS;
 import Components.DateConverter;
 import Components.ShadowButton;
 import DTO.*;
@@ -27,6 +28,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -73,6 +75,7 @@ public class NhapHangGUI extends JPanel {
 	PhieuNhapBUS pnBUS = new PhieuNhapBUS();
 	ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
 	NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+	ThuongHieuBUS thBUS = new ThuongHieuBUS();
 	JTable productTable, chosenProductTable;
 	DefaultTableModel productModel, chosenProductModel;
 	ArrayList<PhienBanSanPhamDTO> arrPBSP = new ArrayList<PhienBanSanPhamDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
@@ -86,7 +89,10 @@ public class NhapHangGUI extends JPanel {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	DangNhapBUS dnBUS = new DangNhapBUS();
 	String maNV = dnBUS.getMaNV();
-
+	
+	final byte[][] imagesBytes = new byte[1][];
+	String selectedFilePath;
+	
 	// Constructor
 	public NhapHangGUI() {
 		this.setLayout(new GridLayout(1, 2, 10, 10));
@@ -596,6 +602,9 @@ public class NhapHangGUI extends JPanel {
 				int returnValue = fileChooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
+					selectedFilePath = selectedFile.getAbsolutePath();
+					//Hiển thị đường dẫn của ảnh  chọn
+					log("Đường dẫn của ảnh: " + selectedFilePath);
 					ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
 					Image img = icon.getImage().getScaledInstance(260, 260, Image.SCALE_SMOOTH);
 					productImg.setIcon(new ImageIcon(img));
@@ -648,26 +657,26 @@ public class NhapHangGUI extends JPanel {
 		txtOS.setBounds(110, 120, 150, 20);
 		newProductDialog.add(txtOS);
 
-		JLabel lblOrigin = new JLabel("Xuất xứ:");
-		lblOrigin.setBounds(10, 145, 100, 20);
-		newProductDialog.add(lblOrigin);
-		JTextField txtOrigin = new JTextField();
-		txtOrigin.setBounds(110, 145, 150, 20);
-		newProductDialog.add(txtOrigin);
+		JLabel lblXuatXu = new JLabel("Xuất xứ:");
+		lblXuatXu.setBounds(10, 145, 100, 20);
+		newProductDialog.add(lblXuatXu);
+		JTextField txtXuatXu = new JTextField();
+		txtXuatXu.setBounds(110, 145, 150, 20);
+		newProductDialog.add(txtXuatXu);
 
-		JLabel lblFrontCam = new JLabel("Cam trước:");
-		lblFrontCam.setBounds(10, 170, 100, 20);
-		newProductDialog.add(lblFrontCam);
-		JTextField txtFrontCam = new JTextField();
-		txtFrontCam.setBounds(110, 170, 150, 20);
-		newProductDialog.add(txtFrontCam);
+		JLabel lblCamTruoc = new JLabel("Cam trước:");
+		lblCamTruoc.setBounds(10, 170, 100, 20);
+		newProductDialog.add(lblCamTruoc);
+		JTextField txtCamTruoc = new JTextField();
+		txtCamTruoc.setBounds(110, 170, 150, 20);
+		newProductDialog.add(txtCamTruoc);
 
-		JLabel lblBackCam = new JLabel("Cam sau:");
-		lblBackCam.setBounds(10, 195, 100, 20);
-		newProductDialog.add(lblBackCam);
-		JTextField txtBackCam = new JTextField();
-		txtBackCam.setBounds(110, 195, 150, 20);
-		newProductDialog.add(txtBackCam);
+		JLabel lblCamSau = new JLabel("Cam sau:");
+		lblCamSau.setBounds(10, 195, 100, 20);
+		newProductDialog.add(lblCamSau);
+		JTextField txtCamSau = new JTextField();
+		txtCamSau.setBounds(110, 195, 150, 20);
+		newProductDialog.add(txtCamSau);
 
 		
 		//nhập thông tin phiên bản sản phẩm
@@ -716,23 +725,29 @@ public class NhapHangGUI extends JPanel {
 		btnSave.setBorderPainted(false);
 		btnSave.setBackground(Color.decode("#01BFF4"));
 		btnSave.addActionListener(e -> {
-			String name = txtName.getText();
-			String brand = brandComboBox.getSelectedItem().toString();
-			String battery = txtBattery.getText();
+			String maSP = txtId.getText();
+			String tenSP = txtName.getText();
+			String pin = txtBattery.getText();
+			String tenThhuongHieu = brandComboBox.getSelectedItem().toString();
+			String maTH = thBUS.getIdByName(tenThhuongHieu);
 			String os = txtOS.getText();
-			String origin = txtOrigin.getText();
-			String frontCam = txtFrontCam.getText();
-			String backCam = txtBackCam.getText();
-			String price = txtPrice.getText();
+			String camTruoc = txtCamTruoc.getText();
+			String camSau = txtCamSau.getText();
+			String xuatXu = txtXuatXu.getText();
+			File imageFile = new File(selectedFilePath);
+			byte[] hinhAnh = convertImageToBytes(imageFile);
+			String trangThai = rbOn.isSelected()? "on":"off";
+			String gia = txtPrice.getText();
+			SanPhamDTO sp = new SanPhamDTO(maSP, tenSP, pin, os, camTruoc, camSau, xuatXu, hinhAnh, trangThai, maTH);
 
-			if (name.isEmpty() || brand.isEmpty() || battery.isEmpty() || os.isEmpty() || origin.isEmpty()
-					|| frontCam.isEmpty() || backCam.isEmpty() || price.isEmpty()) {
+			if (tenSP.isEmpty() || maTH.isEmpty() || pin.isEmpty() || os.isEmpty() || xuatXu.isEmpty()
+					|| camTruoc.isEmpty() || camSau.isEmpty() || gia.isEmpty()) {
 				JOptionPane.showMessageDialog(newProductDialog, "Xin điền đầy đủ thông tin!", "Cảnh báo",
 						JOptionPane.WARNING_MESSAGE);
 			} else {
 				// Thêm vào danh sách sản phẩm (có thể gọi ProductsBUS để xử lý)
-				JOptionPane.showMessageDialog(newProductDialog, "Thêm sản phẩm thành công!", "Thành công",
-						JOptionPane.INFORMATION_MESSAGE);
+				String result = spBUS.addProduct(sp);
+				JOptionPane.showMessageDialog(newProductDialog, "Thêm sản phẩm thành công!", "Thành công",JOptionPane.INFORMATION_MESSAGE);
 				newProductDialog.dispose(); // Đóng form sau khi lưu
 			}
 		});
@@ -761,9 +776,9 @@ public class NhapHangGUI extends JPanel {
 				brandComboBox.setSelectedIndex(0);
 				txtBattery.setText("");
 				txtOS.setText("");
-				txtOrigin.setText("");
-				txtFrontCam.setText("");
-				txtBackCam.setText("");
+				txtXuatXu.setText("");
+				txtCamTruoc.setText("");
+				txtCamSau.setText("");
 				txtPrice.setText("");
 				productImg.setIcon(null); // xóa ảnh vừa browse
 			}
@@ -1105,6 +1120,19 @@ public class NhapHangGUI extends JPanel {
 			
 	}
 	
+	private byte[] convertImageToBytes(File selectedFile) {
+		try {
+			FileInputStream fis = new FileInputStream(selectedFile);
+			byte[] data = new byte[(int) selectedFile.length()];
+			fis.read(data);
+			fis.close();
+			return data;
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+			return null;
+		}
+	}
 	
 	private void searchPerformed(JTable tb){
         String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi

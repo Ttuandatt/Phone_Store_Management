@@ -37,24 +37,10 @@ public class SanPhamBUS {
  		return spDAO.getTenSanPhamByMaPBSP2(maPBSP);
  	}
 
-    public int addProduct(SanPhamDTO product) {
-        // validate
-        validator.isRequired(product.getMaSP(), "Mã sản phẩm");
-        validator.isRequired(product.getTenSP(), "Tên sản phẩm");
-        validator.isRequired(product.getPin(), "Pin sản phẩm");
-        validator.isRequired(product.getOS(), "Hệ điều sản phẩm");
-        validator.isRequired(product.getCamTruoc(), "Cam trước sản phẩm");
-        validator.isRequired(product.getCamSau(), "Cam sau sản phẩm");
-        validator.isRequired(product.getXuatXu(), "Xuất xứ sản phẩm");
-        validator.isRequired(product.getHinhAnh(), "Hình ảnh sản phẩm");
-        if(validator.showError())
-            return 0;
-        // insert
-        if(spDAO.insert(product)>0){
-            this.showInfoMessage("Thêm sản phẩm thành công!");
-            return 1;
-        }
-        return -1;
+    public String addProduct(SanPhamDTO product) {
+        if(spDAO.insert(product)>0)
+        	return "Thêm sản phẩm thành công!";
+        return "Thêm sản phẩm thất bại!";
     }
     
     public int updateProduct(SanPhamDTO product){

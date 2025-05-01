@@ -86,7 +86,7 @@ public class NhanVienGUI extends JPanel{
 	
 	
 	final byte[][] imageBytes = new byte[1][];
-	String selectedFilePathName;	//biến lưu đường dẫn của ảnh được chọn
+	String selectedFilePath;	//biến lưu đường dẫn của ảnh được chọn
 	
 	//Constructor
     public NhanVienGUI(){
@@ -577,8 +577,6 @@ public class NhanVienGUI extends JPanel{
 		});
         
      
-        ArrayList<ChucVuDTO> arrChucVu = cvBUS.selectAll();
-        roles[0] = "Chức vụ";
         for(int i=0; i<arrChucVu.size(); i++) {        		
         	roles[i] =  arrChucVu.get(i).getTenCV();
         }
@@ -1216,9 +1214,9 @@ public class NhanVienGUI extends JPanel{
 				int returnValue = fileChooser.showOpenDialog(null);
 				if(returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
-					selectedFilePathName = selectedFile.getAbsolutePath();
-					//Hiển thị đường dẫn của ảnh được
-					System.out.println("Class: NhanVienGUI | Method: newEmployeeDialog: Đường dẫn của ảnh được chọn: "+selectedFile.getAbsolutePath());
+					selectedFilePath = selectedFile.getAbsolutePath();
+					//Hiển thị đường dẫn của ảnh  chọn
+					log("Đường dẫn của ảnh: " + selectedFilePath);
 					ImageIcon icon = new ImageIcon(selectedFile.getAbsoluteFile().getAbsolutePath());
 					Image img = icon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
 					employeeImg.setIcon(new ImageIcon(img));
@@ -1254,14 +1252,14 @@ public class NhanVienGUI extends JPanel{
 					String diaChi = txtAddress.getText();
 					String sdt = txtPhone.getText();
 					String email = txtEmail.getText();
-					String trangThai = rbOn.isSelected()? "On":"Off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "On", không thì là "Off"
+					String trangThai = rbOn.isSelected()? "on":"off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "On", không thì là "Off"
 					String matKhau = txtPassword.getText();
 					String chucVu = roleCombobox.getSelectedItem().toString();
 					System.out.println("Role picked: " + chucVu);
 					String noiLamViec = workplaceCombobox.getSelectedItem().toString();
 					
 					// Chuyển ảnh thành byte[]
-					File imageFile = new File(selectedFilePathName);
+					File imageFile = new File(selectedFilePath);
 					byte[] hinhAnh = convertImageToBytes(imageFile);
 					
 					
@@ -1534,9 +1532,9 @@ public class NhanVienGUI extends JPanel{
     				int returnValue = fileChooser.showOpenDialog(null);
     				if(returnValue == JFileChooser.APPROVE_OPTION) {
     					File selectedFile = fileChooser.getSelectedFile();
-    					selectedFilePathName = selectedFile.getAbsolutePath();
+    					selectedFilePath = selectedFile.getAbsolutePath();
     					//Hiển thị đường dẫn của ảnh được
-    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Đường dẫn của ảnh được chọn: "+selectedFilePathName);
+    					log("Đường dẫn ảnh: " + selectedFilePath);
     					ImageIcon icon = new ImageIcon(selectedFile.getAbsoluteFile().getAbsolutePath());
     					Image img = icon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
     					employeeImg.setIcon(new ImageIcon(img));
@@ -1579,12 +1577,12 @@ public class NhanVienGUI extends JPanel{
     					
     					
     					if(btnBrowse.isSelected()) { //Nếu có cập nhật ảnh 
-    						File imageFile = new File(selectedFilePathName);
+    						File imageFile = new File(selectedFilePath);
         					byte[] hinhAnh = convertImageToBytes(imageFile);
 	    					// Chuyển ảnh thành byte[]
 	    					NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, hinhAnh, trangThai, chucVu, noiLamViec);
 	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: "+ chucVu);
-	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: selectedFilePathName: " + selectedFilePathName);
+	    					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: selectedFilePathName: " + selectedFilePath);
 	    					int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn cập nhật nhân viên này?", "Xác nhận cập nhật", JOptionPane.OK_CANCEL_OPTION);
 	    					if(dialogResult == JOptionPane.OK_OPTION) {
 	    						// Gọi phương thức insert từ NhanVienBUS
@@ -1834,11 +1832,11 @@ public class NhanVienGUI extends JPanel{
         	JLabel lblStatus = new JLabel("Trạng thái:");
         	lblStatus.setBounds(10, 290, 100, 20);
         	topLeftPanel.add(lblStatus);
-        	JRadioButton rbOn = new JRadioButton("On");
+        	JRadioButton rbOn = new JRadioButton("on");
         	rbOn.setBounds(100, 290, 100, 20);
         	rbOn.setEnabled(false);
         	topLeftPanel.add(rbOn);
-        	JRadioButton rbOff = new JRadioButton("Off");
+        	JRadioButton rbOff = new JRadioButton("off");
         	rbOff.setBounds(150, 290, 100, 20);
         	rbOff.setEnabled(false);
         	topLeftPanel.add(rbOff);
