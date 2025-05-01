@@ -9,7 +9,7 @@ public class BangChamCongDTO {
 	private int soNgayNghiPhepCoLuong;
 	private int soNgayNghiPhepKhongLuong;
 	private String maNV;
-	
+	private float soGioOT;
 	
 
 	//constructor
@@ -30,11 +30,18 @@ public class BangChamCongDTO {
 		this.soNgayNghiPhepCoLuong = soNgayNghiPhepCoLuong;
 		this.soNgayNghiPhepKhongLuong = soNgayNghiPhepKhongLuong;
 		this.maNV = maNV;
+		this.soGioOT = soGioOT;
 	}
 
 
 
 	//getter, setter
+	public float getSoGioOT() {
+		return soGioOT;
+	}
+	public void setSoGioOT(float soGioOT) {
+		this.soGioOT = soGioOT;
+	}
 	public String getMaBCC() {
 		return maBCC;
 	}

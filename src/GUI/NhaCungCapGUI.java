@@ -35,7 +35,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import popup.PopupNhaCungCap;
+//import popup.PopupNhaCungCap;
 
 
 

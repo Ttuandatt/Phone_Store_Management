@@ -49,7 +49,14 @@ public class NhanVienDTO {
 		this.chucVu = chucVu;
 		this.chiNhanh = chiNhanh;
 	}
-	
+	public NhanVienDTO(String maNV, String hoTen, String soDienThoai, String diaChi, String ngaySinh, String gioiTinh) {
+		this.maNV = maNV;
+		this.hoTen = hoTen;
+		this.soDienThoai = soDienThoai;
+		this.diaChi = diaChi;
+		this.ngaySinh = Date.valueOf(ngaySinh);
+		this.gioiTinh = gioiTinh;
+	}
 	
 	public NhanVienDTO(String maNV) {
 		super();
