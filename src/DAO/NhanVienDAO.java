@@ -504,13 +504,13 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
   	    System.out.println(element.getClassName() + " | method: " 
   	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
   	}
-	// update thông tin nhân viên NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh);
+	// update thông tin nhân viên NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh,hinhAnh);
 	public boolean updatePersonalInfo(NhanVienDTO nv) {
 		int result = 0;
 		try {
 			jdbc.openConnection();
 			
-			String query = "update nhanvien set hoTen=?, sdt=?, diaChi=?, ngaySinh=?, gioiTinh=? where maNV=?";
+			String query = "update nhanvien set hoTen=?, sdt=?, diaChi=?, ngaySinh=?, gioiTinh=?,hinhAnh=? where maNV=?";			
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getHoTen());
@@ -518,11 +518,9 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			ps.setString(3, nv.getDiaChi());
 			ps.setDate(4, nv.getNgaySinh());
 			ps.setString(5, nv.getGioiTinh());
-			ps.setString(6, nv.getMaNV());
-			
+			ps.setBytes(6, nv.getHinhAnh());
+			ps.setString(7, nv.getMaNV());
 			result = ps.executeUpdate();
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();

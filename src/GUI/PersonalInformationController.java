@@ -1,5 +1,10 @@
 package GUI;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -11,10 +16,19 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import BUS.BangChamCongBUS;
 import BUS.BangLuongBUS;
 import BUS.DangNhapBUS;
@@ -38,14 +52,16 @@ public class PersonalInformationController {
     BangChamCongDTO bcc = new BangChamCongDTO();
     BangLuongBUS blBUS = new BangLuongBUS();
     ArrayList<BangLuongDTO> arrBangLuong = new ArrayList<BangLuongDTO>();
+    private byte[] selectedImageBytes = null;
+
     @FXML
     public void initialize() {
         // get data from database
         arrBangLuong = blBUS.getBangLuongByNV(DangNhapBUS.maNV);
-        //clearn cbYear and cbMonth
+        // clearn cbYear and cbMonth
         cbMonth.getItems().clear();
         cbYear.getItems().clear();
-        //set disable button bt_update
+        // set disable button bt_update
         bt_update.setDisable(true);
         nv = nvBUS.selectById(DangNhapBUS.maNV);
         labelName.setText(nv.getHoTen());
@@ -63,19 +79,62 @@ public class PersonalInformationController {
             cbMonth.getItems().add(i);
         }
         int currentYear = java.time.LocalDate.now().getYear();
-        for (int year = 1980; year <= 2025; year++) {
+        for (int year = 1980; year <= currentYear; year++) {
             cbYear.getItems().add(year);
         }
-        //Mặc định chọn tháng và nam hiện tại
+        // Mặc định chọn tháng và nam hiện tại
         cbMonth.getSelectionModel().select(java.time.LocalDate.now().getMonthValue() - 1); // chọn tháng hiện tại
         cbYear.getSelectionModel().select(java.time.LocalDate.now().getYear() - 1980); // chọn năm hiện tại
         setBangLuong(arrBangLuong);
         setChamCong(DangNhapBUS.maNV, java.time.LocalDate.now().getMonthValue(), java.time.LocalDate.now().getYear());
+        // set image avatar
+        showImageToPane(nv.getHinhAnh());
+        // Gắn sự kiện click để chọn ảnh mới
+        pn_image.setOnMouseClicked(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Chọn ảnh đại diện");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Hình ảnh", "*.png", "*.jpg", "*.jpeg"));
+            File selectedFile = fileChooser.showOpenDialog(pn_image.getScene().getWindow());
 
+            if (selectedFile != null) {
+                try {
+                    selectedImageBytes = Files.readAllBytes(selectedFile.toPath());
+                    showImageToPane(selectedImageBytes);
+                    bt_update.setDisable(false); // Kích hoạt nút cập nhật khi có ảnh mới
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         root.setOnMousePressed(event -> {
             root.requestFocus(); // click nền để thoát focus khỏi TextField
         });
     }
+
+    private void showImageToPane(byte[] imageBytes) {
+        try {
+            Image image = (imageBytes == null)
+                    ? new Image("file:src/img/th (4).jpeg")
+                    : new Image(new ByteArrayInputStream(imageBytes));
+
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(200);
+            imageView.setFitHeight(200);
+            imageView.setPreserveRatio(false);
+
+            // Bo tròn
+            Circle clip = new Circle(100, 100, 100);
+            imageView.setClip(clip);
+
+            pn_image.getChildren().clear();
+            pn_image.getChildren().add(imageView);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setBangLuong(ArrayList<BangLuongDTO> arrBangLuong) {
         ObservableList<BangLuongDTO> bangLuongDTOs = FXCollections.observableArrayList(arrBangLuong);
 
@@ -91,11 +150,12 @@ public class PersonalInformationController {
             String formatted = formatter.format(tongLuong);
             return new SimpleStringProperty(formatted);
         });
-        
+
         tb_bangluong.getColumns().clear();
         tb_bangluong.setItems(bangLuongDTOs);
         tb_bangluong.getColumns().addAll(tv_heso, tv_thoigian, tv_tongluong);
     }
+
     // set bang cham cong, tham so la nv va thang nam
     public void setChamCong(String maNV, int thang, int nam) {
         bcc = bccBUS.getBangChamCongByThangNam(maNV, thang, nam);
@@ -109,6 +169,7 @@ public class PersonalInformationController {
             System.out.println("Khong tim thay bang cham cong");
         }
     }
+
     @FXML
     void handleClickFemale(MouseEvent event) {
         rbFemale.setSelected(true);
@@ -147,20 +208,34 @@ public class PersonalInformationController {
         bt_update.setDisable(false);
 
     }
+
     @FXML
     void handleChangeMonth(ActionEvent event) {
-        int month = cbMonth.getSelectionModel().getSelectedItem();
-        int year = cbYear.getSelectionModel().getSelectedItem();
-        setChamCong(DangNhapBUS.maNV, month, year);
-        System.out.println("Tháng: " + month + " Năm: " + year);
+        Integer selectedMonth = cbMonth.getSelectionModel().getSelectedItem();
+        Integer selectedYear = cbYear.getSelectionModel().getSelectedItem();
+
+        if (selectedMonth == null || selectedYear == null) {
+            System.out.println("Chưa chọn đủ tháng hoặc năm.");
+            return;
+        }
+
+        setChamCong(DangNhapBUS.maNV, selectedMonth, selectedYear);
+        System.out.println("Tháng: " + selectedMonth + " Năm: " + selectedYear);
     }
 
     @FXML
     void handleChangeYear(ActionEvent event) {
-        int month = cbMonth.getSelectionModel().getSelectedItem();
-        int year = cbYear.getSelectionModel().getSelectedItem();
-        setChamCong(DangNhapBUS.maNV, month, year);
+        Integer selectedMonth = cbMonth.getSelectionModel().getSelectedItem();
+        Integer selectedYear = cbYear.getSelectionModel().getSelectedItem();
+
+        if (selectedMonth == null || selectedYear == null) {
+            System.out.println("Chưa chọn tháng hoặc năm.");
+            return;
+        }
+
+        setChamCong(DangNhapBUS.maNV, selectedMonth, selectedYear);
     }
+
     @FXML
     void handleClickUpdate(MouseEvent event) {
         String maNV = DangNhapBUS.maNV;
@@ -169,17 +244,23 @@ public class PersonalInformationController {
         String diaChi = tfAddress.getText();
         String ngaySinh = tfBirthday.getText();
         String gioiTinh = rbMale.isSelected() ? "Nam" : "Nữ";
-        NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh);
+        byte[] hinhAnh = selectedImageBytes != null ? selectedImageBytes : nv.getHinhAnh();
+        // new NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh,
+        // hinhAnh);
+        nv = new NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh, hinhAnh);
         nvBUS.updatePersonalInfo(nv);
-        //load lai du lieu
+        // load lai du lieu
         initialize();
         bt_update.setDisable(true);
 
     }
 
     @FXML
+    private Pane pn_image;
+
+    @FXML
     private Pane root;
-    
+
     @FXML
     private Label tf_sogiotangca;
 
@@ -204,7 +285,6 @@ public class PersonalInformationController {
     @FXML
     private TableColumn<BangLuongDTO, String> tv_tongluong;
 
-    
     @FXML
     private TableView<BangLuongDTO> tb_bangluong;
 
@@ -241,5 +321,4 @@ public class PersonalInformationController {
     @FXML
     private ComboBox<Integer> cbYear;
 
-    
 }

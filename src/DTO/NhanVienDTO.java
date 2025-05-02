@@ -49,13 +49,14 @@ public class NhanVienDTO {
 		this.chucVu = chucVu;
 		this.chiNhanh = chiNhanh;
 	}
-	public NhanVienDTO(String maNV, String hoTen, String soDienThoai, String diaChi, String ngaySinh, String gioiTinh) {
+	public NhanVienDTO(String maNV, String hoTen, String soDienThoai, String diaChi, String ngaySinh, String gioiTinh,byte[] hinhAnh) {
 		this.maNV = maNV;
 		this.hoTen = hoTen;
 		this.soDienThoai = soDienThoai;
 		this.diaChi = diaChi;
 		this.ngaySinh = Date.valueOf(ngaySinh);
 		this.gioiTinh = gioiTinh;
+		this.hinhAnh = hinhAnh;
 	}
 	
 	public NhanVienDTO(String maNV) {

@@ -120,6 +120,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPhamDTO>{
 			ps.setString(6, pbsp.getMaPBSP());
 
             rowsUpdate = ps.executeUpdate();
+			// PBSP+Makho(?)
             ps.close();
 
         } catch (Exception e) {

@@ -7,13 +7,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1509.0" style="-fx-background-color: #67cac5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PersonalInformationController">
    <children>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="100.0" layoutY="169.0" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="labelName" layoutX="352.0" layoutY="206.0" text="Nguyen Van A">
          <font>
             <Font size="24.0" />
@@ -30,7 +28,7 @@
       <TextField fx:id="tfNumberPhone" layoutX="446.0" layoutY="341.0" onKeyPressed="#handleKeyPressPhoneNumber" text="0123456789" />
       <Label layoutX="446.0" layoutY="388.0" text="Ngày sinh" />
       <TextField fx:id="tfBirthday" layoutX="446.0" layoutY="418.0" onKeyPressed="#handleKeyPressBirthday" text="1990-05-12" />
-      <Label layoutX="107.0" layoutY="388.0" text="Họ và tên" />
+      <Label layoutX="107.0" layoutY="388.0" text="Giới tính" />
       <RadioButton fx:id="rbMale" layoutX="107.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#handleClickMale" selected="true" text="Nam " />
       <RadioButton fx:id="rbFemale" layoutX="169.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#handleClickFemale" text="Nữ" />
       <Label layoutX="107.0" layoutY="467.0" text="Địa chỉ" />
@@ -57,5 +55,6 @@
         </columns>
       </TableView>
       <Button fx:id="bt_update" disable="true" layoutX="755.0" layoutY="589.0" mnemonicParsing="false" onMouseClicked="#handleClickUpdate" text="Cập nhật" />
+      <Pane fx:id="pn_image" layoutX="107.0" layoutY="85.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-background-radius: 50%;" />
    </children>
 </Pane>
