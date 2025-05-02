@@ -1,5 +1,4 @@
-
-package dateChooser;
+package DateChooser;
 
 
 import javax.swing.JButton;

@@ -1,5 +1,5 @@
 
-package dateChooser;
+package DateChooser;
 
 import java.awt.event.MouseEvent;
 

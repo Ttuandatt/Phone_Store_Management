@@ -1,4 +1,4 @@
-package dateChooser;
+package DateChooser;
 
 import java.awt.Component;
 

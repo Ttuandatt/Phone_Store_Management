@@ -23,5 +23,10 @@ public class ChiTietChamCongBUS {
     public void insertChiTietCC(ChiTietChamCongDTO ct) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    
+ 	public ArrayList<ChiTietChamCongDTO> getThongTinNgayNghi(String maBCC){
+ 		return ctccDAO.getThongTinNgayNghi(maBCC);
+ 	}
 
 }

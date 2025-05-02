@@ -1,4 +1,4 @@
-package dateChooser;
+package DateChooser;
 
 public interface SelectedAction {
 

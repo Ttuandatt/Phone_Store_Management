@@ -64,15 +64,17 @@ public class PhienBanSanPhamBUS {
 		return pbspDAO.getThongTinPBSP(maPBSP);
 	}
 	
-	public String tangSoLuong(String maPBSP, int soLuong) {
-		if(pbspDAO.tangSoLuong(maPBSP, soLuong)>0)
+	public String tangSoLuong(String maKho, String maPBSP, int soLuong) {
+		if(pbspDAO.tangSoLuong(maKho, maPBSP, soLuong)>0)
 			return "Tăng số lượng thành công";
 		return "Tăng số lượng thất bại";
 	}
 	
-	public String updateSoLuong(String maPBSP, int soLuong) {
-		if(pbspDAO.updateSoLuong(maPBSP, soLuong)>0)
-			return "Cập nhật số lượng PBSP thành công!";
-		return "Cập nhật số lượng PBSP thất bại!";
+	public String giamSoLuong(String maKho, String maPBSP, int soLuong) {
+		if(pbspDAO.giamSoLuong(maKho, maPBSP, soLuong)>0)
+			return "Giảm số lượng thành công";
+		return "Giảm số lượng thất bại";
 	}
+	
+	
 }

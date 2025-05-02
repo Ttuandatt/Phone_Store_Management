@@ -61,7 +61,7 @@ public class ChiTietPhieuXuatDAO implements DAOInterface<ChiTietPhieuXuatDTO>{
 		try {
 			jdbc.openConnection();
 
-			String query = "insert into ctpx(soLuong, giaXuat, maPX, ma values(?,?,?,?)";
+			String query = "insert into ctpx(soLuong, giaXuat, maPX, maPBSP) values(?,?,?,?)";
 
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setInt(1, ctpx.getSoLuong());

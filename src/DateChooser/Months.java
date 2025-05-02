@@ -1,5 +1,4 @@
-
-package dateChooser;
+package DateChooser;
 
 
 
@@ -22,18 +21,18 @@ public final class Months extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cmd1 = new dateChooser.Button();
-        cmd2 = new dateChooser.Button();
-        cmd3 = new dateChooser.Button();
-        cmd4 = new dateChooser.Button();
-        cmd5 = new dateChooser.Button();
-        cmd6 = new dateChooser.Button();
-        cmd7 = new dateChooser.Button();
-        cmd8 = new dateChooser.Button();
-        cmd9 = new dateChooser.Button();
-        cmd10 = new dateChooser.Button();
-        cmd11 = new dateChooser.Button();
-        cmd12 = new dateChooser.Button();
+        cmd1 = new Button();
+        cmd2 = new Button();
+        cmd3 = new Button();
+        cmd4 = new Button();
+        cmd5 = new Button();
+        cmd6 = new Button();
+        cmd7 = new Button();
+        cmd8 = new Button();
+        cmd9 = new Button();
+        cmd10 = new Button();
+        cmd11 = new Button();
+        cmd12 = new Button();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.GridLayout(4, 4));
@@ -133,18 +132,18 @@ public final class Months extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private dateChooser.Button cmd1;
-    private dateChooser.Button cmd10;
-    private dateChooser.Button cmd11;
-    private dateChooser.Button cmd12;
-    private dateChooser.Button cmd2;
-    private dateChooser.Button cmd3;
-    private dateChooser.Button cmd4;
-    private dateChooser.Button cmd5;
-    private dateChooser.Button cmd6;
-    private dateChooser.Button cmd7;
-    private dateChooser.Button cmd8;
-    private dateChooser.Button cmd9;
+    private Button cmd1;
+    private Button cmd10;
+    private Button cmd11;
+    private Button cmd12;
+    private Button cmd2;
+    private Button cmd3;
+    private Button cmd4;
+    private Button cmd5;
+    private Button cmd6;
+    private Button cmd7;
+    private Button cmd8;
+    private Button cmd9;
     // End of variables declaration//GEN-END:variables
 
 }

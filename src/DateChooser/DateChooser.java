@@ -1,5 +1,4 @@
-
-package dateChooser;
+package DateChooser;
 
 import DTO.NgayThangNamDTO;
 import java.awt.*;
@@ -244,7 +243,7 @@ public final class DateChooser extends JPanel {
         lb = new javax.swing.JLabel();
         cmdYear = new Button();
         cmdPrevious = new Button();
-        slide = new dateChooser.Slider();
+        slide = new Slider();
 
         setBackground(new java.awt.Color(255, 255, 255));
         

@@ -412,7 +412,7 @@ public class PhieuXuatGUI extends JPanel {
 					comboboxClicked = false; // Reset cờ để tránh lặp
 					
 					if(trangThai.equalsIgnoreCase("Đã xuất hàng"))
-						updateSoLuongPBSP(ctpxTable);
+						updateSoLuongPBSP(pxTable, ctpxTable);
 				}
 			}
 		});
@@ -590,16 +590,21 @@ public class PhieuXuatGUI extends JPanel {
 		}	
 	}
 	
-	private void updateSoLuongPBSP(JTable table) {
-		for(int i=0; i<table.getRowCount(); i++) {
-			DefaultTableModel model = (DefaultTableModel)table.getModel();
-			String maPBSP = model.getValueAt(i, 0).toString();
-			int soLuong = Integer.parseInt(model.getValueAt(i, 5).toString());
-			String message = pbspBUS.updateSoLuong(maPBSP,soLuong);
-			if(message.equalsIgnoreCase("Cập nhật số lượng PBSP thành công!"))
-				JOptionPane.showMessageDialog(null, message);
-			else if(message.equals("Cập nhật số lượng PBSP thất bại!"))
-				JOptionPane.showMessageDialog(null, message);
+	private void updateSoLuongPBSP(JTable tablePX, JTable tableCTPX) {
+		DefaultTableModel modelPX = (DefaultTableModel)tablePX.getModel();
+		int selecedRow = tablePX.getSelectedRow();
+		if(selecedRow != -1) {
+			String maKho = modelPX.getValueAt(selecedRow, 5).toString();
+			for(int i=0; i<tableCTPX.getRowCount(); i++) {
+				DefaultTableModel modelCTPX = (DefaultTableModel)tableCTPX.getModel();
+				String maPBSP = modelCTPX.getValueAt(i, 0).toString();
+				int soLuong = Integer.parseInt(modelCTPX.getValueAt(i, 5).toString());
+				String message = pbspBUS.giamSoLuong(maKho, maPBSP,soLuong);
+				if(message.equalsIgnoreCase("Cập nhật số lượng PBSP thành công!"))
+					JOptionPane.showMessageDialog(null, message);
+				else if(message.equals("Cập nhật số lượng PBSP thất bại!"))
+					JOptionPane.showMessageDialog(null, message);
+			}
 		}
 	}
 }
