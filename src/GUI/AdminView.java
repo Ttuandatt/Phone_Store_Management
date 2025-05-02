@@ -128,11 +128,13 @@ public class AdminView {
 
 		JMenu menuNhanVien = createRightAlignedMenu("NHÂN VIÊN");
 		JMenuItem menuItemDanhSachNhanVien = new JMenuItem("Danh sách nhân viên");
-		JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách bảng chấm công");
-		JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin");
+		//JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách chấm công");
+		JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin nghỉ");
+                JMenuItem menuItemDanhSachLuong = new JMenuItem("Danh sách lương");
 		menuNhanVien.add(menuItemDanhSachNhanVien);
-		menuNhanVien.add(menuItemBangChamCong);
+		//menuNhanVien.add(menuItemBangChamCong);
 		menuNhanVien.add(menuItemDanhSachDonXin);
+                menuNhanVien.add(menuItemDanhSachLuong);
 
 		JMenu menuChamCong = createRightAlignedMenu("CHẤM CÔNG");
 
@@ -222,6 +224,7 @@ public class AdminView {
 		final String danhSachDonXin_Identity = "DANH SACH DON XIN";
 
 		final String chamCong_Identity = "CHAM CONG";
+        final String dsChamCong_Identity = "DANH SACH CHAM CONG";
 
 		final String taoDon_Identity = "TAO DON";
 
@@ -320,13 +323,7 @@ public class AdminView {
 			cardLayout.show(contentPanel, danhSachNhanVien_Identity);
 		});
 
-		// ActionListener cho menuItem bảng chấm công
-		menuItemBangChamCong.addActionListener(e -> {
-			BangChamCongGUI timesheetObj = new BangChamCongGUI();
-			contentPanel.add(timesheetObj, danhSachBangChamCong_Identity_);
-			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-			cardLayout.show(contentPanel, danhSachBangChamCong_Identity_);
-		});
+		
 
 		// ActionListener cho menuItem Danh sách dơn xin
 		menuItemDanhSachDonXin.addActionListener(e -> {
@@ -339,10 +336,13 @@ public class AdminView {
 		menuChamCong.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ChamCongGUI chamCongObj = new ChamCongGUI();
-				contentPanel.add(chamCongObj, chamCong_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, chamCong_Identity);
+                            CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+                            DSBangChamCongGUI dschamCongObj = new DSBangChamCongGUI(cardLayout, contentPanel);
+                            contentPanel.add(dschamCongObj, dsChamCong_Identity);  
+                            cardLayout.show(contentPanel, dsChamCong_Identity);
+                            
+                            ChiTietChamCongGUI bcc = new ChiTietChamCongGUI(cardLayout, contentPanel);
+                            contentPanel.add(bcc, chamCong_Identity);
 			}
 		});
 

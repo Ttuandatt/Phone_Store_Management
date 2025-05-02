@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -715,10 +716,10 @@ public class BangChamCongGUI extends JPanel{
     		String maBCC = bcc.getMaBCC();
     		int thangCC = bcc.getThangCC();
     		int namCC = bcc.getNamCC();
-    		int soNgayLam = bcc.getSoNgayLam();
-    		int soNgayNghiKhongPhep = bcc.getSoNgayNghiKhongPhep();
-    		int soNgayNghiPhepCoLuong = bcc.getSoNgayNghiPhepCoLuong();
-    		int soNgayNghiPhepKhongLuong = bcc.getSoNgayNghiPhepKhongLuong();
+    		float soNgayLam = bcc.getSoNgayLam();
+    		float soNgayNghiKhongPhep = bcc.getSoNgayNghiKP();
+    		float soNgayNghiPhepCoLuong = bcc.getSoNPCoLuong();
+    		float soNgayNghiPhepKhongLuong = bcc.getSoNPKhongLuong();
     		String maNV = bcc.getMaNV();
     		
     		Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV};
@@ -812,9 +813,9 @@ public class BangChamCongGUI extends JPanel{
 				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
 				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
 				bcc.setSoNgayLam(0);
-				bcc.setSoNgayNghiKhongPhep(0);
-				bcc.setSoNgayNghiPhepCoLuong(0);
-				bcc.setSoNgayNghiPhepKhongLuong(0);
+				bcc.setSoNgayNghiKP(0);
+				bcc.setSoNPCoLuong(0);
+				bcc.setSoNPKhongLuong(0);
 				bcc.setMaNV(txtMaNV.getText());
 				
 				String message = bccBUS.insert(bcc);
@@ -895,9 +896,9 @@ public class BangChamCongGUI extends JPanel{
 				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
 				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
 				bcc.setSoNgayLam(0);
-				bcc.setSoNgayNghiKhongPhep(0);
-				bcc.setSoNgayNghiPhepCoLuong(0);
-				bcc.setSoNgayNghiPhepKhongLuong(0);
+				bcc.setSoNgayNghiKP(0);
+				bcc.setSoNPCoLuong(0);
+				bcc.setSoNPKhongLuong(0);
 				bcc.setMaNV(txtMaNV.getText());
 				
 				String message = bccBUS.insert(bcc);
@@ -927,9 +928,9 @@ public class BangChamCongGUI extends JPanel{
                 else if(bcc.getThangCC()==Integer.parseInt(searchContent.trim()) || 
                 	bcc.getNamCC()==Integer.parseInt(searchContent.trim()) ||
                 	bcc.getSoNgayLam()==Integer.parseInt(searchContent.trim()) ||
-                	bcc.getSoNgayNghiKhongPhep()==Integer.parseInt(searchContent.trim()) ||
-                	bcc.getSoNgayNghiPhepCoLuong()==Integer.parseInt(searchContent.trim()) ||
-                	bcc.getSoNgayNghiPhepKhongLuong()==Integer.parseInt(searchContent.trim())||
+                	bcc.getSoNgayNghiKP()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNPCoLuong()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNPKhongLuong()==Integer.parseInt(searchContent.trim())||
                 	bcc.getMaNV().toLowerCase().contains(searchContent.toLowerCase())){
                 	dsTimKiem.add(bcc); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
                     found = true;
@@ -952,10 +953,10 @@ public class BangChamCongGUI extends JPanel{
     			String maBCC = bcc.getMaBCC();
     			int thangCC = bcc.getThangCC();
     			int namCC = bcc.getNamCC();
-    			int soNgayLam = bcc.getSoNgayLam();
-    			int soNgayNghiKhongPhep = bcc.getSoNgayNghiKhongPhep();
-    			int soNgayNghiPhepCoLuong = bcc.getSoNgayNghiPhepCoLuong();
-    			int soNgayNghiPhepKhongLuong = bcc.getSoNgayNghiPhepKhongLuong();
+    			float soNgayLam = bcc.getSoNgayLam();
+        		float soNgayNghiKhongPhep = bcc.getSoNgayNghiKP();
+        		float soNgayNghiPhepCoLuong = bcc.getSoNPCoLuong();
+        		float soNgayNghiPhepKhongLuong = bcc.getSoNPKhongLuong();
     			String maNV = bcc.getMaNV();
 
     			
@@ -991,7 +992,7 @@ public class BangChamCongGUI extends JPanel{
 			
 			ngayNghiModel.setRowCount(0);
 			for(int i=0; i<thongTinNgayNghi.size(); i++) {
-				Date ngayChamCong = thongTinNgayNghi.get(i).getngayChamCong();
+				LocalDate ngayChamCong = thongTinNgayNghi.get(i).getNgayTao();
 				log("ngayChamCong="+ngayChamCong);
 				String loaiChamCong = thongTinNgayNghi.get(i).getLoaiChamCong();
 				log("loaiChamCong="+loaiChamCong);
@@ -1016,9 +1017,9 @@ public class BangChamCongGUI extends JPanel{
 		
 			tangCaModel.setRowCount(0);
 			for(int i=0; i<thongTinTangCa.size(); i++) {
-				Date ngayTangCa = thongTinTangCa.get(i).getngayChamCong();
+				LocalDate ngayTangCa = thongTinTangCa.get(i).getNgayTao();
 				String loaiTangCa = thongTinTangCa.get(i).getLoaiChamCong();
-				Double soGioTangCa = thongTinTangCa.get(i).getSoGioOT();
+				Float soGioTangCa = thongTinTangCa.get(i).getSoGioOT();
 				
 				Object[] row = {ngayTangCa, loaiTangCa, soGioTangCa};
 				tangCaModel.addRow(row);
