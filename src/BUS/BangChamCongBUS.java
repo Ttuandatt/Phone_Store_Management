@@ -20,6 +20,8 @@ public class BangChamCongBUS {
 			return "Thêm bảng chấm công thành công!";
 		return "Thêm bảng chấm công thất bại!";
 	}
-	
-
+	//get bang cham cong by thang va nam
+	public BangChamCongDTO getBangChamCongByThangNam(String maNV, int thang, int nam) {
+		return bccDAO.getBangChamCongByNVAndThangNam(maNV, thang, nam);
+	}
 }

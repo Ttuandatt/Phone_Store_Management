@@ -236,6 +236,7 @@ public class AdminView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
+					System.out.println("Clicked on menu San Pham");
                     JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
                     SanPhamGUI productObj = new SanPhamGUI();
                     Parent content = productObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
@@ -363,15 +364,27 @@ public class AdminView {
 		});
 
 		// ActionListener cho button Personal Information
-		personalInfoButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ThongTinCaNhanGUI thongTinCaNhanObj = new ThongTinCaNhanGUI();
-				contentPanel.add(thongTinCaNhanObj, thongTinCaNhan_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
-			}
-		});
+		personalInfoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+					System.out.println("Clicked personalInfoButton");
+                    JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+                    ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
+                    Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+                    javafx.application.Platform.runLater(() -> {
+                        fxPanel.setScene(new Scene(content));
+                    });
+                    contentPanel.add(fxPanel, thongTinCaNhan_Identity);
+                    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+                    cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+                } catch (Exception ex) {
+					System.out.println("error personalInfoButton");
+
+                    ex.printStackTrace();
+                }
+            }
+        });
 
 		// mouseListener cho nút changeInfoButton
 		personalInfoButton.addMouseListener(new MouseAdapter() {

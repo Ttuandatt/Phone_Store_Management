@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1509.0" style="-fx-background-color: #67cac5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PersonalInformationController">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="100.0" layoutY="169.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelName" layoutX="352.0" layoutY="206.0" text="Nguyen Van A">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelEmail" layoutX="352.0" layoutY="244.0" text="phuhuynh.010104@gmail.com">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="107.0" layoutY="311.0" text="Họ và tên" />
+      <TextField fx:id="tfName" layoutX="107.0" layoutY="341.0" onKeyPressed="#handleKeyPressName" text="Huynh Van Phu" />
+      <Label layoutX="446.0" layoutY="311.0" text="Số điện thoại" />
+      <TextField fx:id="tfNumberPhone" layoutX="446.0" layoutY="341.0" onKeyPressed="#handleKeyPressPhoneNumber" text="0123456789" />
+      <Label layoutX="446.0" layoutY="388.0" text="Ngày sinh" />
+      <TextField fx:id="tfBirthday" layoutX="446.0" layoutY="418.0" onKeyPressed="#handleKeyPressBirthday" text="1990-05-12" />
+      <Label layoutX="107.0" layoutY="388.0" text="Họ và tên" />
+      <RadioButton fx:id="rbMale" layoutX="107.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#handleClickMale" selected="true" text="Nam " />
+      <RadioButton fx:id="rbFemale" layoutX="169.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#handleClickFemale" text="Nữ" />
+      <Label layoutX="107.0" layoutY="467.0" text="Địa chỉ" />
+      <TextField fx:id="tfAddress" layoutX="107.0" layoutY="497.0" onKeyPressed="#handleKeyPressAddress" text="123 Lê Lợi, TP.HCM" />
+      <Label layoutX="935.0" layoutY="108.0" text="Tháng " />
+      <Label layoutX="1062.0" layoutY="108.0" text="Năm" />
+      <ComboBox fx:id="cbMonth" layoutX="935.0" layoutY="139.0" onAction="#handleChangeMonth" prefHeight="25.0" prefWidth="79.0" />
+      <ComboBox fx:id="cbYear" layoutX="1062.0" layoutY="139.0" onAction="#handleChangeYear" prefHeight="25.0" prefWidth="79.0" />
+      <Label layoutX="937.0" layoutY="194.0" text="Số ngày công" />
+      <Label fx:id="tf_songaycong" layoutX="1141.0" layoutY="194.0" text="0" />
+      <Label layoutX="937.0" layoutY="230.0" text="Số ngày nghỉ phép có lương" />
+      <Label fx:id="tf_songaynghiphep" layoutX="1141.0" layoutY="230.0" text="0" />
+      <Label layoutX="937.0" layoutY="268.0" text="Số ngày nghỉ phép không lương" />
+      <Label fx:id="tf_songaynghiphepkhongluong" layoutX="1141.0" layoutY="268.0" text="0" />
+      <Label layoutX="937.0" layoutY="307.0" text="Số ngày nghỉ không phép" />
+      <Label fx:id="tf_songaynghikhongphep" layoutX="1141.0" layoutY="307.0" text="0" />
+      <Label layoutX="937.0" layoutY="345.0" text="Số giờ tăng ca" />
+      <Label fx:id="tf_sogiotangca" layoutX="1141.0" layoutY="345.0" text="0" />
+      <TableView fx:id="tb_bangluong" layoutX="937.0" layoutY="424.0" prefHeight="200.0" prefWidth="310.0">
+        <columns>
+          <TableColumn fx:id="tv_thoigian" prefWidth="88.7999267578125" text="Thời gian" />
+          <TableColumn fx:id="tv_heso" prefWidth="98.4000244140625" text="Hệ Số" />
+            <TableColumn fx:id="tv_tongluong" prefWidth="123.199951171875" text="Tổng Lương" />
+        </columns>
+      </TableView>
+      <Button fx:id="bt_update" disable="true" layoutX="755.0" layoutY="589.0" mnemonicParsing="false" text="Cập nhật" />
+   </children>
+</Pane>

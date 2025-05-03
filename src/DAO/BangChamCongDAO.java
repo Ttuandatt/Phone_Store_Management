@@ -129,5 +129,38 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	//get bang cham cong by nhan vien va thang nam
+	public BangChamCongDTO getBangChamCongByNVAndThangNam(String maNV, int thang, int nam) {
+		BangChamCongDTO bcc = new BangChamCongDTO();
+		try {
+			jdbc.openConnection();
+			
+			String query = "select * from bangchamcong where maNV=? and thangCC=? and namCC=?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maNV);
+			ps.setInt(2, thang);
+			ps.setInt(3, nam);
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {				
+				bcc.setMaBCC(rs.getString("maBCC"));
+				bcc.setThangCC(rs.getInt("thangCC"));
+				bcc.setNamCC(rs.getInt("namCC"));
+				bcc.setSoNgayLam(rs.getInt("soNgayLam"));
+				bcc.setSoNgayNghiKhongPhep(rs.getInt("soNgayNghiKhongPhep"));
+				bcc.setSoNgayNghiPhepCoLuong(rs.getInt("soNgayNghiPhepCoLuong"));
+				bcc.setSoNgayNghiPhepKhongLuong(rs.getInt("soNgayNghiPhepKhongLuong"));
+				bcc.setMaNV(rs.getString("maNV"));
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return bcc;
+	}
 }

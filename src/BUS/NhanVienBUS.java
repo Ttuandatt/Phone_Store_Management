@@ -101,4 +101,11 @@ public class NhanVienBUS {
 	public double getSoGioTangCa(int thangCC, int namCC, String maNV) {
 		return nvDAO.getSoGioTangCa(thangCC, namCC, maNV);
 	}
+	// update thong tin ban than
+	public String updatePersonalInfo(NhanVienDTO nv) {
+		if(nvDAO.updatePersonalInfo(nv))
+		return "Cập nhật thông tin cá nhân thành công";
+		return "Cập nhật thông tin cá nhân thất bại";
+	}
+
 }

@@ -2,11 +2,19 @@
     "configurations": [
         {
             "type": "java",
-            "name": "AdminView",
+            "name": "main",
             "request": "launch",
-            "mainClass": "GUI.AdminView",
-            "projectName": "Phone_Store_Management",
+            "mainClass": "GUI.main",
+            "projectName": "Phone_Store_Management_d13e3ac",
             "vmArgs": "--module-path \"E:/Learn/Code_2/java_advanced/thuvienjava/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib\" --add-modules javafx.controls,javafx.fxml,javafx.swing,javafx.base --add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED"
         },
+        {
+            "type": "java",
+            "name": "AdminView",
+            "request": "launch",
+            "mainClass": "GUI.main",
+            "projectName": "Phone_Store_Management",
+            "vmArgs": "--module-path \"E:/Learn/Code_2/java_advanced/thuvienjava/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib\" --add-modules javafx.controls,javafx.fxml,javafx.swing,javafx.base --add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED"
+        }
     ]
 }

@@ -548,4 +548,33 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
   	    System.out.println(element.getClassName() + " | method: " 
   	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
   	}
+	// update thông tin nhân viên NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh,hinhAnh);
+	public boolean updatePersonalInfo(NhanVienDTO nv) {
+		int result = 0;
+		try {
+			jdbc.openConnection();
+			
+			String query = "update nhanvien set hoTen=?, sdt=?, diaChi=?, ngaySinh=?, gioiTinh=?,hinhAnh=? where maNV=?";			
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, nv.getHoTen());
+			ps.setString(2, nv.getSoDienThoai());
+			ps.setString(3, nv.getDiaChi());
+			ps.setDate(4, nv.getNgaySinh());
+			ps.setString(5, nv.getGioiTinh());
+			ps.setBytes(6, nv.getHinhAnh());
+			ps.setString(7, nv.getMaNV());
+			result = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
+		}
+		
+		if(result > 0) {
+			return true;
+		}
+		return false;
+	}
 }
