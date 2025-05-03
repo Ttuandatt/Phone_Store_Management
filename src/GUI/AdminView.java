@@ -168,7 +168,7 @@ public class AdminView {
 
 		// ======================= 3. Logout Panel (0.1) ============================//
 		JPanel logoutPanel = new JPanel();
-		logoutPanel.setBackground(Color.YELLOW);
+		logoutPanel.setBackground(Color.white);
 		logoutPanel.setLayout(new GridBagLayout());
 
 		JButton personalInfoButton = new JButton("Thông tin cá nhân");

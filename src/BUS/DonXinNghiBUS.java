@@ -33,8 +33,8 @@ public class DonXinNghiBUS {
 		return dxnDAO.demSoLanXinNghiConLai(maNV);
 	}
 	
-	public String updateTrangThai(String maDon, String trangThai) {
-		if(dxnDAO.updateTrangThai(maDon, trangThai)>0)
+	public String updateTrangThai(String maDon, String trangThai, String maNguoiDuyet) {
+		if(dxnDAO.updateTrangThai(maDon, trangThai, maNguoiDuyet)>0)
 			return "Cập nhật trạng thái đơn thành công!";
 		return "Cập nhật trạng thái đơn thất bại!";
 	}

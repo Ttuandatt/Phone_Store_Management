@@ -162,16 +162,17 @@ public class DonXinNghiDAO implements DAOInterface<DonXinNghiDTO>{
 		return 0;
 	}
 	
-	public int updateTrangThai(String maDon, String trangThai) {
+	public int updateTrangThai(String maDon, String trangThai, String maNguoiDuyet) {
 		int result = 0;
 		
 		try {
 			jdbc.openConnection();
 			
-			String query = "update donxinnghi set trangThai=? where maDon=?";
+			String query = "update donxinnghi set trangThai=?, maNguoiDuyet=? where maDon=?";
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, trangThai);
-			ps.setString(2, maDon);
+			ps.setString(2, maNguoiDuyet);
+			ps.setString(3, maDon);
 			
 			result = ps.executeUpdate();
 		}catch (Exception e) {
