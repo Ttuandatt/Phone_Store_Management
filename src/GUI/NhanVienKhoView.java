@@ -13,6 +13,10 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 
 public class NhanVienKhoView {
 	
@@ -76,7 +80,7 @@ public class NhanVienKhoView {
 		lblMaNV.setBounds(5, 22, 50, 20);
 		infoPanel.add(lblMaNV);
 		dataHoTen = new JLabel("DEF");
-		dataHoTen.setBounds(55, 22, 50, 20);
+		dataHoTen.setBounds(55, 22, 100, 20);
 		infoPanel.add(dataHoTen);
 		
 		lblMaNV = new JLabel("Chức vụ: ");
@@ -144,7 +148,7 @@ public class NhanVienKhoView {
 
         //======================= 3. Logout Panel (0.1) ============================//
         JPanel logoutPanel = new JPanel();
-        logoutPanel.setBackground(Color.YELLOW);
+        logoutPanel.setBackground(Color.white);
         logoutPanel.setLayout(new GridBagLayout());
 
         
@@ -210,19 +214,24 @@ public class NhanVienKhoView {
         
         
 //=========================================== Khu vực add Listener cho các nút/menu/menuItem ==========================================================//
-   
+
 		// mouseListener cho menu sản phẩm
 		menuSanPham.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				SanPhamGUI sanPhamObj = new SanPhamGUI(); // tạo 1 instance của SanPhamGUI
-				contentPanel.add(sanPhamObj, sanPham_Identity); // thêm instance đó vào contentPanel kèm với định danh
-																// của nó
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout(); // dùng CardLayout để hiển thị giao diện
-																				// của lớp ProductsGUI khi click vào
-																				// menu
-				cardLayout.show(contentPanel, sanPham_Identity);
-
+				try {
+					JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+					SanPhamGUI productObj = new SanPhamGUI();
+					Parent content = productObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+					javafx.application.Platform.runLater(() -> {
+						fxPanel.setScene(new Scene(content));
+					});
+					contentPanel.add(fxPanel, sanPham_Identity);
+					CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+					cardLayout.show(contentPanel, sanPham_Identity);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 		
@@ -272,7 +281,6 @@ public class NhanVienKhoView {
 		});
 		
 		
-
 
 		// MouseListener cho menu Tạo đơn
 		menuTaoDon.addMouseListener(new MouseAdapter() {

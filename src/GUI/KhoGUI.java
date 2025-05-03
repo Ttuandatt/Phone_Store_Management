@@ -347,3 +347,6 @@ public class KhoGUI extends JPanel {
 		pbspModel.addColumn("Mã SP");
 
 	}
+
+
+}
