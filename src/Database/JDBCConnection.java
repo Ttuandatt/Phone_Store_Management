@@ -45,9 +45,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class JDBCConnection {
-	private String dbUrl = "jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false";
-	private String username = "";
-	private String password = "";
+	private String dbUrl = "jdbc:sqlserver://localhost:1433;databaseName=phonestore;encrypt=false;trustServerCertificate=true";
+	private String username = "sa";
+	private String password = "KVy@070303";
 	private Connection con;
 	
 	//Hàm thiết lập kết nối tới CSDL

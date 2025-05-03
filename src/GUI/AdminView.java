@@ -178,7 +178,12 @@ public class AdminView {
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		logoutPanel.add(logoutButton, gbc);
-
+		logoutButton.addActionListener(e -> {
+			JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(logoutButton);
+			currentFrame.dispose();
+			DangNhapGUI dangNhapGUI = new DangNhapGUI();
+			dangNhapGUI.setVisible(true);
+		});
 		// Set tỷ lệ và vị trí hiển thị của logoutPanel
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.1;
