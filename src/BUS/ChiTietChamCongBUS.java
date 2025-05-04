@@ -7,21 +7,28 @@ import DTO.ChiTietChamCongDTO;
 
 public class ChiTietChamCongBUS {
 	ChiTietChamCongDAO ctccDAO = new ChiTietChamCongDAO();
-	
-	public ArrayList<ChiTietChamCongDTO> getThongTinTangCa(String maBCC){
-		return ctccDAO.getThongTinTangCa(maBCC);
-	}
-
-    public ArrayList<ChiTietChamCongDTO> searchById(String temp) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc, String makho) {
+        return ctccDAO.getChiTietCCTheoMaCC(macc, makho);
     }
-
     public ChiTietChamCongDTO selectById(String temp) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return ctccDAO.selectById(temp);
+    }
+    
+    public ChiTietChamCongDTO getChiTietChamCongTheoMaCT(String mact) {
+        return ctccDAO.GetChiTietChamCongTheoMaCT(mact);
     }
 
-    public void insertChiTietCC(ChiTietChamCongDTO ct) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int insertChiTietCC(ChiTietChamCongDTO ct, String makho) {
+        return ctccDAO.insert1(ct, makho);
+    }
+
+    public int deleteById(String mact, String makho) {
+        return ctccDAO.delete1(mact, makho);
+    }
+    
+    public ArrayList<ChiTietChamCongDTO> getThongTinTangCa(String maBCC){
+		return ctccDAO.getThongTinTangCa(maBCC);
     }
 
 }
