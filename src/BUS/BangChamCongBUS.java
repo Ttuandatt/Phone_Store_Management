@@ -20,6 +20,17 @@ public class BangChamCongBUS {
 			return "Thêm bảng chấm công thành công!";
 		return "Thêm bảng chấm công thất bại!";
 	}
+
+    public ArrayList<BangChamCongDTO> sellectAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 	
+        public int updateById(BangChamCongDTO bcc, String makho) {
+            return bccDAO.update(bcc, makho);
+        }
+
+    public int xoaChiTietChamCongTheoBCC(String macc, String makho) {
+        return bccDAO.deleteByMaBCC(macc, makho);
+    }
 
 }
