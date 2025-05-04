@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import DTO.BangChamCongDTO;
 import Database.JDBCConnection;
+import java.sql.Date;
+import java.sql.SQLException;
 
 public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 	JDBCConnection jdbc = new JDBCConnection();
@@ -16,7 +18,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "select * from bangchamcong";
+			String query = "exec sp_GetAllBangChamCong";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -53,7 +55,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "select * from bangchamcong where maNV=?";
+			String query = "exec sp_GetChamCongTheoMaCC maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, maNV);
@@ -85,8 +87,6 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		return bcc;
 	}
 	
-	
-
 	@Override
 	public int insert(BangChamCongDTO bcc) {
 		int result = 0;
@@ -137,5 +137,50 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+        public int update(BangChamCongDTO bcc, String makho) {
+            int result = 0;
+            try {
+                jdbc.openConnection();
+
+                String query = "exec sp_CapNhatBangChamCong @maBCC=?, @soNgayLam=?, @soNgayNghiKP=?, @soNPCoLuong=?, @soNPKhongLuong=?, @soGioOTNgayThuong=?, @soGioOTNgayLe=?, @soGioOTCN=?, @maKho=?";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, bcc.getMaBCC());
+                ps.setFloat(2, bcc.getSoNgayLam());
+                ps.setFloat(3, bcc.getSoNgayNghiKP());
+                ps.setFloat(4, bcc.getSoNPCoLuong());
+                ps.setFloat(5, bcc.getSoNPKhongLuong());
+                ps.setFloat(6, bcc.getSoGioOTNgayThuong());
+                ps.setFloat(7, bcc.getSoGioOTNgayLe());
+                ps.setFloat(8, bcc.getSoGioOTCN());
+                ps.setString(9, makho);
+
+                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+            } catch (SQLException e) {
+                e.printStackTrace(); // Ghi log lỗi để dễ debug
+            } finally {
+                jdbc.closeConnection();
+            }
+            return result;
+        }
+
+    public int deleteByMaBCC(String macc, String makho) {
+        int result = 0;
+            try {
+                jdbc.openConnection();
+
+                String query = "EXEC sp_XoaChiTietChamCongTheoBCC @maBCC = ?, @maKho = ? ;";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, macc);
+                ps.setString(2, makho);
+
+                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+            } catch (SQLException e) {
+                e.printStackTrace(); // Ghi log lỗi để dễ debug
+            } finally {
+                jdbc.closeConnection();
+            }
+        return result;
+    }
 
 }
