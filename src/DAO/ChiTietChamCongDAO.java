@@ -1,48 +1,142 @@
 package DAO;
 
+import static BUS.DangNhapBUS.kho;
+import DTO.BangChamCongDTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import DTO.ChiTietChamCongDTO;
 import Database.JDBCConnection;
+import java.sql.CallableStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 
 public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
-	JDBCConnection jdbc = new JDBCConnection();
+    JDBCConnection jdbc = new JDBCConnection();
 
-	@Override
-	public ArrayList<ChiTietChamCongDTO> selectAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc, String makho) {
+        ArrayList<ChiTietChamCongDTO> arrCT = new ArrayList<ChiTietChamCongDTO>();
+        try {
+            jdbc.openConnection();
+            String query = "EXEC sp_GetChiTietChamCongTheoMaCC @maCC = ?, @maKho = ?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, macc);
+            ps.setString(2, makho);
+            
+            ResultSet rs = ps.executeQuery();
+                while(rs.next()) {
+                    ChiTietChamCongDTO ct = new ChiTietChamCongDTO();
+                    ct.setMaCTCC(rs.getString("maCTCC"));
+                    ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
+                    ct.setLoaiChamCong(rs.getString("loaiChamCong"));
+                    ct.setChiTiet(rs.getString("chiTiet"));
+                    ct.setMaBCC(rs.getString("maBCC"));
+                    ct.setSoGioOT(rs.getFloat("soGioOT"));
+                    arrCT.add(ct);
+                }
+        }catch (SQLException e) {
+            e.getMessage();
+        } finally {
+            // Đóng kết nối CSDL
+            jdbc.closeConnection();
+        }
+        return arrCT;
+        
+    }
+    
+    public int insert1(ChiTietChamCongDTO t, String makho) {
+        int result = 0;
+        try {
+            jdbc.openConnection();
 
-	@Override
-	public ChiTietChamCongDTO selectById(String t) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            String query = "exec sp_ThemChiTietChamCong @maCTCC=?, @ngayTao=?, @loaiChamCong=?, @chiTiet=?, @maBCC=?, @soGioOT=?, @maKho=?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, t.getMaCTCC());
+            ps.setDate(2, Date.valueOf(t.getNgayTao()));
+            ps.setString(3, t.getLoaiChamCong());
+            ps.setString(4, t.getChiTiet());
+            ps.setString(5, t.getMaBCC());
+            ps.setFloat(6, t.getSoGioOT());
+            ps.setString(7, makho);
 
-	@Override
-	public int insert(ChiTietChamCongDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+            result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ghi log lỗi để dễ debug
+        } finally {
+            jdbc.closeConnection();
+        }
+        return result;
+    }
+    
+    public int delete1(String maCTCC, String maKho) {
+        int result = 0;
+        try {
+            jdbc.openConnection();
+
+            String query = "exec sp_XoaChiTietChamCong @maCTCC=?, @maKho=?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, maCTCC);
+            ps.setString(2, maKho);
+
+            result = ps.executeUpdate(); // Số dòng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ghi log lỗi để kiểm tra
+        } finally {
+            jdbc.closeConnection();
+        }
+
+        return result;
+    }
+
+
 
 	@Override
 	public int delete(ChiTietChamCongDTO t) {
+            return 0;
 		// TODO Auto-generated method stub
-		return 0;
+            // Update bảng chấm công
 	}
 
 	@Override
 	public int update(ChiTietChamCongDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
+            // TODO Auto-generated method stub
+            return 0;
+            // Update bảng chấm công
 	}
 	
-	public ArrayList<ChiTietChamCongDTO> getThongTinTangCa(String maBCC) {
+    
+    // Tìm theo mã bảng cc
+    public ChiTietChamCongDTO GetChiTietChamCongTheoMaCT(String mact) {
+    ChiTietChamCongDTO ct = null;
+    try {
+        jdbc.openConnection();
+        String query = "exec sp_GetChiTietChamCongTheoMaCT @maCTCC = ?";
+        PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+        ps.setString(1, mact);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            ct = new ChiTietChamCongDTO();
+            ct.setMaCTCC(rs.getString("maCTCC"));
+            ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
+            ct.setLoaiChamCong(rs.getString("loaiChamCong"));
+            ct.setChiTiet(rs.getString("chiTiet"));
+            ct.setSoGioOT(rs.getFloat("soGioOT"));
+        }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+        } finally {
+            jdbc.closeConnection();
+        }
+        return ct;
+    }
+
+    public ArrayList<ChiTietChamCongDTO> getThongTinTangCa(String maBCC) {
 		ArrayList<ChiTietChamCongDTO> arr = new ArrayList<ChiTietChamCongDTO>();
 		
 		try {
@@ -72,5 +166,21 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
 		}
 		
 		return arr;
-	}
+    }
+    
+    @Override
+    public ChiTietChamCongDTO selectById(String mact) {
+        return null;
+    }
+    
+    @Override
+    public ArrayList<ChiTietChamCongDTO> selectAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int insert(ChiTietChamCongDTO t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
 }
