@@ -76,7 +76,7 @@ public class QuanLyKhoView {
 		lblMaNV.setBounds(5, 22, 50, 20);
 		infoPanel.add(lblMaNV);
 		dataHoTen = new JLabel("DEF");
-		dataHoTen.setBounds(55, 22, 50, 20);
+		dataHoTen.setBounds(55, 22, 100, 20);
 		infoPanel.add(dataHoTen);
 		
 		lblMaNV = new JLabel("Chức vụ: ");
@@ -147,7 +147,7 @@ public class QuanLyKhoView {
 
         //======================= 3. Logout Panel (0.1) ============================//
         JPanel logoutPanel = new JPanel();
-        logoutPanel.setBackground(Color.YELLOW);
+        logoutPanel.setBackground(Color.white);
         logoutPanel.setLayout(new GridBagLayout());
 
         

@@ -83,4 +83,8 @@ public class JDBCConnection {
     public Connection getConnection() {
         return con;
     }
+
+    public static String getDatabaseUrl() {
+    	return dbUrl;
+    }
 }

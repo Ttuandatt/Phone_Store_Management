@@ -78,8 +78,16 @@ public class NhanVienBUS {
 		return nvDAO.selectAllByRoleName(role);
 	}
 	
-	public ArrayList<NhanVienDTO> selectAllByWarehouseName(String kho){
-		return nvDAO.selectAllByWarehouseName(kho);
+	public ArrayList<NhanVienDTO> selectAllByWarehouseName(String tenKho){
+		String khoId="";
+		if(tenKho.equalsIgnoreCase("Kho Hà Nội"))
+			khoId="HN";
+		else if(tenKho.equalsIgnoreCase("Kho Đà Nẵng"))
+			khoId="DN";
+		else if(tenKho.equalsIgnoreCase("Kho Hồ Chí Minh"))
+			khoId="HCM";
+		
+		return nvDAO.selectAllByWarehouseId(khoId);
 	}
 	
 	public int getSoNgayCong(int thangCC, int namCC, String maNV) {
