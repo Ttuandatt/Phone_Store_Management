@@ -1061,13 +1061,7 @@ public class NhanVienGUI extends JPanel{
     	gbc.fill = GridBagConstraints.BOTH;
     	gbc.insets = new Insets(3, 3, 3, 3);
     	leftPanel.add(bottomLeftPanel, gbc);
-    	
-    	JLabel lblId = new JLabel("Mã nhân viên:");
-    	lblId.setBounds(10, 20, 100, 20);
-    	topLeftPanel.add(lblId);
-    	JTextField txtId = new JTextField();
-		txtId.setBounds(100, 20, 100, 25);
-		topLeftPanel.add(txtId);
+    
 		
 		JLabel lblName = new JLabel("Họ tên:");
 		lblName.setBounds(10, 47, 100, 20);

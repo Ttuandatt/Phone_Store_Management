@@ -16,15 +16,19 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	@Override
 	public ArrayList<NhanVienDTO> selectAll() {
 		ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
-
+		String query="";
 		try {
 
 			// Thiết lập kết nối tới Database
 			jdbc.openConnection();
-
-			// Tạo query
-			String query = "exec sp_layDanhSachNhanVien"; // dùng stored procedure thay vì dùng raw sql
-
+			
+			//Nếu kết nối tới CSDL là server gốc thì dùng Stored Procedure sp_LayDanhSachNhanVienGoc
+			if(JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
+				query = "exec sp_LayDanhSachNhanVienGoc";
+			}else { // Nếu kết nối tới CSDL là server mảnh thì dùng Stored Procedure sp_LayDanhSachNhanVienKho
+				query = "exec sp_LayDanhSachNhanVienKho";
+			}
+			
 			// Tạo đối tượng PreparedStatement
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 
@@ -106,46 +110,45 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	}
 
 	
-	public ArrayList<NhanVienDTO> selectAllByWarehouseName(String kho){
-		ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
-		
-		try {
-			jdbc.openConnection();
-			
-			String query = "select * from nhanvien inner join kho on nhanvien.chiNhanh = kho.maKho where kho.tenKho=?";
-			
-			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-			ps.setString(1, kho);
-			
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				NhanVienDTO nv = new NhanVienDTO();
-				nv.setMaNV(rs.getString("maNV"));
-				nv.setHoTen(rs.getString("hoTen"));
-				nv.setNgaySinh(rs.getDate("ngaySinh"));
-				nv.setGioiTinh(rs.getString("gioiTinh"));
-				nv.setDiaChi(rs.getString("diaChi"));
-				nv.setSoDienThoai(rs.getString("sdt"));
-				nv.setEmail(rs.getString("email"));
-				nv.setTrangThai(rs.getString("trangThai"));
-				nv.setChucVu(rs.getString("maCV"));
-				nv.setChiNhanh(rs.getString("chiNhanh"));
-				nv.setMatKhau(rs.getString("matKhau"));
-				nv.setHinhAnh(rs.getBytes("hinhAnh")); // Xử lý ảnh (BLOB)
+	public ArrayList<NhanVienDTO> selectAllByWarehouseId(String maKho) {
+	    ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
 
-				// Thêm vào danh sách
-				arrNhanVien.add(nv);
+	    try {
+	        jdbc.openConnection();
 
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
-		} finally {
-			// Đóng kết nối CSDL
-			jdbc.closeConnection();
-		}
-		
-		return arrNhanVien;
+	        // Gọi stored procedure
+	        String query = "{CALL sp_LayDanhSachNhanVienTheoKhoGoc(?)}";
+	        CallableStatement cs = jdbc.getConnection().prepareCall(query);
+	        cs.setString(1, maKho);
+
+	        ResultSet rs = cs.executeQuery();
+	        while (rs.next()) {
+	            NhanVienDTO nv = new NhanVienDTO();
+	            nv.setMaNV(rs.getString("maNV"));
+	            nv.setHoTen(rs.getString("hoTen"));
+	            nv.setNgaySinh(rs.getDate("ngaySinh"));
+	            nv.setGioiTinh(rs.getString("gioiTinh"));
+	            nv.setDiaChi(rs.getString("diaChi"));
+	            nv.setSoDienThoai(rs.getString("sdt"));
+	            nv.setEmail(rs.getString("email"));
+	            nv.setTrangThai(rs.getString("trangThai"));
+	            nv.setChucVu(rs.getString("maCV"));
+	            nv.setChiNhanh(rs.getString("chiNhanh")); // do procedure thêm cột chiNhanh
+	            nv.setMatKhau(rs.getString("matKhau"));
+	            nv.setHinhAnh(rs.getBytes("hinhAnh"));
+
+	            arrNhanVien.add(nv);
+	        }
+
+	        rs.close();
+	        cs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        jdbc.closeConnection();
+	    }
+
+	    return arrNhanVien;
 	}
 	
 	
@@ -192,60 +195,60 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 	@Override
 	public int insert(NhanVienDTO nv) {
-		int result = 0;
-		try {
-			jdbc.openConnection();
+	    int result = 0;
+	    String query = "";
+	    
+	    try {
+	        jdbc.openConnection();
 
-			// Gọi stored procedure
-			String query = "{ ? = CALL sp_themNhanVien(maNV, hoTen, ngaySinh, gioiTinh, diaChi, sdt, email, hinhAnh, matKhau, trangThai, maCV, chiNhanh) }";
-			CallableStatement cs = jdbc.getConnection().prepareCall(query); // Dùng CallableStatement thay vì
-																			// PreparedStatement vì PreparedStatement
-																			// không thể lấy được giá trị logic được trả
-																			// về từ Stored Procedure còn
-																			// CallableStatement thì có thể. Search
-																			// ChatGPT để hiêu rõ hơn khác biệt giữa
-																			// chúng
+			// Nếu kết nối tới CSDL là server gốc thì dùng Stored Procedure sp_ThemNhanVienGoc
+			if (JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
+		        query = "{CALL sp_ThemNhanVienGoc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+			} else { // Nếu kết nối tới CSDL là server mảnh thì dùng Stored Procedure sp_ThemNhanVienKho
+		        query = "{CALL sp_ThemNhanVienKho(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+			}	        
+			log("query="+query);
+	        CallableStatement cs = jdbc.getConnection().prepareCall(query);
 
-			// Đăng ký tham số trả về
-			cs.registerOutParameter(1, java.sql.Types.INTEGER);
+	        // Truyền các tham số IN
+	        cs.setString(1, nv.getHoTen());
+	        cs.setDate(2, nv.getNgaySinh());
+	        cs.setString(3, nv.getGioiTinh());
+	        cs.setString(4, nv.getDiaChi());
+	        cs.setString(5, nv.getSoDienThoai());
+	        cs.setString(6, nv.getEmail());
+	        cs.setBytes(7, nv.getHinhAnh());
+	        cs.setString(8, nv.getMatKhau());
+	        cs.setString(9, nv.getChucVu());
 
-			// Truyền tham số đầu vào
-			cs.setString(2, nv.getMaNV());
-			cs.setString(3, nv.getHoTen());
-			cs.setDate(4, nv.getNgaySinh());
-			cs.setString(5, nv.getGioiTinh());
-			cs.setString(6, nv.getDiaChi());
-			cs.setString(7, nv.getSoDienThoai());
-			cs.setString(8, nv.getEmail());
-			cs.setBytes(9, nv.getHinhAnh());
-			cs.setString(10, nv.getMatKhau());
-			cs.setString(11, nv.getTrangThai());
+	        // Vì procedure sẽ tự xác định chi nhánh từ server name,
+	        // bạn không cần truyền vào từ DAO. Tuy nhiên nếu bạn vẫn giữ tham số @maKho
+	        // thì có thể truyền null hoặc bỏ đi (trong bản procedure bạn đã bỏ rồi)
+	        cs.setString(10, nv.getChiNhanh()); // @maKho (không dùng nữa)
 
-			if (nv.getChucVu() == null || nv.getChucVu().trim().isEmpty()) {
-				cs.setNull(12, java.sql.Types.VARCHAR);
-			} else {
-				cs.setString(12, nv.getChucVu());
-			}
+	        // Đăng ký tham số OUT: @maNV
+	        cs.registerOutParameter(11, java.sql.Types.VARCHAR);
 
-			cs.setString(13, nv.getChiNhanh());
+	        // Thực thi
+	        cs.execute();
 
-			// Thực thi Stored Procedure
-			cs.execute();
+	        // Lấy mã nhân viên đã tạo từ procedure
+	        String maNV = cs.getString(11);
+	        nv.setMaNV(maNV); // lưu lại nếu muốn dùng
 
-			// Lấy giá trị trả về từ stored procedure
-			result = cs.getInt(1);
+	        System.out.println("Mã nhân viên được tạo: " + maNV);
+	        result = 1; // Đánh dấu thêm thành công
 
-			// Đóng tài nguyên
-			cs.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			jdbc.closeConnection();
-		}
-
-		System.out.println("NhanVienDAO | method: insert: giá trị của biến int result: " + result);
-		return result;
+	        cs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result = 0; // Thêm thất bại
+	    } finally {
+	        jdbc.closeConnection();
+	    }
+	    
+	    log("reuslt="+result);
+	    return result;
 	}
 
 	@Override

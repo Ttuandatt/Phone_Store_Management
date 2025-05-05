@@ -1,9 +1,16 @@
-﻿create database phonestorehn;
+﻿select *
+from sys.procedures
+where name like 'sp_%' 
+
+select @@SERVERNAME as ServerName
+
+create database phonestorehn;
 --drop database phonestorehn;
 --USE master;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 --DROP DATABASE phonestore;
-use phonestorehn;
+use phonestore;
+
 
 
 -- Bảng Thương Hiệu

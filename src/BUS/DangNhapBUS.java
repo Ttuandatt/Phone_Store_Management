@@ -141,6 +141,7 @@ public class DangNhapBUS {
                             adminView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
                             view.closeLoginFrame();
                             dangNhap = true;
+                            log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                         case "CV001": // Quản lý kho
                             JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
@@ -148,6 +149,7 @@ public class DangNhapBUS {
                             qlkView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
                             view.closeLoginFrame();
                             dangNhap = true;
+                            log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                         case "CV002": // Quản lý nhân sự
                             JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
@@ -155,6 +157,7 @@ public class DangNhapBUS {
                             qlnsView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
                             view.closeLoginFrame();
                             dangNhap = true;
+                            log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                         case "CV003": // Nhân viên kho
                             JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
@@ -162,6 +165,7 @@ public class DangNhapBUS {
                             nvkView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
                             view.closeLoginFrame();
                             dangNhap = true;
+                            log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                     }
                     break;
@@ -183,11 +187,11 @@ public class DangNhapBUS {
     private String getDbUrlTheoChiNhanh(String chiNhanh) {
         if (chiNhanh == null) return JDBCConnection.DB_URL_GOC;
         switch (chiNhanh.toUpperCase()) {
-            case "HÀ NỘI":
+            case "HN":
                 return JDBCConnection.DB_URL_HN;
-            case "ĐÀ NẴNG":
+            case "DN":
                 return JDBCConnection.DB_URL_DN;
-            case "HỒ CHÍ MINH":
+            case "HCM":
                 return JDBCConnection.DB_URL_HCM;
             default:
                 return JDBCConnection.DB_URL_GOC;

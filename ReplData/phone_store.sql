@@ -519,6 +519,7 @@ VALUES
 
 
 ------------------------------------------ SELECT --------------------------------------
+SELECT @@SERVERNAME AS ServerName;
 select * from nhanvien;
 select * from sanpham;
 select * from pbsp;

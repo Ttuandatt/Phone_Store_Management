@@ -196,6 +196,7 @@ public class KhoDAO implements DAOInterface<KhoDTO> {
 			jdbc.closeConnection();
 		}
 
+		log("maKho="+maKho);
 		return maKho;
 	}
 
@@ -234,5 +235,12 @@ public class KhoDAO implements DAOInterface<KhoDTO> {
 			return 0;
 		}
 	}
+	//hàm hiển thị thông tin dòng code
+  	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
 
 }
