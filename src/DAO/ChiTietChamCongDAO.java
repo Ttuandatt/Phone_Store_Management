@@ -1,14 +1,11 @@
 package DAO;
 
-import static BUS.DangNhapBUS.kho;
-import DTO.BangChamCongDTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import DTO.ChiTietChamCongDTO;
 import Database.JDBCConnection;
-import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
@@ -16,14 +13,13 @@ import java.sql.Date;
 public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
     JDBCConnection jdbc = new JDBCConnection();
 
-    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc, String makho) {
+    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc) {
         ArrayList<ChiTietChamCongDTO> arrCT = new ArrayList<ChiTietChamCongDTO>();
         try {
             jdbc.openConnection();
-            String query = "EXEC sp_GetChiTietChamCongTheoMaCC @maCC = ?, @maKho = ?";
+            String query = "EXEC sp_LayChiTietChamCongTheoMaCCKho @maCC = ?";
             PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
             ps.setString(1, macc);
-            ps.setString(2, makho);
             
             ResultSet rs = ps.executeQuery();
                 while(rs.next()) {
@@ -46,12 +42,12 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
         
     }
     
-    public int insert1(ChiTietChamCongDTO t, String makho) {
+    public int insert1(ChiTietChamCongDTO t) {
         int result = 0;
         try {
             jdbc.openConnection();
 
-            String query = "exec sp_ThemChiTietChamCong @maCTCC=?, @ngayTao=?, @loaiChamCong=?, @chiTiet=?, @maBCC=?, @soGioOT=?, @maKho=?";
+            String query = "exec sp_ThemChiTietChamCongKho @maCTCC=?, @ngayTao=?, @loaiChamCong=?, @chiTiet=?, @maBCC=?, @soGioOT=?";
             PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
             ps.setString(1, t.getMaCTCC());
             ps.setDate(2, Date.valueOf(t.getNgayTao()));
@@ -59,7 +55,6 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
             ps.setString(4, t.getChiTiet());
             ps.setString(5, t.getMaBCC());
             ps.setFloat(6, t.getSoGioOT());
-            ps.setString(7, makho);
 
             result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
         } catch (SQLException e) {
@@ -70,15 +65,14 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
         return result;
     }
     
-    public int delete1(String maCTCC, String maKho) {
+    public int delete1(String maCTCC) {
         int result = 0;
         try {
             jdbc.openConnection();
 
-            String query = "exec sp_XoaChiTietChamCong @maCTCC=?, @maKho=?";
+            String query = "exec sp_XoaChiTietChamCongKho @maCTCC=??";
             PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
             ps.setString(1, maCTCC);
-            ps.setString(2, maKho);
 
             result = ps.executeUpdate(); // Số dòng bị ảnh hưởng
         } catch (SQLException e) {
@@ -112,7 +106,7 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
     ChiTietChamCongDTO ct = null;
     try {
         jdbc.openConnection();
-        String query = "exec sp_GetChiTietChamCongTheoMaCT @maCTCC = ?";
+        String query = "exec sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?";
         PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
         ps.setString(1, mact);
 
@@ -181,6 +175,23 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
     @Override
     public int insert(ChiTietChamCongDTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    public int deleteByMaCT(String mact) {
+        int result = 0;
+            try {
+                jdbc.openConnection();
+                String query = "EXEC sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?;";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, mact);
+
+                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+            } catch (SQLException e) {
+                e.printStackTrace(); // Ghi log lỗi để dễ debug
+            } finally {
+                jdbc.closeConnection();
+            }
+        return result;
     }
     
 }
