@@ -153,10 +153,14 @@ public class ChiTietChamCongGUI extends JPanel{
 		int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
                 if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
                     manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
-                    makho = (String) table.getValueAt(selectedRow, 3);
-                    arr_temp = loadChamCongTheoNhanVien(manv, makho);
-                    
+                    arr_temp = loadChamCongTheoNhanVien(manv);
                 }
+                /*for (JLabel i : arr_1) {
+                    if (i.getBackground() != colorsunday) {
+                        i.setBackground(Color.WHITE);
+                    }
+                    i.setText("");
+                }*/
             }
 	});
          
@@ -522,7 +526,6 @@ public class ChiTietChamCongGUI extends JPanel{
                     int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
                     if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
                         manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
-                        makho = (String) table.getValueAt(selectedRow, 3);
                     } else {
                         JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                         return;
@@ -721,7 +724,6 @@ public class ChiTietChamCongGUI extends JPanel{
         int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
         if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
             manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
-            makho = (String) table.getValueAt(selectedRow, 3);
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
@@ -730,26 +732,41 @@ public class ChiTietChamCongGUI extends JPanel{
         String macc = "CC" + soThang + nam+ manv;
         LocalDate date = LocalDate.now();
         
-        int resultDel = bccBUS.xoaChiTietChamCongTheoBCC(macc, makho);
+
         BangChamCongDTO bcc = bccBUS.selectById(macc);
         if (bcc == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn lại thời gian chấm công cho nhân viên trong tháng hiện tại hoặc các tháng trước đó!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
+            // Nếu bảng chấm công chưa tồn tại => tạo bảng chấm công mới
+            bcc = new BangChamCongDTO();
+            bcc.setMaBCC(macc);
+            bcc.setThangCC(Integer.parseInt(soThang));
+            bcc.setNamCC(Integer.parseInt(nam));
+            bcc.setSoNgayLam(24.0f);
+            bcc.setSoNgayNghiKP(0);
+            bcc.setSoNPCoLuong(0);
+            bcc.setSoNPKhongLuong(0);
+            bcc.setSoGioOTNgayThuong(0);
+            bcc.setSoGioOTNgayLe(0);
+            bcc.setSoGioOTCN(0);
+            bcc.setMaNV(manv);
+            bccBUS.insert(bcc);
+        } else {
+            bcc.setSoNgayLam(24.0f);
+            bcc.setSoNgayNghiKP(0);
+            bcc.setSoNPCoLuong(0);
+            bcc.setSoNPKhongLuong(0);
+            bcc.setSoGioOTNgayThuong(0);
+            bcc.setSoGioOTNgayLe(0);
+            bcc.setSoGioOTCN(0);
         }
-        bcc.setSoNgayLam(24.0f);
-        bcc.setSoNgayNghiKP(0);
-        bcc.setSoNPCoLuong(0);
-        bcc.setSoNPKhongLuong(0);
-        bcc.setSoGioOTNgayThuong(0);
-        bcc.setSoGioOTNgayLe(0);
-        bcc.setSoGioOTCN(0);
+
+        ctccBUS.xoaChiTietChamCongTheoMaCT(macc);
         
         // Xoá hết ctcc có mabcc -> add ctct 
         for (ChiTietChamCongDTO ct : arr_temp) {
             if (ct.getMaBCC().equals(macc)) {
                 ct.setNgayTao(date);
                 // Sau khi xoá thì thêm mới 
-                int resultAdd = ctccBUS.insertChiTietCC(ct, makho);
+                int resultAdd = ctccBUS.insertChiTietCC(ct);
                 if (resultAdd > 0) {
                     switch (ct.getLoaiChamCong()) {
                         case "Nghỉ không phép":
@@ -774,7 +791,7 @@ public class ChiTietChamCongGUI extends JPanel{
                             break;
                     }
                     bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPCoLuong() - bcc.getSoNPKhongLuong());
-                    bccBUS.updateById(bcc, makho);
+                    bccBUS.updateById(bcc);
                     JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công ngày: " + ct.getMaCTCC(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     // Update bảng chấm công  
                 } else {
@@ -782,18 +799,18 @@ public class ChiTietChamCongGUI extends JPanel{
                 }
             }
         }
-        loadChamCongTheoNhanVien(manv, makho);
+        loadChamCongTheoNhanVien(manv);
     }
     
     // Done
-    private ArrayList<ChiTietChamCongDTO> loadChamCongTheoNhanVien(String manv, String makho) {
+    private ArrayList<ChiTietChamCongDTO> loadChamCongTheoNhanVien(String manv) {
         String thang = jc_thang.getSelectedItem().toString();
         String soThang = thang.replace("Tháng ", "");
         String nam = jc_nam.getSelectedItem().toString();
 
         String macc = "CC" + soThang + nam+ manv;
-        ArrayList<ChiTietChamCongDTO> arr_CTCC = new ArrayList<>();
-        arr_CTCC = ctccBUS.getChiTietCCTheoMaCC(macc, makho);
+        ArrayList<ChiTietChamCongDTO> arr_CTCC = new ArrayList<ChiTietChamCongDTO>();
+        arr_CTCC = ctccBUS.getChiTietCCTheoMaCC(macc);
         
         if (!arr_CTCC.isEmpty()) {
             System.out.println(arr_CTCC);
@@ -806,21 +823,30 @@ public class ChiTietChamCongGUI extends JPanel{
                     String dateString = nam + "-" + soThang + "-" + ngay; // ví dụ: "2025-05-01"
                     LocalDate date = LocalDate.parse(dateString);
                     if (ctcc.getNgayTao().equals(date)) {
-                        if(ctcc.getLoaiChamCong().equals("Nghỉ phép có lương") || ctcc.getLoaiChamCong().equals("Nghỉ phép không lương")) {
-                            i.setBackground(Color.decode("#FF6A6A"));
-                            i.setText("NP");
-                        } else if (ctcc.getLoaiChamCong().equals("Nghỉ không phép")) {
-                            i.setBackground(Color.decode("#FF6A6A"));
-                            i.setText("KP");
-                        } else if(ctcc.getLoaiChamCong().equals("Tăng ca ngày thường")) {
-                            i.setBackground(Color.decode("#4cd137"));
-                            i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
-                        } else if(ctcc.getLoaiChamCong().equals("Tăng ca ngày lễ")) {
-                            i.setBackground(Color.decode("#4cd137"));
-                            i.setText("<html> Lễ <br> "+ ctcc.getSoGioOT() + "h" +"</html>");
-                        } else if(ctcc.getLoaiChamCong().equals("Tăng ca chủ nhật")) {
-                            //i.setBackground(Color.decode("#4cd137"));
-                            i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
+                        switch (ctcc.getLoaiChamCong()) {
+                            case "Nghỉ phép có lương":
+                            case "Nghỉ phép không lương":
+                                i.setBackground(Color.decode("#FF6A6A"));
+                                i.setText("NP");
+                                break;
+                            case "Nghỉ không phép":
+                                i.setBackground(Color.decode("#FF6A6A"));
+                                i.setText("KP");
+                                break;
+                            case "Tăng ca ngày thường":
+                                i.setBackground(Color.decode("#4cd137"));
+                                i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
+                                break;
+                            case "Tăng ca ngày lễ":
+                                i.setBackground(Color.decode("#4cd137"));
+                                i.setText("<html> Lễ <br> "+ ctcc.getSoGioOT() + "h" +"</html>");
+                                break;
+                            case "Tăng ca chủ nhật":
+                                //i.setBackground(Color.decode("#4cd137"));
+                                i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
+                                break;
+                            default:
+                                break;
                         }
                         
                         // Tạo popup menu xem chi tiết
@@ -830,10 +856,12 @@ public class ChiTietChamCongGUI extends JPanel{
                         popupMenu.add(item1);
                         // Gắn sự kiện chuột phải cho JLabel
                         i.addMouseListener(new MouseAdapter() {
+                            @Override
                             public void mousePressed(MouseEvent e) {
                                 showPopup(e);
                             }
 
+                            @Override
                             public void mouseReleased(MouseEvent e) {
                                 showPopup(e);
                             }
