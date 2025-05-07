@@ -18,7 +18,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "exec sp_GetAllBangChamCong";
+			String query = "exec sp_LayDanhSachChamCongKho";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -55,7 +55,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "exec sp_GetChamCongTheoMaCC maNV=?";
+			String query = "exec sp_TimDanhSachCCTheoTuKhoaKho @tuKhoa=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, maNV);
@@ -132,18 +132,13 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		return 0;
 	}
 
-	@Override
-	public int update(BangChamCongDTO t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-        public int update(BangChamCongDTO bcc, String makho) {
+        @Override
+        public int update(BangChamCongDTO bcc) {
             int result = 0;
             try {
                 jdbc.openConnection();
 
-                String query = "exec sp_CapNhatBangChamCong @maBCC=?, @soNgayLam=?, @soNgayNghiKP=?, @soNPCoLuong=?, @soNPKhongLuong=?, @soGioOTNgayThuong=?, @soGioOTNgayLe=?, @soGioOTCN=?, @maKho=?";
+                String query = "exec sp_SuaChamCongKho @maBCC=?, @soNgayLam=?, @soNgayNghiKP=?, @soNPCoLuong=?, @soNPKhongLuong=?, @soGioOTNgayThuong=?, @soGioOTNgayLe=?, @soGioOTCN=?";
                 PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
                 ps.setString(1, bcc.getMaBCC());
                 ps.setFloat(2, bcc.getSoNgayLam());
@@ -153,7 +148,6 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
                 ps.setFloat(6, bcc.getSoGioOTNgayThuong());
                 ps.setFloat(7, bcc.getSoGioOTNgayLe());
                 ps.setFloat(8, bcc.getSoGioOTCN());
-                ps.setString(9, makho);
 
                 result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
             } catch (SQLException e) {
@@ -164,23 +158,6 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
             return result;
         }
 
-    public int deleteByMaBCC(String macc, String makho) {
-        int result = 0;
-            try {
-                jdbc.openConnection();
-
-                String query = "EXEC sp_XoaChiTietChamCongTheoBCC @maBCC = ?, @maKho = ? ;";
-                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-                ps.setString(1, macc);
-                ps.setString(2, makho);
-
-                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
-            } catch (SQLException e) {
-                e.printStackTrace(); // Ghi log lỗi để dễ debug
-            } finally {
-                jdbc.closeConnection();
-            }
-        return result;
-    }
+    
 
 }
