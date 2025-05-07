@@ -25,12 +25,9 @@ public class BangChamCongBUS {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 	
-        public int updateById(BangChamCongDTO bcc, String makho) {
-            return bccDAO.update(bcc, makho);
+        public int updateById(BangChamCongDTO bcc) {
+            return bccDAO.update(bcc);
         }
 
-    public int xoaChiTietChamCongTheoBCC(String macc, String makho) {
-        return bccDAO.deleteByMaBCC(macc, makho);
-    }
-
+    
 }
