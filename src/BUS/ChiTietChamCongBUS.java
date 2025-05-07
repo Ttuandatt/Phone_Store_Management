@@ -8,8 +8,8 @@ import DTO.ChiTietChamCongDTO;
 public class ChiTietChamCongBUS {
 	ChiTietChamCongDAO ctccDAO = new ChiTietChamCongDAO();
     
-    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc, String makho) {
-        return ctccDAO.getChiTietCCTheoMaCC(macc, makho);
+    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc) {
+        return ctccDAO.getChiTietCCTheoMaCC(macc);
     }
     public ChiTietChamCongDTO selectById(String temp) {
         return ctccDAO.selectById(temp);
@@ -19,16 +19,20 @@ public class ChiTietChamCongBUS {
         return ctccDAO.GetChiTietChamCongTheoMaCT(mact);
     }
 
-    public int insertChiTietCC(ChiTietChamCongDTO ct, String makho) {
-        return ctccDAO.insert1(ct, makho);
+    public int insertChiTietCC(ChiTietChamCongDTO ct) {
+        return ctccDAO.insert1(ct);
     }
 
-    public int deleteById(String mact, String makho) {
-        return ctccDAO.delete1(mact, makho);
+    public int deleteById(String mact) {
+        return ctccDAO.delete1(mact);
     }
     
     public ArrayList<ChiTietChamCongDTO> getThongTinTangCa(String maBCC){
 		return ctccDAO.getThongTinTangCa(maBCC);
+    }
+    
+    public int xoaChiTietChamCongTheoMaCT(String mact) {
+        return ctccDAO.deleteByMaCT(mact);
     }
 
 }
