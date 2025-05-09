@@ -312,41 +312,49 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		return result;
 	}
 
-	//Hàm update khi ta không sửa ảnh của nhân viên trong quá trình cập nhật thông tin nhân viên
 	public int updateWithoutChangingImage(NhanVienDTO nv) {
-		int result = 0;
+	    int result = 0;
+	    String query="";
+	    try {
+	        jdbc.openConnection();
 
-		try {
+			// Nếu kết nối tới CSDL là server gốc thì dùng Stored Procedure
+			// sp_ThemNhanVienGoc
+			if (JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
+				query = "{call sp_SuaNhanVienGoc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+			} else { // Nếu kết nối tới CSDL là server mảnh thì dùng Stored Procedure
+						// sp_ThemNhanVienKho
+				query = "{call sp_SuaNhanVienKho(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+			}
+			log("query="+query);
+			CallableStatement cs = jdbc.getConnection().prepareCall(query);
 
-			jdbc.openConnection();
+	        cs.setString(1, nv.getMaNV());
+	        cs.setString(2, nv.getHoTen());
+	        cs.setDate(3, nv.getNgaySinh());
+	        cs.setString(4, nv.getGioiTinh());
+	        cs.setString(5, nv.getDiaChi());
+	        cs.setString(6, nv.getSoDienThoai());
+	        cs.setString(7, nv.getEmail());
+	        cs.setString(8, nv.getMatKhau());
+	        cs.setString(9, nv.getTrangThai());
+	        cs.setString(10, nv.getChucVu());
 
-			String query = "update nhanvien set hoTen=?, ngaySinh=?, gioiTinh=?, diaChi=?, sdt=?, email=?, matKhau=?, trangThai=?, maCV=?, chiNhanh=? where maNV=?";
+	        
+	        // Vì trong Procedure có lệnh SET NO COUNT ON, có tác dụng vô hiệu hóa việc trả về số dòng bị ảnh hưởng sau mỗi lệnh SQL như INSERT, UPDATE, DELETE,... khi chạy trong Stored Procedure.
+	        // Vì vậy dù cho có cập nhật được nhưng result trả về vẫn là -1
+	        result = cs.executeUpdate();
 
-			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-			ps.setString(1, nv.getHoTen());
-			ps.setDate(2, nv.getNgaySinh());
-			ps.setString(3, nv.getGioiTinh());
-			ps.setString(4, nv.getDiaChi());
-			ps.setString(5, nv.getSoDienThoai());
-			ps.setString(6, nv.getEmail());
-			ps.setString(7, nv.getMatKhau());
-			ps.setString(8, nv.getTrangThai());
-			ps.setString(9, nv.getChucVu());
-			ps.setString(10, nv.getChiNhanh());
-			ps.setString(11, nv.getMaNV());
-			
-			result = ps.executeUpdate();
-			
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        jdbc.closeConnection();
+	    }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
-		} finally {
-			jdbc.closeConnection();
-		}
-		System.out.println(result);
-		return result;
+	    log("result="+result);
+	    return result;
 	}
+
 	
 	
 	public Double getBaseSalaryByRoleID(String maCV) {

@@ -420,6 +420,20 @@ public class AdminView {
 
 		});
 
+		logoutButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(f, "Bạn muốn đăng xuất?", "Đăng xuất", JOptionPane.OK_CANCEL_OPTION);
+				
+				if(choice==JOptionPane.OK_OPTION) {
+					f.dispose();
+					DangNhapGUI dnGUI = new DangNhapGUI();
+					dnGUI.setVisible(true);
+				}
+			}
+		});
+		
 		personalInfoButton.setOpaque(true);
 		personalInfoButton.setBackground(Color.WHITE);
 

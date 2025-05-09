@@ -1,4 +1,6 @@
-﻿select *
+﻿use phonestore
+
+select *
 from sys.procedures
 where name like 'sp_%' 
 
@@ -10,7 +12,10 @@ create database phonestorehn;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 --DROP DATABASE phonestore;
 use phonestore;
-
+select * from LINK4.phonestore.dbo.sanpham
+select * from sanpham
+select * from nhanvien
+select * from CHUCVU
 
 
 -- Bảng Thương Hiệu

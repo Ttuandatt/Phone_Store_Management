@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,8 +34,8 @@ public class ChiTietChamCongGUI extends JPanel{
     private JTable table;
     private JLabel lb_manv, lb_thang, lb_soNgayLam, lb_soNgayNghi, lb_ot;
     private JTextField tf_soGioOT, tf_ghiChu1, tf_ghiChu2;
-    private JPanel jp_tangCa, jp_nghi;
-    private String manv;
+    private static JPanel jp_tangCa, jp_nghi;
+    private String manv, makho;
 
     private Color color= Color.decode("#FF6A6A");
     private Color colorsunday = new Color(0,0,0,100);
@@ -44,8 +45,8 @@ public class ChiTietChamCongGUI extends JPanel{
     private DefaultTableModel dftable;
     
     ArrayList<NhanVienDTO> arrNhanVien;
-    ArrayList<JRadioButton> arr_radio, arr_radio1, arr_radio2;
-    private static ArrayList<ChiTietChamCongDTO> arr_temp = null;
+    private static ArrayList<JRadioButton> arr_radio, arr_radio1, arr_radio2;
+    private static ArrayList<ChiTietChamCongDTO> arr_temp = new ArrayList<ChiTietChamCongDTO>();
     NhanVienBUS nvBUS = new NhanVienBUS();
     ChucVuBUS cvBUS = new ChucVuBUS();
     KhoBUS khoBUS = new KhoBUS();
@@ -79,7 +80,10 @@ public class ChiTietChamCongGUI extends JPanel{
 	btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	panelTop.add(btnBack);
         btnBack.addActionListener(e -> {
-            //arr_temp.clear();
+            if (!arr_temp.isEmpty()) {
+                arr_temp.clear();
+            }
+            loadDSNhanVien();
             cardLayout.show(contentPanel, "DANH SACH CHAM CONG");
         });
         
@@ -129,9 +133,9 @@ public class ChiTietChamCongGUI extends JPanel{
                 return false;
             }
     	};
-        
+        table.setFont(new Font("Arial",1,13));
         table.setModel(dftable);
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(0).setPreferredWidth(70);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(120);
         table.getColumnModel().getColumn(3).setPreferredWidth(100);
@@ -149,9 +153,14 @@ public class ChiTietChamCongGUI extends JPanel{
 		int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
                 if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
                     manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
-                    //loadChamCongThang(manv);
-                    arr_temp.clear();
+                    arr_temp = loadChamCongTheoNhanVien(manv);
                 }
+                /*for (JLabel i : arr_1) {
+                    if (i.getBackground() != colorsunday) {
+                        i.setBackground(Color.WHITE);
+                    }
+                    i.setText("");
+                }*/
             }
 	});
          
@@ -209,8 +218,10 @@ public class ChiTietChamCongGUI extends JPanel{
                             default:
                             break;
                     }
-                    //arr_temp.clear();
-                    
+                    if (!arr_temp.isEmpty()) {
+                        arr_temp.clear();
+                    }
+                    table.getSelectedRow();   
 		}
             });
     	
@@ -273,7 +284,10 @@ public class ChiTietChamCongGUI extends JPanel{
                     default:
                         break;
                 }
-               //arr_temp.clear(); 
+                if (!arr_temp.isEmpty()) {
+                    arr_temp.clear();
+                }
+                table.getSelectedRow();
             }
 	});
     	panelTop.add(jc_nam);
@@ -404,7 +418,7 @@ public class ChiTietChamCongGUI extends JPanel{
     	int x_2=130;
     	ButtonGroup g1= new ButtonGroup();
     	String[] abc1= {"Có","Không"};
-    	ArrayList<JRadioButton> arr_radio1= new ArrayList<>();
+    	arr_radio1= new ArrayList<>();
     	for(int i=0;i<2;i++) {
             JRadioButton r1= new JRadioButton(abc1[i]);
             if(i==0) {
@@ -427,7 +441,7 @@ public class ChiTietChamCongGUI extends JPanel{
         int x_3=130;
     	ButtonGroup g2= new ButtonGroup();
     	String[] abc2= {"Có","Không"};
-    	ArrayList<JRadioButton> arr_radio2= new ArrayList<>();
+    	arr_radio2= new ArrayList<>();
     	for(int i=0;i<2;i++) {
             JRadioButton r1= new JRadioButton(abc2[i]);
             if(i==0) {
@@ -505,88 +519,31 @@ public class ChiTietChamCongGUI extends JPanel{
             });
     	}
         
-        for(JLabel i: arr) {
-            i.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2) {   // Kiểm tra double click
-                        //int ngay = i.getText()
-                        int ngay = Integer.parseInt(i.getName());
-                        int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
-                        if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
-                            String manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
-                            try {
-                                loadChiTietChamCong(manv, ngay);
-                            } catch (ParseException ex) {
-                                Logger.getLogger(ChiTietChamCongGUI.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }
-		}
-
-                private void loadChiTietChamCong(String manv, int ngay) throws ParseException {
-                    if (i.getBackground().equals(Color.WHITE)) {
-                        jp_tangCa.setVisible(false);
-                        jp_nghi.setVisible(false);
-                        return;
-                    }
-                    String thang = jc_thang.getSelectedItem().toString();
-                    String t = thang.replace("Tháng ", "");
-                    int soThang = Integer.parseInt(t);
-                    String nam = jc_nam.getSelectedItem().toString();
-
-                    String temp = soThang + nam+ manv;
-                    ArrayList<ChiTietChamCongDTO> arr_CTCC = new ArrayList<>();
-                    arr_CTCC = ctccBUS.searchById(temp);
-                    
-                    for (ChiTietChamCongDTO ctcc: arr_CTCC) {
-                        String str_date = nam + "-" + thang + "-" + i.getName();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // định dạng chuỗi
-                        Date date = sdf.parse(str_date);
-                
-                        if (ctcc.getNgayTao().equals(date) & ctcc.getLoaiChamCong().equals("Tăng ca")) { 
-                            jp_tangCa.setVisible(true);
-                            tf_soGioOT.setText(String.valueOf(ctcc.getSoGioOT()));
-                            tf_ghiChu2.setText(ctcc.getChiTiet());
-                            if (ctcc.getLoaiChamCong().equals("ngày thường") || ctcc.getLoaiChamCong().equals("chủ nhật"))
-                                arr_radio.get(0).setSelected(true);
-                            else if (ctcc.getLoaiChamCong().equals("ngày lễ")) 
-                                arr_radio.get(0).setSelected(true);
-                        } else if (ctcc.getNgayTao().equals(date) & ctcc.getLoaiChamCong().equals("nghỉ")) { 
-                            jp_nghi.setVisible(true);
-                            tf_ghiChu2.setText(ctcc.getChiTiet());
-                            if (ctcc.getLoaiChamCong().equals("không phép")) {
-                                arr_radio1.get(1).setSelected(true);
-                                arr_radio2.get(1).setSelected(true);
-                            } else if (ctcc.getLoaiChamCong().equals("phép có lương")) {
-                                arr_radio1.get(0).setSelected(true); 
-                                arr_radio2.get(0).setSelected(true); 
-                            } else if (ctcc.getLoaiChamCong().equals("phép không lương")) {
-                                arr_radio1.get(0).setSelected(true); 
-                                arr_radio2.get(1).setSelected(true);
-                            }
-                        }
-                    }
-                }
-            });
-    	}
-        
     	for(JLabel i: arr_1) {
             i.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-                    System.out.println("You have clicked!");
-                    /*int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
+                    int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
                     if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
                         manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
                     } else {
                         JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                         return;
-                    }*/
-                    
-                    if (i.getBackground().equals(colorsunday) && arr.get(0).getBackground().equals("#FF6A6A")) {
+                    }
+
+                    if (i.getBackground().equals(colorsunday) && arr.get(0).getBackground().equals(Color.decode("#FF6A6A"))) {
                         return;
                     }
+                    
+                    String thang = jc_thang.getSelectedItem().toString();
+                    String soThang = thang.replace("Tháng ", "");
+                    String nam = jc_nam.getSelectedItem().toString();
+
+                    String macc = "CC" + soThang + nam+ manv;
+                    String ngay = String.format("%02d", Integer.valueOf(i.getName()));
+                    String mact = "CT" + ngay + soThang + nam + manv;
+                    
+                    boolean isSun = false;
                     
                     if (arr.get(0).getBackground().equals(Color.decode("#FF6A6A"))) {
                         if(!i.getBackground().equals(colorsunday)) {
@@ -599,7 +556,7 @@ public class ChiTietChamCongGUI extends JPanel{
                                     i.setText("KP");
                             }  
                         }
-                        dsChiTietCC(manv, Integer.parseInt(i.getName()));
+                        dsChiTietCC(mact, macc, isSun);
                         return;
                     }
                     // 
@@ -625,7 +582,10 @@ public class ChiTietChamCongGUI extends JPanel{
                                     i.setHorizontalAlignment(JLabel.CENTER);
                                     i.setText(soGio + "h");
                                 }
-                                dsChiTietCC(manv, Integer.parseInt(i.getName()));
+                                if (i.getBackground().equals(colorsunday))
+                                    isSun = true;
+                                dsChiTietCC(mact, macc, isSun);
+                                
                             }
                         } catch (NumberFormatException a) {
                             JOptionPane.showMessageDialog(null, "Số giờ phải là một số hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -639,7 +599,8 @@ public class ChiTietChamCongGUI extends JPanel{
                         i.setText("");
                     } else if(i.getBackground() == colorsunday)
                         i.setText("");
-                    dsChiTietCC(manv, Integer.parseInt(i.getName()));
+                    dsChiTietCC(mact, macc, isSun);
+                   
                 }
             });
     	}
@@ -661,18 +622,318 @@ public class ChiTietChamCongGUI extends JPanel{
         btnThem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //themChiTietChamCong();
-                //arr_temp.clear();
+                themChiTietChamCong();
+                if (!arr_temp.isEmpty()) {
+                    arr_temp.clear();
+                }
             }
         });
-        
-        
+          
         // set up end
         LocalDate temp_date = LocalDate.now();
     	jc_nam.setSelectedIndex(2);
     	jc_thang.setSelectedIndex(temp_date.getMonthValue()-1);
     	updateDayOfWeek(temp_date.getMonthValue(), temp_date.getYear());
-       
+        
+    }
+    
+    
+    
+    private void loadDSNhanVien() {
+        table.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
+    	
+        arrNhanVien = nvBUS.selectAll();
+	for(int i=0; i<arrNhanVien.size(); i++) {
+            NhanVienDTO nvien = arrNhanVien.get(i);
+            String trangThai = nvien.getTrangThai();
+            String cvu = nvien.getChucVu();
+            if (trangThai.equals("on") && !cvu.equals("CV004") ) {
+                String manv = nvien.getMaNV();
+                String nv = nvien.getHoTen();
+                ChucVuDTO cv = cvBUS.selectById(cvu);
+                String chucvu = cv.getTenCV();
+                String chiNhanh = nvien.getChiNhanh();
+                Object[] row = {manv, nv, chucvu, chiNhanh};
+		dftable.addRow(row);
+            }
+        }
+    }
+
+    private ArrayList<ChiTietChamCongDTO> dsChiTietCC(String mact, String macc, boolean isSun) {
+        String loaicc = null;
+        String ghiChu = null;
+        float gioOT = 0 ;
+        
+        if (arr.get(0).getBackground().equals(Color.decode("#FF6A6A"))) {
+            if (tf_ghiChu2 != null) 
+                ghiChu = tf_ghiChu2.getText();
+            if(arr_radio1.get(1).isSelected()) {
+                loaicc = "Nghỉ không phép";
+            } else if(arr_radio1.get(0).isSelected() && arr_radio2.get(0).isSelected()) {
+                loaicc = "Nghỉ phép có lương";
+            } else if(arr_radio1.get(0).isSelected() && arr_radio2.get(1).isSelected()) {
+                loaicc = "Nghỉ phép không lương";
+            }
+        } else if (arr.get(1).getBackground().equals(Color.decode("#4cd137"))) {  
+            if (tf_ghiChu1 != null)
+                ghiChu = tf_ghiChu1.getText();
+            gioOT = Float.parseFloat(tf_soGioOT.getText());           
+            if(arr_radio.get(0).isSelected() && !isSun)
+                loaicc = "Tăng ca ngày thường";
+            else if(arr_radio.get(0).isSelected() && isSun)
+                loaicc = "Tăng ca chủ nhật";
+            else if(arr_radio.get(1).isSelected())         // Tăng ca chủ nhật vào ngày lễ thì vẫn được tính lương tăng ca ngày lễ
+                loaicc = "Tăng ca ngày lễ";
+        }
+        System.out.println(arr_temp.isEmpty());
+        for (ChiTietChamCongDTO ct : arr_temp) {
+            System.out.println(ct.getMaCTCC() + " ; " + ct.getLoaiChamCong());
+        }
+        
+        Iterator<ChiTietChamCongDTO> iter = arr_temp.iterator();
+        while (iter.hasNext()) {
+            ChiTietChamCongDTO ct = iter.next();
+            if (mact.equals(ct.getMaCTCC())) {   // Đã có ctcc thì update hc delete chi tiết
+                if (arr.get(2).getBackground().equals(Color.decode("#dfe6e9"))) {
+                    // Delete
+                    iter.remove();
+                    System.out.println("Delete " + ct.getMaCTCC() + " ; "  + ct.getLoaiChamCong() + " ; "  + ct.getSoGioOT() + " ; "  + ct.getChiTiet());
+                    return arr_temp;
+                } else {
+                    // Update
+                    ct.setLoaiChamCong(loaicc);
+                    ct.setSoGioOT(gioOT);
+                    ct.setChiTiet(ghiChu);
+                    System.out.println("Update " + ct.getMaCTCC() + " ; "  + ct.getLoaiChamCong() +  " ; "  + ct.getSoGioOT() + " ; "  + ct.getChiTiet());
+                    return arr_temp;
+                } 
+            } 
+        } 
+        // Chưa có ctcc thì add
+        ChiTietChamCongDTO ct_new = new ChiTietChamCongDTO(mact, null, loaicc, ghiChu, macc, gioOT);
+        arr_temp.add(ct_new);
+        System.out.println("Add " + ct_new.getMaCTCC() + " ; "  + ct_new.getLoaiChamCong() + " ; "  + ct_new.getSoGioOT() + " ; "  + ct_new.getChiTiet());
+        return arr_temp;        
+    } 
+    
+    private void themChiTietChamCong() {
+        String thang = jc_thang.getSelectedItem().toString();
+        String soThang = thang.replace("Tháng ", "");
+        String nam = jc_nam.getSelectedItem().toString();
+        
+        int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
+        if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
+            manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String macc = "CC" + soThang + nam+ manv;
+        LocalDate date = LocalDate.now();
+        
+
+        BangChamCongDTO bcc = bccBUS.selectById(macc);
+        if (bcc == null) {
+            // Nếu bảng chấm công chưa tồn tại => tạo bảng chấm công mới
+            bcc = new BangChamCongDTO();
+            bcc.setMaBCC(macc);
+            bcc.setThangCC(Integer.parseInt(soThang));
+            bcc.setNamCC(Integer.parseInt(nam));
+            bcc.setSoNgayLam(24.0f);
+            bcc.setSoNgayNghiKP(0);
+            bcc.setSoNPCoLuong(0);
+            bcc.setSoNPKhongLuong(0);
+            bcc.setSoGioOTNgayThuong(0);
+            bcc.setSoGioOTNgayLe(0);
+            bcc.setSoGioOTCN(0);
+            bcc.setMaNV(manv);
+            bccBUS.insert(bcc);
+        } else {
+            bcc.setSoNgayLam(24.0f);
+            bcc.setSoNgayNghiKP(0);
+            bcc.setSoNPCoLuong(0);
+            bcc.setSoNPKhongLuong(0);
+            bcc.setSoGioOTNgayThuong(0);
+            bcc.setSoGioOTNgayLe(0);
+            bcc.setSoGioOTCN(0);
+        }
+
+        ctccBUS.xoaChiTietChamCongTheoMaCT(macc);
+        
+        // Xoá hết ctcc có mabcc -> add ctct 
+        for (ChiTietChamCongDTO ct : arr_temp) {
+            if (ct.getMaBCC().equals(macc)) {
+                ct.setNgayTao(date);
+                // Sau khi xoá thì thêm mới 
+                int resultAdd = ctccBUS.insertChiTietCC(ct);
+                if (resultAdd > 0) {
+                    switch (ct.getLoaiChamCong()) {
+                        case "Nghỉ không phép":
+                            bcc.setSoNgayNghiKP(bcc.getSoNgayNghiKP() + 1.0f);
+                            break;
+                        case "Nghỉ phép có lương":
+                            bcc.setSoNPCoLuong(bcc.getSoNPCoLuong() + 1.0f);
+                            break;
+                        case "Nghỉ phép không lương":
+                            bcc.setSoNPKhongLuong(bcc.getSoNPKhongLuong() + 1.0f);
+                            break;
+                        case "Tăng ca ngày thường":
+                            bcc.setSoGioOTNgayThuong(bcc.getSoGioOTNgayThuong() + ct.getSoGioOT());
+                            break;
+                        case "Tăng ca ngày lễ":
+                            bcc.setSoGioOTNgayLe(bcc.getSoGioOTNgayLe() + ct.getSoGioOT());
+                            break;
+                        case "Tăng ca chủ nhật":
+                            bcc.setSoGioOTCN(bcc.getSoGioOTCN() + ct.getSoGioOT());
+                            break;
+                        default:
+                            break;
+                    }
+                    bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPCoLuong() - bcc.getSoNPKhongLuong());
+                    bccBUS.updateById(bcc);
+                    JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công ngày: " + ct.getMaCTCC(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    // Update bảng chấm công  
+                } else {
+                    JOptionPane.showMessageDialog(null, "Thêm thất bại cho mã: " + ct.getMaCTCC(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+        loadChamCongTheoNhanVien(manv);
+    }
+    
+    // Done
+    private ArrayList<ChiTietChamCongDTO> loadChamCongTheoNhanVien(String manv) {
+        String thang = jc_thang.getSelectedItem().toString();
+        String soThang = thang.replace("Tháng ", "");
+        String nam = jc_nam.getSelectedItem().toString();
+
+        String mabcc = "CC" + soThang + nam+ manv;
+        log("maCC="+mabcc);
+        ArrayList<ChiTietChamCongDTO> arr_CTCC = new ArrayList<ChiTietChamCongDTO>();
+        arr_CTCC = ctccBUS.getChiTietCCTheoMaCC(mabcc);
+        
+        if (!arr_CTCC.isEmpty()) {
+            System.out.println(arr_CTCC);
+            int temp_t = Integer.parseInt(soThang);
+            int temp_n = Integer.parseInt(nam);
+            resetLabel(temp_t, temp_n);
+            for (ChiTietChamCongDTO ctcc: arr_CTCC) {
+                for(JLabel i: arr_1) { 
+                    String ngay = String.format("%02d", Integer.valueOf(i.getName()));
+                    String dateString = nam + "-" + soThang + "-" + ngay; // ví dụ: "2025-05-01"
+                    LocalDate date = LocalDate.parse(dateString);
+                    log("date="+date);
+                    if (ctcc.getNgayTao().equals(date)) {
+                        switch (ctcc.getLoaiChamCong()) {
+                            case "Nghỉ phép có lương":
+                            case "Nghỉ phép không lương":
+                                i.setBackground(Color.decode("#FF6A6A"));
+                                i.setText("NP");
+                                break;
+                            case "Nghỉ không phép":
+                                i.setBackground(Color.decode("#FF6A6A"));
+                                i.setText("KP");
+                                break;
+                            case "Tăng ca ngày thường":
+                                i.setBackground(Color.decode("#4cd137"));
+                                i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
+                                break;
+                            case "Tăng ca ngày lễ":
+                                i.setBackground(Color.decode("#4cd137"));
+                                i.setText("<html> Lễ <br> "+ ctcc.getSoGioOT() + "h" +"</html>");
+                                break;
+                            case "Tăng ca chủ nhật":
+                                //i.setBackground(Color.decode("#4cd137"));
+                                i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                        // Tạo popup menu xem chi tiết
+                        JPopupMenu popupMenu = new JPopupMenu();
+                        JMenuItem item1 = new JMenuItem("Xem chi tiết");
+                        // Thêm item vào popup
+                        popupMenu.add(item1);
+                        // Gắn sự kiện chuột phải cho JLabel
+                        i.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                showPopup(e);
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                showPopup(e);
+                            }
+
+                            private void showPopup(MouseEvent e) {
+                                if (e.isPopupTrigger()) {
+                                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                                }
+                            }
+                        });
+                        item1.addActionListener((ActionEvent e) -> {
+                            loadChiTietChamCong(i, ctcc);
+                        });
+                    }
+                }
+            }
+        } else System.out.println("Nhân viên không có ctcc");
+        return arr_CTCC;
+    }
+    
+    private void loadChiTietChamCong(JLabel i, ChiTietChamCongDTO ctcc) {
+        if (i.getBackground().equals(Color.WHITE)) {
+            jp_tangCa.setVisible(false);
+            jp_nghi.setVisible(false);
+            return;
+        }
+        if (ctcc.getLoaiChamCong().contains("Tăng ca")) { 
+            jp_tangCa.setVisible(true);
+            arr.get(0).setBackground(Color.WHITE);
+            arr.get(1).setBackground(Color.decode("#4cd137"));
+            tf_soGioOT.setText(String.valueOf(ctcc.getSoGioOT()));
+            tf_ghiChu1.setText(ctcc.getChiTiet());
+            if (ctcc.getLoaiChamCong().contains("ngày thường") || 
+                ctcc.getLoaiChamCong().contains("chủ nhật") && !i.getText().contains("Lễ"))
+                arr_radio.get(0).setSelected(true);
+            else if (ctcc.getLoaiChamCong().contains("ngày lễ") || 
+                ctcc.getLoaiChamCong().contains("chủ nhật") && i.getText().contains("Lễ")) 
+                arr_radio.get(0).setSelected(true);
+
+        } else if (ctcc.getLoaiChamCong().contains("Nghỉ")) { 
+            jp_nghi.setVisible(true);
+            tf_ghiChu2.setText(ctcc.getChiTiet());
+            arr.get(0).setBackground(Color.decode("#FF6A6A"));
+            arr.get(1).setBackground(Color.WHITE);
+            switch (ctcc.getLoaiChamCong()) {
+                case "Nghỉ không phép" -> {
+                    arr_radio1.get(1).setSelected(true);
+                    arr_radio2.get(1).setSelected(true);
+                }
+                case "Nghỉ phép có lương" -> {
+                    arr_radio1.get(0).setSelected(true);
+                    arr_radio2.get(0).setSelected(true);
+                }
+                case "Nghỉ phép không lương" -> {
+                    arr_radio1.get(0).setSelected(true);
+                    arr_radio2.get(1).setSelected(true);
+                }
+                default -> {
+                }
+            }
+        }
+    }
+     
+    private void resetLabel(int thang, int nam) {
+        for(JLabel i: arr_1) {
+            i.setBackground(Color.white);
+            i.setText("");
+	}
+        updateDayOfWeek(thang, nam);
+        
     }
     
     public void updateDayOfWeek(int month, int year) {
@@ -737,172 +998,6 @@ public class ChiTietChamCongGUI extends JPanel{
 	}
     }
     
-    private void loadDSNhanVien() {
-        table.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
-    	
-        arrNhanVien = nvBUS.selectAll();
-	for(int i=0; i<arrNhanVien.size(); i++) {
-            NhanVienDTO nvien = arrNhanVien.get(i);
-            String trangThai = nvien.getTrangThai();
-            String cvu = nvien.getChucVu();
-            if (trangThai.equals("on") & !cvu.equals("CV004") ) {
-                String manv = nvien.getMaNV();
-                String nv = nvien.getHoTen();
-                ChucVuDTO cv = cvBUS.selectById(cvu);
-                String chucvu = cv.getTenCV();
-                String chiNhanh = nvien.getChiNhanh();
-                Object[] row = {manv, nv, chucvu, chiNhanh};
-		dftable.addRow(row);
-            }
-        }
-    }
-
-    private ArrayList<ChiTietChamCongDTO> dsChiTietCC(String manv, int ngay) {
-        arr_temp = ctccBUS.searchById(manv);
-        String thang = jc_thang.getSelectedItem().toString();
-        String t = thang.replace("Tháng ", "");
-        int soThang = Integer.parseInt(t);
-        String nam = jc_nam.getSelectedItem().toString();
-        String loaicc = null;
-        String ghiChu = null;
-        float gioOT = 0 ;
-        String mact = "CT" + ngay + soThang + nam + manv;
-        String macc = "BCC" + soThang + nam + manv;
-        
-        if (arr.get(0).getBackground().equals(Color.decode("#FF6A6A"))) {
-            ghiChu = tf_ghiChu2.getText();
-            if(arr_radio1.get(1).isSelected())
-                loaicc = "Nghỉ không phép";
-            else if(arr_radio1.get(0).isSelected() & arr_radio2.get(0).isSelected())
-                loaicc = "Nghỉ phép có lương";
-            else if(arr_radio1.get(0).isSelected() & arr_radio2.get(1).isSelected())
-                loaicc = "Nghỉ phép không lương";
-            
-        } else if (arr.get(1).getBackground().equals(Color.decode("#4cd137"))) {  
-            ghiChu = tf_ghiChu1.getText();
-            gioOT = Float.parseFloat(tf_soGioOT.getText());
-            if(arr_radio.get(0).isSelected())
-                loaicc = "Tăng ca ngày thường";
-            else if(arr_radio1.get(1).isSelected())
-                loaicc = "Tăng ca ngày lễ";
-        }
-       
-        for (ChiTietChamCongDTO ct: arr_temp) {
-            if (mact.equals(ct.getMaBCC())) {   // Đã có ctcc thì update hc delete
-                if (arr.get(2).getBackground().equals(Color.decode("#dfe6e9"))) {
-                    // Delete
-                    arr_temp.remove(ct);
-                    return arr_temp;
-                } else {
-                    // Update
-                    ct.setLoaiChamCong(loaicc);
-                    ct.setSoGioOT(gioOT);
-                    ct.setChiTiet(ghiChu);
-                    return arr_temp;
-                } 
-            } 
-        } 
-        // Chưa có ctcc thì add
-        ChiTietChamCongDTO ct_new = new ChiTietChamCongDTO(mact, null, loaicc, ghiChu, macc, gioOT);
-        arr_temp.add(ct_new);
-        return arr_temp;        
-    } 
-    
-    private void themChiTietChamCong() {
-        LocalDate date = LocalDate.now();
-
-        for (ChiTietChamCongDTO ct : arr_temp) {
-            ct.setNgayTao(date);
-            ctccBUS.insertChiTietCC(ct);
-        }
-        
-        // Nếu thêm thành công thì arr_temp = null; update jc_thang, jc_nam cũng null
-    }
-    
-    private void loadChamCongThang(String manv) throws ParseException {
-        String thang = jc_thang.getSelectedItem().toString();
-        String t = thang.replace("Tháng ", "");
-        int soThang = Integer.parseInt(t);
-        String nam = jc_nam.getSelectedItem().toString();
-        
-        String temp = soThang + nam+ manv;
-        ArrayList<ChiTietChamCongDTO> arr_CTCC = new ArrayList<>();
-        arr_CTCC = ctccBUS.searchById(temp);
-        
-        for (ChiTietChamCongDTO ctcc: arr_CTCC) {
-            for(JLabel i: arr_1) {
-                if(i.getBackground() == colorsunday) {
-                    return;
-                }
-                String dateString = nam + "-" + thang + "-" + i.getName(); // ví dụ: "2025-05-01"
-                LocalDate date = LocalDate.parse(dateString);
-                
-                if (ctcc.getNgayTao().equals(date)) {
-                    if(ctcc.equals("Nghỉ phép có lương") || ctcc.equals("Nghỉ phép không lương")) {
-                        i.setBackground(Color.decode("#FF6A6A"));
-                        i.setText("NP");
-                    } else if (ctcc.equals("Nghỉ không phép")) {
-                        i.setBackground(Color.decode("#FF6A6A"));
-                        i.setText("KP");
-                    } else if(ctcc.equals("Tăng ca ngày thường")) {
-                        i.setBackground(Color.decode("#4cd137"));
-                        i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
-                    } else if(ctcc.equals("Tăng ca ngày lễ")) {
-                        i.setBackground(Color.decode("#4cd137"));
-                        i.setText("<html> Lễ <br> "+ ctcc.getSoGioOT() + "h" +"</html>");
-                    } else if(ctcc.equals("Tăng ca chủ nhật")) {
-                        i.setBackground(Color.decode("#4cd137"));
-                        i.setText("<html>"+ ctcc.getSoGioOT() + "h" + "</html>");
-                    }
-                }
-            }
-        }
-    }
-
-    private void loadChiTietChamCong(String manv, int ngay) throws ParseException {
-        for (JLabel i: arr_1) {
-            if (i.getName().equals(ngay)) {
-                if (i.getBackground().equals(Color.WHITE)) {
-                    jp_tangCa.setVisible(false);
-                    jp_nghi.setVisible(false);
-                    return;
-                }
-                String thang = jc_thang.getSelectedItem().toString();
-                String t = thang.replace("Tháng ", "");
-                int soThang = Integer.parseInt(t);
-                String nam = jc_nam.getSelectedItem().toString();
-
-                String temp = ngay+ soThang+ nam+ manv;
-                ChiTietChamCongDTO ctcc = new ChiTietChamCongDTO();
-                ctcc = ctccBUS.selectById(temp);
-                
-                if (ctcc.getLoaiChamCong().equals("Tăng ca")) { 
-                    jp_tangCa.setVisible(true);
-                    tf_soGioOT.setText(String.valueOf(ctcc.getSoGioOT()));
-                    tf_ghiChu1.setText(ctcc.getChiTiet());
-                    if (ctcc.getLoaiChamCong().equals("ngày thường") || ctcc.getLoaiChamCong().equals("chủ nhật"))
-                        arr_radio.get(0).setSelected(true);
-                    else if (ctcc.getLoaiChamCong().equals("ngày lễ")) 
-                        arr_radio.get(0).setSelected(true);
-                    
-                } else if (ctcc.getLoaiChamCong().equals("nghỉ")) { 
-                    jp_nghi.setVisible(true);
-                    tf_ghiChu2.setText(ctcc.getChiTiet());
-                    if (ctcc.getLoaiChamCong().equals("không phép")) {
-                        arr_radio1.get(1).setSelected(true);
-                        arr_radio2.get(1).setSelected(true);
-                    } else if (ctcc.getLoaiChamCong().equals("phép có lương")) {
-                        arr_radio1.get(0).setSelected(true); 
-                        arr_radio2.get(0).setSelected(true); 
-                    } else if (ctcc.getLoaiChamCong().equals("phép không lương")) {
-                        arr_radio1.get(0).setSelected(true); 
-                        arr_radio2.get(1).setSelected(true);
-                    }
-                }
-            }
-        }
-    }
-    
     /* Get, set */
     public JButton getBtnThem() {
         return btnThem;
@@ -943,6 +1038,15 @@ public class ChiTietChamCongGUI extends JPanel{
     public JButton getBtnBack() {
     	return this.btnBack;
     }   
+    
+	// hàm hiển thị thông tin dòng code
+	public static void log(String message) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+				+ element.getLineNumber() + " | " + message);
+	}
+    
 }
 
     

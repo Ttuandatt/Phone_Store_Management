@@ -1140,10 +1140,10 @@ public class NhanVienGUI extends JPanel{
     	JLabel lblStatus = new JLabel("Trạng thái:");
     	lblStatus.setBounds(10, 263, 100, 20);
     	topLeftPanel.add(lblStatus);
-    	JRadioButton rbOn = new JRadioButton("On");
+    	JRadioButton rbOn = new JRadioButton("on");
     	rbOn.setBounds(100, 263, 100, 25);
     	topLeftPanel.add(rbOn);
-    	JRadioButton rbOff = new JRadioButton("Off");
+    	JRadioButton rbOff = new JRadioButton("off");
     	rbOff.setBounds(150, 263, 100, 25);
     	topLeftPanel.add(rbOff);
     	
@@ -1236,7 +1236,6 @@ public class NhanVienGUI extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String maNV = txtId.getText();
 					String hoTen = txtName.getText();
 					java.util.Date utilDate = dateChooser.getDate(); // Lấy ngày từ JDateChooser
 					System.out.println("Thời gian của biến utilDate: "+utilDate);
@@ -1246,7 +1245,7 @@ public class NhanVienGUI extends JPanel{
 					String diaChi = txtAddress.getText();
 					String sdt = txtPhone.getText();
 					String email = txtEmail.getText();
-					String trangThai = rbOn.isSelected()? "on":"off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "On", không thì là "Off"
+					String trangThai = rbOn.isSelected()? "on":"off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "off", không thì là "off"
 					String matKhau = txtPassword.getText();
 					String chucVu = roleCombobox.getSelectedItem().toString();
 					System.out.println("Role picked: " + chucVu);
@@ -1257,7 +1256,7 @@ public class NhanVienGUI extends JPanel{
 					byte[] hinhAnh = convertImageToBytes(imageFile);
 					
 					
-					NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, hinhAnh, trangThai, chucVu, noiLamViec);
+					NhanVienDTO nv = new NhanVienDTO(hoTen, sqlDate, gioiTinh, diaChi, sdt, email, matKhau, hinhAnh, trangThai, chucVu, noiLamViec);
 					// Gọi phương thức insert từ NhanVienBUS
 					NhanVienBUS nvBUS = new NhanVienBUS();
 					String message = nvBUS.insert(nv);
@@ -1458,10 +1457,10 @@ public class NhanVienGUI extends JPanel{
         	JLabel lblStatus = new JLabel("Trạng thái:");
         	lblStatus.setBounds(10, 263, 100, 20);
         	topLeftPanel.add(lblStatus);
-        	JRadioButton rbOn = new JRadioButton("On");
+        	JRadioButton rbOn = new JRadioButton("on");
         	rbOn.setBounds(100, 263, 100, 25);
         	topLeftPanel.add(rbOn);
-        	JRadioButton rbOff = new JRadioButton("Off");
+        	JRadioButton rbOff = new JRadioButton("off");
         	rbOff.setBounds(150, 263, 100, 25);
         	topLeftPanel.add(rbOff);
         	
@@ -1563,7 +1562,7 @@ public class NhanVienGUI extends JPanel{
     					String diaChi = txtAddress.getText();
     					String sdt = txtPhone.getText();
     					String email = txtEmail.getText();
-    					String trangThai = rbOn.isSelected()? "On":"Off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "On", không thì là "Off"
+    					String trangThai = rbOn.isSelected()? "on":"off"; //rbOn có được chọn hay không, nếu isSelected thì giá của trangThai là "off", không thì là "off"
     					String matKhau = txtPassword.getText();
     					String chucVu = roleCombobox.getSelectedItem().toString();
     					System.out.println("Class: NhanVienGUI | Method: updateEmployeeDialog: Role picked: " + chucVu);
@@ -1638,7 +1637,7 @@ public class NhanVienGUI extends JPanel{
         		txtAddress.setText(nv.getDiaChi());
         		txtPhone.setText(nv.getSoDienThoai());
         		txtEmail.setText(nv.getEmail());
-        		if(nv.getTrangThai().equalsIgnoreCase("On")) {	//lấy trạng thái của nhân viên, nếu là "On" thì set radio button rbOn lên
+        		if(nv.getTrangThai().equalsIgnoreCase("on")) {	//lấy trạng thái của nhân viên, nếu là "off" thì set radio button rbOn lên
         			rbOn.setSelected(true);
         			rbOff.setSelected(false);
         		}else {
@@ -1830,6 +1829,7 @@ public class NhanVienGUI extends JPanel{
         	rbOn.setBounds(100, 290, 100, 20);
         	rbOn.setEnabled(false);
         	topLeftPanel.add(rbOn);
+
         	JRadioButton rbOff = new JRadioButton("off");
         	rbOff.setBounds(150, 290, 100, 20);
         	rbOff.setEnabled(false);
@@ -1884,7 +1884,7 @@ public class NhanVienGUI extends JPanel{
         		txtAddress.setText(nv.getDiaChi());
         		txtPhone.setText(nv.getSoDienThoai());
         		txtEmail.setText(nv.getEmail());
-        		if(nv.getTrangThai().equalsIgnoreCase("On")) {	//lấy trạng thái của nhân viên, nếu là "On" thì set radio button rbOn lên
+        		if(nv.getTrangThai().equalsIgnoreCase("on")) {	//lấy trạng thái của nhân viên, nếu là "off" thì set radio button rbOn lên
         			rbOn.setSelected(true);
         			rbOff.setSelected(false);
         		}else {
@@ -2194,11 +2194,11 @@ public class NhanVienGUI extends JPanel{
     }
     
     
-  //hàm hiển thị thông tin dòng code
-  	public static void log(String message) {
-  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
-  	    System.out.println(element.getClassName() + " | method: " 
-  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
-  	}
+	// hàm hiển thị thông tin dòng code
+	public static void log(String message) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+				+ element.getLineNumber() + " | " + message);
+	}
 }

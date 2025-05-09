@@ -36,6 +36,21 @@ public class NhanVienDTO {
 		this.chiNhanh = chiNhanh;
 	}
 	
+	
+	public NhanVienDTO(String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, byte[] hinhAnh, String trangThai, String chucVu, String chiNhanh) {
+		this.hoTen = hoTen;
+		this.ngaySinh = ngaySinh;
+		this.gioiTinh = gioiTinh;
+		this.diaChi = diaChi;
+		this.soDienThoai = soDienThoai;
+		this.email = email;
+		this.hinhAnh = hinhAnh;
+		this.trangThai = trangThai;
+		this.matKhau = matKhau;
+		this.chucVu = chucVu;
+		this.chiNhanh = chiNhanh;
+	}
+	
 	public NhanVienDTO(String maNV, String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, String trangThai, String chucVu, String chiNhanh) {
 		this.maNV = maNV;
 		this.hoTen = hoTen;

@@ -36,6 +36,9 @@
 ---------- 6. Quản lý phiếu nhập
 ---------- 7. Quản lý phiếu xuất 
 
+
+use phonestore
+
 -- Xem tất cả procedure đang có
 SELECT *
 FROM sys.procedures
@@ -46,6 +49,10 @@ select @@servername as ServerName
 
 use phonestore;
 SELECT * FROM NHANVIEN
+delete from nhanvien where manv='NV021'
+
+select * from nhanvien
+where chinhanh='HN'
 */
 
 --//////////
@@ -90,7 +97,7 @@ BEGIN
         SET @maKho = 'HCM'
 
     -- 1. Gọi tới server gốc để lấy mã NV duy nhất
-    EXEC LINK0.phonestore.dbo.sp_TaoMaNhanVien @maNV OUTPUT
+    EXEC LINK6.phonestore.dbo.sp_TaoMaNhanVien @maNV OUTPUT
 
     -- 2. Kiểm tra mã NV đã tồn tại trong bảng cục bộ hay chưa
     IF EXISTS (SELECT 1 FROM NHANVIEN WHERE maNV = @maNV)
@@ -137,7 +144,7 @@ CREATE PROCEDURE sp_SuaNhanVienKho
     @diaChi NVARCHAR(200),
     @sdt NVARCHAR(20),
     @email NVARCHAR(255),
-    @hinhAnh VARBINARY(MAX),
+    --@hinhAnh VARBINARY(MAX),
     @matKhau NVARCHAR(200),
     @trangThai NVARCHAR(10),
     @maCV NVARCHAR(50)
@@ -153,7 +160,7 @@ BEGIN
             diaChi = @diaChi,
             sdt = @sdt,
             email = @email,
-            hinhAnh = @hinhAnh,
+            --hinhAnh = @hinhAnh,
             matKhau = @matKhau,
             trangThai = @trangThai,
             maCV = @maCV
@@ -467,8 +474,11 @@ BEGIN
 
     SELECT *
     FROM CHITIETCHAMCONG
-    WHERE maCC = @maCC;
+    WHERE maBCC = @maCC;
 END
+EXEC sp_LayChiTietChamCongTheoMaCCKho 'CC042025NV002'
+
+select * from chitietchamcong
 
 ---------- 4. Quản lý bảng lương
 ----4.1 Thêm bảng lương	- sp_ThemBangLuongKho
@@ -501,7 +511,6 @@ BEGIN
         @bhxh, @bhyt, @bhtn, @thueTNCN,
         @tamUng, @thuNhan, @maNV);
 END
-
 ----4.2 Sửa bảng lương - sp_SuaBangLuongKho
 CREATE PROCEDURE sp_SuaBangLuongKho
     @maBL VARCHAR(50),

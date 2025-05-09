@@ -37,7 +37,7 @@ public class NhanVienBUS {
 		if(cvDAO.getIdByName(nv.getChucVu()) != null && khoDAO.getIdByName(nv.getChiNhanh()) != null){
 			nv.setChucVu(cvDAO.getIdByName(nv.getChucVu()));
 			nv.setChiNhanh(khoDAO.getIdByName(nv.getChiNhanh()));
-			if(nvDAO.update(nv)>0)
+			if(nvDAO.update(nv)==-1)
 				return "Cập nhật nhân viên thành công";
 		}
 		return "Cập nhật nhân viên thất bại";

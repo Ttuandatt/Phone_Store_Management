@@ -2,12 +2,13 @@
 ---------------1. Quản lý nhân viên 
 -----1.1 Lấy danh sách nhân viên tất cả các kho - sp_LayDanhSachNhanVienGoc
 -----1.2 Lấy danh sách nhân viên của một kho - sp_LayDanhSachNhanVienTheoKhoGoc
------1.3 Thêm nhân viên
----1.3.1 Tạo mã nhân viên tự động tăng - sp_TaoMaNhanVien
----1.3.2 Thêm nhân viên - sp_ThemNhanVienGoc
------1.4 Sửa nhân viên - sp_SuaNhanVienGoc
------1.5 Tìm nhân viên theo manv- sp_TimNhanVienTheoMaNVGoc
------1.6 Tìm kiếm nhân viên (theo từ khoá) - sp_TimNhanVienTheoTuKhoaGoc
+-----1.3 Lấy nhân viên theo mã nhân viên	// Added by tundat
+-----1.4 Thêm nhân viên
+---1.4.1 Tạo mã nhân viên tự động tăng - sp_TaoMaNhanVien
+---1.4.2 Thêm nhân viên - sp_ThemNhanVienGoc
+-----1.5 Sửa nhân viên - sp_SuaNhanVienGoc
+-----1.6 Tìm nhân viên theo manv- sp_TimNhanVienTheoMaNVGoc
+-----1.7 Tìm kiếm nhân viên (theo từ khoá) - sp_TimNhanVienTheoTuKhoaGoc
 2. Quản lý bảng chấm công
 -----2.1 Lấy danh sách bảng chấm công - sp_LayDSChamCongGoc
 -----2.2 Lấy danh sách bảng chấm công của một kho - sp_DSBangChamCongTheoKhoGoc
@@ -40,6 +41,7 @@
 -----5.7 Lấy danh sách đơn của một kho - sp_LayDSDonGoc
 
 
+use phonestore
 
 -- Xem tất cả procedure đang có
 SELECT *
@@ -99,9 +101,21 @@ END
 EXEC sp_LayDanhSachNhanVienTheoKhoGoc 'HCM'
 
 
------1.3 Thêm nhân viên - sp_ThemNhanVienGoc
----1.3.1 Tạo mã nhân viên tự động tăng - sp_TaoMaNhanVien
-drop procedure sp_TaoMaNhanVien
+-----1.3 Lấy nhân viên theo mã nhân viên
+create procedure sp_layNhanVienTheoID
+@maNV nvarchar(50)
+as
+begin
+	select * from nhanvien where maNV = @maNV
+end
+
+exec sp_layNhanVienTheoID 'NV001'
+go
+
+
+-----1.4 Thêm nhân viên - sp_ThemNhanVienGoc
+---1.4.1 Tạo mã nhân viên tự động tăng - sp_TaoMaNhanVien
+drop procedure sp_TaoMaNhanVien;
 create procedure sp_TaoMaNhanVien
 @mamoi varchar(10) OUTPUT
 as
@@ -119,7 +133,7 @@ begin
 	set @mamoi = 'NV' + RIGHT('000' + CONVERT(VARCHAR, @soThuTu), 3)
 END
 
----1.3.2 Thêm nhân viên - sp_ThemNhanVienGoc
+---1.4.2 Thêm nhân viên - sp_ThemNhanVienGoc
 DROP PROCEDURE sp_ThemNhanVienGoc
 CREATE PROCEDURE sp_ThemNhanVienGoc
     @hoTen NVARCHAR(100),
@@ -184,7 +198,7 @@ EXEC sp_ThemNhanVienGoc
 ;
 
 
------1.4 Sửa nhân viên - sp_SuaNhanVienGoc
+-----1.5 Sửa nhân viên - sp_SuaNhanVienGoc
 drop procedure sp_SuaNhanVienGoc
 
 CREATE PROCEDURE sp_SuaNhanVienGoc
@@ -195,7 +209,7 @@ CREATE PROCEDURE sp_SuaNhanVienGoc
     @diaChi NVARCHAR(200),
     @sdt NVARCHAR(20),
     @email NVARCHAR(255),
-    @hinhAnh VARBINARY(MAX),
+    --@hinhAnh VARBINARY(MAX),
     @matKhau NVARCHAR(200),
     @trangThai NVARCHAR(10),
     @maCV NVARCHAR(50)
@@ -208,7 +222,8 @@ BEGIN
     BEGIN
         UPDATE LINK3.phonestore.dbo.NHANVIEN
         SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, diaChi = @diaChi, sdt = @sdt, email = @email, 
-			hinhAnh = @hinhAnh, matKhau = @matKhau, trangThai = @trangThai, maCV = @maCV
+			--hinhAnh = @hinhAnh, 
+			matKhau = @matKhau, trangThai = @trangThai, maCV = @maCV
         WHERE maNV = @maNV;
         RETURN;
     END
@@ -218,7 +233,8 @@ BEGIN
     BEGIN
         UPDATE LINK4.phonestore.dbo.NHANVIEN
         SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, diaChi = @diaChi, sdt = @sdt, email = @email, 
-			hinhAnh = @hinhAnh, matKhau = @matKhau, trangThai = @trangThai, maCV = @maCV
+			--hinhAnh = @hinhAnh, 
+			matKhau = @matKhau, trangThai = @trangThai, maCV = @maCV
         WHERE maNV = @maNV;
         RETURN;
     END
@@ -228,12 +244,13 @@ BEGIN
     BEGIN
         UPDATE LINK5.phonestore.dbo.NHANVIEN
         SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, diaChi = @diaChi, sdt = @sdt, email = @email, 
-			hinhAnh = @hinhAnh, matKhau = @matKhau, trangThai = @trangThai, maCV = @maCV
+			--hinhAnh = @hinhAnh, 
+			matKhau = @matKhau, trangThai = @trangThai, maCV = @maCV
         WHERE maNV = @maNV;
         RETURN;
     END
 
-    RAISERROR(N'Khong tim thay ma nhan vien.', 16, 1);
+    RAISERROR(N'Không tìm thấy mã nhân viên.', 16, 1);
 END
 --//////////// TEST
 EXEC sp_SuaNhanVienGoc
@@ -250,7 +267,7 @@ EXEC sp_SuaNhanVienGoc
     @maCV = 'CV002';
 
 
------1.5 Tìm nhân viên theo manv- sp_TimNhanVienTheoMaNVGoc
+-----1.6 Tìm nhân viên theo manv- sp_TimNhanVienTheoMaNVGoc
 drop procedure sp_TimNhanVienTheoMaNVGoc
 CREATE PROCEDURE sp_TimNhanVienTheoMaNVGoc
     @maNV VARCHAR(10)
@@ -286,7 +303,7 @@ BEGIN
     RAISERROR(N'Không tìm thấy nhân viên với mã đã cho.', 16, 1);
 END
 
------1.6 Tìm kiếm nhân viên (theo từ khoá) - sp_TimNhanVienTheoTuKhoaGoc
+-----1.7 Tìm kiếm nhân viên (theo từ khoá) - sp_TimNhanVienTheoTuKhoaGoc
 
 
 

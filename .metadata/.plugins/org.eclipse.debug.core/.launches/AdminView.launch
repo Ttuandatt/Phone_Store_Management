@@ -14,4 +14,5 @@
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="GUI.AdminView"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="Phone_Store_Management"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Phone_Store_Management"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--module-path \&quot;C:\openjfx-24_windows-x64_bin-sdk\javafx-sdk-24\lib\&quot;&#13;&#10;--module-path &quot;path_to_javafx/lib&quot; --add-modules javafx.controls,javafx.fxml&#13;&#10; --add-modules javafx.controls,javafx.fxml,javafx.swing,javafx.base &#13;&#10;--add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED"/>
 </launchConfiguration>

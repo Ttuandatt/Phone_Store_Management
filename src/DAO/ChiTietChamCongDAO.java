@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DTO.ChiTietChamCongDTO;
@@ -100,5 +101,123 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
  		}
  		return arr;
  	}
- 	
+	
+	// Tìm theo mã bảng cc
+    public ChiTietChamCongDTO GetChiTietChamCongTheoMaCT(String mact) {
+    ChiTietChamCongDTO ct = null;
+    try {
+        jdbc.openConnection();
+        String query = "exec sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?";
+        PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+        ps.setString(1, mact);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            ct = new ChiTietChamCongDTO();
+            ct.setMaCTCC(rs.getString("maCTCC"));
+            ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
+            ct.setLoaiChamCong(rs.getString("loaiChamCong"));
+            ct.setChiTiet(rs.getString("chiTiet"));
+            ct.setSoGioOT(rs.getFloat("soGioOT"));
+        }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+        } finally {
+            jdbc.closeConnection();
+        }
+        return ct;
+    }
+    
+    public ArrayList<ChiTietChamCongDTO> getChiTietCCTheoMaCC(String macc) {
+        ArrayList<ChiTietChamCongDTO> arrCT = new ArrayList<ChiTietChamCongDTO>();
+        try {
+            jdbc.openConnection();
+            String query = "EXEC sp_LayChiTietChamCongTheoMaCCKho @maCC = ?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, macc);
+            
+            ResultSet rs = ps.executeQuery();
+                while(rs.next()) {
+                    ChiTietChamCongDTO ct = new ChiTietChamCongDTO();
+                    ct.setMaCTCC(rs.getString("maCTCC"));
+                    ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
+                    ct.setLoaiChamCong(rs.getString("loaiChamCong"));
+                    ct.setChiTiet(rs.getString("chiTiet"));
+                    ct.setMaBCC(rs.getString("maBCC"));
+                    ct.setSoGioOT(rs.getFloat("soGioOT"));
+                    arrCT.add(ct);
+                }
+        }catch (SQLException e) {
+            e.getMessage();
+        } finally {
+            // Đóng kết nối CSDL
+            jdbc.closeConnection();
+        }
+        return arrCT;
+        
+    }
+    
+    public int insert1(ChiTietChamCongDTO t) {
+        int result = 0;
+        try {
+            jdbc.openConnection();
+
+            String query = "exec sp_ThemChiTietChamCongKho @maCTCC=?, @ngayTao=?, @loaiChamCong=?, @chiTiet=?, @maBCC=?, @soGioOT=?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, t.getMaCTCC());
+            ps.setDate(2, Date.valueOf(t.getNgayTao()));
+            ps.setString(3, t.getLoaiChamCong());
+            ps.setString(4, t.getChiTiet());
+            ps.setString(5, t.getMaBCC());
+            ps.setFloat(6, t.getSoGioOT());
+
+            result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ghi log lỗi để dễ debug
+        } finally {
+            jdbc.closeConnection();
+        }
+        return result;
+    }
+    
+    public int delete1(String maCTCC) {
+        int result = 0;
+        try {
+            jdbc.openConnection();
+
+            String query = "exec sp_XoaChiTietChamCongKho @maCTCC=??";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, maCTCC);
+
+            result = ps.executeUpdate(); // Số dòng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ghi log lỗi để kiểm tra
+        } finally {
+            jdbc.closeConnection();
+        }
+
+        return result;
+    }
+
+
+    public int deleteByMaCT(String mact) {
+        int result = 0;
+            try {
+                jdbc.openConnection();
+                String query = "EXEC sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?;";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, mact);
+
+                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+            } catch (SQLException e) {
+                e.printStackTrace(); // Ghi log lỗi để dễ debug
+            } finally {
+                jdbc.closeConnection();
+            }
+        return result;
+    }
+
 }

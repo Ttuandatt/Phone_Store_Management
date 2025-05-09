@@ -4,7 +4,7 @@ drop database phonestore;
 --ALTER DATABASE phonestore SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 --DROP DATABASE phonestore;
 use phonestore
-
+select @@SERVERNAME as ServerName
 
 -- Bảng Thương Hiệu
 CREATE TABLE THUONGHIEU (
@@ -273,7 +273,7 @@ CREATE TABLE BANGCHAMCONG(
 -- Bảng ghi chú
 CREATE TABLE CHITIETCHAMCONG (
     maCTCC varchar(50) , 	-- = "CT" + thang + nam + manv 
-    ngayChamCong DATE NOT NULL,
+    ngayTao DATE NOT NULL,
     loaiChamCong NVARCHAR(255) CHECK (loaiChamCong IN (N'Tăng ca ngày lễ', N'Tăng ca chủ nhật', N'Tăng ca ngày thường', 
 	N'Nghỉ phép có lương', N'Nghỉ phép không lương ', N'Nghỉ không phép', N'Nghỉ nửa buổi', N'Nghỉ việc')) NOT NULL, 	-- Thiếu gì bổ sung thêm
     chiTiet nvarchar(255),        -- Nếu nghỉ thì ghi lý do nghỉ
@@ -429,6 +429,7 @@ VALUES
 (4, 1525000, 'PX004', 'PBSP004'),
 (6, 1380000, 'PX005', 'PBSP005');
 
+/*
 -- BANGCHAMCONG + BANGLUONG + CHITIETCHAMCONG cho 5 nhân viên
 -- Nhân viên NV001
 INSERT INTO BANGLUONG VALUES ('BL042025NV001', 4, 2025, 8000000, 2.5, 500000, 300000, 1000000, 800000, 400000, 200000, 500000, 2000000, 15000000, 'NV001');
@@ -475,7 +476,38 @@ INSERT INTO BANGCHAMCONG VALUES ('CC042025NV005', 4, 2025, 23, 0, 0, 0, 2, 0, 0,
 INSERT INTO CHITIETCHAMCONG VALUES 
 ('CT042025NV00501', '2025-04-25', N'Tăng ca ngày thường', N'Tăng ca nhập hàng', 'CC042025NV005', 2);
 
+*/
+use phonestore
+INSERT INTO BANGCHAMCONG (maBCC, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN, maNV)
+VALUES 
+('CC042025NV004', 4, 2025, 21, 1, 0, 0, 4, 1, 1, 'NV004'),
+('CC042025NV005', 4, 2025, 23, 0, 0, 0, 2, 0, 0, 'NV005'),
+('CC042025NV001', 4, 2025, 20, 2, 1, 0, 5, 2, 1.5, 'NV001'),
+('CC042025NV002', 4, 2025, 22, 1, 0, 0, 3, 0, 2, 'NV002'),
+('CC042025NV003', 4, 2025, 19, 3, 0, 0, 6, 2, 1, 'NV003');
+INSERT INTO CHITIETCHAMCONG (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT) VALUES 
+('CT01042025NV001', '2025-04-10', N'Nghỉ không phép', N'Nghỉ việc riêng', 'CC042025NV001', NULL),
+('CT02042025NV001', '2025-04-20', N'Nghỉ không phép', N'Nghỉ trễ không báo', 'CC042025NV001', NULL),
+('CT03042025NV001', '2025-04-05', N'Nghỉ phép có lương', N'Nghỉ đi cưới', 'CC042025NV001', NULL),
+('CT04042025NV001', '2025-04-12', N'Tăng ca ngày thường', N'Tăng ca xử lý đơn hàng', 'CC042025NV001', 5),
+('CT05042025NV001', '2025-04-30', N'Tăng ca ngày lễ', N'Tăng ca lễ 30/4', 'CC042025NV001', 2),
+('CT06042025NV001', '2025-04-13', N'Tăng ca chủ nhật', N'Tăng ca kiểm kho', 'CC042025NV001', 1.5);
 
+INSERT INTO CHITIETCHAMCONG (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGioOT) VALUES 
+('CT01042025NV002', '2025-04-18', N'Nghỉ không phép', N'Nghỉ không báo trước', 'CC042025NV002', NULL),
+('CT02042025NV002', '2025-04-07', N'Tăng ca ngày thường', N'Tăng ca đóng gói hàng', 'CC042025NV002', 3),
+('CT03042025NV002', '2025-04-14', N'Tăng ca chủ nhật', N'Tăng ca kiểm kho cuối tuần', 'CC042025NV002', 2),
+('CT01042025NV003', '2025-04-03', N'Nghỉ không phép', N'Nghỉ việc đột xuất', 'CC042025NV003', NULL),
+('CT02042025NV003', '2025-04-15', N'Nghỉ không phép', N'Không lý do', 'CC042025NV003', NULL),
+('CT03042025NV003', '2025-04-23', N'Nghỉ không phép', N'Nghỉ trễ', 'CC042025NV003', NULL),
+('CT04042025NV003', '2025-04-05', N'Tăng ca ngày thường', N'Tăng ca kiểm tra kho', 'CC042025NV003', 6),
+('CT05042025NV003', '2025-04-30', N'Tăng ca ngày lễ', N'Tăng ca lễ', 'CC042025NV003', 2),
+('CT06042025NV003', '2025-04-14', N'Tăng ca chủ nhật', N'Tăng ca giao hàng', 'CC042025NV003', 1),
+('CT01042025NV004', '2025-04-10', N'Nghỉ không phép', N'Nghỉ về quê', 'CC042025NV004', NULL),
+('CT02042025NV004', '2025-04-08', N'Tăng ca ngày thường', N'Tăng ca kiểm kho', 'CC042025NV004', 4),
+('CT03042025NV004', '2025-04-30', N'Tăng ca ngày lễ', N'Tăng ca 30/4', 'CC042025NV004', 1),
+('CT04042025NV004', '2025-04-13', N'Tăng ca chủ nhật', N'Tăng ca kiểm tra tồn kho', 'CC042025NV004', 1),
+('CT01042025NV005', '2025-04-25', N'Tăng ca ngày thường', N'Tăng ca nhập hàng', 'CC042025NV005', 2);
 
 
 
@@ -540,6 +572,7 @@ select * from lschinhsua;
 select * from donxinnghi;
 SELECT @@VERSION;
 ------------------------------------------ DELETE --------------------------------------
+use phonestore
 DELETE FROM GHICHU;
 DELETE FROM BANGCHAMCONG;
 DELETE FROM CHITIETCHAMCONG;

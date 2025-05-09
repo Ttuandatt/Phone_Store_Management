@@ -21,5 +21,9 @@ public class BangChamCongBUS {
 		return "Thêm bảng chấm công thất bại!";
 	}
 	
+	public int updateById(BangChamCongDTO bcc) {
+        return bccDAO.update(bcc);
+    }
+	
 
 }
