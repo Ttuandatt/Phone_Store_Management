@@ -1,7 +1,0 @@
-package BUS;
-
-public class ProductsBUS {
-	public ArrayList<SanPhamDTO> getAllSanPham(){
-        return spDAO.getAll();
-    }
-}
