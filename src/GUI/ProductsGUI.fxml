@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1509.0" style="-fx-background-color: #A6B9C9" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductsGUIController"> 
+   <children>
+      <Pane>
+         <children>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="669.0" prefWidth="1401.0">
+               <children>
+                  <TableView fx:id="tb_products" layoutX="6.0" layoutY="109.0" onMouseClicked="#handleClickTableProducts" prefHeight="326.0" prefWidth="699.0">
+                    <columns>
+                      <TableColumn fx:id="tb_c_masp" prefWidth="63.19997864961624" text="Mã SP" />
+                      <TableColumn fx:id="tb_c_tensp" prefWidth="144.0" text="Tên SP" />
+                        <TableColumn fx:id="tb_c_pin" prefWidth="50.39997863769531" text="Pin" />
+                        <TableColumn fx:id="tb_c_os" prefWidth="92.0" text="Hệ Điều Hành" />
+                        <TableColumn fx:id="tb_c_camtruoc" minWidth="4.7999267578125" prefWidth="75.20001220703125" text="Cam Trước" />
+                        <TableColumn fx:id="tb_c_camsau" minWidth="0.0" prefWidth="77.60003662109375" text="Cam Sau" />
+                        <TableColumn fx:id="tb_c_xuatxu" prefWidth="95.20001220703125" text="Xuất Xứ" />
+                        <TableColumn prefWidth="98.4000122070313" text="Thương Hiệu" />
+                    </columns>
+                  </TableView>
+                  <TableView fx:id="tb_pbsp" layoutX="6.0" layoutY="455.0" onMouseClicked="#handleClickTableVersion" prefHeight="257.0" prefWidth="698.0">
+                    <columns>
+                      <TableColumn fx:id="tb_c2_mapb" prefWidth="91.99999713897705" text="Mã PB" />
+                      <TableColumn fx:id="tb_c2_mausac" prefWidth="155.19998168945312" text="Màu Sắc" />
+                        <TableColumn fx:id="tb_c2_ram" prefWidth="102.40003967285156" text="Ram" />
+                        <TableColumn fx:id="tb_c2_rom" prefWidth="100.0" text="Rom" />
+                        <TableColumn fx:id="tb_c2_giaban" prefWidth="105.60003662109375" text="Giá Bán" />
+                        <TableColumn fx:id="tb_c2_soluong" prefWidth="144.79998779296875" text="Số Lượng" />
+                    </columns>
+                  </TableView>
+                  <Label alignment="CENTER" layoutX="395.0" layoutY="25.0" prefHeight="22.0" prefWidth="157.0" style="-fx-background-color: white;" text="Danh sách sản phẩm" textFill="#181818">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="textFieldTimKiem" layoutX="246.0" layoutY="74.0" onKeyPressed="#handlePressTimKiem" />
+                  <Text layoutX="173.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tìm kiếm">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Pane fx:id="productPane" layoutX="862.0" layoutY="39.0" prefHeight="541.0" prefWidth="438.0">
+                     <children>
+                        <Label alignment="CENTER" layoutX="136.0" layoutY="43.0" prefHeight="21.0" prefWidth="129.0" style="-fx-background-color: white;" text="Chi tiết sản phẩm" textAlignment="RIGHT" textFill="#181818">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="24.0" layoutY="88.0" text="Mã sản phẩm">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_masp" layoutX="120.0" layoutY="85.0" />
+                        <Label layoutX="22.0" layoutY="125.0" text="Tên sản phẩm">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_tensp" layoutX="120.0" layoutY="122.0" />
+                        <Label layoutX="25.0" layoutY="165.0" text="Pin">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_pin" layoutX="120.0" layoutY="162.0" />
+                        <Label layoutX="24.0" layoutY="203.0" text="Hệ điều hành">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_os" layoutX="120.0" layoutY="200.0" />
+                        <Label layoutX="24.0" layoutY="241.0" text="Cam trước">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_camtruoc" layoutX="120.0" layoutY="238.0" />
+                        <Label layoutX="23.0" layoutY="280.0" text="Cam sau">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_camsau" layoutX="120.0" layoutY="277.0" />
+                        <Label layoutX="25.0" layoutY="320.0" text="Xuất xứ">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_xuatxu" layoutX="120.0" layoutY="317.0" />
+                        <Button fx:id="bt_sua_sp" disable="true" layoutX="91.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickSuaSP" style="-fx-background-color: #ffc107;" text="Sửa sản phẩm" />
+                        <Button fx:id="bt_xoa_sp" disable="true" layoutX="219.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#handleClickXoaSP" style="-fx-background-color: #dc3545;" text="Xóa sản phẩm" />
+                        <Button layoutX="23.0" layoutY="432.0" mnemonicParsing="false" onMouseClicked="#handleClickButtonResetProduct" style="-fx-background-color: #fd9843;" text="Reset" />
+                        <Label layoutX="25.0" layoutY="357.0" text="Thương Hiệu">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="cbb_thuonghieu" layoutX="119.0" layoutY="354.0" prefHeight="25.0" prefWidth="150.0" />
+                        <Label layoutX="25.0" layoutY="393.0" text="Hình ảnh">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="120.0" layoutY="390.0" mnemonicParsing="false" onMouseClicked="#handleCilckChooseFile" style="-fx-background-color: #087990;" text="Choose File" />
+                        <Button fx:id="bt_show_pannel_pb" layoutX="278.0" layoutY="41.0" mnemonicParsing="false" onMouseClicked="#handleCilckQLPB" text="Quản Lý Phiên Bản" visible="false" />
+                     </children>
+                  </Pane>
+                  <Pane fx:id="versionPane" layoutX="863.0" layoutY="39.0" prefHeight="450.0" prefWidth="438.0" visible="false">
+                     <children>
+                        <Label alignment="CENTER" layoutX="136.0" layoutY="43.0" prefHeight="21.0" prefWidth="129.0" style="-fx-background-color: white;" text="Chi Tiết Phiên Bản" textAlignment="RIGHT" textFill="#181818">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="42.0" layoutY="118.0" text="Mã Phiên Bản">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_mapb" layoutX="138.0" layoutY="115.0" />
+                        <Label layoutX="40.0" layoutY="155.0" text="Màu sắc">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_mausac" layoutX="138.0" layoutY="152.0" />
+                        <Label layoutX="43.0" layoutY="195.0" text="RAM">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_ram" layoutX="138.0" layoutY="192.0" />
+                        <Label layoutX="42.0" layoutY="233.0" text="ROM">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_rom" layoutX="138.0" layoutY="230.0" />
+                        <Label layoutX="42.0" layoutY="271.0" text="Giá Bán">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_giaban" layoutX="138.0" layoutY="268.0" />
+                        <Label layoutX="41.0" layoutY="310.0" text="Số Lượng">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_soluong" layoutX="138.0" layoutY="307.0" />
+                        <Button layoutX="40.0" layoutY="380.0" mnemonicParsing="false" onMouseClicked="#handleCilckAddPB" style="-fx-background-color: #0d6efd;" text="Thêm Phiên Bản" />
+                        <Button layoutX="158.0" layoutY="380.0" mnemonicParsing="false" onMouseClicked="#handleCilckSuaPB" style="-fx-background-color: #ffc107;" text="Sửa Phiên Bản" />
+                        <Button layoutX="268.0" layoutY="380.0" mnemonicParsing="false" onMouseClicked="#handleCilckXoaPB" style="-fx-background-color: #dc3545;" text="Xóa Phiên Bản" />
+                        <Button fx:id="bt_pb_reset" layoutX="42.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#handleClickButtonResetVersion" style="-fx-background-color: #fd9843;" text="Reset" />
+                        <Label layoutX="43.0" layoutY="82.0" text="Mã Sản Phẩm">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tf_vs_masp" disable="true" layoutX="139.0" layoutY="79.0" />
+                     </children>
+                  </Pane>
+                  <ImageView fx:id="imageView" fitHeight="160.0" fitWidth="227.0" layoutX="927.0" layoutY="561.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </AnchorPane>
+         </children>
+      </Pane>
+   </children>
+</Pane>

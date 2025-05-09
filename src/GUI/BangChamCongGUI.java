@@ -1,30 +1,33 @@
 package GUI;
 
-import BUS.ProductsBUS;
+import BUS.BangChamCongBUS;
+import BUS.ChiTietChamCongBUS;
+import BUS.DonXinNghiBUS;
 import Components.ShadowButton;
 import DTO.*;
-import DAO.ProductsDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,6 +36,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -42,19 +46,26 @@ import javax.swing.table.TableColumnModel;
 
 public class BangChamCongGUI extends JPanel{
 
-	ProductsBUS productBUS = new ProductsBUS();
-    JTable table = new JTable();
-    DefaultTableModel model = new DefaultTableModel();
-    ArrayList<SanPhamDTO> productArr = new ArrayList<SanPhamDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
-    private JComboBox sortComboBox;
+	BangChamCongBUS bccBUS = new BangChamCongBUS();
+	ChiTietChamCongBUS ctccBUS = new ChiTietChamCongBUS();
+	DonXinNghiBUS dxnBUS = new DonXinNghiBUS();
+    JTable bangChamCongTable, ngayNghiTable, tangCaTable;
+    DefaultTableModel bangChamCongModel = new DefaultTableModel();
+    DefaultTableModel ngayNghiModel = new DefaultTableModel();
+    DefaultTableModel tangCaModel = new DefaultTableModel();
+    ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
+    ArrayList<ChiTietPhieuNhapDTO> arrCTCC = new ArrayList<ChiTietPhieuNhapDTO>();
+    private JComboBox<String> sortComboBox, sortThangCCCombobox, sortNamCCComboBox;
     private JPanel bangChamCongContent;
-    private JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
+    private JTextField txtTimKiem, tfPriceStart, tfPriceEnd;
 	
 	
 	//Constructor
     public BangChamCongGUI(){
         initComponents();
         loadBangChamCongList();
+        loadNgayNghiList();
+        loadTangCaList();
     }
     
     
@@ -80,18 +91,18 @@ public class BangChamCongGUI extends JPanel{
         topPanel.setLayout(new GridBagLayout());
         topPanel.setBackground(Color.white);
         gbc.weightx = 1.0;
-        gbc.weighty = 0.09;
+        gbc.weighty = 0.1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
         bangChamCongContent.add(topPanel, gbc);
         
         middlePanel = new JPanel();
-        middlePanel.setLayout(null);
+        middlePanel.setLayout(new GridBagLayout());
         middlePanel.setBackground(Color.white);
         middlePanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
         gbc.weightx = 1.0;
-        gbc.weighty = 0.61;
+        gbc.weighty = 0.65;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -99,33 +110,29 @@ public class BangChamCongGUI extends JPanel{
         bangChamCongContent.add(middlePanel, gbc);
         
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(null);
+        bottomPanel.setLayout(new GridBagLayout());
         bottomPanel.setBackground(Color.white);
-        // Tạo viền với độ dày 3px và màu xám
-        Border lineBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
-
-        // Tạo TitledBorder với tiêu đề "Thông tin chi tiết"
-        TitledBorder titledBorder = BorderFactory.createTitledBorder(lineBorder, "Thông tin chi tiết");
-
-        // Chỉnh cỡ chữ, kiểu chữ
-        titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
-        titledBorder.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
-
-        // Áp dụng border cho bottomPanel
-        bottomPanel.setBorder(titledBorder);
+//		// Tạo viền với độ dày 3px và màu xám
+//		Border lineBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
+//		// Tạo TitledBorder với tiêu đề "Thông tin chi tiết"
+//		TitledBorder titledBorder = BorderFactory.createTitledBorder(lineBorder, "Thông tin chi tiết");
+//		// Chỉnh cỡ chữ, kiểu chữ
+//		titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
+//		titledBorder.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
+//		// Áp dụng border cho bottomPanel
+//		bottomPanel.setBorder(titledBorder);
+		
         gbc.weightx = 1.0;
-        gbc.weighty = 0.3;
+        gbc.weighty = 0.25;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.insets = new Insets(0, 3, 0, 3);
         bangChamCongContent.add(bottomPanel, gbc);
         
-//==================================================== TOP PANEL =============================================================================================//
+        
         JPanel functionsPanel, searchPanel;
-        
-        
-        //======================================= functionsPanel =====================================================//
+        //functionPanel
         //set thông số cho functionsPanel
         functionsPanel = new JPanel();
         functionsPanel.setBackground(Color.white);
@@ -195,7 +202,7 @@ public class BangChamCongGUI extends JPanel{
         printButtonPanel.setBounds(69, 4, 60, 60);
         rightFunctionPanel.add(printButtonPanel);
         
-        //======================================= Đặt các nút chức năng vào các panel ==========================================================//
+        //Đặt các nút chức năng vào các panel
         ImageIcon iconAdd = new ImageIcon(getClass().getResource("/img/plus.png"));
         Image imgAdd = iconAdd.getImage();
         Image newImgAdd = imgAdd.getScaledInstance(30,30, Image.SCALE_SMOOTH);
@@ -216,7 +223,7 @@ public class BangChamCongGUI extends JPanel{
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                newEmployeeDialog();
+                newBangChamCongDialog();
             }
         });
         btnAdd.addMouseListener(new MouseAdapter() {
@@ -263,7 +270,7 @@ public class BangChamCongGUI extends JPanel{
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//            	updateEmployeeDialog();
+            	updateBangChamCongDialog();
             }
         });
         btnUpdate.addMouseListener(new MouseAdapter() {
@@ -286,7 +293,7 @@ public class BangChamCongGUI extends JPanel{
         
         
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDelete = new ImageIcon("C:\\\\Users\\\\ACER\\\\Dropbox\\\\My PC (LAPTOP-UGP9QJUT)\\\\Documents\\\\ITstudies\\\\JAVA_BACKEND\\\\JAVA PROJECTS\\\\Phone_Store_Management_HTTTDN\\\\Phone_Store_Management\\\\src\\\\img\\\\delete.png\\"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
         Image imgDelete = iconDelete.getImage();
         Image newImgDelete = imgDelete.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         if (iconDelete.getIconWidth() == -1) {
@@ -333,51 +340,51 @@ public class BangChamCongGUI extends JPanel{
         
         
      
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
-        Image imgDetail = iconDetail.getImage();
-        Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        if (iconDelete.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
-
-        // Tạo nút Detail
-        JButton btnDetail = new ShadowButton("Xem", scaledIconDetail);
-        btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnDetail.setFocusPainted(false);
-        btnDetail.setBorderPainted(true);
-        btnDetail.setContentAreaFilled(false);
-        btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-
-        // Thêm sự kiện click cho nút Detail
-        btnDetail.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                employeeDetailDialog();
-            }
-        });
-        btnDetail.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnDetail.setBackground(Color.white);
-        		detailButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
-
-        // Thêm nút vào panel
-        detailButtonPanel.setLayout(new BorderLayout());
-        detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
-
+//        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
+//        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
+//        Image imgDetail = iconDetail.getImage();
+//        Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+//        if (iconDelete.getIconWidth() == -1) {
+//            System.out.println("Không tìm thấy ảnh!");
+//        }
+//        ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
+//
+//        // Tạo nút Detail
+//        JButton btnDetail = new ShadowButton("Xem", scaledIconDetail);
+//        btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
+//        btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
+//        btnDetail.setFocusPainted(false);
+//        btnDetail.setBorderPainted(true);
+//        btnDetail.setContentAreaFilled(false);
+//        btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+//
+//        // Thêm sự kiện click cho nút Detail
+//        btnDetail.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+////                employeeDetailDialog();
+//            }
+//        });
+//        btnDetail.addMouseListener(new MouseAdapter() {
+//        	@Override
+//        	public void mouseEntered(MouseEvent e) {
+//        		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+//        		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        	}
+//        	
+//        	@Override
+//        	public void mouseExited(MouseEvent e) {
+//        		btnDetail.setBackground(Color.white);
+//        		detailButtonPanel.setBackground(Color.white);
+//        	}
+//        });
+//        
+//
+//        // Thêm nút vào panel
+//        detailButtonPanel.setLayout(new BorderLayout());
+//        detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
+//
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
@@ -475,7 +482,7 @@ public class BangChamCongGUI extends JPanel{
         
         
         
-        //======================================= seacrhPanel ========================================================//
+        //seacrhPanel
         //set thông số cho seacrhPanel
         searchPanel = new JPanel();
         searchPanel.setBackground(Color.white);
@@ -515,41 +522,27 @@ public class BangChamCongGUI extends JPanel{
         
         
         
-        //==================================== searchInputPanel =======================================================//
+        //searchInputPanel
         String[] sortCriterias = {"Tất cả", "A-Z", "Z-A", "Tăng dần", "Giảm dần"};
         sortComboBox = new JComboBox<String>(sortCriterias);
         sortComboBox.setBounds(10, 24, 75, 25);
         searchInputPanel.add(sortComboBox);
         
+        String[] thang = {"Tháng", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        sortThangCCCombobox = new JComboBox<String>(thang);
+        sortThangCCCombobox.setBounds(90, 24, 70, 25);
+        searchInputPanel.add(sortThangCCCombobox);
         
-//        String[] genders = {"Giới tính", "Nam", "Nữ"};
-//        genderCombobox = new JComboBox<String>(genders);
-//        genderCombobox.setBounds(90,  24,  90, 25);
-//        searchInputPanel.add(genderCombobox);
-//        
-//     
-//        roleCombobox = new JComboBox<String>(roles);
-//        roleCombobox.setBounds(185, 24, 150, 25);
-//        searchInputPanel.add(roleCombobox);
-//        roleCombobox.addItemListener(e -> {
-//        	if(e.getStateChange() == ItemEvent.SELECTED) {
-//        		String selected = (String)roleCombobox.getSelectedItem();
-//        		if("Thêm chức vụ...".equals(selected)) {
-//        			newRoleDialog();
-//        		}
-//        	}
-//        	
-//        });
 
         
-        JTextField searchInputTF = new JTextField();
-        searchInputTF.setBounds(375,  24,  260, 25);
-        searchInputPanel.add(searchInputTF);
+        txtTimKiem = new JTextField();
+        txtTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(txtTimKiem);
         
         
         
-        //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\loupe2.png"); // Đặt đường dẫn ảnh ở đây
+        //searchButtonPanel
+        ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
         Image imgSearch = iconSearch.getImage();
         Image newImgSearch = imgSearch.getScaledInstance(20,20, Image.SCALE_SMOOTH);
         if (iconSearch.getIconWidth() == -1) {
@@ -571,7 +564,7 @@ public class BangChamCongGUI extends JPanel{
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Search button clicked!");
+                searchPerformed(bangChamCongTable);
             }
         });
         btnSearch.addMouseListener(new MouseAdapter() {
@@ -591,7 +584,7 @@ public class BangChamCongGUI extends JPanel{
         btnSearch.setBounds(0, 15, 40, 40);
         searchButtonPanel.add(btnSearch);
         
-        ImageIcon iconRefresh = new ImageIcon("C:\\Users\\ACER\\Dropbox\\My PC (LAPTOP-UGP9QJUT)\\Documents\\ITstudies\\JAVA_BACKEND\\JAVA PROJECTS\\Phone_Store_Management_HTTTDN\\Phone_Store_Management\\src\\img\\refresh.png"); // Đặt đường dẫn ảnh ở đây
+        ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
         Image imgRefresh = iconRefresh.getImage();
         Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         if (iconRefresh.getIconWidth() == -1) {
@@ -613,7 +606,7 @@ public class BangChamCongGUI extends JPanel{
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Refresh button clicked!");
+                refreshList();
             }
         });
         btnRefresh.addMouseListener(new MouseAdapter() {
@@ -633,11 +626,416 @@ public class BangChamCongGUI extends JPanel{
         btnRefresh.setBounds(45, 15, 40, 40);
         searchButtonPanel.add(btnRefresh);
 
-        
+        //========================= Table =========================//
+        bangChamCongTable = new JTable();
+        JScrollPane sp = new JScrollPane(bangChamCongTable);
+        gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		middlePanel.add(sp, gbc);
+		bangChamCongTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()>=1) {
+					viewNgayNghi();
+					viewTangCa();
+				}
+			}
+		});
+		
+		
+		//bottomPanel
+		//Chia 2 panel con leftBottomPanel, rightBottomPanel để hiển thị 2 bảng nghỉ và tăng ca
+		JPanel leftBottomPanel, rightBottomPanel;
+		leftBottomPanel = new JPanel(new GridBagLayout());
+		leftBottomPanel.setBackground(Color.white);
+		Border lineBorder = BorderFactory.createLineBorder(Color.lightGray, 2); // Tạo viền với độ dày 3px và màu xám
+		TitledBorder titledBorder = BorderFactory.createTitledBorder(lineBorder, "Ngày nghỉ"); // Tạo TitledBorder với tiêu đề 
+		titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
+		titledBorder.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
+		leftBottomPanel.setBorder(titledBorder); 		// Áp dụng border cho leftBottomPanel
+		gbc.weightx = 0.5;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(leftBottomPanel, gbc);
+		
+		rightBottomPanel = new JPanel(new GridBagLayout());
+		rightBottomPanel.setBackground(Color.white);
+		Border lineBorder2 = BorderFactory.createLineBorder(Color.lightGray, 2); // Tạo viền với độ dày 3px và màu xám
+		TitledBorder titledBorder2 = BorderFactory.createTitledBorder(lineBorder, "Tăng ca"); // Tạo TitledBorder với tiêu đề 
+		titledBorder2.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
+		titledBorder2.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
+		rightBottomPanel.setBorder(titledBorder2); 		// Áp dụng border cho leftBottomPanel
+		gbc.weightx = 0.5;
+		gbc.weighty = 1.0;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(rightBottomPanel, gbc);
+		
+		ngayNghiTable = new JTable();
+		JScrollPane sp2 = new JScrollPane(ngayNghiTable);
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		leftBottomPanel.add(sp2, gbc);
+		
+		tangCaTable = new JTable();
+		JScrollPane sp3 = new JScrollPane(tangCaTable);
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		rightBottomPanel.add(sp3, gbc);
     }
 
     
-    private void loadBangChamCongList() {
+	private void loadBangChamCongList() {
+		bangChamCongTable.setDefaultEditor(Object.class, null);
+
+		bangChamCongTable.setModel(bangChamCongModel);
+		bangChamCongModel.addColumn("Mã bảng chấm công");
+		bangChamCongModel.addColumn("Tháng chấm công");
+		bangChamCongModel.addColumn("Năm chấm công");
+		bangChamCongModel.addColumn("Số ngày làm");
+    	bangChamCongModel.addColumn("Số ngày nghỉ không phép");
+    	bangChamCongModel.addColumn("Số ngày nghỉ phép có lương");
+    	bangChamCongModel.addColumn("Số ngày nghỉ phép không lương");
+    	bangChamCongModel.addColumn("Mã nhân viên"); 
     	
+    	arrBangChamCong = bccBUS.selectAll();
+    	for(int i=0; i<arrBangChamCong.size(); i++) {
+    		BangChamCongDTO bcc = arrBangChamCong.get(i);
+    		String maBCC = bcc.getMaBCC();
+    		int thangCC = bcc.getThangCC();
+    		int namCC = bcc.getNamCC();
+    		float soNgayLam = bcc.getSoNgayLam();
+    		float soNgayNghiKhongPhep = bcc.getSoNgayNghiKP();
+    		float soNgayNghiPhepCoLuong = bcc.getSoNPCoLuong();
+    		float soNgayNghiPhepKhongLuong = bcc.getSoNPKhongLuong();
+    		String maNV = bcc.getMaNV();
+    		
+    		Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV};
+    		bangChamCongModel.addRow(row);
+    		
+    	}
+    	
+    	//Điều chỉnh kích thước các cột
+    	TableColumnModel tcm = bangChamCongTable.getColumnModel();
+    	tcm.getColumn(0).setPreferredWidth(150);
+		tcm.getColumn(1).setPreferredWidth(150);
+		tcm.getColumn(2).setPreferredWidth(150);
+		tcm.getColumn(3).setPreferredWidth(100);
+		tcm.getColumn(4).setPreferredWidth(200);
+		tcm.getColumn(5).setPreferredWidth(200);
+		tcm.getColumn(6).setPreferredWidth(208);
+		tcm.getColumn(7).setPreferredWidth(110);
+		
+		bangChamCongTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
+
+	}
+	
+	
+	private void loadNgayNghiList() {
+		ngayNghiTable.setDefaultEditor(Object.class, null);
+		
+		ngayNghiTable.setModel(ngayNghiModel);
+		ngayNghiModel.addColumn("Ngày nghỉ");
+		ngayNghiModel.addColumn("Loại");
+		ngayNghiModel.addColumn("Lý do");
+	}
+	
+	private void loadTangCaList() {
+		tangCaTable.setDefaultEditor(Object.class, null);
+		
+		tangCaTable.setModel(tangCaModel);
+		tangCaModel.addColumn("Ngày tăng ca");
+		tangCaModel.addColumn("Loại tăng ca");
+		tangCaModel.addColumn("Số giờ tăng ca");
+	}
+	
+	private void newBangChamCongDialog() {
+		JDialog newBangChamCongDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Thêm bảng chấm công", true);
+		newBangChamCongDialog.setSize(300, 300);
+		newBangChamCongDialog.setLayout(null);
+
+		JLabel lblMaBCC, lblThangCC, lblNamCC, lblMaNV;
+		lblMaBCC = new JLabel("Mã bảng chấm công");
+		lblMaBCC.setBounds(10, 10, 150, 20);
+		newBangChamCongDialog.add(lblMaBCC);
+		
+		lblThangCC = new JLabel("Tháng chấm công");
+		lblThangCC.setBounds(10, 60, 150, 20);
+		newBangChamCongDialog.add(lblThangCC);
+		
+		lblNamCC = new JLabel("Năm chấm công");
+		lblNamCC.setBounds(10, 110, 150, 20);
+		newBangChamCongDialog.add(lblNamCC);
+		
+		lblMaNV = new JLabel("Mã nhân viên");
+		lblMaNV.setBounds(10, 160, 150, 20);
+		newBangChamCongDialog.add(lblMaNV);
+		
+		JTextField txtMaBCC, txtThangCC, txtNamCC, txtMaNV;
+		txtMaBCC = new JTextField();
+		txtMaBCC.setBounds(10, 30, 260, 25);
+		newBangChamCongDialog.add(txtMaBCC);
+		
+		txtThangCC = new JTextField();
+		txtThangCC.setBounds(10, 80, 260, 25);
+		newBangChamCongDialog.add(txtThangCC);
+		
+		txtNamCC = new JTextField();
+		txtNamCC.setBounds(10, 130, 260, 25);
+		newBangChamCongDialog.add(txtNamCC);
+		
+		txtMaNV = new JTextField();
+		txtMaNV.setBounds(10, 180, 260, 25);
+		newBangChamCongDialog.add(txtMaNV);
+		
+		JButton btnSave = new ShadowButton("Lưu");
+		btnSave.setBounds(200, 230, 70, 25);
+		newBangChamCongDialog.add(btnSave);
+		
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				BangChamCongDTO bcc = new BangChamCongDTO();
+				bcc.setMaBCC(txtMaBCC.getText());
+				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
+				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
+				bcc.setSoNgayLam(0);
+				bcc.setSoNgayNghiKP(0);
+				bcc.setSoNPCoLuong(0);
+				bcc.setSoNPKhongLuong(0);
+				bcc.setMaNV(txtMaNV.getText());
+				
+				String message = bccBUS.insert(bcc);
+				JOptionPane.showMessageDialog(null, message);
+			}
+		});
+		
+		
+		newBangChamCongDialog.setLocationRelativeTo(this);
+		newBangChamCongDialog.setVisible(true);
+	}
+	
+	private void updateBangChamCongDialog() {
+		JDialog updateBangChamCongDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Sửa bảng chấm công", true);
+		updateBangChamCongDialog.setSize(600, 300);
+		updateBangChamCongDialog.setLayout(null);
+		
+		JLabel lblMaBCC, lblThangCC, lblNamCC, lblMaNV, lblSoNgayLam, lblSoNgayNghiKhongPhep, lblSoNgayNghiPhepCoLuong, lblSoNgayNghiPhepKhongLuong;
+		lblMaBCC = new JLabel("Mã bảng chấm công");
+		lblMaBCC.setBounds(10, 10, 150, 20);
+		updateBangChamCongDialog.add(lblMaBCC);
+		
+		lblThangCC = new JLabel("Tháng chấm công");
+		lblThangCC.setBounds(10, 60, 150, 20);
+		updateBangChamCongDialog.add(lblThangCC);
+		
+		lblNamCC = new JLabel("Năm chấm công");
+		lblNamCC.setBounds(10, 110, 150, 20);
+		updateBangChamCongDialog.add(lblNamCC);
+		
+		lblMaNV = new JLabel("Mã nhân viên");
+		lblMaNV.setBounds(10, 160, 150, 20);
+		updateBangChamCongDialog.add(lblMaNV);
+		
+		lblSoNgayLam = new JLabel("Số ngày làm");
+		lblSoNgayLam.setBounds(170, 10, 150, 20);
+		updateBangChamCongDialog.add(lblSoNgayLam);
+		
+		lblSoNgayNghiKhongPhep = new JLabel("Số ngày nghỉ không phép");
+		lblSoNgayNghiKhongPhep.setBounds(170, 60, 150, 20);
+		updateBangChamCongDialog.add(lblSoNgayNghiKhongPhep);
+		
+		lblSoNgayNghiPhepCoLuong = new JLabel("Số ngày nghỉ phép có lương");
+		lblSoNgayNghiPhepCoLuong.setBounds(170, 110, 150, 20);
+		updateBangChamCongDialog.add(lblSoNgayNghiPhepCoLuong);
+		
+		lblSoNgayNghiPhepKhongLuong = new JLabel("Số ngày nghỉ phép không lương");
+		lblSoNgayNghiPhepKhongLuong.setBounds(170, 160, 170, 20);
+		updateBangChamCongDialog.add(lblSoNgayNghiPhepKhongLuong);
+		
+		JTextField txtMaBCC, txtThangCC, txtNamCC, txtMaNV;
+		txtMaBCC = new JTextField();
+		txtMaBCC.setBounds(10, 30, 100, 25);
+		updateBangChamCongDialog.add(txtMaBCC);
+		
+		txtThangCC = new JTextField();
+		txtThangCC.setBounds(10, 80, 100, 25);
+		updateBangChamCongDialog.add(txtThangCC);
+		
+		txtNamCC = new JTextField();
+		txtNamCC.setBounds(10, 130, 100, 25);
+		updateBangChamCongDialog.add(txtNamCC);
+		
+		txtMaNV = new JTextField();
+		txtMaNV.setBounds(10, 180, 100, 25);
+		updateBangChamCongDialog.add(txtMaNV);
+		
+		JButton btnSave = new ShadowButton("Lưu");
+		btnSave.setBounds(400, 230, 70, 25);
+		updateBangChamCongDialog.add(btnSave);
+		
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				BangChamCongDTO bcc = new BangChamCongDTO();
+				bcc.setMaBCC(txtMaBCC.getText());
+				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
+				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
+				bcc.setSoNgayLam(0);
+				bcc.setSoNgayNghiKP(0);
+				bcc.setSoNPCoLuong(0);
+				bcc.setSoNPKhongLuong(0);
+				bcc.setMaNV(txtMaNV.getText());
+				
+				String message = bccBUS.insert(bcc);
+				JOptionPane.showMessageDialog(null, message);
+			}
+		});
+		
+		
+		updateBangChamCongDialog.setLocationRelativeTo(this);
+		updateBangChamCongDialog.setVisible(true);
+	}
+	
+	private void searchPerformed(JTable tb){
+        String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
+            ArrayList<BangChamCongDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
+
+            // Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm kiếm
+            boolean found = false;
+            for (BangChamCongDTO bcc: arrBangChamCong) {
+                // Kiểm tra xem thông tin của bảng chấm công có chứa chuỗi tìm kiếm hay không (sử dụng phương thức contains)
+                if (bcc.getMaBCC().toLowerCase().contains(searchContent.toLowerCase().trim()) || 
+                	bcc.getMaNV().toLowerCase().contains(searchContent.toLowerCase().trim())){
+                    dsTimKiem.add(bcc); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
+                    found = true;
+                }
+                else if(bcc.getThangCC()==Integer.parseInt(searchContent.trim()) || 
+                	bcc.getNamCC()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNgayLam()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNgayNghiKP()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNPCoLuong()==Integer.parseInt(searchContent.trim()) ||
+                	bcc.getSoNPKhongLuong()==Integer.parseInt(searchContent.trim())||
+                	bcc.getMaNV().toLowerCase().contains(searchContent.toLowerCase())){
+                	dsTimKiem.add(bcc); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
+                    found = true;
+                }
+                
+            }
+            // Kiểm tra nếu không tìm thấy sản phẩm nào
+            if(!found){
+                JOptionPane.showMessageDialog(this, "Không tìm thấy bảng chấm công!");
+                refreshList();
+                return; // Kết thúc phương thức sau khi hiển thị thông báo
+            }
+            
+            // Xóa tất cả các dòng hiện có trong bảng
+            DefaultTableModel tableModel = (DefaultTableModel) tb.getModel();
+            tableModel.setRowCount(0);
+
+            // Thêm các sản phẩm thỏa mãn vào bảng
+            for (BangChamCongDTO bcc : dsTimKiem) {
+    			String maBCC = bcc.getMaBCC();
+    			int thangCC = bcc.getThangCC();
+    			int namCC = bcc.getNamCC();
+    			float soNgayLam = bcc.getSoNgayLam();
+        		float soNgayNghiKhongPhep = bcc.getSoNgayNghiKP();
+        		float soNgayNghiPhepCoLuong = bcc.getSoNPCoLuong();
+        		float soNgayNghiPhepKhongLuong = bcc.getSoNPKhongLuong();
+    			String maNV = bcc.getMaNV();
+
+    			
+    			
+    		    Object[] row = {maBCC, thangCC, namCC, soNgayLam, soNgayNghiKhongPhep, soNgayNghiPhepCoLuong, soNgayNghiPhepKhongLuong, maNV};
+                tableModel.addRow(row);
+            }
+        } else {
+            // Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển thị tất cả sản phẩm
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
+            refreshList();
+        }
     }
-}
+	
+	private void refreshList(){
+        // Xóa tất cả các dòng trong mô hình bảng
+        bangChamCongModel.setRowCount(0);
+        bangChamCongModel.setColumnCount(0);
+        loadBangChamCongList();
+        sortComboBox.setSelectedIndex(0);
+        txtTimKiem.setText("");
+    }
+	
+	public void viewNgayNghi() {
+		int selectedRow = bangChamCongTable.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel bccModel = (DefaultTableModel)bangChamCongTable.getModel();
+			
+	
+			String maBCC = (String) bccModel.getValueAt(selectedRow,0);
+			log("maBCC=" + maBCC);
+			ArrayList<ChiTietChamCongDTO> thongTinNgayNghi = ctccBUS.getThongTinNgayNghi(maBCC);
+			
+			ngayNghiModel.setRowCount(0);
+			for(int i=0; i<thongTinNgayNghi.size(); i++) {
+				LocalDate ngayChamCong = thongTinNgayNghi.get(i).getNgayTao();
+				log("ngayChamCong="+ngayChamCong);
+				String loaiChamCong = thongTinNgayNghi.get(i).getLoaiChamCong();
+				log("loaiChamCong="+loaiChamCong);
+				String chiTiet = thongTinNgayNghi.get(i).getChiTiet();
+				log("chiTiet="+chiTiet);
+				
+				
+				Object[] row = {ngayChamCong, loaiChamCong, chiTiet};
+				ngayNghiModel.addRow(row);
+			}
+		}
+	}
+	
+	public void viewTangCa() {
+		int selectedRow = bangChamCongTable.getSelectedRow();
+		if(selectedRow != -1) {
+			DefaultTableModel bccModel = (DefaultTableModel)bangChamCongTable.getModel();
+			
+			String maBCC = (String) bccModel.getValueAt(selectedRow,0);
+			log("maBCC=" + maBCC);
+			ArrayList<ChiTietChamCongDTO> thongTinTangCa = ctccBUS.getThongTinTangCa(maBCC);
+		
+			tangCaModel.setRowCount(0);
+			for(int i=0; i<thongTinTangCa.size(); i++) {
+				LocalDate ngayTangCa = thongTinTangCa.get(i).getNgayTao();
+				String loaiTangCa = thongTinTangCa.get(i).getLoaiChamCong();
+				Float soGioTangCa = thongTinTangCa.get(i).getSoGioOT();
+				
+				Object[] row = {ngayTangCa, loaiTangCa, soGioTangCa};
+				tangCaModel.addRow(row);
+			}
+		
+		}
+	}
+	
+	  //hàm hiển thị thông tin dòng code
+  	public static void log(String message) {
+  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+  	    System.out.println(element.getClassName() + " | method: " 
+  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+  	}
+ }
+  	
+	
+

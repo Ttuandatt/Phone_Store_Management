@@ -14,14 +14,14 @@ public class NhanVienDTO {
     private byte[] hinhAnh;      // Ảnh nhân viên (lưu dưới dạng BLOB)
     private String trangThai;    // Trạng thái (đang làm, đã nghỉ, đang nghỉ phép)
     private String chucVu;		 // Khóa ngoại mã chức vụ
-    private String noiLamViec;	 // Nơi làm việc
+    private String chiNhanh;	 // Nơi làm việc
     
     //Constructors
     public NhanVienDTO() {
     	
     }
     
-	public NhanVienDTO(String maNV, String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, byte[] hinhAnh, String trangThai, String chucVu, String noiLamViec) {
+	public NhanVienDTO(String maNV, String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, byte[] hinhAnh, String trangThai, String chucVu, String chiNhanh) {
 		this.maNV = maNV;
 		this.hoTen = hoTen;
 		this.ngaySinh = ngaySinh;
@@ -33,10 +33,25 @@ public class NhanVienDTO {
 		this.trangThai = trangThai;
 		this.matKhau = matKhau;
 		this.chucVu = chucVu;
-		this.noiLamViec = noiLamViec;
+		this.chiNhanh = chiNhanh;
 	}
 	
-	public NhanVienDTO(String maNV, String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, String trangThai, String chucVu, String noiLamViec) {
+	
+	public NhanVienDTO(String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, byte[] hinhAnh, String trangThai, String chucVu, String chiNhanh) {
+		this.hoTen = hoTen;
+		this.ngaySinh = ngaySinh;
+		this.gioiTinh = gioiTinh;
+		this.diaChi = diaChi;
+		this.soDienThoai = soDienThoai;
+		this.email = email;
+		this.hinhAnh = hinhAnh;
+		this.trangThai = trangThai;
+		this.matKhau = matKhau;
+		this.chucVu = chucVu;
+		this.chiNhanh = chiNhanh;
+	}
+	
+	public NhanVienDTO(String maNV, String hoTen, Date ngaySinh, String gioiTinh, String diaChi, String soDienThoai, String email, String matKhau, String trangThai, String chucVu, String chiNhanh) {
 		this.maNV = maNV;
 		this.hoTen = hoTen;
 		this.ngaySinh = ngaySinh;
@@ -47,7 +62,7 @@ public class NhanVienDTO {
 		this.trangThai = trangThai;
 		this.matKhau = matKhau;
 		this.chucVu = chucVu;
-		this.noiLamViec = noiLamViec;
+		this.chiNhanh = chiNhanh;
 	}
 	
 	
@@ -146,12 +161,12 @@ public class NhanVienDTO {
 		this.chucVu = maCV;
 	}
 
-	public String getNoiLamViec() {
-		return noiLamViec;
+	public String getChiNhanh() {
+		return chiNhanh;
 	}
 
-	public void setNoiLamViec(String noiLamViec) {
-		this.noiLamViec = noiLamViec;
+	public void setChiNhanh(String chiNhanh) {
+		this.chiNhanh = chiNhanh;
 	}
 	
 	
