@@ -3,20 +3,19 @@ package DTO;
 public class ChucVuDTO {
 	private String maCV;
 	private String tenCV;
-	private float heSoLuong;
 	private float luongCoBan;
-	
+	private String trangThai;
 	//Constructor
 	public ChucVuDTO() {
 	}
 	
 	
-	public ChucVuDTO(String maCV, String tenCV, float heSoLuong, float luongCoBan) {
+	public ChucVuDTO(String maCV, String tenCV, float heSoLuong, String trangThai) {
 		super();
 		this.maCV = maCV;
 		this.tenCV = tenCV;
-		this.heSoLuong = heSoLuong;
 		this.luongCoBan = luongCoBan;
+                this.trangThai = trangThai;
 	}
 
 	//getter, setter
@@ -32,18 +31,20 @@ public class ChucVuDTO {
 	public void setTenCV(String tenCV) {
 		this.tenCV = tenCV;
 	}
-	public float getHeSoLuong() {
-		return heSoLuong;
-	}
-	public void setHeSoLuong(float heSoLuong) {
-		this.heSoLuong = heSoLuong;
-	}
 	public float getLuongCoBan() {
 		return luongCoBan;
 	}
 	public void setLuongCoBan(float luongCoBan) {
 		this.luongCoBan = luongCoBan;
 	}
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+    }
 	
-	
+
 }
