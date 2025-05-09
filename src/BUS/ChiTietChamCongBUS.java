@@ -20,19 +20,23 @@ public class ChiTietChamCongBUS {
     }
 
     public int insertChiTietCC(ChiTietChamCongDTO ct) {
-        return ctccDAO.insert1(ct);
+        return ctccDAO.insert(ct);
     }
 
     public int deleteById(String mact) {
-        return ctccDAO.delete1(mact);
+        return ctccDAO.deleteById(mact);
     }
     
     public ArrayList<ChiTietChamCongDTO> getThongTinTangCa(String maBCC){
 		return ctccDAO.getThongTinTangCa(maBCC);
     }
     
-    public int xoaChiTietChamCongTheoMaCT(String mact) {
-        return ctccDAO.deleteByMaCT(mact);
+    public int xoaChiTietChamCongTheoMaCC(String macc) {
+        return ctccDAO.deleteByMaCC(macc);
+    }
+
+    public ArrayList<ChiTietChamCongDTO> selectAll() {
+        return ctccDAO.selectAll();
     }
 
 }
