@@ -42,31 +42,8 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
         
     }
     
-    public int insert1(ChiTietChamCongDTO t) {
-        int result = 0;
-        try {
-            jdbc.openConnection();
-
-            String query = "exec sp_ThemChiTietChamCongKho @maCTCC=?, @ngayTao=?, @loaiChamCong=?, @chiTiet=?, @maBCC=?, @soGioOT=?";
-            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-            ps.setString(1, t.getMaCTCC());
-            ps.setDate(2, Date.valueOf(t.getNgayTao()));
-            ps.setString(3, t.getLoaiChamCong());
-            ps.setString(4, t.getChiTiet());
-            ps.setString(5, t.getMaBCC());
-            ps.setFloat(6, t.getSoGioOT());
-
-            result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
-        } catch (SQLException e) {
-            e.printStackTrace(); // Ghi log lỗi để dễ debug
-        } finally {
-            jdbc.closeConnection();
-        }
-        return result;
-    }
-    
-    public int delete1(String maCTCC) {
-        int result = 0;
+    public int deleteById(String maCTCC) {
+                    int result = 0;
         try {
             jdbc.openConnection();
 
@@ -82,50 +59,41 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
         }
 
         return result;
-    }
-
-
-
-	@Override
-	public int delete(ChiTietChamCongDTO t) {
-            return 0;
-		// TODO Auto-generated method stub
-            // Update bảng chấm công
 	}
 
-	@Override
-	public int update(ChiTietChamCongDTO t) {
+    @Override
+    public int update(ChiTietChamCongDTO t) {
             // TODO Auto-generated method stub
             return 0;
             // Update bảng chấm công
-	}
+    }
 	
     
     // Tìm theo mã bảng cc
     public ChiTietChamCongDTO GetChiTietChamCongTheoMaCT(String mact) {
-    ChiTietChamCongDTO ct = null;
-    try {
-        jdbc.openConnection();
-        String query = "exec sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?";
-        PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-        ps.setString(1, mact);
+        ChiTietChamCongDTO ct = null;
+        try {
+            jdbc.openConnection();
+            String query = "exec sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, mact);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            ct = new ChiTietChamCongDTO();
-            ct.setMaCTCC(rs.getString("maCTCC"));
-            ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
-            ct.setLoaiChamCong(rs.getString("loaiChamCong"));
-            ct.setChiTiet(rs.getString("chiTiet"));
-            ct.setSoGioOT(rs.getFloat("soGioOT"));
-        }
+            if (rs.next()) {
+                ct = new ChiTietChamCongDTO();
+                ct.setMaCTCC(rs.getString("maCTCC"));
+                ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
+                ct.setLoaiChamCong(rs.getString("loaiChamCong"));
+                ct.setChiTiet(rs.getString("chiTiet"));
+                ct.setSoGioOT(rs.getFloat("soGioOT"));
+            }
 
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-        } finally {
-            jdbc.closeConnection();
+                rs.close();
+                ps.close();
+            } catch (SQLException e) {
+            } finally {
+                jdbc.closeConnection();
         }
         return ct;
     }
@@ -167,31 +135,85 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
         return null;
     }
     
-    @Override
+    @Override 
     public ArrayList<ChiTietChamCongDTO> selectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ArrayList<ChiTietChamCongDTO> arr = new ArrayList<>();
+        try {
+            jdbc.openConnection();
+            String query = "select * from ChiTietChamCong";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ChiTietChamCongDTO ct = new ChiTietChamCongDTO();
+                ct.setMaCTCC(rs.getString("maCTCC"));
+                ct.setNgayTao(rs.getDate("ngayTao").toLocalDate());
+                ct.setLoaiChamCong(rs.getString("loaiChamCong"));
+                ct.setChiTiet(rs.getString("chiTiet"));
+                ct.setSoGioOT(rs.getFloat("soGioOT"));
+                arr.add(ct); // Thêm vào danh sách
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // In ra lỗi để dễ debug
+        } finally {
+            jdbc.closeConnection();
+        }
+        return arr;
     }
+
 
     @Override
     public int insert(ChiTietChamCongDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result = 0;
+        try {
+            jdbc.openConnection();
+
+            String query = "exec sp_ThemChiTietChamCongKho @maCTCC=?, @ngayTao=?, @loaiChamCong=?, @chiTiet=?, @maBCC=?, @soGioOT=?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, t.getMaCTCC());
+            ps.setDate(2, Date.valueOf(t.getNgayTao()));
+            ps.setString(3, t.getLoaiChamCong());
+            ps.setString(4, t.getChiTiet());
+            ps.setString(5, t.getMaBCC());
+            ps.setFloat(6, t.getSoGioOT());
+
+            result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ghi log lỗi để dễ debug
+        } finally {
+            jdbc.closeConnection();
+        }
+        return result;
     }
     
-    public int deleteByMaCT(String mact) {
+    public int deleteByMaCC(String macc) {
         int result = 0;
             try {
                 jdbc.openConnection();
-                String query = "EXEC sp_LayChiTietChamCongTheoMaCTKho @maCTCC = ?;";
+                String query = "EXEC sp_XoaChiTietChamCongTheoBCCKho @maBCC = ?;";
                 PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-                ps.setString(1, mact);
+                ps.setString(1, macc);
 
                 result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+                if (result > 0)
+                    System.out.println("Đã xoá danh sách chi tiết chấm công theo maBCC");
+                else System.out.println("Không tồn tại chi tiết chấm công theo maBCC");
+                
             } catch (SQLException e) {
                 e.printStackTrace(); // Ghi log lỗi để dễ debug
             } finally {
                 jdbc.closeConnection();
             }
         return result;
+    }
+
+    @Override
+    public int delete(ChiTietChamCongDTO t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }
