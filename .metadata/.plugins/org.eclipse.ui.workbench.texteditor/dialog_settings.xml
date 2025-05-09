@@ -1,33 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="&quot;Per"/>
-		<item key="wrap" value="true"/>
+		<item key="selection" value="Nhân viên không có"/>
+		<item key="wrap" value="false"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="&quot;per"/>
-			<item value="&quot;per "/>
-			<item value="&quot;Export&quot;"/>
-			<item value="&quot;export&quot;"/>
-			<item value="&quot;import&quot;"/>
-			<item value="&quot;employees&quot;"/>
-			<item value="&quot;Employees&quot;"/>
-			<item value="importMenuItem"/>
-			<item value="import"/>
-			<item value="pink"/>
-			<item value="menuPanel.setP"/>
+			<item value="Nhân viên không có"/>
+			<item value="Nhân viên không có ctcc"/>
+			<item value="Nhân viên không có "/>
+			<item value="menuSanPham"/>
+			<item value="rbOn"/>
+			<item value="logoutButton"/>
+			<item value="logout"/>
+			<item value="Đăng xuất"/>
+			<item value="&quot;Off&quot;"/>
+			<item value="&quot;On&quot;"/>
+			<item value="Off"/>
+			<item value="On"/>
+			<item value="newE"/>
+			<item value="new"/>
+			<item value="newN"/>
 		</list>
 		<list key="replacehistory">
+			<item value="&quot;off&quot;"/>
+			<item value="off"/>
+			<item value="on"/>
+			<item value="Button"/>
+			<item value="DateChooser"/>
+			<item value="khoContent"/>
+			<item value="selectedFilePath"/>
+			<item value="px"/>
+			<item value="ctpx"/>
+			<item value="ctpxBUS"/>
+			<item value="maPX"/>
+			<item value="khachHang"/>
+			<item value="PhieuXuat"/>
+			<item value="white"/>
+			<item value="nhaCungCapComboBox"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1033"/>
-		<item key="DIALOG_Y_ORIGIN" value="229"/>
-		<item key="DIALOG_WIDTH" value="414"/>
-		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_X_ORIGIN" value="1244"/>
+		<item key="DIALOG_Y_ORIGIN" value="413"/>
+		<item key="DIALOG_WIDTH" value="584"/>
+		<item key="DIALOG_HEIGHT" value="637"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="646"/>
+		<item key="DIALOG_Y_ORIGIN" value="379"/>
 	</section>
 </section>
