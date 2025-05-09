@@ -47,37 +47,33 @@ public class ChucVuDAO implements DAOInterface<ChucVuDTO>{
 		return arrChucVu;
 	}
 
-	@Override
-	public ChucVuDTO selectById(String maCV) {
-		ChucVuDTO cv = new ChucVuDTO();
-		
-		try {
-			
-			jdbc.openConnection();
-			
-			String query = "select * from nhanvien where maNV=?";
-			
-			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-			ps.setString(1, maCV);
-			
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				cv.setMaCV(rs.getString("maCV"));
-				cv.setTenCV(rs.getString("tenCV"));
-				cv.setLuongCoBan(rs.getFloat("luongCB"));
-				cv.setHeSoLuong(rs.getFloat("heSo"));
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
-		}finally {
-			//Đóng kết nối CSDL
-			jdbc.closeConnection();
-		}
-		
-		return cv;
-	}
+        @Override
+        public ChucVuDTO selectById(String maCV) {
+            ChucVuDTO cv = new ChucVuDTO();
+            try {
+                jdbc.openConnection();
+                String query = "select * from ChucVu where maCV=?";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, maCV);
+
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()) {
+                    cv.setMaCV(rs.getString("maCV"));
+                    cv.setTenCV(rs.getString("tenCV"));
+                    cv.setLuongCoBan(rs.getFloat("luongCB"));
+                    cv.setTenCV(rs.getString("trangThai"));
+                }
+
+            }catch (Exception e) {
+                e.printStackTrace();
+                e.getMessage();
+            }finally {
+                //Đóng kết nối CSDL
+                jdbc.closeConnection();
+            }
+
+            return cv;
+        }
 	
 	public String getIdByName(String tenCV) {
 		String maCV="";
