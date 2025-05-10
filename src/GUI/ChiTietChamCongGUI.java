@@ -625,9 +625,6 @@ public class ChiTietChamCongGUI extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 themChiTietChamCong();
-                if (!arr_temp.isEmpty()) {
-                    arr_temp.clear();
-                }
             }
         });
           
@@ -761,17 +758,18 @@ public class ChiTietChamCongGUI extends JPanel{
         }
 
         ctccBUS.xoaChiTietChamCongTheoMaCC(macc);
-        System.out.println(arr_temp.size());
-        int c = 0;
+        System.out.println(" arr_temp size: " + arr_temp.size());
+        int count = 0;
         // Xoá hết ctcc có mabcc -> add ctct 
         for (ChiTietChamCongDTO ct : arr_temp) {
             if (ct.getMaBCC().equals(macc)) {
                 ct.setNgayTao(date);
                 System.out.println("Thêm CTCC: " + ct.getMaCTCC());
                 int resultAdd = ctccBUS.insertChiTietCC(ct);
-                if (resultAdd > 0) {
-                    c += 1;
-                    System.out.println("/// c = " + c);
+                System.out.println("Result Add: " + resultAdd);
+                if (resultAdd < 0) {
+                    count += 1;
+                    System.out.println("/// c = " + count);
                     switch (ct.getLoaiChamCong()) {
                         case "Nghỉ không phép":
                             bcc.setSoNgayNghiKP(bcc.getSoNgayNghiKP() + 1.0f);
@@ -796,12 +794,20 @@ public class ChiTietChamCongGUI extends JPanel{
                     }
                     bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPCoLuong() - bcc.getSoNPKhongLuong());
                     bccBUS.updateById(bcc);
+                    
                 }
             }
         }
-        if (c == arr_temp.size()) {
+        /*System.out.println("=====Bảng chấm công: " + bcc.getMaBCC() + bcc.getSoNgayLam() + bcc.getSoNPKhongLuong());
+        System.out.println("SoNgayLam: " + bcc.getSoNgayLam());
+        System.out.println("SoNgayPhepKhongLuong: " + bcc.getSoNPKhongLuong());
+        System.out.println("SoNgayPhepCoLuong: " + bcc.getSoNPCoLuong());
+        System.out.println("SoNgayKP: " + bcc.getSoNgayNghiKP());
+        System.out.println("TangCaNgayThuong: " + bcc.getSoGioOTNgayThuong());
+        System.out.println("TangCaNgayLe: " + bcc.getSoGioOTNgayLe());
+        System.out.println("==TangCaNgayCN: " + bcc.getSoGioOTCN());*/
+        if (count == arr_temp.size()) {
             JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            arr_temp.clear();
         } else JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thất bại ", "Lỗi", JOptionPane.ERROR_MESSAGE);
         loadChamCongTheoNhanVien(manv);
     }
