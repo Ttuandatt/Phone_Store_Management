@@ -48,43 +48,42 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		return arrBangChamCong;
 	}
 
-	@Override
-	public BangChamCongDTO selectById(String maNV) {
-		BangChamCongDTO bcc = new BangChamCongDTO();
-		
+	public ArrayList<BangChamCongDTO> selectByKeyWord(String tuKhoa) {
+            ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<BangChamCongDTO>();
 		try {
-			jdbc.openConnection();
+                    jdbc.openConnection();
 			
-			String query = "exec sp_TimDanhSachCCTheoTuKhoaKho @tuKhoa=?";
+                    String query = "exec sp_TimDanhSachCCTheoTuKhoaKho @tuKhoa=?";
 			
-			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-			ps.setString(1, maNV);
-			
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {				
-				bcc.setMaBCC(rs.getString("maBCC"));
-				bcc.setThangCC(rs.getInt("thangCC"));
-				bcc.setNamCC(rs.getInt("namCC"));
-				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
-				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
-				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
-				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayThuong"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayLe"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTCN"));
-				
-			}
-			
-			ps.close();
-			rs.close();
-		}catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
-		}finally {
-			jdbc.closeConnection();
-		}
-		
-		return bcc;
+                    PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                    ps.setString(1, tuKhoa);
+
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        BangChamCongDTO bcc = new BangChamCongDTO();
+                        bcc.setMaBCC(rs.getString("maBCC"));
+                        bcc.setThangCC(rs.getInt("thangCC"));
+                        bcc.setNamCC(rs.getInt("namCC"));
+                        bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+                        bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+                        bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+                        bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                        bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+                        bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+                        bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+                        bcc.setMaNV(rs.getString("maNV"));
+                        arr_bcc.add(bcc);
+                    }
+
+                    rs.close();
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    jdbc.closeConnection();
+                }
+
+            return arr_bcc;
 	}
 	
 	@Override
@@ -157,6 +156,83 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
             }
             return result;
         }
+
+    public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
+        ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<>();
+
+        try {
+            jdbc.openConnection();
+            String query = "exec sp_LayDSBangChamCongTheoTGKho @thangCC=?, @namCC=?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, String.valueOf(thang));
+            ps.setString(2, String.valueOf(nam));
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                BangChamCongDTO bcc = new BangChamCongDTO();
+                bcc.setMaBCC(rs.getString("maBCC"));
+                bcc.setThangCC(rs.getInt("thangCC"));
+                bcc.setNamCC(rs.getInt("namCC"));
+                bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+                bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+                bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+                bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+                bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+                bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+                bcc.setMaNV(rs.getString("maNV"));
+                arr_bcc.add(bcc);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            jdbc.closeConnection();
+        }
+
+        return arr_bcc;
+    }
+
+    @Override
+    public BangChamCongDTO selectById(String t) {
+        BangChamCongDTO bcc = new BangChamCongDTO();
+		
+		try {
+			jdbc.openConnection();
+			
+			String query = "select * from BangChamCong where maBCC = ?";
+			
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, t);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {				
+				bcc.setMaBCC(rs.getString("maBCC"));
+				bcc.setThangCC(rs.getInt("thangCC"));
+				bcc.setNamCC(rs.getInt("namCC"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayThuong"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayLe"));
+                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTCN"));
+                                bcc.setMaNV(rs.getString("maNV"));
+			}
+			
+			ps.close();
+			rs.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		}finally {
+			jdbc.closeConnection();
+		}
+		
+		return bcc;
+    }
 
     
 
