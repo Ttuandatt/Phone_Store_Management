@@ -11,8 +11,8 @@ public class BangChamCongBUS {
 		return bccDAO.selectAll();
 	}
 	
-	public BangChamCongDTO selectById(String maNV) {
-		return bccDAO.selectById(maNV);
+	public BangChamCongDTO selectById(String maBCC) {
+		return bccDAO.selectById(maBCC);
 	}
 	
 	public String insert(BangChamCongDTO bcc) {
@@ -20,10 +20,6 @@ public class BangChamCongBUS {
 			return "Thêm bảng chấm công thành công!";
 		return "Thêm bảng chấm công thất bại!";
 	}
-
-    public ArrayList<BangChamCongDTO> sellectAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 	
     public int updateById(BangChamCongDTO bcc) {
         return bccDAO.update(bcc);
@@ -33,5 +29,7 @@ public class BangChamCongBUS {
         return bccDAO.selectByTime(thang, nam);
     }
 
-    
+    public ArrayList<BangChamCongDTO> selectByKeyWord(String tuKhoa) {
+        return bccDAO.selectByKeyWord(tuKhoa);
+    }
 }
