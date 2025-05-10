@@ -1,5 +1,5 @@
 package DTO;
-
+/*Mới update*/
 public class BangLuongDTO {
     /*[maBL]
       ,[thangLuong]
