@@ -25,9 +25,13 @@ public class BangChamCongBUS {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 	
-        public int updateById(BangChamCongDTO bcc) {
-            return bccDAO.update(bcc);
-        }
+    public int updateById(BangChamCongDTO bcc) {
+        return bccDAO.update(bcc);
+    }
+
+    public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
+        return bccDAO.selectByTime(thang, nam);
+    }
 
     
 }
