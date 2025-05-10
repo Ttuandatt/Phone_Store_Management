@@ -1,5 +1,5 @@
 package DTO;
-
+/*Mới update*/
 public class BangChamCongDTO {
 	private String maBCC;
 	private int thangCC;
