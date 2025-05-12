@@ -133,31 +133,69 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 	}
 
         @Override
-        public int update(BangChamCongDTO bcc) {
-            int result = 0;
-            try {
-                jdbc.openConnection();
+	public int update(BangChamCongDTO bcc) {
+		int result = 0;
+		try {
+			jdbc.openConnection();
 
-                String query = "exec sp_SuaChamCongKho @maBCC=?, @soNgayLam=?, @soNgayNghiKP=?, @soNPCoLuong=?, @soNPKhongLuong=?, @soGioOTNgayThuong=?, @soGioOTNgayLe=?, @soGioOTCN=?";
-                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-                ps.setString(1, bcc.getMaBCC());
-                ps.setFloat(2, bcc.getSoNgayLam());
-                ps.setFloat(3, bcc.getSoNgayNghiKP());
-                ps.setFloat(4, bcc.getSoNPCoLuong());
-                ps.setFloat(5, bcc.getSoNPKhongLuong());
-                ps.setFloat(6, bcc.getSoGioOTNgayThuong());
-                ps.setFloat(7, bcc.getSoGioOTNgayLe());
-                ps.setFloat(8, bcc.getSoGioOTCN());
+			String query = "exec sp_SuaChamCongKho @maBCC=?, @soNgayLam=?, @soNgayNghiKP=?, @soNPCoLuong=?, @soNPKhongLuong=?, @soGioOTNgayThuong=?, @soGioOTNgayLe=?, @soGioOTCN=?";
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, bcc.getMaBCC());
+			ps.setFloat(2, bcc.getSoNgayLam());
+			ps.setFloat(3, bcc.getSoNgayNghiKP());
+			ps.setFloat(4, bcc.getSoNPCoLuong());
+			ps.setFloat(5, bcc.getSoNPKhongLuong());
+			ps.setFloat(6, bcc.getSoGioOTNgayThuong());
+			ps.setFloat(7, bcc.getSoGioOTNgayLe());
+			ps.setFloat(8, bcc.getSoGioOTCN());
 
-                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
-            } catch (SQLException e) {
-                e.printStackTrace(); // Ghi log lỗi để dễ debug
-            } finally {
-                jdbc.closeConnection();
-            }
-            return result;
-        }
+			result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+		} catch (SQLException e) {
+			e.printStackTrace(); // Ghi log lỗi để dễ debug
+		} finally {
+			jdbc.closeConnection();
+		}
+		return result;
+	}
 
+	// get bang cham cong by nhan vien va thang nam
+	public BangChamCongDTO getBangChamCongByNVAndThangNam(String maNV, int thang, int nam) {
+		BangChamCongDTO bcc = new BangChamCongDTO();
+		try {
+			jdbc.openConnection();
+
+			String query = "select * from bangchamcong where maNV=? and thangCC=? and namCC=?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maNV);
+			ps.setInt(2, thang);
+			ps.setInt(3, nam);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				bcc.setMaBCC(rs.getString("maBCC"));
+				bcc.setThangCC(rs.getInt("thangCC"));
+				bcc.setNamCC(rs.getInt("namCC"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+				bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+				bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+				bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+				bcc.setMaNV(rs.getString("maNV"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
+		}
+
+		return bcc;
+	}
+
+}
     
 
 }
