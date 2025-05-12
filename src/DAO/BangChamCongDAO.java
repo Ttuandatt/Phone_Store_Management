@@ -18,7 +18,7 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 		try {
 			jdbc.openConnection();
 			
-			String query = "exec sp_LayDanhSachChamCongKho";
+			String query = "select * from BangChamCong";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -31,9 +31,9 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
 				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
 				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayThuong"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayLe"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTCN"));
+                                bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+                                bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+                                bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
 				bcc.setMaNV(rs.getString("maNV"));
 				
 				arrBangChamCong.add(bcc);
@@ -162,10 +162,10 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 
         try {
             jdbc.openConnection();
-            String query = "exec sp_LayDSBangChamCongTheoTGKho @thangCC=?, @namCC=?";
+            String query = "select * from BangChamCong where thangCC = ? and namCC = ?";
             PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-            ps.setString(1, String.valueOf(thang));
-            ps.setString(2, String.valueOf(nam));
+            ps.setInt(1, thang);
+            ps.setInt(2, nam);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -209,17 +209,17 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
 			
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {				
-				bcc.setMaBCC(rs.getString("maBCC"));
-				bcc.setThangCC(rs.getInt("thangCC"));
-				bcc.setNamCC(rs.getInt("namCC"));
-				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
-				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
-				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
-				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayThuong"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTNgayLe"));
-                                bcc.setSoNPKhongLuong(rs.getFloat("soGioOTCN"));
-                                bcc.setMaNV(rs.getString("maNV"));
+                            bcc.setMaBCC(rs.getString("maBCC"));
+                            bcc.setThangCC(rs.getInt("thangCC"));
+                            bcc.setNamCC(rs.getInt("namCC"));
+                            bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+                            bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+                            bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+                            bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                            bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+                            bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+                            bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+                            bcc.setMaNV(rs.getString("maNV"));
 			}
 			
 			ps.close();
