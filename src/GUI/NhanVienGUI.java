@@ -947,30 +947,31 @@ public class NhanVienGUI extends JPanel{
     
     private void newRoleDialog() {
     	//Tạo Jpanel chứa form nhập
-    	JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5)); // row:3, column:2, hgap:5, wgap:5
+    	JPanel panel = new JPanel(null); // row:3, column:2, hgap:5, wgap:5
     	
-    	JLabel idLabel = new JLabel("Mã chức vụ:");
-		JTextField idField = new JTextField(15);
+    	JLabel lblId = new JLabel("Mã chức vụ:");
+		JTextField tfId = new JTextField();
 
     	
-    	JLabel nameLabel = new JLabel("Tên chức vụ:");
-		JTextField nameField = new JTextField(15);
+    	JLabel lblTenChucVu = new JLabel("Tên chức vụ:");
+		JTextField tfTenChucVu = new JTextField(15);
 
-		JLabel salaryCoefficientLabel = new JLabel("Hệ số lương:");
-		JTextField salaryCoefficient = new JTextField(15);
+		JLabel lblLuongCoBan = new JLabel("Lương cơ bản:");
+		JTextField tfLuongCoBan = new JTextField(15);
 		
-		JLabel baseSalarylLabel = new JLabel("Lương cơ bản:");
-		JTextField baseSalaryField = new JTextField(15);
+		JLabel lblTrangThai = new JLabel("Trạng thái:");
 		
+    	JRadioButton rbOn = new JRadioButton("on");
+    	JRadioButton rbOff = new JRadioButton("off");
 		
-		panel.add(idLabel);
-		panel.add(idField);
-		panel.add(nameLabel);
-		panel.add(nameField);
-		panel.add(salaryCoefficientLabel);
-		panel.add(salaryCoefficient);
-		panel.add(baseSalarylLabel);
-		panel.add(baseSalaryField);
+		panel.add(lblId);
+		panel.add(tfId);
+		panel.add(lblTenChucVu);
+		panel.add(tfTenChucVu);
+		panel.add(lblLuongCoBan);
+		panel.add(tfLuongCoBan);
+		panel.add(lblTrangThai);
+		panel.add(rbOn);
 		
 
 
@@ -980,13 +981,13 @@ public class NhanVienGUI extends JPanel{
 
 		// Nếu nhấn OK
 		if (result == JOptionPane.OK_OPTION) {
-			String maCV = idField.getText();
-			String tenCV = nameField.getText();
-			float heSoLuong = Float.parseFloat(salaryCoefficient.getText());
-			float heSluongCB = Float.parseFloat(baseSalaryField.getText());
-			ChucVuDTO cv = new ChucVuDTO(maCV, tenCV, heSoLuong, heSluongCB);
+			String maCV = tfId.getText();
+			String tenCV = tfTenChucVu.getText();
+			float luongCB = Float.parseFloat(tfLuongCoBan.getText());
+			String trangThai = rbOn.isSelected()?"on":"off";
+			ChucVuDTO cv = new ChucVuDTO(maCV, tenCV, luongCB, trangThai);
 			String message =cvBUS.insert(cv);
-			String newRole = nameField.getText().trim();
+			String newRole = tfTenChucVu.getText().trim();
 
 
 			if (!newRole.isEmpty()) {
@@ -1879,8 +1880,8 @@ public class NhanVienGUI extends JPanel{
         		dateChooser.setDate(nv.getNgaySinh());
         		genderCombobox.setSelectedItem(nv.getGioiTinh());	
         		roleCombobox.setSelectedItem(nvBUS.getRoleNameByRoleId(nv.getChucVu()));	//lấy mã chưc vụ của nhân viên để lấy tên chức vụ
-        		System.out.println("Class: NhanVienGUI | Method: employeeDetailDialog: "+ nvBUS.getRoleNameByRoleId(nv.getChucVu()));
-        		System.out.println("Class: NhanVienGUI | Method: employeeDetailDialog: "+ nv.getChucVu());
+        		log("roleName="+ nvBUS.getRoleNameByRoleId(nv.getChucVu()));
+        		log("role="+ nv.getChucVu());
         		txtAddress.setText(nv.getDiaChi());
         		txtPhone.setText(nv.getSoDienThoai());
         		txtEmail.setText(nv.getEmail());

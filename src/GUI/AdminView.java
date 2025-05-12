@@ -6,6 +6,8 @@ import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -49,54 +51,99 @@ public class AdminView {
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBackground(Color.BLUE);
 
-		// ======================= Menu Panel (Chứa 3 phần)
-		// ============================//
+		// ======================= Menu Panel (Chứa 3 phần) ============================//
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
-		menuPanel.setBackground(Color.green);
-//        menuPanel.setPreferredSize(new Dimension(200, 800));
+		menuPanel.setBackground(Color.WHITE);
+        menuPanel.setPreferredSize(new Dimension(900, 500));
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		// ======================= 1. Info Panel (0.3) ============================//
-		JPanel infoPanel = new JPanel(null);
-		infoPanel.setBackground(Color.decode("#01BFF4"));
+		// ======================= 1. Info Panel ============================//
+		JPanel infoPanel = new JPanel(new GridBagLayout());
+		infoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.decode("#47CBFF")));	//top=0, left=0, bottom=2, right=0
+		
+		
+		JPanel infoLeftPanel, infoRightPanel;
+		infoLeftPanel = new JPanel(null);
+		infoLeftPanel.setPreferredSize(new Dimension(200, 200));
+		infoLeftPanel.setBackground(Color.WHITE);
+		gbc.weightx = 0.43;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		infoPanel.add(infoLeftPanel, gbc);
+		
+		/// ======================= Thêm ảnh vào infoLeftPanel =======================//
+		ImageIcon icon = new ImageIcon(getClass().getResource("/img/admin.png")); // Đường dẫn ảnh
+		Image image = icon.getImage();
+
+		// Tạo JLabel chứa hình ảnh, chưa cần set kích thước vội
+		JLabel imageLabel = new JLabel(new ImageIcon(image));
+		infoLeftPanel.add(imageLabel);
+
+		// Lắng nghe sự kiện resize của infoLeftPanel để cập nhật ảnh
+		infoLeftPanel.addComponentListener(new ComponentAdapter() {
+		    @Override
+		    public void componentResized(ComponentEvent e) {
+		        // Chỉ thực hiện khi kích thước Panel đã sẵn sàng
+		        if (infoLeftPanel.getWidth() > 0 && infoLeftPanel.getHeight() > 0) {
+		            // Điều chỉnh kích thước ảnh vừa với infoLeftPanel
+		            Image scaledImage = image.getScaledInstance(infoLeftPanel.getWidth()-10, infoLeftPanel.getHeight()-10, Image.SCALE_SMOOTH);
+
+		            // Cập nhật icon cho JLabel
+		            imageLabel.setIcon(new ImageIcon(scaledImage));
+		            
+		            // Set kích thước cho label trùng với panel
+		            imageLabel.setBounds(0, 0, infoLeftPanel.getWidth(), infoLeftPanel.getHeight());
+
+		            // Vẽ lại panel
+		            infoLeftPanel.revalidate();
+		            infoLeftPanel.repaint();
+		        }
+		    }
+		});
+
+
+		
+		
+		
+		infoRightPanel = new JPanel(null);
+		infoRightPanel.setBackground(Color.WHITE);
+		gbc.weightx = 0.57;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		infoPanel.add(infoRightPanel, gbc);
+		
+		infoPanel.setBackground(Color.WHITE);
 		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
 		gbc.weightx = 1.0;
-		gbc.weighty = 0.38;
+		gbc.weighty = 0.5;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		menuPanel.add(infoPanel, gbc);
 		
-		lblMaNV = new JLabel("Mã NV: ");
-		lblMaNV.setBounds(5, 5, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataMaNV = new JLabel("ABC");
-		dataMaNV.setBounds(55, 5, 50, 20);
-		infoPanel.add(dataMaNV);
+		dataHoTen = new JLabel("ABC");
+		dataHoTen.setBounds(10, 25, 200, 20);
+		infoRightPanel.add(dataHoTen);
 		
-		lblMaNV = new JLabel("Họ tên: ");
-		lblMaNV.setBounds(5, 22, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataHoTen = new JLabel("DEF");
-		dataHoTen.setBounds(55, 22, 200, 20);
-		infoPanel.add(dataHoTen);
+		dataChucVu = new JLabel("DEF");
+		dataChucVu.setBounds(10, 45, 200, 20);
+		infoRightPanel.add(dataChucVu);
 		
-		lblMaNV = new JLabel("Chức vụ: ");
-		lblMaNV.setBounds(5, 37, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataChucVu = new JLabel("GHI");
-		dataChucVu.setBounds(55, 37, 50, 20);
-		infoPanel.add(dataChucVu);
 		
-		lblMaNV = new JLabel("Kho: ");
-		lblMaNV.setBounds(5, 52, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataKho = new JLabel("JKL");
-		dataKho.setBounds(55, 52, 50, 20);
-		infoPanel.add(dataKho);
+	
 		
+		Font lblFont = new Font("Arial", Font.BOLD, 13);
+		dataHoTen.setFont(lblFont);
+		Font lblFont2 = new Font("Arial", Font.PLAIN, 12);
+		dataChucVu.setFont(lblFont2);
 
+		
+		
 		// ======================= 2. Menu Panel (0.6) ============================//
 		JPanel menuBarPanel = new JPanel();
 		menuBarPanel.setLayout(new BoxLayout(menuBarPanel, BoxLayout.Y_AXIS));
@@ -128,13 +175,13 @@ public class AdminView {
 
 		JMenu menuNhanVien = createRightAlignedMenu("NHÂN VIÊN");
 		JMenuItem menuItemDanhSachNhanVien = new JMenuItem("Danh sách nhân viên");
-		//JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách chấm công");
+		// JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách chấm công");
 		JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin nghỉ");
-                JMenuItem menuItemDanhSachLuong = new JMenuItem("Danh sách lương");
+		JMenuItem menuItemDanhSachLuong = new JMenuItem("Danh sách lương");
 		menuNhanVien.add(menuItemDanhSachNhanVien);
-		//menuNhanVien.add(menuItemBangChamCong);
+		// menuNhanVien.add(menuItemBangChamCong);
 		menuNhanVien.add(menuItemDanhSachDonXin);
-                menuNhanVien.add(menuItemDanhSachLuong);
+		menuNhanVien.add(menuItemDanhSachLuong);
 
 		JMenu menuChamCong = createRightAlignedMenu("CHẤM CÔNG");
 
@@ -195,7 +242,7 @@ public class AdminView {
 
 		// ============================ Content Panel ============================//
 		contentPanel = new JPanel(new CardLayout());
-		contentPanel.setBackground(Color.DARK_GRAY);
+		contentPanel.setBackground(Color.decode("#47CBFF"));
 		contentPanel.setPreferredSize(new Dimension(1400, 900));
 		mainPanel.add(menuPanel, BorderLayout.WEST);
 		mainPanel.add(contentPanel, BorderLayout.CENTER);
@@ -220,9 +267,11 @@ public class AdminView {
 		final String phieuXuat_Identity = "PHIEU XUAT";
 
 		final String danhSachNhanVien_Identity = "DANH SACH NHAN VIEN";
-		final String danhSachBangChamCong_Identity_ = "DANH SACH BANG CHAM CONG";
+//		final String danhSachBangChamCong_Identity_ = "DANH SACH BANG CHAM CONG";
 		final String danhSachDonXin_Identity = "DANH SACH DON XIN";
+		final String danhSachBangLuong_Identity = "DANH SACH BANG LUONG";
 
+		
 		final String chamCong_Identity = "CHAM CONG";
         final String dsChamCong_Identity = "DANH SACH CHAM CONG";
 
@@ -322,6 +371,14 @@ public class AdminView {
 			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 			cardLayout.show(contentPanel, danhSachNhanVien_Identity);
 		});
+		
+		// ActionListener cho menuItem Danh sách lương
+		menuItemDanhSachLuong.addActionListener(e ->{
+			DSBangLuongGUI dsBangLuongObj = new DSBangLuongGUI();
+			contentPanel.add(dsBangLuongObj, danhSachBangLuong_Identity);
+			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+			cardLayout.show(contentPanel, danhSachBangLuong_Identity);
+		});
 
 		
 
@@ -379,16 +436,27 @@ public class AdminView {
 			}
 		});
 
-		// ActionListener cho button Personal Information
-		personalInfoButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ThongTinCaNhanGUI thongTinCaNhanObj = new ThongTinCaNhanGUI();
-				contentPanel.add(thongTinCaNhanObj, thongTinCaNhan_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
-			}
-		});
+		personalInfoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+					System.out.println("Clicked personalInfoButton");
+                    JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+                    ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
+                    Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+                    javafx.application.Platform.runLater(() -> {
+                        fxPanel.setScene(new Scene(content));
+                    });
+                    contentPanel.add(fxPanel, thongTinCaNhan_Identity);
+                    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+                    cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+                } catch (Exception ex) {
+					System.out.println("error personalInfoButton");
+
+                    ex.printStackTrace();
+                }
+            }
+        });
 
 		// mouseListener cho nút changeInfoButton
 		personalInfoButton.addMouseListener(new MouseAdapter() {
@@ -502,11 +570,10 @@ public class AdminView {
 	}
 	
 	
-	public void hienThiThongTinNguoiDung(String maNV, String hoTen, String chucVu, String maKho) {
-		dataMaNV.setText(maNV);
-		dataHoTen.setText(hoTen);
+	public void hienThiThongTinNguoiDung(String hoTen, String chucVu) {
 		dataChucVu.setText(chucVu);
-		dataKho.setText(maKho);
+		dataHoTen.setText(hoTen);
+		
 	}
 
 	//hàm hiển thị thông tin dòng code

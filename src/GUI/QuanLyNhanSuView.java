@@ -5,6 +5,8 @@ import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -26,71 +28,116 @@ public class QuanLyNhanSuView {
 	
 	
 	private void init() {
-		//Dùng thư viện FlatLaf để làm giao diện đẹp hơn
-    	FlatRobotoFont.install();
-        FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
-        FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
-        FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
-        FlatIntelliJLaf.registerCustomDefaultsSource("style");
-        FlatIntelliJLaf.setup();
-		
-        // Tạo JFrame
-        JFrame f = new JFrame("Quản lý nhân sự");
-        f.setSize(1500, 800);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+		FlatRobotoFont.install();
+		FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
+		FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
+		FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
+		FlatIntelliJLaf.registerCustomDefaultsSource("style");
+		FlatIntelliJLaf.setup();
 
-        JPanel mainPanel, menuPanel;
+		// Tạo JFrame
+		JFrame f = new JFrame("Quản lý nhân sự");
+		f.setSize(1500, 800);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Main Panel chứa menuPanel và contentPanel
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBackground(Color.BLUE);
+		JPanel mainPanel, menuPanel;
 
-        //======================= Menu Panel (Chứa 3 phần) ============================//
-        menuPanel = new JPanel();
-        menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
-        menuPanel.setBackground(Color.green);
-//        menuPanel.setPreferredSize(new Dimension(200, 800));
-        GridBagConstraints gbc = new GridBagConstraints();
+		// Main Panel chứa menuPanel và contentPanel
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBackground(Color.BLUE);
 
-        //======================= 1. Info Panel (0.3) ============================//
-        JPanel infoPanel = new JPanel(null);
-        infoPanel.setBackground(Color.decode("#F38B2B"));
-        infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.15;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        menuPanel.add(infoPanel, gbc);
-        
-        lblMaNV = new JLabel("Mã NV: ");
-		lblMaNV.setBounds(5, 5, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataMaNV = new JLabel("ABC");
-		dataMaNV.setBounds(55, 5, 50, 20);
-		infoPanel.add(dataMaNV);
+		// ======================= Menu Panel (Chứa 3 phần) ============================//
+		menuPanel = new JPanel();
+		menuPanel.setLayout(new GridBagLayout()); 
+		menuPanel.setBackground(Color.white);
+        menuPanel.setPreferredSize(new Dimension(1000, 500));
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		// ======================= 1. Info Panel ============================//
+		JPanel infoPanel = new JPanel(new GridBagLayout());
+		infoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.decode("#F38B2B")));	//top=0, left=0, bottom=2, right=0
 		
-		lblMaNV = new JLabel("Họ tên: ");
-		lblMaNV.setBounds(5, 22, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataHoTen = new JLabel("DEF");
-		dataHoTen.setBounds(55, 22, 200, 20);
-		infoPanel.add(dataHoTen);
 		
-		lblMaNV = new JLabel("Chức vụ: ");
-		lblMaNV.setBounds(5, 37, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataChucVu = new JLabel("GHI");
-		dataChucVu.setBounds(55, 37, 50, 20);
-		infoPanel.add(dataChucVu);
+		JPanel infoLeftPanel, infoRightPanel;
+		infoLeftPanel = new JPanel(null);
+		infoLeftPanel.setPreferredSize(new Dimension(200, 200));
+		infoLeftPanel.setBackground(Color.white);
+		gbc.weightx = 0.43;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		infoPanel.add(infoLeftPanel, gbc);
 		
-		lblMaNV = new JLabel("Kho: ");
-		lblMaNV.setBounds(5, 52, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataKho = new JLabel("JKL");
-		dataKho.setBounds(55, 52, 50, 20);
-		infoPanel.add(dataKho);
+		/// ======================= Thêm ảnh vào infoLeftPanel =======================//
+		ImageIcon icon = new ImageIcon(getClass().getResource("/img/hr-manager.png")); // Đường dẫn ảnh
+		Image image = icon.getImage();
+
+		// Tạo JLabel chứa hình ảnh, chưa cần set kích thước vội
+		JLabel imageLabel = new JLabel(new ImageIcon(image));
+		infoLeftPanel.add(imageLabel);
+
+		// Lắng nghe sự kiện resize của infoLeftPanel để cập nhật ảnh
+		infoLeftPanel.addComponentListener(new ComponentAdapter() {
+		    @Override
+		    public void componentResized(ComponentEvent e) {
+		        // Chỉ thực hiện khi kích thước Panel đã sẵn sàng
+		        if (infoLeftPanel.getWidth() > 0 && infoLeftPanel.getHeight() > 0) {
+		            // Điều chỉnh kích thước ảnh vừa với infoLeftPanel
+		            Image scaledImage = image.getScaledInstance(infoLeftPanel.getWidth()-25, infoLeftPanel.getHeight()-25, Image.SCALE_SMOOTH);
+
+		            // Cập nhật icon cho JLabel
+		            imageLabel.setIcon(new ImageIcon(scaledImage));
+		            
+		            // Set kích thước cho label trùng với panel
+		            imageLabel.setBounds(0, 0, infoLeftPanel.getWidth(), infoLeftPanel.getHeight());
+
+		            // Vẽ lại panel
+		            infoLeftPanel.revalidate();
+		            infoLeftPanel.repaint();
+		        }
+		    }
+		});
+
+
+		
+		
+		
+		infoRightPanel = new JPanel(null);
+		infoRightPanel.setBackground(Color.white);
+		gbc.weightx = 0.57;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		infoPanel.add(infoRightPanel, gbc);
+		
+		infoPanel.setBackground(Color.WHITE);
+		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 20));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.18;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		menuPanel.add(infoPanel, gbc);
+		
+		dataHoTen = new JLabel("ABC");
+		dataHoTen.setBounds(10, 25, 200, 20);
+		infoRightPanel.add(dataHoTen);
+		
+		dataChucVu = new JLabel("DEF");
+		dataChucVu.setBounds(10, 45, 200, 20);
+		infoRightPanel.add(dataChucVu);
+		
+		
+	
+		
+		Font lblFont = new Font("Arial", Font.BOLD, 13);
+		dataHoTen.setFont(lblFont);
+		Font lblFont2 = new Font("Arial", Font.PLAIN, 12);
+		dataChucVu.setFont(lblFont2);
         
 
         //======================= 2. Menu Panel (0.6) ============================//
@@ -103,31 +150,33 @@ public class QuanLyNhanSuView {
 
         // ================================ MENU ITEMS ================================//
         JMenu menuNhanVien = createRightAlignedMenu("NHÂN VIÊN");
-        JMenuItem menuItemDanhSachNhanVien = new JMenuItem("Danh sách nhân viên");
-        JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách bảng chấm công");
-        JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin");
-        menuNhanVien.add(menuItemDanhSachNhanVien);
-        menuNhanVien.add(menuItemBangChamCong);
-        menuNhanVien.add(menuItemDanhSachDonXin);
+		JMenuItem menuItemDanhSachNhanVien = new JMenuItem("Danh sách nhân viên");
+		// JMenuItem menuItemBangChamCong = new JMenuItem("Danh sách chấm công");
+		JMenuItem menuItemDanhSachDonXin = new JMenuItem("Danh sách đơn xin nghỉ");
+		JMenuItem menuItemDanhSachLuong = new JMenuItem("Danh sách lương");
+		menuNhanVien.add(menuItemDanhSachNhanVien);
+		// menuNhanVien.add(menuItemBangChamCong);
+		menuNhanVien.add(menuItemDanhSachDonXin);
+		menuNhanVien.add(menuItemDanhSachLuong);
         
         JMenu menuChamCong = createRightAlignedMenu("CHẤM CÔNG");
         
         JMenu menuTaoDon = createRightAlignedMenu("TẠO ĐƠN");
                 
-        JMenu menuThongKe = createRightAlignedMenu("THỐNG KÊ");
+//        JMenu menuThongKe = createRightAlignedMenu("THỐNG KÊ");
 
         // Thêm vào menuBar
         menuBar.add(menuNhanVien);
         menuBar.add(menuChamCong);
         menuBar.add(menuTaoDon);
-        menuBar.add(menuThongKe);
+//        menuBar.add(menuThongKe);
         
 
         // Thêm menuBar vào menuBarPanel
         menuBarPanel.add(menuBar);
         
         gbc.weightx = 1.0;
-        gbc.weighty = 0.65;
+        gbc.weighty = 0.82;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -135,7 +184,7 @@ public class QuanLyNhanSuView {
 
         //======================= 3. Logout Panel (0.1) ============================//
         JPanel logoutPanel = new JPanel();
-        logoutPanel.setBackground(Color.YELLOW);
+        logoutPanel.setBackground(Color.white);
         logoutPanel.setLayout(new GridBagLayout());
 
         
@@ -166,7 +215,7 @@ public class QuanLyNhanSuView {
 
         //============================ Content Panel ============================//
         contentPanel = new JPanel(new CardLayout());
-        contentPanel.setBackground(Color.DARK_GRAY);
+        contentPanel.setBackground(Color.decode("#F38B2B"));
         contentPanel.setPreferredSize(new Dimension(1400, 900));
         mainPanel.add(menuPanel, BorderLayout.WEST);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
@@ -178,11 +227,13 @@ public class QuanLyNhanSuView {
         contentPanel.setPreferredSize(new Dimension(contentWidth, f.getHeight())); // Đặt kích thước cho contentPanel
         
         // Định danh cho các thẻ giao diện
-        final String danhSachNhanVien_Identity = "DANH SACH NHAN VIEN";
-        final String danhSachBangChamCong_Identity_ = "DANH SACH BANG CHAM CONG";
-        final String danhSachDonXin_Identity = "DANH SACH DON XIN";
+		final String danhSachNhanVien_Identity = "DANH SACH NHAN VIEN";
+//		final String danhSachBangChamCong_Identity_ = "DANH SACH BANG CHAM CONG";
+		final String danhSachDonXin_Identity = "DANH SACH DON XIN";
+		final String danhSachBangLuong_Identity = "DANH SACH BANG LUONG";
 
-        final String chamCong_Identity = "CHAM CONG";
+		final String chamCong_Identity = "CHAM CONG";
+        final String dsChamCong_Identity = "DANH SACH CHAM CONG";
         
         final String taoDon_Identity = "TAO DON";
                 
@@ -200,63 +251,65 @@ public class QuanLyNhanSuView {
 //=========================================== Khu vực add Listener cho các nút/menu/menuItem ==========================================================//
    
         
-		// ActionListener cho menuItem Danh sách nhân viên
-		menuItemDanhSachNhanVien.addActionListener(e -> {
-			NhanVienGUI employeeObj = new NhanVienGUI();
-			contentPanel.add(employeeObj, danhSachNhanVien_Identity);
-			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-			cardLayout.show(contentPanel, danhSachNhanVien_Identity);
-		});
-
-		// ActionListener cho menuItem bảng chấm công
-		menuItemBangChamCong.addActionListener(e -> {
-			BangChamCongGUI timesheetObj = new BangChamCongGUI();
-			contentPanel.add(timesheetObj, danhSachBangChamCong_Identity_);
-			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-			cardLayout.show(contentPanel, danhSachBangChamCong_Identity_);
-		});
-
-		// ActionListener cho menuItem Danh sách dơn xin
-		menuItemDanhSachDonXin.addActionListener(e -> {
-			DanhSachDonXinGUI leaveRequestObj = new DanhSachDonXinGUI();
-			contentPanel.add(leaveRequestObj, danhSachDonXin_Identity);
-			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-			cardLayout.show(contentPanel, danhSachDonXin_Identity);
-		});
-		
-		
-		menuChamCong.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ChamCongGUI chamCongObj = new ChamCongGUI();
-				contentPanel.add(chamCongObj, chamCong_Identity);
+     // ActionListener cho menuItem Danh sách nhân viên
+     		menuItemDanhSachNhanVien.addActionListener(e -> {
+     			NhanVienGUI employeeObj = new NhanVienGUI();
+     			contentPanel.add(employeeObj, danhSachNhanVien_Identity);
+     			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+     			cardLayout.show(contentPanel, danhSachNhanVien_Identity);
+     		});
+     		
+			// ActionListener cho menuItem Danh sách lương
+			menuItemDanhSachLuong.addActionListener(e -> {
+				DSBangLuongGUI dsBangLuongObj = new DSBangLuongGUI();
+				contentPanel.add(dsBangLuongObj, danhSachBangLuong_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, chamCong_Identity);
-			}
-		});
-		
-		// MouseListener cho menu Tạo đơn
-		menuTaoDon.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				TaoDonXinGUI createLeaveRequestObj = new TaoDonXinGUI();
-				contentPanel.add(createLeaveRequestObj, taoDon_Identity);
+				cardLayout.show(contentPanel, danhSachBangLuong_Identity);
+			});
+
+			// ActionListener cho menuItem Danh sách dơn xin
+			menuItemDanhSachDonXin.addActionListener(e -> {
+				DanhSachDonXinGUI leaveRequestObj = new DanhSachDonXinGUI();
+				contentPanel.add(leaveRequestObj, danhSachDonXin_Identity);
 				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, taoDon_Identity);
-			}
-		});
+				cardLayout.show(contentPanel, danhSachDonXin_Identity);
+			});
+
+			menuChamCong.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+					DSBangChamCongGUI dschamCongObj = new DSBangChamCongGUI(cardLayout, contentPanel);
+					contentPanel.add(dschamCongObj, dsChamCong_Identity);
+					cardLayout.show(contentPanel, dsChamCong_Identity);
+
+					ChiTietChamCongGUI bcc = new ChiTietChamCongGUI(cardLayout, contentPanel);
+					contentPanel.add(bcc, chamCong_Identity);
+				}
+			});
+
+     		// MouseListener cho menu Tạo đơn
+     		menuTaoDon.addMouseListener(new MouseAdapter() {
+     			@Override
+     			public void mouseClicked(MouseEvent e) {
+     				TaoDonXinGUI createLeaveRequestObj = new TaoDonXinGUI();
+     				contentPanel.add(createLeaveRequestObj, taoDon_Identity);
+     				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+     				cardLayout.show(contentPanel, taoDon_Identity);
+     			}
+     		});
         
 		
-		// MouseListener cho menu thống kê
-		menuThongKe.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ThongKeGUI statisticsObj = new ThongKeGUI();
-				contentPanel.add(statisticsObj, thongKe_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, thongKe_Identity);
-			}
-		});
+//		// MouseListener cho menu thống kê
+//		menuThongKe.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				ThongKeGUI statisticsObj = new ThongKeGUI();
+//				contentPanel.add(statisticsObj, thongKe_Identity);
+//				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+//				cardLayout.show(contentPanel, thongKe_Identity);
+//			}
+//		});
 		
 		
 		//ActionListener cho button Personal Information
@@ -401,11 +454,9 @@ public class QuanLyNhanSuView {
     	contentPanel.repaint();
     }
     
-	public void hienThiThongTinNguoiDung(String maNV, String hoTen, String chucVu, String maKho) {
-		dataMaNV.setText(maNV);
+	public void hienThiThongTinNguoiDung(String hoTen, String chucVu) {
 		dataHoTen.setText(hoTen);
 		dataChucVu.setText(chucVu);
-		dataKho.setText(maKho);
 	}
 
 	//hàm hiển thị thông tin dòng code

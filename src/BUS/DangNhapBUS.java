@@ -134,35 +134,39 @@ public class DangNhapBUS {
                     kho = nv.getChiNhanh();
 
                     // Cập nhật dbUrl theo chi nhánh hoặc quyền
-                    switch (chucVu.toUpperCase()) {
+                    switch (chucVu) {
                         case "CV004": // Admin
+                        	chucVu = "Admin";
                             JDBCConnection.setDbUrl(JDBCConnection.DB_URL_GOC);
                             AdminView adminView = new AdminView();
-                            adminView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
+                            adminView.hienThiThongTinNguoiDung(hoTen, chucVu);
                             view.closeLoginFrame();
                             dangNhap = true;
                             log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                         case "CV001": // Quản lý kho
-                            JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
+                        	chucVu = "Quản lý kho";
+                        	JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
                             QuanLyKhoView qlkView = new QuanLyKhoView();
-                            qlkView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
+                            qlkView.hienThiThongTinNguoiDung(hoTen, chucVu);
                             view.closeLoginFrame();
                             dangNhap = true;
                             log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                         case "CV002": // Quản lý nhân sự
+                        	chucVu = "Quản lý nhân sự";
                             JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
                             QuanLyNhanSuView qlnsView = new QuanLyNhanSuView();
-                            qlnsView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
+                            qlnsView.hienThiThongTinNguoiDung(hoTen, chucVu);
                             view.closeLoginFrame();
                             dangNhap = true;
                             log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());
                             break;
                         case "CV003": // Nhân viên kho
+                        	chucVu = "Nhân viên kho";
                             JDBCConnection.setDbUrl(getDbUrlTheoChiNhanh(kho));
                             NhanVienKhoView nvkView = new NhanVienKhoView();
-                            nvkView.hienThiThongTinNguoiDung(maNV, hoTen, chucVu, kho);
+                            nvkView.hienThiThongTinNguoiDung(hoTen, chucVu);
                             view.closeLoginFrame();
                             dangNhap = true;
                             log("Server đang kết nối tới: "+ JDBCConnection.getDatabaseUrl());

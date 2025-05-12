@@ -25,5 +25,17 @@ public class BangChamCongBUS {
         return bccDAO.update(bcc);
     }
 	
+	public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
+        return bccDAO.selectByTime(thang, nam);
+    }
+
+    public ArrayList<BangChamCongDTO> selectByKeyWord(String tuKhoa) {
+        return bccDAO.selectByKeyWord(tuKhoa);
+    }
+    
+  //get bang cham cong by thang va nam
+  	public BangChamCongDTO getBangChamCongByThangNam(String maNV, int thang, int nam) {
+  		return bccDAO.getBangChamCongByNVAndThangNam(maNV, thang, nam);
+  	}
 
 }

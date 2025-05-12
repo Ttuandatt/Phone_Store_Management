@@ -5,6 +5,8 @@ import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -30,72 +32,116 @@ public class QuanLyKhoView {
 	
 	
 	private void init() {
-		//Dùng thư viện FlatLaf để làm giao diện đẹp hơn
-    	FlatRobotoFont.install();
-        FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
-        FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
-        FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
-        FlatIntelliJLaf.registerCustomDefaultsSource("style");
-        FlatIntelliJLaf.setup();
-		
-        // Tạo JFrame
-        JFrame f = new JFrame("Quản lý kho");
-        f.setSize(1500, 800);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+		FlatRobotoFont.install();
+		FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
+		FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
+		FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
+		FlatIntelliJLaf.registerCustomDefaultsSource("style");
+		FlatIntelliJLaf.setup();
 
-        JPanel mainPanel, menuPanel;
+		// Tạo JFrame
+		JFrame f = new JFrame("Quản lý kho");
+		f.setSize(1500, 800);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Main Panel chứa menuPanel và contentPanel
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBackground(Color.BLUE);
+		JPanel mainPanel, menuPanel;
 
-        //======================= Menu Panel (Chứa 3 phần) ============================//
-        menuPanel = new JPanel();
-        menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
-        menuPanel.setBackground(Color.green);
-//        menuPanel.setPreferredSize(new Dimension(200, 800));
-        GridBagConstraints gbc = new GridBagConstraints();
+		// Main Panel chứa menuPanel và contentPanel
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBackground(Color.BLUE);
 
-        //======================= 1. Info Panel (0.3) ============================//
-        JPanel infoPanel = new JPanel(null);
-        infoPanel.setBackground(Color.decode("#01BFF4"));
-        infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.2;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        menuPanel.add(infoPanel, gbc);
-        
-        
-        lblMaNV = new JLabel("Mã NV: ");
-		lblMaNV.setBounds(5, 5, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataMaNV = new JLabel("ABC");
-		dataMaNV.setBounds(55, 5, 50, 20);
-		infoPanel.add(dataMaNV);
+		// ======================= Menu Panel (Chứa 3 phần) ============================//
+		menuPanel = new JPanel();
+		menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
+		menuPanel.setBackground(Color.WHITE);
+        menuPanel.setPreferredSize(new Dimension(900, 500));
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		// ======================= 1. Info Panel ============================//
+		JPanel infoPanel = new JPanel(new GridBagLayout());
+		infoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.decode("#DD1155")));	//top=0, left=0, bottom=2, right=0
 		
-		lblMaNV = new JLabel("Họ tên: ");
-		lblMaNV.setBounds(5, 22, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataHoTen = new JLabel("DEF");
-		dataHoTen.setBounds(55, 22, 100, 20);
-		infoPanel.add(dataHoTen);
 		
-		lblMaNV = new JLabel("Chức vụ: ");
-		lblMaNV.setBounds(5, 37, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataChucVu = new JLabel("GHI");
-		dataChucVu.setBounds(55, 37, 50, 20);
-		infoPanel.add(dataChucVu);
+		JPanel infoLeftPanel, infoRightPanel;
+		infoLeftPanel = new JPanel(null);
+		infoLeftPanel.setPreferredSize(new Dimension(200, 200));
+		infoLeftPanel.setBackground(Color.WHITE);
+		gbc.weightx = 0.43;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		infoPanel.add(infoLeftPanel, gbc);
 		
-		lblMaNV = new JLabel("Kho: ");
-		lblMaNV.setBounds(5, 52, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataKho = new JLabel("JKL");
-		dataKho.setBounds(55, 52, 50, 20);
-		infoPanel.add(dataKho);
+		/// ======================= Thêm ảnh vào infoLeftPanel =======================//
+		ImageIcon icon = new ImageIcon(getClass().getResource("/img/manager.png")); // Đường dẫn ảnh
+		Image image = icon.getImage();
+
+		// Tạo JLabel chứa hình ảnh, chưa cần set kích thước vội
+		JLabel imageLabel = new JLabel(new ImageIcon(image));
+		infoLeftPanel.add(imageLabel);
+
+		// Lắng nghe sự kiện resize của infoLeftPanel để cập nhật ảnh
+		infoLeftPanel.addComponentListener(new ComponentAdapter() {
+		    @Override
+		    public void componentResized(ComponentEvent e) {
+		        // Chỉ thực hiện khi kích thước Panel đã sẵn sàng
+		        if (infoLeftPanel.getWidth() > 0 && infoLeftPanel.getHeight() > 0) {
+		            // Điều chỉnh kích thước ảnh vừa với infoLeftPanel
+		            Image scaledImage = image.getScaledInstance(infoLeftPanel.getWidth()-10, infoLeftPanel.getHeight()-10, Image.SCALE_SMOOTH);
+
+		            // Cập nhật icon cho JLabel
+		            imageLabel.setIcon(new ImageIcon(scaledImage));
+		            
+		            // Set kích thước cho label trùng với panel
+		            imageLabel.setBounds(0, 0, infoLeftPanel.getWidth(), infoLeftPanel.getHeight());
+
+		            // Vẽ lại panel
+		            infoLeftPanel.revalidate();
+		            infoLeftPanel.repaint();
+		        }
+		    }
+		});
+
+
+		
+		
+		
+		infoRightPanel = new JPanel(null);
+		infoRightPanel.setBackground(Color.WHITE);
+		gbc.weightx = 0.57;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		infoPanel.add(infoRightPanel, gbc);
+		
+		infoPanel.setBackground(Color.WHITE);
+		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.21;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		menuPanel.add(infoPanel, gbc);
+		
+		dataHoTen = new JLabel("ABC");
+		dataHoTen.setBounds(10, 25, 200, 20);
+		infoRightPanel.add(dataHoTen);
+		
+		dataChucVu = new JLabel("DEF");
+		dataChucVu.setBounds(10, 45, 200, 20);
+		infoRightPanel.add(dataChucVu);
+		
+		
+	
+		
+		Font lblFont = new Font("Arial", Font.BOLD, 13);
+		dataHoTen.setFont(lblFont);
+		Font lblFont2 = new Font("Arial", Font.PLAIN, 12);
+		dataChucVu.setFont(lblFont2);
 
         //======================= 2. Menu Panel (0.6) ============================//
         JPanel menuBarPanel = new JPanel();
@@ -182,7 +228,7 @@ public class QuanLyKhoView {
 
         //============================ Content Panel ============================//
         contentPanel = new JPanel(new CardLayout());
-        contentPanel.setBackground(Color.DARK_GRAY);
+        contentPanel.setBackground(Color.decode("#DD1155"));
         contentPanel.setPreferredSize(new Dimension(1400, 900));
         mainPanel.add(menuPanel, BorderLayout.WEST);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
@@ -329,7 +375,7 @@ public class QuanLyKhoView {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				personalInfoButton.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
+				personalInfoButton.setBackground(Color.decode("#DD1155")); //để đổi màu khi rê chuột vào
 				personalInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			
@@ -344,7 +390,7 @@ public class QuanLyKhoView {
 		logoutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				logoutButton.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
+				logoutButton.setBackground(Color.decode("#DD1155")); //để đổi màu khi rê chuột vào
 				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			
@@ -382,7 +428,7 @@ public class QuanLyKhoView {
         menu.addMouseListener(new MouseAdapter() {
         		@Override
         		public void mouseEntered(MouseEvent e) {
-        			menu.setBackground(Color.decode("#47CBFF")); //để đổi màu khi rê chuột vào
+        			menu.setBackground(Color.decode("#DD1155")); //để đổi màu khi rê chuột vào
         			menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         		}
         		
@@ -425,11 +471,9 @@ public class QuanLyKhoView {
     	contentPanel.repaint();
     }
     
-    public void hienThiThongTinNguoiDung(String maNV, String hoTen, String chucVu, String maKho) {
-		dataMaNV.setText(maNV);
+    public void hienThiThongTinNguoiDung(String hoTen, String chucVu) {
 		dataHoTen.setText(hoTen);
 		dataChucVu.setText(chucVu);
-		dataKho.setText(maKho);
 	}
     
     

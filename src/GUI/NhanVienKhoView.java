@@ -1,10 +1,13 @@
 package GUI;
+
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -17,202 +20,231 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-
 public class NhanVienKhoView {
-	
+
 	private JPanel contentPanel; // contentPanel để hiển thị các giao diện
 	JLabel lblMaNV, lblHoTen, lblChucVu, lblKho, dataMaNV, dataHoTen, dataChucVu, dataKho;
 
-	
 	public NhanVienKhoView() {
-		
+
 		init();
-    }
+	}
 
-	
 	private void init() {
-		//Dùng thư viện FlatLaf để làm giao diện đẹp hơn
-    	FlatRobotoFont.install();
-        FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
-        FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
-        FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
-        FlatIntelliJLaf.registerCustomDefaultsSource("style");
-        FlatIntelliJLaf.setup();
+		// Dùng thư viện FlatLaf để làm giao diện đẹp hơn
+		FlatRobotoFont.install();
+		FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
+		FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
+		FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
+		FlatIntelliJLaf.registerCustomDefaultsSource("style");
+		FlatIntelliJLaf.setup();
+
+		// Tạo JFrame
+		JFrame f = new JFrame("Admin");
+		f.setSize(1500, 800);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		JPanel mainPanel, menuPanel;
+
+		// Main Panel chứa menuPanel và contentPanel
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBackground(Color.BLUE);
+
+		// ======================= Menu Panel (Chứa 3 phần) ============================//
+		menuPanel = new JPanel();
+		menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
+		menuPanel.setBackground(Color.white);
+        menuPanel.setPreferredSize(new Dimension(900, 500));
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		// ======================= 1. Info Panel ============================//
+		JPanel infoPanel = new JPanel(new GridBagLayout());
+		infoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.decode("#79DE54")));	//top=0, left=0, bottom=2, right=0
 		
-        // Tạo JFrame
-        JFrame f = new JFrame("Nhân viên kho");
-        f.setSize(1500, 800);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel mainPanel, menuPanel;
-
-        // Main Panel chứa menuPanel và contentPanel
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBackground(Color.BLUE);
-
-        //======================= Menu Panel (Chứa 3 phần) ============================//
-        menuPanel = new JPanel();
-        menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
-        menuPanel.setBackground(Color.green);
-//        menuPanel.setPreferredSize(new Dimension(200, 800));
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        //======================= 1. Info Panel (0.3) ============================//
-        JPanel infoPanel = new JPanel(null);
-        infoPanel.setBackground(Color.decode("#79DE54"));
-        infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.17;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        menuPanel.add(infoPanel, gbc);
-        
-        lblMaNV = new JLabel("Mã NV: ");
-		lblMaNV.setBounds(5, 5, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataMaNV = new JLabel("ABC");
-		dataMaNV.setBounds(55, 5, 50, 20);
-		infoPanel.add(dataMaNV);
 		
-		lblMaNV = new JLabel("Họ tên: ");
-		lblMaNV.setBounds(5, 22, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataHoTen = new JLabel("DEF");
-		dataHoTen.setBounds(55, 22, 100, 20);
-		infoPanel.add(dataHoTen);
+		JPanel infoLeftPanel, infoRightPanel;
+		infoLeftPanel = new JPanel(null);
+		infoLeftPanel.setPreferredSize(new Dimension(200, 200));
+		infoLeftPanel.setBackground(Color.white);
+		gbc.weightx = 0.43;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		infoPanel.add(infoLeftPanel, gbc);
 		
-		lblMaNV = new JLabel("Chức vụ: ");
-		lblMaNV.setBounds(5, 37, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataChucVu = new JLabel("GHI");
-		dataChucVu.setBounds(55, 37, 50, 20);
-		infoPanel.add(dataChucVu);
+		/// ======================= Thêm ảnh vào infoLeftPanel =======================//
+		ImageIcon icon = new ImageIcon(getClass().getResource("/img/staff.png")); // Đường dẫn ảnh
+		Image image = icon.getImage();
+
+		// Tạo JLabel chứa hình ảnh, chưa cần set kích thước vội
+		JLabel imageLabel = new JLabel(new ImageIcon(image));
+		infoLeftPanel.add(imageLabel);
+
+		// Lắng nghe sự kiện resize của infoLeftPanel để cập nhật ảnh
+		infoLeftPanel.addComponentListener(new ComponentAdapter() {
+		    @Override
+		    public void componentResized(ComponentEvent e) {
+		        // Chỉ thực hiện khi kích thước Panel đã sẵn sàng
+		        if (infoLeftPanel.getWidth() > 0 && infoLeftPanel.getHeight() > 0) {
+		            // Điều chỉnh kích thước ảnh vừa với infoLeftPanel
+		            Image scaledImage = image.getScaledInstance(infoLeftPanel.getWidth()-10, infoLeftPanel.getHeight()-10, Image.SCALE_SMOOTH);
+
+		            // Cập nhật icon cho JLabel
+		            imageLabel.setIcon(new ImageIcon(scaledImage));
+		            
+		            // Set kích thước cho label trùng với panel
+		            imageLabel.setBounds(0, 0, infoLeftPanel.getWidth(), infoLeftPanel.getHeight());
+
+		            // Vẽ lại panel
+		            infoLeftPanel.revalidate();
+		            infoLeftPanel.repaint();
+		        }
+		    }
+		});
+
+
 		
-		lblMaNV = new JLabel("Kho: ");
-		lblMaNV.setBounds(5, 52, 50, 20);
-		infoPanel.add(lblMaNV);
-		dataKho = new JLabel("JKL");
-		dataKho.setBounds(55, 52, 50, 20);
-		infoPanel.add(dataKho);
+		
+		
+		infoRightPanel = new JPanel(null);
+		infoRightPanel.setBackground(Color.white);
+		gbc.weightx = 0.57;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		infoPanel.add(infoRightPanel, gbc);
+		
+		infoPanel.setBackground(Color.decode("#01BFF4"));
+		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.2;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		menuPanel.add(infoPanel, gbc);
+		
+		dataHoTen = new JLabel("ABC");
+		dataHoTen.setBounds(10, 25, 200, 20);
+		infoRightPanel.add(dataHoTen);
+		
+		dataChucVu = new JLabel("DEF");
+		dataChucVu.setBounds(10, 45, 200, 20);
+		infoRightPanel.add(dataChucVu);
+		
+		
+	
+		
+		Font lblFont = new Font("Arial", Font.BOLD, 13);
+		dataHoTen.setFont(lblFont);
+		Font lblFont2 = new Font("Arial", Font.PLAIN, 12);
+		dataChucVu.setFont(lblFont2);
 
-        //======================= 2. Menu Panel (0.6) ============================//
-        JPanel menuBarPanel = new JPanel();
-        menuBarPanel.setLayout(new BoxLayout(menuBarPanel, BoxLayout.Y_AXIS));
-        menuBarPanel.setBackground(Color.white);
+		// ======================= 2. Menu Panel (0.6) ============================//
+		JPanel menuBarPanel = new JPanel();
+		menuBarPanel.setLayout(new BoxLayout(menuBarPanel, BoxLayout.Y_AXIS));
+		menuBarPanel.setBackground(Color.white);
 
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.Y_AXIS));
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.Y_AXIS));
 
-        // ================================ MENU ITEMS ================================//
-        JMenu menuSanPham = createRightAlignedMenu("SẢN PHẨM");
-        
-        JMenu menuNhaCungCap = createRightAlignedMenu("NHÀ CUNG CẤP");
-        	
-        JMenu menuNhapHang = createRightAlignedMenu("NHẬP HÀNG");
-        JMenuItem menuItemTaoPhieuNhap = new JMenuItem("Tạo phiếu nhập");
-        JMenuItem menuItemPhieuNhap = new JMenuItem("Phiếu nhập");
-        menuNhapHang.add(menuItemTaoPhieuNhap);
-        menuNhapHang.add(menuItemPhieuNhap);
-        
-        JMenu menuXuatHang = createRightAlignedMenu("XUẤT HÀNG");
-        JMenuItem menuItemTaoPhieuXuat = new JMenuItem("Tạo phiếu xuất");
-        JMenuItem menuItemPhieuXuat = new JMenuItem("Phiếu xuất");
-        menuXuatHang.add(menuItemTaoPhieuXuat);
-        menuXuatHang.add(menuItemPhieuXuat);
-        
-        
-        JMenu menuTaoDon = createRightAlignedMenu("TẠO ĐƠN");
-        
-        
+		// ================================ MENU ITEMS ================================//
+		JMenu menuSanPham = createRightAlignedMenu("SẢN PHẨM");
 
-        // Thêm vào menuBar
-        menuBar.add(menuSanPham);
-        menuBar.add(menuNhaCungCap);
-        menuBar.add(menuNhapHang);
-        menuBar.add(menuXuatHang);
-        menuBar.add(menuTaoDon);
+		JMenu menuNhaCungCap = createRightAlignedMenu("NHÀ CUNG CẤP");
 
-        
+		JMenu menuNhapHang = createRightAlignedMenu("NHẬP HÀNG");
+		JMenuItem menuItemTaoPhieuNhap = new JMenuItem("Tạo phiếu nhập");
+		JMenuItem menuItemPhieuNhap = new JMenuItem("Phiếu nhập");
+		menuNhapHang.add(menuItemTaoPhieuNhap);
+		menuNhapHang.add(menuItemPhieuNhap);
 
-        // Thêm menuBar vào menuBarPanel
-        menuBarPanel.add(menuBar);
-        
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.75;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        menuPanel.add(menuBarPanel, gbc);
+		JMenu menuXuatHang = createRightAlignedMenu("XUẤT HÀNG");
+		JMenuItem menuItemTaoPhieuXuat = new JMenuItem("Tạo phiếu xuất");
+		JMenuItem menuItemPhieuXuat = new JMenuItem("Phiếu xuất");
+		menuXuatHang.add(menuItemTaoPhieuXuat);
+		menuXuatHang.add(menuItemPhieuXuat);
 
-        //======================= 3. Logout Panel (0.1) ============================//
-        JPanel logoutPanel = new JPanel();
-        logoutPanel.setBackground(Color.white);
-        logoutPanel.setLayout(new GridBagLayout());
+		JMenu menuTaoDon = createRightAlignedMenu("TẠO ĐƠN");
 
-        
-        JButton personalInfoButton = new JButton("Thông tin cá nhân");
-        personalInfoButton.setBorderPainted(false);
-        personalInfoButton.setPreferredSize(new Dimension(logoutPanel.getWidth(), 50));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        logoutPanel.add(personalInfoButton, gbc);
-        
-        JButton logoutButton = new JButton("Đăng xuất");
-        logoutButton.setBorderPainted(false);
-        logoutButton.setPreferredSize(new Dimension(logoutPanel.getWidth(), 50));
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        logoutPanel.add(logoutButton, gbc);
-        
-        
-        //Set tỷ lệ và vị trí hiển thị của logoutPanel
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.1;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        menuPanel.add(logoutPanel, gbc);
-        
-        
+		// Thêm vào menuBar
+		menuBar.add(menuSanPham);
+		menuBar.add(menuNhaCungCap);
+		menuBar.add(menuNhapHang);
+		menuBar.add(menuXuatHang);
+		menuBar.add(menuTaoDon);
 
-        //============================ Content Panel ============================//
-        contentPanel = new JPanel(new CardLayout());
-        contentPanel.setBackground(Color.DARK_GRAY);
-        contentPanel.setPreferredSize(new Dimension(1400, 900));
-        mainPanel.add(menuPanel, BorderLayout.WEST);
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
+		// Thêm menuBar vào menuBarPanel
+		menuBarPanel.add(menuBar);
 
-        //Thiết lập tỷ lệ hiển thị cho menuPanel và contentPanel
-        int menuWidth = f.getWidth() / 8; // Chiều rộng của thanhDieuHuong là 1/4 của frame
-        int contentWidth = f.getWidth() - menuWidth; // Chiều rộng của noiDung
-        menuPanel.setPreferredSize(new Dimension(menuWidth, f.getHeight())); // Đặt kích thước cho menuPanel
-        contentPanel.setPreferredSize(new Dimension(contentWidth, f.getHeight())); // Đặt kích thước cho contentPanel
-        
-        // Định danh cho các thẻ giao diện
-        final String sanPham_Identity = "SAN PHAM";
-        
-        final String nhaCungCap_Identity = "NHA CUNG CAP";
-        
-        final String nhapHang_Identity = "NHAP HANG";
-        final String phieuNhap_Identity = "PHIEU NHAP";
-        
-        final String xuatHang_Identity = "XUAT HANG";
-        final String phieuXuat_Identity = "PHIEU XUAT";
-        
-        final String taoDon_Identity = "TAO DON";
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.75;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		menuPanel.add(menuBarPanel, gbc);
 
-        
-        final String thongTinCaNhan_Identity = "THONG TIN CA NHAN";
-        
-        f.add(mainPanel);
-        f.setResizable(false);
-        f.setVisible(true);
-        
-        
-        
-        
+		// ======================= 3. Logout Panel (0.1) ============================//
+		JPanel logoutPanel = new JPanel();
+		logoutPanel.setBackground(Color.white);
+		logoutPanel.setLayout(new GridBagLayout());
+
+		JButton personalInfoButton = new JButton("Thông tin cá nhân");
+		personalInfoButton.setBorderPainted(false);
+		personalInfoButton.setPreferredSize(new Dimension(logoutPanel.getWidth(), 50));
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		logoutPanel.add(personalInfoButton, gbc);
+
+		JButton logoutButton = new JButton("Đăng xuất");
+		logoutButton.setBorderPainted(false);
+		logoutButton.setPreferredSize(new Dimension(logoutPanel.getWidth(), 50));
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		logoutPanel.add(logoutButton, gbc);
+
+		// Set tỷ lệ và vị trí hiển thị của logoutPanel
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.1;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		menuPanel.add(logoutPanel, gbc);
+
+		// ============================ Content Panel ============================//
+		contentPanel = new JPanel(new CardLayout());
+		contentPanel.setBackground(Color.decode("#79DE54"));
+		contentPanel.setPreferredSize(new Dimension(1400, 900));
+		mainPanel.add(menuPanel, BorderLayout.WEST);
+		mainPanel.add(contentPanel, BorderLayout.CENTER);
+
+		// Thiết lập tỷ lệ hiển thị cho menuPanel và contentPanel
+		int menuWidth = f.getWidth() / 8; // Chiều rộng của thanhDieuHuong là 1/4 của frame
+		int contentWidth = f.getWidth() - menuWidth; // Chiều rộng của noiDung
+		menuPanel.setPreferredSize(new Dimension(menuWidth, f.getHeight())); // Đặt kích thước cho menuPanel
+		contentPanel.setPreferredSize(new Dimension(contentWidth, f.getHeight())); // Đặt kích thước cho contentPanel
+
+		// Định danh cho các thẻ giao diện
+		final String sanPham_Identity = "SAN PHAM";
+
+		final String nhaCungCap_Identity = "NHA CUNG CAP";
+
+		final String nhapHang_Identity = "NHAP HANG";
+		final String phieuNhap_Identity = "PHIEU NHAP";
+
+		final String xuatHang_Identity = "XUAT HANG";
+		final String phieuXuat_Identity = "PHIEU XUAT";
+
+		final String taoDon_Identity = "TAO DON";
+
+		final String thongTinCaNhan_Identity = "THONG TIN CA NHAN";
+
+		f.add(mainPanel);
+		f.setResizable(false);
+		f.setVisible(true);
+
 //=========================================== Khu vực add Listener cho các nút/menu/menuItem ==========================================================//
 
 		// mouseListener cho menu sản phẩm
@@ -234,7 +266,7 @@ public class NhanVienKhoView {
 				}
 			}
 		});
-		
+
 		// MouseListener cho menu "SUPPLIERS"
 		menuNhaCungCap.addMouseListener(new MouseAdapter() {
 			@Override
@@ -245,7 +277,7 @@ public class NhanVienKhoView {
 				cardLayout.show(contentPanel, nhaCungCap_Identity);
 			}
 		});
-		
+
 		// ActionListener cho Tạo phiếu nhập. Vì menuItem thì kích hoạt sự kiện bằng
 		// ActionListener chứ k phải MouseListener
 		menuItemTaoPhieuNhap.addActionListener(e -> {
@@ -262,8 +294,7 @@ public class NhanVienKhoView {
 			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 			cardLayout.show(contentPanel, phieuNhap_Identity);
 		});
-        
-        
+
 		// ActionListener cho menuItem Export
 		menuItemTaoPhieuXuat.addActionListener(e -> {
 			XuatHangGUI exportObj = new XuatHangGUI();
@@ -279,8 +310,6 @@ public class NhanVienKhoView {
 			CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
 			cardLayout.show(contentPanel, phieuXuat_Identity);
 		});
-		
-		
 
 		// MouseListener cho menu Tạo đơn
 		menuTaoDon.addMouseListener(new MouseAdapter() {
@@ -292,11 +321,8 @@ public class NhanVienKhoView {
 				cardLayout.show(contentPanel, taoDon_Identity);
 			}
 		});
-        
-		
-		
-		
-		//ActionListener cho button Personal Information
+
+		// ActionListener cho button Personal Information
 		personalInfoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -306,125 +332,118 @@ public class NhanVienKhoView {
 				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
 			}
 		});
-		
-        //mouseListener cho nút changeInfoButton
+
+		// mouseListener cho nút changeInfoButton
 		personalInfoButton.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				personalInfoButton.setBackground(Color.decode("#79DE54")); //để đổi màu khi rê chuột vào
+				personalInfoButton.setBackground(Color.decode("#79DE54")); // để đổi màu khi rê chuột vào
 				personalInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
-			
-    		
-    		@Override
-    		public void mouseExited(MouseEvent e) {
-    			personalInfoButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
-    		}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				personalInfoButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
+			}
 		});
-		
-		//mouseListener cho nút logoutButton
+
+		// mouseListener cho nút logoutButton
 		logoutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				logoutButton.setBackground(Color.decode("#79DE54")); //để đổi màu khi rê chuột vào
+				logoutButton.setBackground(Color.decode("#79DE54")); // để đổi màu khi rê chuột vào
 				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
-			
-    		
-    		@Override
-    		public void mouseExited(MouseEvent e) {
-    			logoutButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
-    		}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				logoutButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
+			}
 
 		});
-	
-		
-		
+
 		personalInfoButton.setOpaque(true);
 		personalInfoButton.setBackground(Color.WHITE);
-		
+
 		logoutButton.setOpaque(true);
 		logoutButton.setBackground(Color.WHITE);
 	}
 
-    private JMenu createRightAlignedMenu(String title) {
-    	JMenu menu = new JMenu(title);
-        menu.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái theo BoxLayout
-        menu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Full chiều ngang, tăng chiều cao
-        menu.setPreferredSize(new Dimension(200, 50)); // Điều chỉnh chiều cao theo ý muốn
-        menu.setOpaque(true);
-        menu.setBackground(Color.WHITE);
-        menu.setBorderPainted(false); // Không vẽ viền
-        menu.setBorder(null); // Xóa viền
-        menu.setHorizontalAlignment(SwingConstants.CENTER);
-        JPopupMenu popupMenu = menu.getPopupMenu();
+	private JMenu createRightAlignedMenu(String title) {
+		JMenu menu = new JMenu(title);
+		menu.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái theo BoxLayout
+		menu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Full chiều ngang, tăng chiều cao
+		menu.setPreferredSize(new Dimension(200, 50)); // Điều chỉnh chiều cao theo ý muốn
+		menu.setOpaque(true);
+		menu.setBackground(Color.WHITE);
+		menu.setBorderPainted(false); // Không vẽ viền
+		menu.setBorder(null); // Xóa viền
+		menu.setHorizontalAlignment(SwingConstants.CENTER);
+		JPopupMenu popupMenu = menu.getPopupMenu();
 
-        
-        // Thêm MouseListener để thay đổi con trỏ chuột
-        menu.addMouseListener(new MouseAdapter() {
-        		@Override
-        		public void mouseEntered(MouseEvent e) {
-        			menu.setBackground(Color.decode("#79DE54")); //để đổi màu khi rê chuột vào
-        			menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        		}
-        		
-        		@Override
-        		public void mouseExited(MouseEvent e) {
-        			menu.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
-        		}
-        	
-        });
-        
-        
-        // Lắng nghe sự kiện mở menu để hiển thị popup đúng vị trí
-        menu.addMenuListener(new MenuListener() {
-            @Override
-            public void menuSelected(MenuEvent e) {
-                if (!popupMenu.isVisible()) {
-                    SwingUtilities.invokeLater(() -> {
-                        Point location = menu.getLocationOnScreen();
-                        popupMenu.setLocation(location.x + menu.getWidth(), location.y);
-                        popupMenu.setVisible(true);
-                    });
-                }
-            }
+		// Thêm MouseListener để thay đổi con trỏ chuột
+		menu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				menu.setBackground(Color.decode("#79DE54")); // để đổi màu khi rê chuột vào
+				menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
 
-            @Override
-            public void menuDeselected(MenuEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				menu.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
+			}
 
-            @Override
-            public void menuCanceled(MenuEvent e) {}
-            
-        });
-        return menu;
+		});
+
+		// Lắng nghe sự kiện mở menu để hiển thị popup đúng vị trí
+		menu.addMenuListener(new MenuListener() {
+			@Override
+			public void menuSelected(MenuEvent e) {
+				if (!popupMenu.isVisible()) {
+					SwingUtilities.invokeLater(() -> {
+						Point location = menu.getLocationOnScreen();
+						popupMenu.setLocation(location.x + menu.getWidth(), location.y);
+						popupMenu.setVisible(true);
+					});
+				}
+			}
+
+			@Override
+			public void menuDeselected(MenuEvent e) {
+			}
+
+			@Override
+			public void menuCanceled(MenuEvent e) {
+			}
+
+		});
+		return menu;
 
 	}
-	
-    public void showProductsGUI() {
-    	contentPanel.removeAll();	//Xóa giao diện cũ
-    	contentPanel.add(new SanPhamGUI()); //Thêm giao diện ProductsGUI
-    	contentPanel.revalidate();
-    	contentPanel.repaint();
-    }
-    
-	public void hienThiThongTinNguoiDung(String maNV, String hoTen, String chucVu, String maKho) {
-		dataMaNV.setText(maNV);
+
+	public void showProductsGUI() {
+		contentPanel.removeAll(); // Xóa giao diện cũ
+		contentPanel.add(new SanPhamGUI()); // Thêm giao diện ProductsGUI
+		contentPanel.revalidate();
+		contentPanel.repaint();
+	}
+
+	public void hienThiThongTinNguoiDung(String hoTen, String chucVu) {
 		dataHoTen.setText(hoTen);
 		dataChucVu.setText(chucVu);
-		dataKho.setText(maKho);
 	}
 
-	//hàm hiển thị thông tin dòng code
+	// hàm hiển thị thông tin dòng code
 	public static void log(String message) {
-	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
-	    System.out.println(element.getClassName() + " | method: " 
-	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+				+ element.getLineNumber() + " | " + message);
 	}
-    
-    
-    public static void main(String[] args) {
-        new NhanVienKhoView();
-    }
+
+	public static void main(String[] args) {
+		new NhanVienKhoView();
+	}
 }

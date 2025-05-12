@@ -270,3 +270,5 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO> {
 	}
 
 }
+
+
