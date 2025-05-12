@@ -1,124 +1,125 @@
 package DTO;
 
 public class BangChamCongDTO {
-	private String maBCC;
-	private int thangCC;
-	private int namCC;
-	private int soNgayLam;
-	private int soNgayNghiKhongPhep;
-	private int soNgayNghiPhepCoLuong;
-	private int soNgayNghiPhepKhongLuong;
-	private String maNV;
-	private float soGioOT;
-	
+    private String maBCC;
+    private int thangCC;
+    private int namCC;
+    private float soNgayLam;
+    private float soNgayNghiKP;
+    private float soNPCoLuong;
+    private float soNPKhongLuong;
+    private float soGioOTNgayThuong;
+    private float soGioOTNgayLe;
+    private float soGioOTCN;
+    private String maNV;
 
-	//constructor
-	public BangChamCongDTO() {
-		super();
-	}
+    public BangChamCongDTO(String maBCC, int thangCC, int namCC, float soNgayLam, float soNgayNghiKP, float soNPCoLuong, float soNPKhongLuong, float soGioOTNgayThuong, float soGioOTNgayLe, float soGioOTCN, String maNV) {
+        this.maBCC = maBCC;
+        this.thangCC = thangCC;
+        this.namCC = namCC;
+        this.soNgayLam = soNgayLam;
+        this.soNgayNghiKP = soNgayNghiKP;
+        this.soNPCoLuong = soNPCoLuong;
+        this.soNPKhongLuong = soNPKhongLuong;
+        this.soGioOTNgayThuong = soGioOTNgayThuong;
+        this.soGioOTNgayLe = soGioOTNgayLe;
+        this.soGioOTCN = soGioOTCN;
+        this.maNV = maNV;
+    }
 
-	
+    public BangChamCongDTO() {
+    }
 
-	public BangChamCongDTO(String maBCC, int thangCC, int namCC, int soNgayLam, int soNgayNghiKhongPhep,
-			int soNgayNghiPhepCoLuong, int soNgayNghiPhepKhongLuong, float soGioOT, String maNV) {
-		super();
-		this.maBCC = maBCC;
-		this.thangCC = thangCC;
-		this.namCC = namCC;
-		this.soNgayLam = soNgayLam;
-		this.soNgayNghiKhongPhep = soNgayNghiKhongPhep;
-		this.soNgayNghiPhepCoLuong = soNgayNghiPhepCoLuong;
-		this.soNgayNghiPhepKhongLuong = soNgayNghiPhepKhongLuong;
-		this.maNV = maNV;
-		this.soGioOT = soGioOT;
-	}
+    
+    
+    public String getMaBCC() {
+        return maBCC;
+    }
 
+    public void setMaBCC(String maBCC) {
+        this.maBCC = maBCC;
+    }
 
+    public int getThangCC() {
+        return thangCC;
+    }
 
-	//getter, setter
-	public float getSoGioOT() {
-		return soGioOT;
-	}
-	public void setSoGioOT(float soGioOT) {
-		this.soGioOT = soGioOT;
-	}
-	public String getMaBCC() {
-		return maBCC;
-	}
+    public void setThangCC(int thangCC) {
+        this.thangCC = thangCC;
+    }
 
-	public void setMaBCC(String maBCC) {
-		this.maBCC = maBCC;
-	}
+    public int getNamCC() {
+        return namCC;
+    }
 
-	public int getThangCC() {
-		return thangCC;
-	}
+    public void setNamCC(int namCC) {
+        this.namCC = namCC;
+    }
 
-	public void setThangCC(int thangCC) {
-		this.thangCC = thangCC;
-	}
+    public float getSoNgayLam() {
+        return soNgayLam;
+    }
 
-	public int getNamCC() {
-		return namCC;
-	}
+    public void setSoNgayLam(float soNgayLam) {
+        this.soNgayLam = soNgayLam;
+    }
 
-	public void setNamCC(int namCC) {
-		this.namCC = namCC;
-	}
+    public float getSoNgayNghiKP() {
+        return soNgayNghiKP;
+    }
 
-	public int getSoNgayLam() {
-		return soNgayLam;
-	}
+    public void setSoNgayNghiKP(float soNgayNghiKP) {
+        this.soNgayNghiKP = soNgayNghiKP;
+    }
 
-	public void setSoNgayLam(int soNgayLam) {
-		this.soNgayLam = soNgayLam;
-	}
+    public float getSoNPCoLuong() {
+        return soNPCoLuong;
+    }
 
+    public void setSoNPCoLuong(float soNPCoLuong) {
+        this.soNPCoLuong = soNPCoLuong;
+    }
 
-	public int getSoNgayNghiKhongPhep() {
-		return soNgayNghiKhongPhep;
-	}
+    public float getSoNPKhongLuong() {
+        return soNPKhongLuong;
+    }
 
+    public void setSoNPKhongLuong(float soNPKhongLuong) {
+        this.soNPKhongLuong = soNPKhongLuong;
+    }
 
+    public float getSoGioOTNgayThuong() {
+        return soGioOTNgayThuong;
+    }
 
-	public void setSoNgayNghiKhongPhep(int soNgayNghiKhongPhep) {
-		this.soNgayNghiKhongPhep = soNgayNghiKhongPhep;
-	}
+    public void setSoGioOTNgayThuong(float soGioOTNgayThuong) {
+        this.soGioOTNgayThuong = soGioOTNgayThuong;
+    }
 
+    public float getSoGioOTNgayLe() {
+        return soGioOTNgayLe;
+    }
 
+    public void setSoGioOTNgayLe(float soGioOTNgayLe) {
+        this.soGioOTNgayLe = soGioOTNgayLe;
+    }
 
-	public int getSoNgayNghiPhepCoLuong() {
-		return soNgayNghiPhepCoLuong;
-	}
+    public float getSoGioOTCN() {
+        return soGioOTCN;
+    }
 
+    public void setSoGioOTCN(float soGioOTCN) {
+        this.soGioOTCN = soGioOTCN;
+    }
 
+    public String getMaNV() {
+        return maNV;
+    }
 
-	public void setSoNgayNghiPhepCoLuong(int soNgayNghiPhepCoLuong) {
-		this.soNgayNghiPhepCoLuong = soNgayNghiPhepCoLuong;
-	}
-
-
-
-	public int getSoNgayNghiPhepKhongLuong() {
-		return soNgayNghiPhepKhongLuong;
-	}
-
-
-
-	public void setSoNgayNghiPhepKhongLuong(int soNgayNghiPhepKhongLuong) {
-		this.soNgayNghiPhepKhongLuong = soNgayNghiPhepKhongLuong;
-	}
-
-
-
-	public String getMaNV() {
-		return maNV;
-	}
-
-	public void setMaNV(String maNV) {
-		this.maNV = maNV;
-	}
-	
-	
-		
-}
+    public void setMaNV(String maNV) {
+        this.maNV = maNV;
+    }
+    
+    
+    
+}    

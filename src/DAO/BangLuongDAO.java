@@ -22,7 +22,7 @@ public class BangLuongDAO implements DAOInterface<BangLuongDTO>{
         try {
             jdbc.openConnection();
 
-            String query = "select * from bangluong where maNV=?";
+            String query = "select * from bangluong where maNV=? and trangThai='on'";
 
             PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
             ps.setString(1, maNV);

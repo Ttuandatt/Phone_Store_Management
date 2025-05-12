@@ -12,49 +12,69 @@
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1509.0" style="-fx-background-color: #67cac5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PersonalInformationController">
    <children>
-      <Label fx:id="labelName" layoutX="352.0" layoutY="206.0" text="Nguyen Van A">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelEmail" layoutX="352.0" layoutY="244.0" text="phuhuynh.010104@gmail.com">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="107.0" layoutY="311.0" text="Họ và tên" />
-      <TextField fx:id="tfName" layoutX="107.0" layoutY="341.0" onKeyPressed="#handleKeyPressName" text="Huynh Van Phu" />
-      <Label layoutX="446.0" layoutY="311.0" text="Số điện thoại" />
-      <TextField fx:id="tfNumberPhone" layoutX="446.0" layoutY="341.0" onKeyPressed="#handleKeyPressPhoneNumber" text="0123456789" />
-      <Label layoutX="446.0" layoutY="388.0" text="Ngày sinh" />
-      <TextField fx:id="tfBirthday" layoutX="446.0" layoutY="418.0" onKeyPressed="#handleKeyPressBirthday" text="1990-05-12" />
-      <Label layoutX="107.0" layoutY="388.0" text="Giới tính" />
-      <RadioButton fx:id="rbMale" layoutX="107.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#handleClickMale" selected="true" text="Nam " />
-      <RadioButton fx:id="rbFemale" layoutX="169.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#handleClickFemale" text="Nữ" />
-      <Label layoutX="107.0" layoutY="467.0" text="Địa chỉ" />
-      <TextField fx:id="tfAddress" layoutX="107.0" layoutY="497.0" onKeyPressed="#handleKeyPressAddress" text="123 Lê Lợi, TP.HCM" />
-      <Label layoutX="935.0" layoutY="108.0" text="Tháng " />
-      <Label layoutX="1062.0" layoutY="108.0" text="Năm" />
-      <ComboBox fx:id="cbMonth" layoutX="935.0" layoutY="139.0" onAction="#handleChangeMonth" prefHeight="25.0" prefWidth="79.0" />
-      <ComboBox fx:id="cbYear" layoutX="1062.0" layoutY="139.0" onAction="#handleChangeYear" prefHeight="25.0" prefWidth="79.0" />
-      <Label layoutX="937.0" layoutY="194.0" text="Số ngày công" />
-      <Label fx:id="tf_songaycong" layoutX="1141.0" layoutY="194.0" text="0" />
-      <Label layoutX="937.0" layoutY="230.0" text="Số ngày nghỉ phép có lương" />
-      <Label fx:id="tf_songaynghiphep" layoutX="1141.0" layoutY="230.0" text="0" />
-      <Label layoutX="937.0" layoutY="268.0" text="Số ngày nghỉ phép không lương" />
-      <Label fx:id="tf_songaynghiphepkhongluong" layoutX="1141.0" layoutY="268.0" text="0" />
-      <Label layoutX="937.0" layoutY="307.0" text="Số ngày nghỉ không phép" />
-      <Label fx:id="tf_songaynghikhongphep" layoutX="1141.0" layoutY="307.0" text="0" />
-      <Label layoutX="937.0" layoutY="345.0" text="Số giờ tăng ca" />
-      <Label fx:id="tf_sogiotangca" layoutX="1141.0" layoutY="345.0" text="0" />
-      <TableView fx:id="tb_bangluong" layoutX="937.0" layoutY="424.0" prefHeight="200.0" prefWidth="310.0">
+      <Pane layoutX="87.0" layoutY="61.0" prefHeight="508.0" prefWidth="578.0" style="-fx-border-color: #000000;">
+         <children>
+            <Label fx:id="labelName" layoutX="253.0" layoutY="100.0" text="Nguyen Van A">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="labelEmail" layoutX="253.0" layoutY="138.0" text="phuhuynh.010104@gmail.com">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="31.0" layoutY="251.0" text="Họ và tên" />
+            <TextField fx:id="tfName" layoutX="31.0" layoutY="281.0" onKeyPressed="#handleKeyPressName" text="Huynh Van Phu" />
+            <Label layoutX="347.0" layoutY="251.0" text="Số điện thoại" />
+            <TextField fx:id="tfNumberPhone" layoutX="347.0" layoutY="281.0" onKeyPressed="#handleKeyPressPhoneNumber" text="0123456789" />
+            <Label layoutX="347.0" layoutY="328.0" text="Ngày sinh" />
+            <TextField fx:id="tfBirthday" layoutX="347.0" layoutY="358.0" onKeyPressed="#handleKeyPressBirthday" text="1990-05-12" />
+            <Label layoutX="31.0" layoutY="328.0" text="Giới tính" />
+            <RadioButton fx:id="rbMale" layoutX="31.0" layoutY="362.0" mnemonicParsing="false" onMouseClicked="#handleClickMale" selected="true" text="Nam " />
+            <RadioButton fx:id="rbFemale" layoutX="93.0" layoutY="362.0" mnemonicParsing="false" onMouseClicked="#handleClickFemale" text="Nữ" />
+            <Label layoutX="31.0" layoutY="407.0" text="Địa chỉ" />
+            <TextField fx:id="tfAddress" layoutX="31.0" layoutY="437.0" onKeyPressed="#handleKeyPressAddress" text="123 Lê Lợi, TP.HCM" />
+            <Button fx:id="bt_update" disable="true" layoutX="464.0" layoutY="450.0" mnemonicParsing="false" onMouseClicked="#handleClickUpdate" text="Cập nhật" />
+            <Pane fx:id="pn_image" layoutX="23.0" layoutY="46.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-background-radius: 50%;" />
+         </children>
+      </Pane>
+      <Pane layoutX="765.0" layoutY="61.0" prefHeight="508.0" prefWidth="358.0" style="-fx-border-color: #000000;">
+         <children>
+            <Label layoutX="67.0" layoutY="64.0" text="Tháng ">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="194.0" layoutY="64.0" text="Năm">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cbMonth" layoutX="67.0" layoutY="95.0" onAction="#handleChangeMonth" prefHeight="25.0" prefWidth="79.0" />
+            <ComboBox fx:id="cbYear" layoutX="194.0" layoutY="95.0" onAction="#handleChangeYear" prefHeight="25.0" prefWidth="79.0" />
+            <Label layoutX="67.0" layoutY="198.0" text="Số ngày công" />
+            <Label fx:id="tf_songaycong" layoutX="271.0" layoutY="198.0" text="0" />
+            <Label layoutX="67.0" layoutY="234.0" text="Số ngày nghỉ phép có lương" />
+            <Label fx:id="tf_songaynghiphep" layoutX="271.0" layoutY="234.0" text="0" />
+            <Label layoutX="67.0" layoutY="272.0" text="Số ngày nghỉ phép không lương" />
+            <Label fx:id="tf_songaynghiphepkhongluong" layoutX="271.0" layoutY="272.0" text="0" />
+            <Label layoutX="67.0" layoutY="311.0" text="Số ngày nghỉ không phép" />
+            <Label fx:id="tf_songaynghikhongphep" layoutX="271.0" layoutY="311.0" text="0" />
+            <Label layoutX="67.0" layoutY="349.0" text="Số giờ tăng ca" />
+            <Label fx:id="tf_sogiotangca" layoutX="271.0" layoutY="349.0" text="0" />
+         </children>
+      </Pane>
+      <TableView fx:id="tb_bangluong" layoutX="87.0" layoutY="589.0" prefHeight="200.0" prefWidth="1037.0">
         <columns>
           <TableColumn fx:id="tv_thoigian" prefWidth="88.7999267578125" text="Thời gian" />
-          <TableColumn fx:id="tv_heso" prefWidth="98.4000244140625" text="Hệ Số" />
-            <TableColumn fx:id="tv_tongluong" prefWidth="123.199951171875" text="Tổng Lương" />
+          <TableColumn fx:id="tv_heso" prefWidth="121.60000610351562" text="Hệ Số" />
+            <TableColumn fx:id="tv_luongthucte" prefWidth="149.5999755859375" text="Lương Thực Tế" />
+            <TableColumn fx:id="tv_phucap" prefWidth="167.20001220703125" text="Phụ Cấp" />
+            <TableColumn fx:id="tv_luongthuong" prefWidth="215.199951171875" text="Lương Thưởng" />
+            <TableColumn fx:id="tv_cackhoangtru" prefWidth="127.20001220703125" text="Các Khoảng Trừ" />
+            <TableColumn fx:id="tv_thucnhan" prefWidth="171.2000732421875" text="Thực Nhận" />
         </columns>
       </TableView>
-      <Button fx:id="bt_update" disable="true" layoutX="755.0" layoutY="589.0" mnemonicParsing="false" onMouseClicked="#handleClickUpdate" text="Cập nhật" />
-      <Pane fx:id="pn_image" layoutX="107.0" layoutY="85.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-background-radius: 50%;" />
    </children>
 </Pane>
