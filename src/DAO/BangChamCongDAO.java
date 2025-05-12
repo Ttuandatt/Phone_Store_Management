@@ -48,6 +48,82 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO> {
 		return arrBangChamCong;
 	}
 
+	public ArrayList<BangChamCongDTO> selectByKeyWord(String tuKhoa) {
+		ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<BangChamCongDTO>();
+		try {
+			jdbc.openConnection();
+
+			String query = "exec sp_TimDanhSachCCTheoTuKhoaKho @tuKhoa=?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, tuKhoa);
+
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				BangChamCongDTO bcc = new BangChamCongDTO();
+				bcc.setMaBCC(rs.getString("maBCC"));
+				bcc.setThangCC(rs.getInt("thangCC"));
+				bcc.setNamCC(rs.getInt("namCC"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+				bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+				bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+				bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+				bcc.setMaNV(rs.getString("maNV"));
+				arr_bcc.add(bcc);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.closeConnection();
+		}
+
+		return arr_bcc;
+	}
+
+	public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
+		ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<>();
+
+		try {
+			jdbc.openConnection();
+			String query = "exec sp_LayDSBangChamCongTheoTGKho @thangCC=?, @namCC=?";
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, String.valueOf(thang));
+			ps.setString(2, String.valueOf(nam));
+
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				BangChamCongDTO bcc = new BangChamCongDTO();
+				bcc.setMaBCC(rs.getString("maBCC"));
+				bcc.setThangCC(rs.getInt("thangCC"));
+				bcc.setNamCC(rs.getInt("namCC"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+				bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+				bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+				bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+				bcc.setMaNV(rs.getString("maNV"));
+				arr_bcc.add(bcc);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.closeConnection();
+		}
+
+		return arr_bcc;
+	}
+	
 	@Override
 	public BangChamCongDTO selectById(String maNV) {
 		BangChamCongDTO bcc = new BangChamCongDTO();
@@ -156,4 +232,41 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO> {
 		return result;
 	}
 
+	//get bang cham cong by nhan vien va thang nam
+		public BangChamCongDTO getBangChamCongByNVAndThangNam(String maNV, int thang, int nam) {
+			BangChamCongDTO bcc = new BangChamCongDTO();
+			try {
+				jdbc.openConnection();
+				
+				String query = "select * from bangchamcong where maNV=? and thangCC=? and namCC=?";
+				
+				PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+				ps.setString(1, maNV);
+				ps.setInt(2, thang);
+				ps.setInt(3, nam);
+				
+				ResultSet rs = ps.executeQuery();
+				if(rs.next()) {				
+					bcc.setMaBCC(rs.getString("maBCC"));
+					bcc.setThangCC(rs.getInt("thangCC"));
+					bcc.setNamCC(rs.getInt("namCC"));
+					bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+					bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+					bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+					bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+					bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+					bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+					bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+					bcc.setMaNV(rs.getString("maNV"));
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+				e.getMessage();
+			}finally {
+				jdbc.closeConnection();
+			}
+			
+			return bcc;
+		}
+	
 }

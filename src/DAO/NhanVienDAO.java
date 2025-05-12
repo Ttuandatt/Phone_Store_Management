@@ -23,7 +23,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			jdbc.openConnection();
 			
 			//Nếu kết nối tới CSDL là server gốc thì dùng Stored Procedure sp_LayDanhSachNhanVienGoc
-			if(JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
+			if(JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER06;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
 				query = "exec sp_LayDanhSachNhanVienGoc";
 			}else { // Nếu kết nối tới CSDL là server mảnh thì dùng Stored Procedure sp_LayDanhSachNhanVienKho
 				query = "exec sp_LayDanhSachNhanVienKho";
@@ -202,7 +202,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 	        jdbc.openConnection();
 
 			// Nếu kết nối tới CSDL là server gốc thì dùng Stored Procedure sp_ThemNhanVienGoc
-			if (JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
+			if (JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER06;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
 		        query = "{CALL sp_ThemNhanVienGoc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 			} else { // Nếu kết nối tới CSDL là server mảnh thì dùng Stored Procedure sp_ThemNhanVienKho
 		        query = "{CALL sp_ThemNhanVienKho(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
@@ -259,7 +259,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			
 			jdbc.openConnection();
 			
-			String query = "update nhanvien set trangThai='Off' where maNV=?";
+			String query = "update nhanvien set trangThai='off' where maNV=?";
 			
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, nv.getMaNV());
@@ -320,7 +320,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
 			// Nếu kết nối tới CSDL là server gốc thì dùng Stored Procedure
 			// sp_ThemNhanVienGoc
-			if (JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER01;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
+			if (JDBCConnection.getDatabaseUrl().equalsIgnoreCase("jdbc:sqlserver://DAMIAN\\MSSQLSERVER06;databaseName=phonestore;integratedSecurity=true;encrypt=false")) {
 				query = "{call sp_SuaNhanVienGoc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 			} else { // Nếu kết nối tới CSDL là server mảnh thì dùng Stored Procedure
 						// sp_ThemNhanVienKho
@@ -551,6 +551,37 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 		
 		return tongSoGioTangCa;
 	}
+	
+	
+	// update thông tin nhân viên NhanVienDTO(maNV, hoTen, soDienThoai, diaChi, ngaySinh, gioiTinh,hinhAnh);
+		public boolean updatePersonalInfo(NhanVienDTO nv) {
+			int result = 0;
+			try {
+				jdbc.openConnection();
+				
+				String query = "update nhanvien set hoTen=?, sdt=?, diaChi=?, ngaySinh=?, gioiTinh=?,hinhAnh=? where maNV=?";			
+				
+				PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+				ps.setString(1, nv.getHoTen());
+				ps.setString(2, nv.getSoDienThoai());
+				ps.setString(3, nv.getDiaChi());
+				ps.setDate(4, nv.getNgaySinh());
+				ps.setString(5, nv.getGioiTinh());
+				ps.setBytes(6, nv.getHinhAnh());
+				ps.setString(7, nv.getMaNV());
+				result = ps.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+				e.getMessage();
+			} finally {
+				jdbc.closeConnection();
+			}
+			
+			if(result > 0) {
+				return true;
+			}
+			return false;
+		}
 	
 	//hàm hiển thị thông tin dòng code
   	public static void log(String message) {

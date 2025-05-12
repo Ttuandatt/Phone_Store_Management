@@ -39,4 +39,12 @@ public class ChiTietChamCongBUS {
  		return ctccDAO.getThongTinNgayNghi(maBCC);
  	}
 
+    public int xoaChiTietChamCongTheoMaCC(String macc) {
+        return ctccDAO.deleteByMaCC(macc);
+    }
+
+    public ArrayList<ChiTietChamCongDTO> selectAll() {
+        return ctccDAO.selectAll();
+    }
+ 	
 }

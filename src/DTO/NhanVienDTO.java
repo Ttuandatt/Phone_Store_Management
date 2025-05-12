@@ -66,10 +66,28 @@ public class NhanVienDTO {
 	}
 	
 	
+	
+	
+	public NhanVienDTO(String maNV, String hoTen, String soDienThoai, String diaChi, Date ngaySinh, String gioiTinh,byte[] hinhAnh) {
+		super();
+		this.maNV = maNV;
+		this.hoTen = hoTen;
+		this.soDienThoai = soDienThoai;
+		this.ngaySinh = ngaySinh;
+		this.gioiTinh = gioiTinh;
+		this.diaChi = diaChi;
+		
+		this.hinhAnh = hinhAnh;
+	}
+
 	public NhanVienDTO(String maNV) {
 		super();
 		this.maNV = maNV;
 	}
+
+
+
+
 
 	public String getMatKhau() {
 		return matKhau;

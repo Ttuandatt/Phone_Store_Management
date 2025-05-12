@@ -219,5 +219,27 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
             }
         return result;
     }
+    
+    public int deleteByMaCC(String macc) {
+        int result = 0;
+            try {
+                jdbc.openConnection();
+                String query = "EXEC sp_XoaChiTietChamCongTheoBCCKho @maBCC = ?;";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+                ps.setString(1, macc);
+
+                result = ps.executeUpdate(); // Sử dụng executeUpdate() để lấy số dòng bị ảnh hưởng
+                if (result > 0)
+                    System.out.println("Đã xoá danh sách chi tiết chấm công theo maBCC");
+                else System.out.println("Không tồn tại chi tiết chấm công theo maBCC");
+                
+            } catch (SQLException e) {
+                e.printStackTrace(); // Ghi log lỗi để dễ debug
+            } finally {
+                jdbc.closeConnection();
+            }
+        return result;
+    }
+
 
 }

@@ -182,6 +182,10 @@ END
 drop procedure sp_ThemNhanVienGoc
 --\\\\\\\\\\\\\\\\\ TEST
 DECLARE @maNhanVienMoi VARCHAR(10);
+select * from nhanvien
+select * from CHUCVU
+select * from chitietchamcong WHERE maCTCC='CC042025NV004'
+select * from BANGCHAMCONG WHERE mabCC='CC042025NV004'
 
 EXEC sp_ThemNhanVienGoc
     @hoTen = N'Nguyễn Trần D',

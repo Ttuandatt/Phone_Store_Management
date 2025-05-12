@@ -65,7 +65,7 @@ public class ChucVuDAO implements DAOInterface<ChucVuDTO>{
 				cv.setMaCV(rs.getString("maCV"));
 				cv.setTenCV(rs.getString("tenCV"));
 				cv.setLuongCoBan(rs.getFloat("luongCB"));
-				cv.setHeSoLuong(rs.getFloat("heSo"));
+				cv.setTrangThai(rs.getString("trangThai"));
 			}
 			
 		}catch (Exception e) {

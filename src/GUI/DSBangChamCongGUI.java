@@ -48,7 +48,7 @@ public class DSBangChamCongGUI extends JPanel{
     DefaultTableModel tangCaModel = new DefaultTableModel();
     ArrayList<BangChamCongDTO> arrBangChamCong = new ArrayList<BangChamCongDTO>(); //Tạo ArrayList sp với kiểu là ProductsDTO
     ArrayList<ChiTietPhieuNhapDTO> arrCTCC = new ArrayList<ChiTietPhieuNhapDTO>();
-    private JComboBox<String> sortComboBox, sortThangCCCombobox, sortNamCCComboBox;
+    private JComboBox<String> sortComboBox, jc_thang, jc_nam;
     private JPanel bangChamCongContent;
     private JTextField txtTimKiem, tfPriceStart, tfPriceEnd;	
 	
@@ -103,15 +103,7 @@ public class DSBangChamCongGUI extends JPanel{
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridBagLayout());
         bottomPanel.setBackground(Color.white);
-//		// Tạo viền với độ dày 3px và màu xám
-//		Border lineBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
-//		// Tạo TitledBorder với tiêu đề "Thông tin chi tiết"
-//		TitledBorder titledBorder = BorderFactory.createTitledBorder(lineBorder, "Thông tin chi tiết");
-//		// Chỉnh cỡ chữ, kiểu chữ
-//		titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 13)); // Font: Arial, đậm, size 16
-//		titledBorder.setTitleColor(Color.black); // Đổi màu chữ tiêu đề thành xanh
-//		// Áp dụng border cho bottomPanel
-//		bottomPanel.setBorder(titledBorder);
+
 		
         gbc.weightx = 1.0;
         gbc.weighty = 0.25;
@@ -323,51 +315,7 @@ public class DSBangChamCongGUI extends JPanel{
         deleteButtonPanel.setLayout(new BorderLayout());
         deleteButtonPanel.add(btnDelete, BorderLayout.CENTER);        
      
-//        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-//        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
-//        Image imgDetail = iconDetail.getImage();
-//        Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-//        if (iconDelete.getIconWidth() == -1) {
-//            System.out.println("Không tìm thấy ảnh!");
-//        }
-//        ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
-//
-//        // Tạo nút Detail
-//        JButton btnDetail = new ShadowButton("Xem", scaledIconDetail);
-//        btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
-//        btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
-//        btnDetail.setFocusPainted(false);
-//        btnDetail.setBorderPainted(true);
-//        btnDetail.setContentAreaFilled(false);
-//        btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//        btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
-//
-//        // Thêm sự kiện click cho nút Detail
-//        btnDetail.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-////                employeeDetailDialog();
-//            }
-//        });
-//        btnDetail.addMouseListener(new MouseAdapter() {
-//        	@Override
-//        	public void mouseEntered(MouseEvent e) {
-//        		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-//        		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//        	}
-//        	
-//        	@Override
-//        	public void mouseExited(MouseEvent e) {
-//        		btnDetail.setBackground(Color.white);
-//        		detailButtonPanel.setBackground(Color.white);
-//        	}
-//        });
-//        
-//
-//        // Thêm nút vào panel
-//        detailButtonPanel.setLayout(new BorderLayout());
-//        detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
-//
+
         
         //Nút Xuất Excel
         //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
@@ -498,20 +446,7 @@ public class DSBangChamCongGUI extends JPanel{
         gbc.gridy = 0;
         searchPanel.add(searchButtonPanel, gbc);
         
-        //searchInputPanel
-        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A", "Tăng dần", "Giảm dần"};
-        sortComboBox = new JComboBox<String>(sortCriterias);
-        sortComboBox.setBounds(10, 24, 75, 25);
-        searchInputPanel.add(sortComboBox);
         
-        String[] thang = {"Tháng", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        sortThangCCCombobox = new JComboBox<String>(thang);
-        sortThangCCCombobox.setBounds(90, 24, 70, 25);
-        searchInputPanel.add(sortThangCCCombobox);
-        
-        txtTimKiem = new JTextField();
-        txtTimKiem.setBounds(375,  24,  260, 25);
-        searchInputPanel.add(txtTimKiem);
         
         //searchButtonPanel
         ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
@@ -616,8 +551,127 @@ public class DSBangChamCongGUI extends JPanel{
 		}
             }
 	});
+                bccTable.setDefaultEditor(Object.class, null);
+        bccTable.setModel(bccModel);            
+        bccModel.addColumn("Mã chấm công");
+        bccModel.addColumn("Nhân viên");   //"maNV - Họ tên: NV001 - Nguyen Van A"
+        bccModel.addColumn("Tháng");
+        bccModel.addColumn("Năm");
+        bccModel.addColumn("Ngày công");
+        bccModel.addColumn("Nghỉ không phép");
+        bccModel.addColumn("Nghỉ phép có lương");
+        bccModel.addColumn("Nghỉ phép không lương");
+        bccModel.addColumn("Tăng ca ngày thường");
+        bccModel.addColumn("Tăng ca ngày lễ");
+        bccModel.addColumn("Tăng ca chủ nhật");
+        
+        //Điều chỉnh kích thước các cột
+    	TableColumnModel tcm = bccTable.getColumnModel();
+    	tcm.getColumn(0).setPreferredWidth(100);
+	tcm.getColumn(1).setPreferredWidth(150);
+	tcm.getColumn(2).setPreferredWidth(50);
+	tcm.getColumn(3).setPreferredWidth(50);
+	tcm.getColumn(4).setPreferredWidth(100);
+	tcm.getColumn(5).setPreferredWidth(100);
+	tcm.getColumn(6).setPreferredWidth(100);
+	tcm.getColumn(7).setPreferredWidth(100);
+        tcm.getColumn(8).setPreferredWidth(100);
+        tcm.getColumn(9).setPreferredWidth(100);
+        tcm.getColumn(10).setPreferredWidth(100);
 		
+	bccTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
 		
+	//searchInputPanel
+        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A", "Tăng dần", "Giảm dần"};
+        sortComboBox = new JComboBox<String>(sortCriterias);
+        sortComboBox.setBounds(10, 24, 75, 25);
+        searchInputPanel.add(sortComboBox);
+        
+        String[] thang = {"Tháng", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        jc_thang = new JComboBox<String>(thang);
+        jc_thang.setBounds(90, 24, 80, 25);
+        searchInputPanel.add(jc_thang);
+        jc_thang.addActionListener(new ActionListener() {
+			
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bccModel.setRowCount(0);
+                String thang = jc_thang.getSelectedItem().toString();
+                String nam = jc_nam.getSelectedItem().toString();
+                if (!thang.equals("Tháng") || !nam.equals("Năm")) {
+                    arrBangChamCong = bccBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
+                    for(BangChamCongDTO bcc: arrBangChamCong) {
+                        NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
+
+                        String maBCC = bcc.getMaBCC();
+                        String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
+                        int thangCC = bcc.getThangCC();
+                        int namCC = bcc.getNamCC();
+                        float soNgayLam = bcc.getSoNgayLam();
+                        float soNgayNghiKP = bcc.getSoNgayNghiKP();
+                        float soNPCoLuong = bcc.getSoNPCoLuong();
+                        float soNPKhongLuong = bcc.getSoNPKhongLuong();
+                        float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
+                        float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
+                        float soGioOTCN = bcc.getSoGioOTCN();
+
+                        Object[] row = {maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN};
+                        bccModel.addRow(row);
+
+                    }
+                } else loadBangChamCongList();
+            }
+        });
+        
+        LocalDate current = LocalDate.now();
+        String[] nam_title= new String[6];
+        nam_title[0] = "Năm";
+    	for(int i=1;i<nam_title.length;i++) {
+    		nam_title[i] = current.getYear()-2+i+"";
+    	}
+        jc_nam = new JComboBox<String>();
+        jc_nam.setBounds(185, 24, 80, 25);
+        jc_nam.setModel(new DefaultComboBoxModel<>(nam_title));
+        searchInputPanel.add(jc_nam);
+        jc_nam.addActionListener(new ActionListener() {
+			
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bccModel.setRowCount(0);
+                String thang = jc_thang.getSelectedItem().toString();
+                String nam = jc_nam.getSelectedItem().toString();
+                if (!thang.equals("Tháng") || !nam.equals("Năm")) {
+                    arrBangChamCong = bccBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
+                    for(int i=0; i<arrBangChamCong.size(); i++) {
+                        BangChamCongDTO bcc = arrBangChamCong.get(i);
+                        System.out.println("///// MaNV" + bcc.getMaNV());
+                        NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
+
+                        String maBCC = bcc.getMaBCC();
+                        String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
+                        int thangCC = bcc.getThangCC();
+                        int namCC = bcc.getNamCC();
+                        float soNgayLam = bcc.getSoNgayLam();
+                        float soNgayNghiKP = bcc.getSoNgayNghiKP();
+                        float soNPCoLuong = bcc.getSoNPCoLuong();
+                        float soNPKhongLuong = bcc.getSoNPKhongLuong();
+                        float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
+                        float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
+                        float soGioOTCN = bcc.getSoGioOTCN();
+
+                        Object[] row = {maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN};
+                        bccModel.addRow(row);
+                    }
+                } else loadBangChamCongList();
+            }
+        });
+        
+        
+        txtTimKiem = new JTextField();
+        txtTimKiem.setBounds(375,  24,  260, 25);
+        searchInputPanel.add(txtTimKiem);
+        
+        
 	//bottomPanel
 	//Chia 2 panel con leftBottomPanel, rightBottomPanel để hiển thị 2 bảng nghỉ và tăng ca
 	JPanel leftBottomPanel, rightBottomPanel;
@@ -669,21 +723,6 @@ public class DSBangChamCongGUI extends JPanel{
     }
     
     private void loadBangChamCongList() {
-        bccTable.setDefaultEditor(Object.class, null);
-        bccTable.setModel(bccModel);            
-            
-        bccModel.addColumn("Mã chấm công");
-        bccModel.addColumn("Nhân viên");   //"maNV - Họ tên: NV001 - Nguyen Van A"
-        bccModel.addColumn("Tháng");
-        bccModel.addColumn("Năm");
-        bccModel.addColumn("Ngày công");
-        bccModel.addColumn("Nghỉ không phép");
-        bccModel.addColumn("Nghỉ phép có lương");
-        bccModel.addColumn("Nghỉ phép không lương");
-        bccModel.addColumn("Tăng ca ngày thường");
-        bccModel.addColumn("Tăng ca ngày lễ");
-        bccModel.addColumn("Tăng ca chủ nhật");
-    	
         arrBangChamCong = bccBUS.selectAll();
         for(int i=0; i<arrBangChamCong.size(); i++) {
             BangChamCongDTO bcc = arrBangChamCong.get(i);
@@ -705,23 +744,7 @@ public class DSBangChamCongGUI extends JPanel{
             bccModel.addRow(row);
     		
     	}
-    	
-    	//Điều chỉnh kích thước các cột
-    	TableColumnModel tcm = bccTable.getColumnModel();
-    	tcm.getColumn(0).setPreferredWidth(100);
-	tcm.getColumn(1).setPreferredWidth(150);
-	tcm.getColumn(2).setPreferredWidth(50);
-	tcm.getColumn(3).setPreferredWidth(50);
-	tcm.getColumn(4).setPreferredWidth(100);
-	tcm.getColumn(5).setPreferredWidth(100);
-	tcm.getColumn(6).setPreferredWidth(100);
-	tcm.getColumn(7).setPreferredWidth(100);
-        tcm.getColumn(8).setPreferredWidth(100);
-        tcm.getColumn(9).setPreferredWidth(100);
-        tcm.getColumn(10).setPreferredWidth(100);
-		
-	bccTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
-	}
+    }
 	
     private void loadNgayNghiList() {
 	ngayNghiTable.setDefaultEditor(Object.class, null);		
@@ -981,7 +1004,7 @@ public class DSBangChamCongGUI extends JPanel{
             if(selectedRow != -1) {
 		DefaultTableModel bccModel = (DefaultTableModel)bccTable.getModel();
 			
-                String maNV = (String) bccModel.getValueAt(selectedRow,7);
+                String maNV = bccModel.getValueAt(selectedRow,7).toString();
 		log("maNV=" + maNV);
 		ArrayList<DonXinNghiDTO> thongTinNgayNghi = dxnBUS.getThongTinNgayNghi(maNV);
 			
