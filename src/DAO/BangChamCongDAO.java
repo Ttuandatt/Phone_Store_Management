@@ -232,41 +232,41 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO> {
 		return result;
 	}
 
-	//get bang cham cong by nhan vien va thang nam
-		public BangChamCongDTO getBangChamCongByNVAndThangNam(String maNV, int thang, int nam) {
-			BangChamCongDTO bcc = new BangChamCongDTO();
-			try {
-				jdbc.openConnection();
-				
-				String query = "select * from bangchamcong where maNV=? and thangCC=? and namCC=?";
-				
-				PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-				ps.setString(1, maNV);
-				ps.setInt(2, thang);
-				ps.setInt(3, nam);
-				
-				ResultSet rs = ps.executeQuery();
-				if(rs.next()) {				
-					bcc.setMaBCC(rs.getString("maBCC"));
-					bcc.setThangCC(rs.getInt("thangCC"));
-					bcc.setNamCC(rs.getInt("namCC"));
-					bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
-					bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
-					bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
-					bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
-					bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
-					bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
-					bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
-					bcc.setMaNV(rs.getString("maNV"));
-				}
-			}catch (Exception e) {
-				e.printStackTrace();
-				e.getMessage();
-			}finally {
-				jdbc.closeConnection();
+	// get bang cham cong by nhan vien va thang nam
+	public BangChamCongDTO getBangChamCongByNVAndThangNam(String maNV, int thang, int nam) {
+		BangChamCongDTO bcc = new BangChamCongDTO();
+		try {
+			jdbc.openConnection();
+
+			String query = "select * from bangchamcong where maNV=? and thangCC=? and namCC=?";
+
+			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+			ps.setString(1, maNV);
+			ps.setInt(2, thang);
+			ps.setInt(3, nam);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				bcc.setMaBCC(rs.getString("maBCC"));
+				bcc.setThangCC(rs.getInt("thangCC"));
+				bcc.setNamCC(rs.getInt("namCC"));
+				bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+				bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+				bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+				bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+				bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+				bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+				bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+				bcc.setMaNV(rs.getString("maNV"));
 			}
-			
-			return bcc;
+		} catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
+		} finally {
+			jdbc.closeConnection();
 		}
-	
+
+		return bcc;
+	}
+
 }

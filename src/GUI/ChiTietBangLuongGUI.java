@@ -2,6 +2,7 @@
 package GUI;
 
 import BUS.BangChamCongBUS;
+import BUS.BangLuongBUS;
 import BUS.ChucVuBUS;
 import BUS.NhanVienBUS;
 import DTO.BangChamCongDTO;
@@ -12,33 +13,30 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
+import java.text.DecimalFormat;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 public final class ChiTietBangLuongGUI extends JFrame {
-	private JLabel lb_nhanvien, lb_chucvu, lb_luongcb, lb_heso, lb_bangluong;
-	private JLabel jl_nhanvien, jl_chucvu, jl_luongcb, jl_heso;
-	private JPanel jp_ttnv, jp_ctl, jp_main;
-	private JLabel lb_luongtt, lb_luongot, lb_phucap, lb_thuong, lb_khoantru, lb_thuclinh, lb_tongtn, lb_soNL,
-			lb_thanhtien;
-	private JLabel lb_luongtt1, lb_luongot1, lb_luongot2, lb_luongot3, lb_phucap1, lb_phucap2, lb_khoantru1,
-			lb_khoantru2, lb_khoantru3, lb_khoantru4, lb_khoantru5, lb_soNL1, lb_soNL2, lb_soNL3, lb_soNL4, lb_soNL5,
-			lb_soNL6;
-	private JTextField tf_luongtt1, tf_luongot1, tf_luongot2, tf_luongot3, tf_phucap1, tf_phucap2, tf_thuong,
-			tf_khoantru1, tf_khoantru2, tf_khoantru3, tf_khoantru4, tf_khoantru5, tf_tongtn, tf_thuclinh;
-	private JButton btn_chinhsua, btn_luu, btn_duyet;
-	private NhanVienBUS nvBUS = new NhanVienBUS();
-	private BangChamCongBUS bccBUS = new BangChamCongBUS();
-	private ChucVuBUS cvBUS = new ChucVuBUS();
+    private JLabel lb_nhanvien, lb_chucvu, lb_luongcb, lb_heso, lb_bangluong;
+    private JLabel jl_nhanvien, jl_chucvu, jl_luongcb, jl_heso;
+    private JPanel jp_ttnv, jp_ctl, jp_main;
+    private JLabel lb_luongtt, lb_luongot, lb_phucap, lb_thuong, lb_khoantru, lb_thuclinh, lb_tongtn, lb_soNL, lb_thanhtien;
+    private JLabel lb_luongtt1, lb_luongot1, lb_luongot2, lb_luongot3, lb_phucap1, lb_phucap2, 
+            lb_khoantru1, lb_khoantru2, lb_khoantru3, lb_khoantru4, lb_khoantru5, lb_soNL1, lb_soNL2, lb_soNL3, lb_soNL4, lb_soNL5, lb_soNL6;
+    private JTextField tf_luongtt1, tf_luongot1, tf_luongot2, tf_luongot3, tf_phucap1, tf_phucap2, 
+            tf_thuong, tf_khoantru1, tf_khoantru2, tf_khoantru3, tf_khoantru4, tf_khoantru5, tf_tongtn, tf_thuclinh;
+    private NhanVienBUS nvBUS = new NhanVienBUS();
+    private BangChamCongBUS bccBUS = new BangChamCongBUS();
+    private ChucVuBUS cvBUS = new ChucVuBUS();
+    private BangLuongBUS blBUS = new BangLuongBUS();
 
-    public ChiTietBangLuongGUI(BangLuongDTO bangLuong) {
-        NhanVienDTO nv = nvBUS.selectById(bangLuong.getMaNV());
-        String mabcc= bangLuong.getMaLuong().replaceFirst("BL", "CC");
+    public ChiTietBangLuongGUI(BangLuongDTO bl, String tongTN, String thucNhan) {
+        NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
+        String mabcc= bl.getMaLuong().replaceFirst("BL", "CC");
         BangChamCongDTO bcc = bccBUS.selectById(mabcc);
         ChucVuDTO cv = cvBUS.selectById(nv.getChucVu());
+        DecimalFormat df = new DecimalFormat("#,###");
         
         setTitle("CHI TIẾT BẢNG LƯƠNG");
         setSize(900, 700);
@@ -55,7 +53,8 @@ public final class ChiTietBangLuongGUI extends JFrame {
         Font labelFont = new Font("SansSerif", Font.BOLD, 15);
         Font tfFont = new Font("SansSerif", Font.PLAIN, 15);
         
-        lb_bangluong = new JLabel("BẢNG LƯƠNG", SwingConstants.CENTER);
+        String title = "BẢNG LƯƠNG THÁNG " + bl.getThangLuong() + "/" + bl.getNamLuong();
+        lb_bangluong = new JLabel(title, SwingConstants.CENTER);
         lb_bangluong.setFont(titleFont);
         lb_bangluong.setBounds(300, 10, 300, 30);
         jp_main.add(lb_bangluong);
@@ -76,7 +75,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_nhanvien.setBounds(50, 25, 100, 30);
         jp_ttnv.add(lb_nhanvien);
 
-        jl_nhanvien = new JLabel("000");
+        jl_nhanvien = new JLabel(nv.getMaNV() + " - " + nv.getHoTen());
         jl_nhanvien.setBounds(150, 25, 160, 30);
         jl_nhanvien.setFont(tfFont);
         jp_ttnv.add(jl_nhanvien);
@@ -86,7 +85,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_chucvu.setBounds(430, 25, 160, 30);
         jp_ttnv.add(lb_chucvu);
 
-        jl_chucvu = new JLabel("000");
+        jl_chucvu = new JLabel(cv.getTenCV());
         jl_chucvu.setBounds(520, 25, 200, 30);
         jl_chucvu.setFont(tfFont);
         jp_ttnv.add(jl_chucvu);
@@ -96,7 +95,8 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_luongcb.setBounds(50, 65, 200, 30);
         jp_ttnv.add(lb_luongcb);
 
-        jl_luongcb = new JLabel("000");
+        String luongCB= df.format(bl.getLuongCB());
+        jl_luongcb = new JLabel(luongCB);
         jl_luongcb.setBounds(180, 65, 200, 30);
         jl_luongcb.setFont(tfFont);
         jp_ttnv.add(jl_luongcb);
@@ -106,7 +106,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_heso.setBounds(450, 65, 160, 30);
         jp_ttnv.add(lb_heso);
 
-        jl_heso = new JLabel("000");
+        jl_heso = new JLabel(String.valueOf(bl.getHeSo()));
         jl_heso.setBounds(520, 65, 150, 30);
         jl_heso.setFont(tfFont);
         jp_ttnv.add(jl_heso);
@@ -148,13 +148,15 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_luongtt1.setFont(tfFont);
         jp_ctl.add(lb_luongtt1);
         
-        tf_luongtt1 = new JTextField(" ");
+        Float luongTT = ((bl.getLuongCB()* bl.getHeSo())/24)* bcc.getSoNgayLam();
+        String luongThucTe= df.format(luongTT);
+        tf_luongtt1 = new JTextField(luongThucTe);
         tf_luongtt1.setBounds(680, 50, 130, 25);
         tf_luongtt1.setFont(tfFont);
         tf_luongtt1.setEditable(false);
         jp_ctl.add(tf_luongtt1);
         
-        lb_soNL1 = new JLabel("000");
+        lb_soNL1 = new JLabel(String.valueOf(bcc.getSoNgayLam()));
         lb_soNL1.setBounds(510, 50, 100, 25);
         lb_soNL1.setHorizontalAlignment(SwingConstants.CENTER);
         lb_soNL1.setFont(tfFont);
@@ -171,13 +173,16 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_luongot1.setFont(tfFont);
         jp_ctl.add(lb_luongot1);
         
-        tf_luongot1 = new JTextField("");
+        Float t = (bl.getLuongCB()* bl.getHeSo())/(24* 8);
+        String luongOT1 = df.format(bcc.getSoGioOTNgayThuong()*t);
+        tf_luongot1 = new JTextField(luongOT1);
         tf_luongot1.setBounds(680, 90, 130, 25);
         tf_luongot1.setFont(tfFont);
         tf_luongot1.setEditable(false);
         jp_ctl.add(tf_luongot1);  
         
-        lb_soNL2 = new JLabel("000");
+        
+        lb_soNL2 = new JLabel(String.valueOf(bcc.getSoGioOTNgayThuong()) + "h");
         lb_soNL2.setBounds(510, 90, 100, 25);
         lb_soNL2.setHorizontalAlignment(SwingConstants.CENTER);
         lb_soNL2.setFont(tfFont);
@@ -188,13 +193,14 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_luongot2.setFont(tfFont);
         jp_ctl.add(lb_luongot2);
         
-        tf_luongot2 = new JTextField("");
+        String luongOT2 = df.format(bcc.getSoGioOTNgayLe()*t);
+        tf_luongot2 = new JTextField(luongOT2);
         tf_luongot2.setBounds(680, 130, 130, 25);
         tf_luongot2.setFont(tfFont);
         tf_luongot2.setEditable(false);
         jp_ctl.add(tf_luongot2);
         
-        lb_soNL3 = new JLabel("000");
+        lb_soNL3 = new JLabel(String.valueOf(bcc.getSoGioOTNgayLe()) + "h");
         lb_soNL3.setBounds(510, 130, 100, 25);
         lb_soNL3.setHorizontalAlignment(SwingConstants.CENTER);
         lb_soNL3.setFont(tfFont);
@@ -205,13 +211,14 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_luongot3.setFont(tfFont);
         jp_ctl.add(lb_luongot3);
         
-        tf_luongot3 = new JTextField("");
+        String luongOT3 = df.format(bcc.getSoGioOTCN()*t);
+        tf_luongot3 = new JTextField(luongOT3);
         tf_luongot3.setBounds(680, 170, 130, 25);
         tf_luongot3.setFont(tfFont);
         tf_luongot3.setEditable(false);
         jp_ctl.add(tf_luongot3);
         
-        lb_soNL4 = new JLabel("000");
+        lb_soNL4 = new JLabel(String.valueOf(bcc.getSoGioOTCN()) + "h");
         lb_soNL4.setBounds(510, 170, 100, 25);
         lb_soNL4.setHorizontalAlignment(SwingConstants.CENTER);
         lb_soNL4.setFont(tfFont);
@@ -227,46 +234,38 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_phucap1.setFont(tfFont);
         lb_phucap1.setBounds(200, 210, 150, 25);
         jp_ctl.add(lb_phucap1);
-        
-        tf_phucap1 = new JTextField("");
+       
+        String pcAn= df.format(bl.getPhuCapAnTrua());
+        tf_phucap1 = new JTextField(pcAn);
         tf_phucap1.setBounds(680, 210, 130, 25);
         tf_phucap1.setFont(tfFont);
         tf_phucap1.setEditable(false);
         jp_ctl.add(tf_phucap1);
-        
-        lb_soNL5 = new JLabel("000");
-        lb_soNL5.setBounds(510, 210, 100, 25);
-        lb_soNL5.setHorizontalAlignment(SwingConstants.CENTER);
-        lb_soNL5.setFont(tfFont);
-        jp_ctl.add(lb_soNL5);
         
         lb_phucap2 = new JLabel("Phụ cấp đi lại");
         lb_phucap2.setFont(tfFont);
         lb_phucap2.setBounds(200, 250, 150, 25);
         jp_ctl.add(lb_phucap2);
         
-        tf_phucap2 = new JTextField("");
+        String pcDiLai= df.format(bl.getPhuCapDiLai());
+        tf_phucap2 = new JTextField(pcDiLai);
         tf_phucap2.setBounds(680, 250, 130, 25);
         tf_phucap2.setFont(tfFont);
         tf_phucap2.setEditable(false);
         jp_ctl.add(tf_phucap2);
         
-        lb_soNL6 = new JLabel("000");
-        lb_soNL6.setBounds(510, 250, 100, 25);
-        lb_soNL6.setHorizontalAlignment(SwingConstants.CENTER);
-        lb_soNL6.setFont(tfFont);
-        jp_ctl.add(lb_soNL6);
-        
+
         //
         lb_thuong = new JLabel("4. Lương thưởng:");
         lb_thuong.setFont(labelFont);
         lb_thuong.setBounds(30, 290, 160, 25);
         jp_ctl.add(lb_thuong);
-
-        tf_thuong = new JTextField("");
+        
+        String thuong= df.format(bl.getThuong());
+        tf_thuong = new JTextField(thuong);
         tf_thuong.setBounds(680, 290, 130, 25);
         tf_thuong.setFont(tfFont);
-        //tf_thuong.setEditable(false);
+        tf_thuong.setEditable(false);
         jp_ctl.add(tf_thuong);
         
         //
@@ -300,43 +299,48 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_khoantru5.setBounds(200, 490, 160, 25);
         jp_ctl.add(lb_khoantru5); 
         
-        tf_khoantru1 = new JTextField("");
+        String thue= df.format(bl.getThue());
+        tf_khoantru1 = new JTextField(thue);
         tf_khoantru1.setBounds(680, 330, 130, 25);
         tf_khoantru1.setFont(tfFont);
-        //tf_khoantru1.setEditable(false);
+        tf_khoantru1.setEditable(false);
         jp_ctl.add(tf_khoantru1);
 
-        tf_khoantru2 = new JTextField("");
+        String bhyt= df.format(bl.getBhyt());
+        tf_khoantru2 = new JTextField(bhyt);
         tf_khoantru2.setBounds(680, 370, 130, 25);
         tf_khoantru2.setFont(tfFont);
-        //tf_khoantru2.setEditable(false);
+        tf_khoantru2.setEditable(false);
         jp_ctl.add(tf_khoantru2);
         
-        tf_khoantru3 = new JTextField("");
+        String bhxh= df.format(bl.getBhxh());
+        tf_khoantru3 = new JTextField(bhxh);
         tf_khoantru3.setBounds(680, 410, 130, 25);
         tf_khoantru3.setFont(tfFont);
-        //tf_khoantru3.setEditable(false);
+        tf_khoantru3.setEditable(false);
         jp_ctl.add(tf_khoantru3);
 
-        tf_khoantru4 = new JTextField("");
+        String bhtn= df.format(bl.getBhtn());
+        tf_khoantru4 = new JTextField(bhtn);
         tf_khoantru4.setBounds(680, 450, 130, 25);
         tf_khoantru4.setFont(tfFont);
-        //tf_khoantru4.setEditable(false);
+        tf_khoantru4.setEditable(false);
         jp_ctl.add(tf_khoantru4);    
         
-        tf_khoantru5 = new JTextField("");
+        String tamUng= df.format(bl.getTamUng());
+        tf_khoantru5 = new JTextField(tamUng);
         tf_khoantru5.setBounds(680, 490, 130, 25);
         tf_khoantru5.setFont(tfFont);
-        //tf_khoantru4.setEditable(false);
+        tf_khoantru5.setEditable(false);
         jp_ctl.add(tf_khoantru5);
-
+        
         //
         lb_tongtn = new JLabel("6. Tổng thu nhập thực tế (1)+(2)+(3)+(4)");
         lb_tongtn.setFont(labelFont);
         lb_tongtn.setBounds(30, 530, 300, 25);
         jp_ctl.add(lb_tongtn); 
 
-        tf_tongtn = new JTextField("");
+        tf_tongtn = new JTextField(tongTN);
         tf_tongtn.setBounds(680, 530, 130, 25);
         tf_tongtn.setFont(tfFont);
         tf_tongtn.setEditable(false);
@@ -348,7 +352,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_thuclinh.setBounds(30, 570, 200, 25);
         jp_ctl.add(lb_thuclinh); 
 
-        tf_thuclinh = new JTextField("");
+        tf_thuclinh = new JTextField(thucNhan);
         tf_thuclinh.setBounds(680, 570, 130, 25);
         tf_thuclinh.setFont(tfFont);
         tf_thuclinh.setEditable(false);
@@ -357,58 +361,5 @@ public final class ChiTietBangLuongGUI extends JFrame {
         jp_ctl.revalidate();
         jp_ctl.repaint();
         
-        // Các nút
-        JButton btn_chinhsua = new JButton("Lưu bảng lương");
-        btn_chinhsua.setBounds(200, 300, 200, 35);
-        btn_chinhsua.setFont(new Font("Arial", Font.BOLD, 14));
-        btn_chinhsua.setForeground(Color.white);
-        btn_chinhsua.setBackground(Color.decode("#37A4F2"));
-        btn_chinhsua.setBorderPainted(false);
-        btn_chinhsua.setFocusPainted(false);
-        btn_chinhsua.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        jp_main.add(btn_chinhsua);
-        btn_chinhsua.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                btnChinhSuaActionPerformed(ae);
-            } 
-        });
-        
-        btn_duyet = new JButton("Duyệt bảng lương");
-        btn_duyet.setBounds(500, 300, 200, 35);
-        btn_duyet.setFont(new Font("Arial", Font.BOLD, 14));
-        btn_duyet.setForeground(Color.white);
-        btn_duyet.setBackground(Color.decode("#37A4F2"));
-        btn_duyet.setBorderPainted(false);
-        btn_duyet.setFocusPainted(false);
-        btn_duyet.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        jp_main.add(btn_duyet);
-        btn_duyet.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                btnDuyetActionPerformed(ae);
-            }     
-
-            
-
-        });
     }
-
-    private void btnChinhSuaActionPerformed(ActionEvent ae) {
-        
-    }
-    
-    private void btnDuyetActionPerformed(ActionEvent ae) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
-    /*public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            
-            ChiTietBangLuongGUI frame = new ChiTietBangLuongGUI();
-            frame.setVisible(true);
-        });
-    }*/
-    
 }
