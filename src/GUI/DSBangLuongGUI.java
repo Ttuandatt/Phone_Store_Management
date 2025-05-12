@@ -191,12 +191,12 @@ public class DSBangLuongGUI extends JPanel{
                 if (selectedRows.length == 1) {
                     String maBL = blTable.getValueAt(selectedRows[0], 0).toString(); 
                     BangLuongDTO bangLuong = blBUS.selectById(maBL);
-                    DecimalFormat df = new DecimalFormat("#.###");
-                    Float luongTT = Float.valueOf(blTable.getValueAt(selectedRows[0], 5).toString());
-                    Float luongOT = Float.valueOf(blTable.getValueAt(selectedRows[0], 6).toString());
-                    Float phuCap = Float.valueOf(blTable.getValueAt(selectedRows[0], 7).toString());
-                    Float thuong = Float.valueOf(blTable.getValueAt(selectedRows[0], 8).toString());
-                    Float khoanTru = Float.valueOf(blTable.getValueAt(selectedRows[0], 9).toString());
+                    DecimalFormat df = new DecimalFormat("#,###");
+                    Float luongTT = Float.valueOf(blTable.getValueAt(selectedRows[0], 5).toString().replace(",", ""));
+                    Float luongOT = Float.valueOf(blTable.getValueAt(selectedRows[0], 6).toString().replace(",", ""));
+                    Float phuCap = Float.valueOf(blTable.getValueAt(selectedRows[0], 7).toString().replace(",", ""));
+                    Float thuong = Float.valueOf(blTable.getValueAt(selectedRows[0], 8).toString().replace(",", ""));
+                    Float khoanTru = Float.valueOf(blTable.getValueAt(selectedRows[0], 9).toString().replace(",", ""));
                     
                     Float tongtn = luongTT + luongOT + phuCap + thuong;
                     String tongTN= df.format(tongtn);
@@ -693,9 +693,9 @@ public class DSBangLuongGUI extends JPanel{
 	}
 
 
-    private void loadBangLuongList() {
+    private ArrayList<BangLuongDTO> loadBangLuongList() {
         blModel.setRowCount(0);
-	arrBangLuong = blBUS.selectAll();  
+	ArrayList<BangLuongDTO> arrBangLuong = blBUS.selectAll();  
         String trangThai = null;
 	for(BangLuongDTO bl: arrBangLuong) {
             NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
@@ -706,7 +706,7 @@ public class DSBangLuongGUI extends JPanel{
             String nvien = nv.getMaNV() + " - " + nv.getHoTen();
             String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
             
-            DecimalFormat df = new DecimalFormat("#.###");
+            DecimalFormat df = new DecimalFormat("#,###");
 
             String luongCB= df.format(bl.getLuongCB());
             
@@ -727,8 +727,11 @@ public class DSBangLuongGUI extends JPanel{
             Float cacKhoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
             String khoanTru= df.format(cacKhoanTru);
             
-            //Float thucNhan = luongTT + luongOT + pc + luongThuong - cacKhoanTru;
-            String thucNhan= df.format(luongTT + luongOT + pc + luongThuong - cacKhoanTru);
+            Float thucnhan = luongTT + luongOT + pc + luongThuong - cacKhoanTru;
+            String thucNhan= df.format(thucnhan);
+            bl.setThucNhan(thucnhan);
+            blBUS.updateBangLuong(bl);
+            //System.out.println("loadBangLuongList() - thucNhan: " + thucNhan);
             
             if (bl.getTrangThai().equals("on"))
                 trangThai = "Đã duyệt";
@@ -737,7 +740,8 @@ public class DSBangLuongGUI extends JPanel{
 			
             Object[] row = {maBL, nvien, thoiGian, luongCB, heSo, luongThucTe, luongTangCa, phuCap, thuong, khoanTru, thucNhan, trangThai};
             blModel.addRow(row);
-	}		
+	}
+        return arrBangLuong;
     }
     
     private void loadBangLuongTheoThoiGian() {
@@ -745,7 +749,7 @@ public class DSBangLuongGUI extends JPanel{
         String thang = jc_thang.getSelectedItem().toString();
         String nam = jc_nam.getSelectedItem().toString();
         if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-            arrBangLuong = blBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
+            ArrayList<BangLuongDTO> arrBangLuong = blBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
             String trangThai = null;
             for(BangLuongDTO bl: arrBangLuong) {
                 NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
@@ -755,7 +759,7 @@ public class DSBangLuongGUI extends JPanel{
                 String maBL = bl.getMaLuong();
                 String nvien = nv.getMaNV() + " - " + nv.getHoTen();
                 String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
-                DecimalFormat df = new DecimalFormat("#.###");
+                DecimalFormat df = new DecimalFormat("#,###");
 
                 String luongCB= df.format(bl.getLuongCB());
 
@@ -776,8 +780,8 @@ public class DSBangLuongGUI extends JPanel{
                 Float cacKhoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
                 String khoanTru= df.format(cacKhoanTru);
 
-                //Float thucNhan = luongTT + luongOT + pc + luongThuong - cacKhoanTru;
-                String thucNhan= df.format(luongTT + luongOT + pc + luongThuong - cacKhoanTru);
+                Float thucnhan = bl.getThucNhan();
+                String thucNhan = df.format(thucnhan);
 
                 if (bl.getTrangThai().equals("on"))
                     trangThai = "Đã duyệt";
@@ -831,59 +835,58 @@ public class DSBangLuongGUI extends JPanel{
 
             if (!tf_thuong.getText().trim().isEmpty()) {
                 bl.setThuong((bl.getLuongCB()/100) * Float.parseFloat(tf_thuong.getText()));
-                System.out.println("Thuong: " + bl.getThuong());
+                //System.out.println("Thuong: " + bl.getThuong());
             }
             if (!tf_bhxh.getText().trim().isEmpty()) {
                 bl.setBhxh(Float.parseFloat(tf_bhxh.getText()));
-                System.out.println("BHXH: " + bl.getBhxh());
+                //System.out.println("BHXH: " + bl.getBhxh());
             }
             if (!tf_bhyt.getText().trim().isEmpty()) {
                 bl.setBhyt(Float.parseFloat(tf_bhyt.getText()));
-                System.out.println("BHYT: " + bl.getBhyt());
+                //System.out.println("BHYT: " + bl.getBhyt());
             }
             if (!tf_bhtn.getText().trim().isEmpty()) {
                 bl.setBhtn(Float.parseFloat(tf_bhtn.getText()));
-                System.out.println("BHTN: " + bl.getBhtn());
+               //System.out.println("BHTN: " + bl.getBhtn());
             }
             if (!tf_thue.getText().trim().isEmpty()) {
                 bl.setThue(Float.parseFloat(tf_thue.getText()));
-                System.out.println("Thue: " + bl.getThue());
+                //System.out.println("Thue: " + bl.getThue());
             }
             if (!tf_tamUng.getText().trim().isEmpty()) {
                 bl.setTamUng(Float.parseFloat(tf_tamUng.getText()));
-                System.out.println("Tam Ung: " + bl.getTamUng());
+                //System.out.println("Tam Ung: " + bl.getTamUng());
             }
             if (!tf_pcAnTrua.getText().trim().isEmpty()) {
                 bl.setPhuCapAnTrua(Float.parseFloat(tf_pcAnTrua.getText()));
-                System.out.println("An: " + bl.getPhuCapAnTrua());
+                //System.out.println("An: " + bl.getPhuCapAnTrua());
             }
             if (!tf_pcDiChuyen.getText().trim().isEmpty()) {
                 bl.setPhuCapDiLai(Float.parseFloat(tf_pcDiChuyen.getText()));
-                System.out.println("Di lai: " + bl.getPhuCapDiLai());
+                //System.out.println("Di lai: " + bl.getPhuCapDiLai());
             }
 
             String mabcc = bl.getMaLuong().replaceFirst("BL", "CC");
             BangChamCongDTO bcc = bccBUS.selectById(mabcc);
             
             Float luongTT = (bl.getLuongCB() * bl.getHeSo())/ 24 * bcc.getSoNgayLam();
-            luongTT = (float) Math.round(luongTT);
+            //luongTT = (float) Math.round(luongTT);
             
             Float t = (bl.getLuongCB() * bl.getHeSo()) / (24 * 8);
             Float luongTangCa = t * bcc.getSoGioOTNgayThuong() + t * 2 * bcc.getSoGioOTCN() + t * 3 * bcc.getSoGioOTNgayLe();
-            luongTangCa = (float) Math.round(luongTangCa);
+            //luongTangCa = (float) Math.round(luongTangCa);
             
             Float phuCap = bl.getPhuCapAnTrua() + bl.getPhuCapDiLai();
             phuCap = (float) Math.round(phuCap);
-            System.out.println("Phu cap: " + phuCap);
+            //System.out.println("Phu cap: " + phuCap);   //
             Float thuong = bl.getThuong();
             Float khoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
-            System.out.println("Khoan tru: " + khoanTru);
-            khoanTru = (float) Math.round(khoanTru);
-            Float thucNhan = luongTT + luongTangCa + phuCap + thuong - khoanTru;
-            thucNhan = (float) Math.round(thucNhan);
+            //System.out.println("Khoan tru: " + khoanTru);   //
+            //khoanTru = (float) Math.round(khoanTru);
+            Float thucnhan = luongTT + luongTangCa + phuCap + thuong - khoanTru;
+            int thucNhan = (int) Math.round(thucnhan);
             bl.setThucNhan(thucNhan);
-            System.out.println("Thuc Nhan: " + bl.getThucNhan());
-            
+            //System.out.println("Thuc Nhan: " + bl.getThucNhan() + " ; " + thucNhan);    //
 
             int resultUpdate = blBUS.updateBangLuong(bl);
             if (resultUpdate > 0) {
@@ -927,7 +930,7 @@ public class DSBangLuongGUI extends JPanel{
                 String maBL = bl.getMaLuong();
                 String nvien = nv.getMaNV() + " - " + nv.getHoTen();
                 String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
-                DecimalFormat df = new DecimalFormat("#.###");
+                DecimalFormat df = new DecimalFormat("#,###");
 
                 String luongCB= df.format(bl.getLuongCB());
 
