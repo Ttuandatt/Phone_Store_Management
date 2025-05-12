@@ -68,10 +68,10 @@ public class ChiTietChamCongGUI extends JPanel{
 //      this.setBackground(Color.white);
         
         JPanel panelTop = new JPanel();
-	panelTop.setBounds(5,0,1080,40);
-	panelTop.setBackground(Color.white);
-	this.add(panelTop);
-	panelTop.setLayout(null);
+		panelTop.setBounds(5,0,1300,40);
+		panelTop.setBackground(Color.white);
+		this.add(panelTop);
+		panelTop.setLayout(null);
 
         ArrayList<ChiTietChamCongDTO> arr_AllCTCC = ctccBUS.selectAll();
         /*for (ChiTietChamCongDTO ct: arr_AllCTCC) {
@@ -96,7 +96,7 @@ public class ChiTietChamCongGUI extends JPanel{
         
 	JPanel panelFrame = new JPanel();
 	panelFrame.setBackground(Color.white);
-	panelFrame.setBounds(5,50,1080,520);
+	panelFrame.setBounds(5,50,1300,700);
 	this.add(panelFrame);
 	panelFrame.setLayout(null);
 		
@@ -149,7 +149,7 @@ public class ChiTietChamCongGUI extends JPanel{
     	
         JScrollPane scrollPanel= new JScrollPane(table);
     	scrollPanel.setVerticalScrollBar(new JScrollBar());
-    	scrollPanel.setBounds(10, 10, 380, 505);
+    	scrollPanel.setBounds(10, 10, 500, 680);
     	scrollPanel.setBorder(new LineBorder(Color.decode("#dfe4ea"),3));
     	panelFrame.add(scrollPanel);
         
@@ -295,17 +295,17 @@ public class ChiTietChamCongGUI extends JPanel{
     	
         //////
        	JPanel panel= new JPanel();
-    	panel.setBounds(400,10,530,505);
+    	panel.setBounds(460,10,825,680);
     	panel.setLayout(null);
     	panel.setBorder(new LineBorder(Color.decode("#dfe4ea"),3));
     	panelFrame.add(panel);
     	   	
     	JPanel panel_1= new JPanel();
-    	panel_1.setBounds(0,0,530,280);
+    	panel_1.setBounds(55,0,770,400);
     	panel_1.setLayout(null);
     	panel_1.setBorder(new LineBorder(Color.decode("#dfe4ea"),3));
     	panel.add(panel_1);
-    	GridLayout layout= new GridLayout(4, 8);  
+    	GridLayout layout= new GridLayout(5, 7);  
     	layout.setHgap(2);
     	layout.setVgap(2);
     	panel_1.setLayout(layout);
@@ -334,7 +334,7 @@ public class ChiTietChamCongGUI extends JPanel{
     	}
 
     	JPanel thongTinChamCong= new JPanel();
-    	thongTinChamCong.setBounds(110,305,450,40);
+    	thongTinChamCong.setBounds(250,420,400,40);
     	panel.add(thongTinChamCong);
     	thongTinChamCong.setLayout(null);
     	arr= new ArrayList<>();
@@ -357,14 +357,14 @@ public class ChiTietChamCongGUI extends JPanel{
         /////////
     	jp_tangCa= new JPanel();
     	jp_tangCa.setLayout(null);
-    	jp_tangCa.setBounds(5, 365, 400, 120);
+    	jp_tangCa.setBounds(250, 470, 400, 120);
     	panel.add(jp_tangCa);
     	jp_tangCa.setVisible(false);
     	
-	JLabel title_tangCa= new JLabel("Loại tăng ca: ");
-	title_tangCa.setFont(new Font("Arial",Font.BOLD,14));
-	title_tangCa.setBounds(20,5,150,30);
-	jp_tangCa.add(title_tangCa);
+		JLabel title_tangCa = new JLabel("Loại tăng ca: ");
+		title_tangCa.setFont(new Font("Arial", Font.BOLD, 14));
+		title_tangCa.setBounds(20, 5, 150, 30);
+		jp_tangCa.add(title_tangCa);
     	
     	int x_1=130;
     	ButtonGroup g= new ButtonGroup();
@@ -385,36 +385,36 @@ public class ChiTietChamCongGUI extends JPanel{
     	} 
     	
         JLabel lb_soGio= new JLabel("Số giờ tăng ca: ");
-	lb_soGio.setFont(new Font("Arial", Font.BOLD,14));
-	lb_soGio.setBounds(20,45,150,30);
-	jp_tangCa.add(lb_soGio); 
-        
-        tf_soGioOT = new JTextField();
-        tf_soGioOT.setFont(new Font("Arial",0,14));
-	tf_soGioOT.setBounds(130, 45,80,25);
-	jp_tangCa.add(tf_soGioOT);
-        
+		lb_soGio.setFont(new Font("Arial", Font.BOLD, 14));
+		lb_soGio.setBounds(20, 45, 150, 30);
+		jp_tangCa.add(lb_soGio);
+
+		tf_soGioOT = new JTextField();
+		tf_soGioOT.setFont(new Font("Arial", 0, 14));
+		tf_soGioOT.setBounds(130, 45, 80, 25);
+		jp_tangCa.add(tf_soGioOT);
+
         JLabel lb_ghiChu1= new JLabel("Ghi chú:");
-	lb_ghiChu1.setFont(new Font("Arial", Font.BOLD,14));
-	lb_ghiChu1.setBounds(20,85,100,30);
-	jp_tangCa.add(lb_ghiChu1); 
-        
-        JTextField tf_ghiChu1 = new JTextField();
-        tf_ghiChu1.setFont(new Font("Arial",0,14));
-	tf_ghiChu1.setBounds(130, 85,250,30);
-	jp_tangCa.add(tf_ghiChu1);
+		lb_ghiChu1.setFont(new Font("Arial", Font.BOLD, 14));
+		lb_ghiChu1.setBounds(20, 85, 100, 30);
+		jp_tangCa.add(lb_ghiChu1);
+
+		JTextField tf_ghiChu1 = new JTextField();
+		tf_ghiChu1.setFont(new Font("Arial", 0, 14));
+		tf_ghiChu1.setBounds(130, 85, 250, 30);
+		jp_tangCa.add(tf_ghiChu1);
         
         ///
         jp_nghi= new JPanel();
     	jp_nghi.setLayout(null);
-    	jp_nghi.setBounds(5, 365, 400, 120);
+    	jp_nghi.setBounds(250, 470, 400, 120);
     	panel.add(jp_nghi);
     	jp_nghi.setVisible(true);
     	
-	JLabel lb_nghi= new JLabel("Nghỉ có phép: ");
-	lb_nghi.setFont(new Font("Arial", Font.BOLD, 14));
-	lb_nghi.setBounds(20,5,150,30);
-	jp_nghi.add(lb_nghi);
+		JLabel lb_nghi = new JLabel("Nghỉ có phép: ");
+		lb_nghi.setFont(new Font("Arial", Font.BOLD, 14));
+		lb_nghi.setBounds(20, 5, 150, 30);
+		jp_nghi.add(lb_nghi);
     	
     	int x_2=130;
     	ButtonGroup g1= new ButtonGroup();
@@ -435,10 +435,10 @@ public class ChiTietChamCongGUI extends JPanel{
     	} 
     	
         JLabel lb_tinhLuong= new JLabel("Tính lương: ");
-	lb_tinhLuong.setFont(new Font("Arial", Font.BOLD,14));
-	lb_tinhLuong.setBounds(20,45,150,30);
-	jp_nghi.add(lb_tinhLuong); 
-        
+		lb_tinhLuong.setFont(new Font("Arial", Font.BOLD, 14));
+		lb_tinhLuong.setBounds(20, 45, 150, 30);
+		jp_nghi.add(lb_tinhLuong);
+
         int x_3=130;
     	ButtonGroup g2= new ButtonGroup();
     	String[] abc2= {"Có","Không"};
@@ -479,16 +479,16 @@ public class ChiTietChamCongGUI extends JPanel{
             }
         });
         
-        JLabel lb_ghiChu2= new JLabel("Ghi chú: ");
-	lb_ghiChu2.setFont(new Font("Arial", Font.BOLD,14));
-	lb_ghiChu2.setBounds(20,85,100,30);
-	jp_nghi.add(lb_ghiChu2); 
-        
-        tf_ghiChu2 = new JTextField();
-        tf_ghiChu2.setFont(new Font("Arial",0,14));
-	tf_ghiChu2.setBounds(130, 85,250,30);
-	jp_nghi.add(tf_ghiChu2);
-        
+		JLabel lb_ghiChu2 = new JLabel("Ghi chú: ");
+		lb_ghiChu2.setFont(new Font("Arial", Font.BOLD, 14));
+		lb_ghiChu2.setBounds(20, 85, 100, 30);
+		jp_nghi.add(lb_ghiChu2);
+
+		tf_ghiChu2 = new JTextField();
+		tf_ghiChu2.setFont(new Font("Arial", 0, 14));
+		tf_ghiChu2.setBounds(130, 85, 250, 30);
+		jp_nghi.add(tf_ghiChu2);
+
         for(JLabel i: arr) {
             i.addMouseListener(new MouseAdapter() {
                 @Override
@@ -617,7 +617,7 @@ public class ChiTietChamCongGUI extends JPanel{
         btnThem.setBackground(Color.decode("#37A4F2"));
         btnThem.setBorderPainted(false);
         btnThem.setFocusPainted(false);
-        btnThem.setBounds(430, 460, 80, 40);
+        btnThem.setBounds(430, 600, 80, 40);
         btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR));
         panel.add(btnThem);
         
@@ -819,6 +819,7 @@ public class ChiTietChamCongGUI extends JPanel{
         String nam = jc_nam.getSelectedItem().toString();
 
         String macc = "CC" + soThang + nam+ manv;
+        log("macc="+macc);
         ArrayList<ChiTietChamCongDTO> arr_CTCC = new ArrayList<ChiTietChamCongDTO>();
         arr_CTCC = ctccBUS.getChiTietCCTheoMaCC(macc);
         
@@ -831,6 +832,8 @@ public class ChiTietChamCongGUI extends JPanel{
                 for(JLabel i: arr_1) { 
                     String ngay = String.format("%02d", Integer.valueOf(i.getName()));
                     String date = ngay + soThang + nam; 
+                    log("date="+date);
+                    log("macc="+macc);
                     if (ctcc.getMaCTCC().contains(date)) {
                         switch (ctcc.getLoaiChamCong()) {
                             case "Nghỉ phép có lương":
@@ -1049,7 +1052,17 @@ public class ChiTietChamCongGUI extends JPanel{
     public JTextField gettGetNgayThangNam() {
         return tGetNgayThangNam;
     }
-}
+
     /*private void loadBangChamCongList() {
     	
     }*/
+
+
+// hàm hiển thị thông tin dòng code
+	public static void log(String message) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+				+ element.getLineNumber() + " | " + message);
+	}
+}
