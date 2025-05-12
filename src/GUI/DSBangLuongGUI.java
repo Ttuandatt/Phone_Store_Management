@@ -830,7 +830,7 @@ public class DSBangLuongGUI extends JPanel{
     }
 
     private void loadBangLuongList() {
-	arrBangLuong = blBUS.selectAll();
+	arrBangLuong = blBUS.selectAll();  
         String trangThai = null;
 	for(BangLuongDTO bl: arrBangLuong) {
             NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
@@ -841,7 +841,7 @@ public class DSBangLuongGUI extends JPanel{
             String nvien = nv.getMaNV() + " - " + nv.getHoTen();
             String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
             
-            DecimalFormat df = new DecimalFormat("#.###");
+            DecimalFormat df = new DecimalFormat("#,###");
 
             String luongCB= df.format(bl.getLuongCB());
             
@@ -890,7 +890,7 @@ public class DSBangLuongGUI extends JPanel{
                 String maBL = bl.getMaLuong();
                 String nvien = nv.getMaNV() + " - " + nv.getHoTen();
                 String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
-                DecimalFormat df = new DecimalFormat("#.###");
+                DecimalFormat df = new DecimalFormat("#,###");
 
                 String luongCB= df.format(bl.getLuongCB());
 
@@ -1011,7 +1011,7 @@ public class DSBangLuongGUI extends JPanel{
                 String maBL = bl.getMaLuong();
                 String nvien = nv.getMaNV() + " - " + nv.getHoTen();
                 String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
-                DecimalFormat df = new DecimalFormat("#.###");
+                DecimalFormat df = new DecimalFormat("#,###");
 
                 String luongCB= df.format(bl.getLuongCB());
 
