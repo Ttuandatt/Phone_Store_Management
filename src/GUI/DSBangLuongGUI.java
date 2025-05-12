@@ -2,8 +2,6 @@ package GUI;
 
 import BUS.BangChamCongBUS;
 import BUS.BangLuongBUS;
-import BUS.ChucVuBUS;
-import BUS.KhoBUS;
 import BUS.NhanVienBUS;
 import Components.ShadowButton;
 import DTO.*;
@@ -252,7 +250,18 @@ public class DSBangLuongGUI extends JPanel{
                 if (selectedRows.length == 1) {
                     String maBL = blTable.getValueAt(selectedRows[0], 0).toString(); 
                     BangLuongDTO bangLuong = blBUS.selectById(maBL);
-                    ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong);
+                    DecimalFormat df = new DecimalFormat("#,###");
+                    Float luongTT = (Float) blTable.getValueAt(selectedRows[0], 5);
+                    Float luongOT = (Float) blTable.getValueAt(selectedRows[0], 6);
+                    Float phuCap = (Float) blTable.getValueAt(selectedRows[0], 7);
+                    Float thuong = (Float) blTable.getValueAt(selectedRows[0], 8);
+                    Float khoanTru = (Float) blTable.getValueAt(selectedRows[0], 9);
+                    
+                    Float tongtn = luongTT + luongTT + phuCap + thuong;
+                    String tongTN= df.format(tongtn);
+                    Float thucnhan = tongtn - khoanTru;
+                    String thucNhan= df.format(thucnhan);
+                    ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong, tongTN, thucNhan);
                     ctbl.setVisible(true);
                 } else JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);  
             }
@@ -344,7 +353,18 @@ public class DSBangLuongGUI extends JPanel{
                 if (selectedRows.length == 1) {
                     String maBL = blTable.getValueAt(selectedRows[0], 0).toString(); 
                     BangLuongDTO bangLuong = blBUS.selectById(maBL);
-                    ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong);
+                    DecimalFormat df = new DecimalFormat("#,###");
+                    Float luongTT = (Float) blTable.getValueAt(selectedRows[0], 5);
+                    Float luongOT = (Float) blTable.getValueAt(selectedRows[0], 6);
+                    Float phuCap = (Float) blTable.getValueAt(selectedRows[0], 7);
+                    Float thuong = (Float) blTable.getValueAt(selectedRows[0], 8);
+                    Float khoanTru = (Float) blTable.getValueAt(selectedRows[0], 9);
+                    
+                    Float tongtn = luongTT + luongTT + phuCap + thuong;
+                    String tongTN= df.format(tongtn);
+                    Float thucnhan = tongtn - khoanTru;
+                    String thucNhan= df.format(thucnhan);
+                    ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong, tongTN, thucNhan);
                     ctbl.setVisible(true);
                 } else JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);  
             }
@@ -927,64 +947,99 @@ public class DSBangLuongGUI extends JPanel{
     
     private void btnLuuSuaBangLuong() {
         int[] selectedRows = blTable.getSelectedRows();
-        if (selectedRows.length >= 1 && !tf_thuong.getText().trim().isEmpty() || !tf_bhxh.getText().trim().isEmpty() || !tf_bhyt.getText().trim().isEmpty() || !tf_bhtn.getText().trim().isEmpty() || !tf_thue.getText().trim().isEmpty() || !tf_tamUng.getText().trim().isEmpty() || !tf_pcAnTrua.getText().trim().isEmpty() || !tf_pcDiChuyen.getText().trim().isEmpty()) {
-            int count = 0;
-            for (int row : selectedRows) {
-                String maBL = blTable.getValueAt(row, 0).toString(); 
-                BangLuongDTO bangLuong = blBUS.selectById(maBL);
-                if (!tf_thuong.getText().trim().isEmpty()) {
-                    bangLuong.setThuong(bangLuong.getLuongCB() * Float.parseFloat(tf_thuong.getText()));
-                }
-                if (!tf_bhxh.getText().trim().isEmpty()) {
-                    bangLuong.setBhxh(Float.parseFloat(tf_bhxh.getText()));
-                }
-                if (!tf_bhyt.getText().trim().isEmpty()) {
-                    bangLuong.setBhyt(Float.parseFloat(tf_bhyt.getText()));
-                }
-                if (!tf_bhtn.getText().trim().isEmpty()) {
-                    bangLuong.setBhtn(Float.parseFloat(tf_bhtn.getText()));
-                }
-                if (!tf_thue.getText().trim().isEmpty()) {
-                    bangLuong.setThue(Float.parseFloat(tf_thue.getText()));
-                }
-                if (!tf_tamUng.getText().trim().isEmpty()) {
-                    bangLuong.setTamUng(Float.parseFloat(tf_tamUng.getText()));
-                }
-                if (!tf_pcAnTrua.getText().trim().isEmpty()) {
-                    bangLuong.setPhuCapAnTrua(Float.parseFloat(tf_pcAnTrua.getText()));
-                }
-                if (!tf_pcDiChuyen.getText().trim().isEmpty()) {
-                    bangLuong.setPhuCapDiLai(Float.parseFloat(tf_pcDiChuyen.getText()));
-                }
-                
-                String mabcc= bangLuong.getMaLuong().replaceFirst("BL", "CC");
-                BangChamCongDTO bcc = bccBUS.selectById(mabcc);
-                Float luongTT = (bangLuong.getLuongCB()*bangLuong.getHeSo())/24*bcc.getSoNgayLam();
-                luongTT = (float) Math.round(luongTT);
-                Float t = (bangLuong.getLuongCB()*bangLuong.getHeSo())/(24* 8);
-                Float luongTangCa = t* bcc.getSoGioOTNgayThuong() + t*2*bcc.getSoGioOTCN() + t*3*bcc.getSoGioOTNgayLe();
-                luongTangCa = (float) Math.round(luongTangCa);
-                Float phuCap = bangLuong.getPhuCapAnTrua() + bangLuong.getPhuCapDiLai();
-                phuCap = (float) Math.round(phuCap) ;
-                Float thuong = bangLuong.getThuong();
-                Float khoanTru = bangLuong.getBhxh() + bangLuong.getBhtn() + bangLuong.getBhyt() + bangLuong.getTamUng() + bangLuong.getThue();
-                khoanTru = (float) Math.round(khoanTru) ;
-                Float thucNhan = luongTT + luongTangCa + phuCap + thuong - khoanTru;
-                thucNhan = (float) Math.round(thucNhan);
-                bangLuong.setThucNhan(thucNhan);
-                int resultUpdate = blBUS.updateBangLuong(bangLuong);
-                if (resultUpdate > 0) {
-                    count +=1;
+
+        // Kiểm tra nếu không có dòng nào được chọn hoặc tất cả các ô nhập đều trống
+        if (selectedRows.length < 1 || 
+            (tf_thuong.getText().trim().isEmpty() && tf_bhxh.getText().trim().isEmpty() &&
+             tf_bhyt.getText().trim().isEmpty() && tf_bhtn.getText().trim().isEmpty() &&
+             tf_thue.getText().trim().isEmpty() && tf_tamUng.getText().trim().isEmpty() &&
+             tf_pcAnTrua.getText().trim().isEmpty() && tf_pcDiChuyen.getText().trim().isEmpty())) {
+
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra định dạng số và không âm
+        JTextField[] fields = { tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua, tf_pcDiChuyen };
+        String[] fieldNames = { "Thưởng", "BHXH", "BHYT", "BHTN", "Thuế TNCN", "Tạm ứng", "Phụ cấp ăn trưa", "Phụ cấp di chuyển" };
+
+        for (int i = 0; i < fields.length; i++) {
+            String text = fields[i].getText().trim();
+            if (!text.isEmpty()) {
+                try {
+                    float value = Float.parseFloat(text);
+                    if (value < 0) {
+                        JOptionPane.showMessageDialog(null, fieldNames[i] + " không được là số âm!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, fieldNames[i] + " phải là số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
-            if (count == selectedRows.length) 
-                JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            else JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thất bại ", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            
-        } else JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);            
+        }
+
+        int count = 0;
+        for (int row : selectedRows) {
+            String maBL = blTable.getValueAt(row, 0).toString(); 
+            BangLuongDTO bangLuong = blBUS.selectById(maBL);
+
+            if (!tf_thuong.getText().trim().isEmpty()) {
+                bangLuong.setThuong(bangLuong.getLuongCB() * Float.parseFloat(tf_thuong.getText()));
+            }
+            if (!tf_bhxh.getText().trim().isEmpty()) {
+                bangLuong.setBhxh(Float.parseFloat(tf_bhxh.getText()));
+            }
+            if (!tf_bhyt.getText().trim().isEmpty()) {
+                bangLuong.setBhyt(Float.parseFloat(tf_bhyt.getText()));
+            }
+            if (!tf_bhtn.getText().trim().isEmpty()) {
+                bangLuong.setBhtn(Float.parseFloat(tf_bhtn.getText()));
+            }
+            if (!tf_thue.getText().trim().isEmpty()) {
+                bangLuong.setThue(Float.parseFloat(tf_thue.getText()));
+            }
+            if (!tf_tamUng.getText().trim().isEmpty()) {
+                bangLuong.setTamUng(Float.parseFloat(tf_tamUng.getText()));
+            }
+            if (!tf_pcAnTrua.getText().trim().isEmpty()) {
+                bangLuong.setPhuCapAnTrua(Float.parseFloat(tf_pcAnTrua.getText()));
+            }
+            if (!tf_pcDiChuyen.getText().trim().isEmpty()) {
+                bangLuong.setPhuCapDiLai(Float.parseFloat(tf_pcDiChuyen.getText()));
+            }
+
+            String mabcc = bangLuong.getMaLuong().replaceFirst("BL", "CC");
+            BangChamCongDTO bcc = bccBUS.selectById(mabcc);
+            Float luongTT = (bangLuong.getLuongCB() * bangLuong.getHeSo()) / 24 * bcc.getSoNgayLam();
+            luongTT = (float) Math.round(luongTT);
+            Float t = (bangLuong.getLuongCB() * bangLuong.getHeSo()) / (24 * 8);
+            Float luongTangCa = t * bcc.getSoGioOTNgayThuong() + t * 2 * bcc.getSoGioOTCN() + t * 3 * bcc.getSoGioOTNgayLe();
+            luongTangCa = (float) Math.round(luongTangCa);
+            Float phuCap = bangLuong.getPhuCapAnTrua() + bangLuong.getPhuCapDiLai();
+            phuCap = (float) Math.round(phuCap);
+            Float thuong = bangLuong.getThuong();
+            Float khoanTru = bangLuong.getBhxh() + bangLuong.getBhtn() + bangLuong.getBhyt() + bangLuong.getTamUng() + bangLuong.getThue();
+            khoanTru = (float) Math.round(khoanTru);
+            Float thucNhan = luongTT + luongTangCa + phuCap + thuong - khoanTru;
+            thucNhan = (float) Math.round(thucNhan);
+            bangLuong.setThucNhan(thucNhan);
+
+            int resultUpdate = blBUS.updateBangLuong(bangLuong);
+            if (resultUpdate > 0) {
+                count++;
+            }
+        }
+
+        if (count == selectedRows.length) {
+            JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+
         loadBangLuongList();
     }
-    
+
     private void btnDuyetBangLuong() {
         int[] selectedRows = blTable.getSelectedRows();
         if (selectedRows.length >= 1) {
@@ -1001,7 +1056,7 @@ public class DSBangLuongGUI extends JPanel{
     private void searchPerformed(){
         String searchContent = txtTimKiem.getText().trim();
         if (!searchContent.isEmpty()) { 
-            ArrayList<BangLuongDTO> dsTimKiem = blBUS.selectByKeyWord();
+            ArrayList<BangLuongDTO> dsTimKiem = blBUS.selectByKeyWord(searchContent);
             String trangThai = null;
             for(BangLuongDTO bl: dsTimKiem) {
                 NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
