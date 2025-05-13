@@ -5,10 +5,12 @@ import java.sql.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import Database.JDBCConnection;
+
 public class excelExporter {
-	private String dbUrl = "jdbc:mysql://localhost:3306/phonestore";
-	private String username = "root";
-	private String password = "1234";
+	private String dbUrl = JDBCConnection.getDatabaseUrl();
+	private String username = "";
+	private String password = "";
     public static void main(String[] args) {
       
     }

@@ -1,3 +1,4 @@
+
 package GUI;
 
 import BUS.BangChamCongBUS;
@@ -5,6 +6,7 @@ import BUS.BangLuongBUS;
 import BUS.NhanVienBUS;
 import Components.ShadowButton;
 import DTO.*;
+import Printer.PrintFile;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -248,14 +250,15 @@ public class DSBangLuongGUI extends JPanel {
 		btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
 		// Thêm sự kiện click cho nút Detail
-		  btnExcel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                excelExporter ex = new excelExporter();
-                ex.excelExporterBangLuong();
-                JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+		btnExcel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				excelExporter ex = new excelExporter();
+				ex.excelExporterBangLuong();
+				JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 		btnExcel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -295,18 +298,19 @@ public class DSBangLuongGUI extends JPanel {
 		btnPrint.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
 		// Thêm sự kiện click cho nút Print
-	btnPrint.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        PrintFile pr = new PrintFile();
-        JTable table = pr.getTableBangLuongFromDatabase();
-        if (table != null) {
-            pr.printTableBangLuong(table); // Thực hiện in
-        } else {
-            JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng lương.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-});
+		btnPrint.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PrintFile pr = new PrintFile();
+				JTable table = pr.getTableBangLuongFromDatabase();
+				if (table != null) {
+					pr.printTableBangLuong(table); // Thực hiện in
+				} else {
+					JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng lương.", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnPrint.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
