@@ -599,35 +599,10 @@ btnPrint.addActionListener(new ActionListener() {
         jc_thang = new JComboBox<String>(thang);
         jc_thang.setBounds(90, 24, 80, 25);
         searchInputPanel.add(jc_thang);
-        jc_thang.addActionListener(new ActionListener() {
-			
+        jc_thang.addActionListener(new ActionListener() {	
             @Override
             public void actionPerformed(ActionEvent e) {
-                bccModel.setRowCount(0);
-                String thang = jc_thang.getSelectedItem().toString();
-                String nam = jc_nam.getSelectedItem().toString();
-                if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-                    arrBangChamCong = bccBUS.selectByTime(thang, nam);
-                    for(BangChamCongDTO bcc: arrBangChamCong) {
-                        NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
-
-                        String maBCC = bcc.getMaBCC();
-                        String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
-                        int thangCC = bcc.getThangCC();
-                        int namCC = bcc.getNamCC();
-                        float soNgayLam = bcc.getSoNgayLam();
-                        float soNgayNghiKP = bcc.getSoNgayNghiKP();
-                        float soNPCoLuong = bcc.getSoNPCoLuong();
-                        float soNPKhongLuong = bcc.getSoNPKhongLuong();
-                        float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
-                        float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
-                        float soGioOTCN = bcc.getSoGioOTCN();
-
-                        Object[] row = {maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN};
-                        bccModel.addRow(row);
-
-                    }
-                } else loadBangChamCongList();
+                loadDanhSachChamCongTheoThoiGian();
             }
         });
         
@@ -641,36 +616,10 @@ btnPrint.addActionListener(new ActionListener() {
         jc_nam.setBounds(185, 24, 80, 25);
         jc_nam.setModel(new DefaultComboBoxModel<>(nam_title));
         searchInputPanel.add(jc_nam);
-        jc_nam.addActionListener(new ActionListener() {
-			
+        jc_nam.addActionListener(new ActionListener() {	
             @Override
             public void actionPerformed(ActionEvent e) {
-                bccModel.setRowCount(0);
-                String thang = jc_thang.getSelectedItem().toString();
-                String nam = jc_nam.getSelectedItem().toString();
-                if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-                    arrBangChamCong = bccBUS.selectByTime(thang, nam);
-                    for(int i=0; i<arrBangChamCong.size(); i++) {
-                        BangChamCongDTO bcc = arrBangChamCong.get(i);
-                        System.out.println("///// MaNV" + bcc.getMaNV());
-                        NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
-
-                        String maBCC = bcc.getMaBCC();
-                        String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
-                        int thangCC = bcc.getThangCC();
-                        int namCC = bcc.getNamCC();
-                        float soNgayLam = bcc.getSoNgayLam();
-                        float soNgayNghiKP = bcc.getSoNgayNghiKP();
-                        float soNPCoLuong = bcc.getSoNPCoLuong();
-                        float soNPKhongLuong = bcc.getSoNPKhongLuong();
-                        float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
-                        float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
-                        float soGioOTCN = bcc.getSoGioOTCN();
-
-                        Object[] row = {maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN};
-                        bccModel.addRow(row);
-                    }
-                } else loadBangChamCongList();
+                loadDanhSachChamCongTheoThoiGian();
             }
         });
         
