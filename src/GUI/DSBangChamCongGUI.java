@@ -607,7 +607,7 @@ btnPrint.addActionListener(new ActionListener() {
                 String thang = jc_thang.getSelectedItem().toString();
                 String nam = jc_nam.getSelectedItem().toString();
                 if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-                    arrBangChamCong = bccBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
+                    arrBangChamCong = bccBUS.selectByTime(thang, nam);
                     for(BangChamCongDTO bcc: arrBangChamCong) {
                         NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
 
@@ -649,7 +649,7 @@ btnPrint.addActionListener(new ActionListener() {
                 String thang = jc_thang.getSelectedItem().toString();
                 String nam = jc_nam.getSelectedItem().toString();
                 if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-                    arrBangChamCong = bccBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
+                    arrBangChamCong = bccBUS.selectByTime(thang, nam);
                     for(int i=0; i<arrBangChamCong.size(); i++) {
                         BangChamCongDTO bcc = arrBangChamCong.get(i);
                         System.out.println("///// MaNV" + bcc.getMaNV());
