@@ -1,3 +1,4 @@
+
 package GUI;
 
 import BUS.BangChamCongBUS;
@@ -5,6 +6,7 @@ import BUS.BangLuongBUS;
 import BUS.NhanVienBUS;
 import Components.ShadowButton;
 import DTO.*;
+import Printer.PrintFile;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,400 +44,239 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
+public class DSBangLuongGUI extends JPanel {
+	NhanVienBUS nvBUS = new NhanVienBUS();
+	BangChamCongBUS bccBUS = new BangChamCongBUS();
+	BangLuongBUS blBUS = new BangLuongBUS();
+	private static JTable blTable;
+	DefaultTableModel blModel = new DefaultTableModel();
+	ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
+	private JComboBox<String> sortComboBox;
+	private JComboBox<String> jc_thang, jc_nam;
+	ArrayList<BangLuongDTO> arrBangLuong = null;
+	JPanel bangLuongContent;
+	JTextField txtTimKiem;
 
+	JLabel lb_thuong, lb_khoanTru, lb_bhxh, lb_bhyt, lb_bhtn, lb_thue, lb_tamUng, lb_phuCap, lb_pcAnTrua, lb_pcDiChuyen;
+	JTextField tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua, tf_pcDiChuyen;
+	JButton btnLuu, btnDuyet;
 
-public class DSBangLuongGUI extends JPanel{
-    NhanVienBUS nvBUS = new NhanVienBUS();
-    BangChamCongBUS bccBUS = new BangChamCongBUS();
-    BangLuongBUS blBUS = new BangLuongBUS();
-    private static JTable blTable;
-    DefaultTableModel blModel = new DefaultTableModel();
-    ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>(); 
-    private JComboBox<String> sortComboBox;
-    private JComboBox<String> jc_thang, jc_nam;
-    ArrayList<BangLuongDTO> arrBangLuong = null;
-    JPanel bangLuongContent;
-    JTextField txtTimKiem;
-    
-    JLabel lb_thuong, lb_khoanTru, lb_bhxh, lb_bhyt, lb_bhtn, lb_thue, lb_tamUng, lb_phuCap, lb_pcAnTrua, lb_pcDiChuyen;
-    JTextField tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua, tf_pcDiChuyen;
-    JButton btnLuu, btnDuyet;
-    
-	//Constructor
-    public DSBangLuongGUI(){
-        initComponents();
-        loadBangLuongList();
-    }
-    
-    private void initComponents() {
-        setLayout(new GridBagLayout()); //set Layout
-        GridBagConstraints gbc = new GridBagConstraints();
-        bangLuongContent = new JPanel();
-        bangLuongContent.setBackground(Color.white);
-        bangLuongContent.setLayout(new GridBagLayout());
-        
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(bangLuongContent, gbc); // Thêm vào ProductsGUI
-        
-        //tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị bảng danh sách
-        JPanel topPanel, bottomPanel;
-        //set thông số cho 2 panel
-        topPanel = new JPanel();
-        topPanel.setLayout(new GridBagLayout());
-        topPanel.setBackground(Color.white);
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.5;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        bangLuongContent.add(topPanel, gbc);
-        
-        bottomPanel = new JPanel();
-        bottomPanel.setLayout(new GridBagLayout());
-        bottomPanel.setBackground(Color.white);
-        bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.5;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        bangLuongContent.add(bottomPanel, gbc);
-        
+	// Constructor
+	public DSBangLuongGUI() {
+		initComponents();
+		loadBangLuongList();
+	}
+
+	private void initComponents() {
+		setLayout(new GridBagLayout()); // set Layout
+		GridBagConstraints gbc = new GridBagConstraints();
+		bangLuongContent = new JPanel();
+		bangLuongContent.setBackground(Color.white);
+		bangLuongContent.setLayout(new GridBagLayout());
+
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		add(bangLuongContent, gbc); // Thêm vào ProductsGUI
+
+		// tạo 2 panel topPanel, bottomPanel cho khu vực tìm kiếm và khu vực hiển thị
+		// bảng danh sách
+		JPanel topPanel, bottomPanel;
+		// set thông số cho 2 panel
+		topPanel = new JPanel();
+		topPanel.setLayout(new GridBagLayout());
+		topPanel.setBackground(Color.white);
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.25;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		bangLuongContent.add(topPanel, gbc);
+
+		bottomPanel = new JPanel();
+		bottomPanel.setLayout(new GridBagLayout());
+		bottomPanel.setBackground(Color.white);
+		bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.75;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		bangLuongContent.add(bottomPanel, gbc);
+
 //==================================================== TOP PANEL =============================================================================================//
-        JPanel functionsPanel, searchPanel;
-        
-        
-        //======================================= functionsPanel =====================================================//
-        //set thông số cho functionsPanel
-        functionsPanel = new JPanel();
-        functionsPanel.setBackground(Color.white);
-        functionsPanel.setLayout(new GridBagLayout());
-        functionsPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));	//Tạo border cho panel
-        gbc.weightx = 0.4;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        topPanel.add(functionsPanel,gbc);
-        
-        //chia 2 panel con nữa, leftFunctionPanel cho các nút chức năng, rightFunctionPanel cho nút xuất Excel
-        JPanel leftFunctionPanel, rightFunctionPanel;
-        
-        leftFunctionPanel = new JPanel();
-        leftFunctionPanel.setBackground(Color.white);
-        leftFunctionPanel.setLayout(null);
-        gbc.weightx = 0.71;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        functionsPanel.add(leftFunctionPanel, gbc);
-        
-        rightFunctionPanel = new JPanel();
-        rightFunctionPanel.setBackground(Color.white);
-        rightFunctionPanel.setLayout(null);
-        gbc.weightx = 0.29;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        functionsPanel.add(rightFunctionPanel, gbc);
-        
-        //Chia tiếp các panel con để chứa các nút chức năng ở leftFunctionPanel
-        JPanel addButtonPanel, updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel, printButtonPanel;
-        
-        addButtonPanel = new JPanel();
-        addButtonPanel.setBackground(Color.white);
-        addButtonPanel.setBounds(10, 4, 60, 60);
-        leftFunctionPanel.add(addButtonPanel);
-        
-        updateButtonPanel = new JPanel();
-        updateButtonPanel.setBackground(Color.white);
-        updateButtonPanel.setBounds(79, 4, 60, 60);
-        leftFunctionPanel.add(updateButtonPanel);
-        
-        deleteButtonPanel = new JPanel();
-        deleteButtonPanel.setBackground(Color.white);
-        deleteButtonPanel.setBounds(148, 4, 60, 60);
-        leftFunctionPanel.add(deleteButtonPanel);
-        
-        detailButtonPanel = new JPanel();
-        detailButtonPanel.setBackground(Color.white);
-        detailButtonPanel.setBounds(217, 4, 60, 60);
-        leftFunctionPanel.add(detailButtonPanel);
-        
-        excelButtonPanel = new JPanel();
-        excelButtonPanel.setBackground(Color.white);
-        excelButtonPanel.setBounds(0, 4, 60, 60);
-        rightFunctionPanel.add(excelButtonPanel);
-        
-        printButtonPanel = new JPanel();
-        printButtonPanel.setBackground(Color.white);
-        printButtonPanel.setBounds(69, 4, 60, 60);
-        rightFunctionPanel.add(printButtonPanel);
-        
-        //======================================= Đặt các nút chức năng vào các panel ==========================================================//
-        /*ImageIcon iconAdd = new ImageIcon(getClass().getResource("/img/plus.png"));
-        Image imgAdd = iconAdd.getImage();
-        Image newImgAdd = imgAdd.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-        if(iconAdd.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconAdd = new ImageIcon(newImgAdd);
-        // Tạo nút Add
-        JButton btnAdd = new ShadowButton("Thêm", scaledIconAdd);
-        btnAdd.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnAdd.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnAdd.setFocusPainted(false);
-        btnAdd.setBorderPainted(true);
-        btnAdd.setContentAreaFilled(false);
-        btnAdd.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+		JPanel functionsPanel, searchPanel;
 
-        // Thêm sự kiện click cho nút Update
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //CTBangLuongForm ctbl = new CTBangLuongForm();
-                //ctbl.setVisible(true);
-            }
-        });
-        btnAdd.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnAdd.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnAdd.setBackground(Color.white);
-        		addButtonPanel.setBackground(Color.white);
-        	}
-        });
+		// ======================================= functionsPanel
+		// =====================================================//
+		// set thông số cho functionsPanel
+		functionsPanel = new JPanel();
+		functionsPanel.setBackground(Color.white);
+		functionsPanel.setLayout(new GridBagLayout());
+		functionsPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2)); // Tạo border cho panel
+		gbc.weightx = 0.4;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		topPanel.add(functionsPanel, gbc);
 
-        // Thêm nút vào panel
-        addButtonPanel.setLayout(new BorderLayout());
-        addButtonPanel.add(btnAdd, BorderLayout.CENTER);		
-        */
-        
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconUpdate = new ImageIcon(getClass().getResource("/img/update.png"));
-        Image imgUpdate = iconUpdate.getImage();
-        Image newImgUpdate = imgUpdate.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        if (iconUpdate.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconUpdate = new ImageIcon(newImgUpdate);
+		// chia 2 panel con nữa, leftFunctionPanel cho các nút chức năng,
+		// rightFunctionPanel cho nút xuất Excel
+		JPanel leftFunctionPanel, rightFunctionPanel;
 
-        // Tạo nút Update
-        JButton btnUpdate = new ShadowButton("Sửa", scaledIconUpdate);
-        btnUpdate.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnUpdate.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnUpdate.setFocusPainted(false);
-        btnUpdate.setBorderPainted(true);
-        btnUpdate.setContentAreaFilled(false);
-        btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUpdate.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+		leftFunctionPanel = new JPanel();
+		leftFunctionPanel.setBackground(Color.white);
+		leftFunctionPanel.setLayout(null);
+		gbc.weightx = 0.71;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		functionsPanel.add(leftFunctionPanel, gbc);
 
-        // Thêm sự kiện click cho nút Update
-        btnUpdate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	int[] selectedRows = blTable.getSelectedRows();
-                if (selectedRows.length == 1) {
-                    String maBL = blTable.getValueAt(selectedRows[0], 0).toString(); 
-                    BangLuongDTO bangLuong = blBUS.selectById(maBL);
-                    DecimalFormat df = new DecimalFormat("#,###");
-                    Float luongTT = (Float) blTable.getValueAt(selectedRows[0], 5);
-                    Float luongOT = (Float) blTable.getValueAt(selectedRows[0], 6);
-                    Float phuCap = (Float) blTable.getValueAt(selectedRows[0], 7);
-                    Float thuong = (Float) blTable.getValueAt(selectedRows[0], 8);
-                    Float khoanTru = (Float) blTable.getValueAt(selectedRows[0], 9);
-                    
-                    Float tongtn = luongTT + luongTT + phuCap + thuong;
-                    String tongTN= df.format(tongtn);
-                    Float thucnhan = tongtn - khoanTru;
-                    String thucNhan= df.format(thucnhan);
-                    ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong, tongTN, thucNhan);
-                    ctbl.setVisible(true);
-                } else JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);  
-            }
-        });
-        btnUpdate.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnUpdate.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnUpdate.setBackground(Color.white);
-        		updateButtonPanel.setBackground(Color.white);
-        	}
-        });
+		rightFunctionPanel = new JPanel();
+		rightFunctionPanel.setBackground(Color.white);
+		rightFunctionPanel.setLayout(null);
+		gbc.weightx = 0.29;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		functionsPanel.add(rightFunctionPanel, gbc);
 
-        // Thêm nút vào panel
-        updateButtonPanel.setLayout(new BorderLayout());
-        updateButtonPanel.add(btnUpdate, BorderLayout.CENTER);
-        
-        
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        /*ImageIcon iconDelete = new ImageIcon(getClass().getResource("/img/delete.png")); // Đặt đường dẫn ảnh ở đây
-        Image imgDelete = iconDelete.getImage();
-        Image newImgDelete = imgDelete.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        if (iconDelete.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconDelete = new ImageIcon(newImgDelete);
+		// Chia tiếp các panel con để chứa các nút chức năng ở leftFunctionPanel
+		JPanel updateButtonPanel, detailButtonPanel, excelButtonPanel, printButtonPanel;
 
-        // Tạo nút Delete
-        JButton btnDelete = new ShadowButton("Xóa", scaledIconDelete);
-        btnDelete.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnDelete.setFocusPainted(false);
-        btnDelete.setBorderPainted(true);
-        btnDelete.setContentAreaFilled(false);
-        btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnDelete.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+		detailButtonPanel = new JPanel();
+		detailButtonPanel.setBackground(Color.white);
+		detailButtonPanel.setBounds(10, 4, 60, 60);
+		leftFunctionPanel.add(detailButtonPanel);
 
-        // Thêm sự kiện click cho nút Delete
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //deleteEmployee(blTable);
-            }
-        });
-        btnDelete.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnDelete.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnDelete.setBackground(Color.white);
-        		deleteButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
-        // Thêm nút vào panel
-        deleteButtonPanel.setLayout(new BorderLayout());
-        deleteButtonPanel.add(btnDelete, BorderLayout.CENTER);*/
-     
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
-        Image imgDetail = iconDetail.getImage();
-        Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
+		excelButtonPanel = new JPanel();
+		excelButtonPanel.setBackground(Color.white);
+		excelButtonPanel.setBounds(0, 4, 60, 60);
+		rightFunctionPanel.add(excelButtonPanel);
 
-        // Tạo nút Detail
-        JButton btnDetail = new ShadowButton("Xem", scaledIconDetail);
-        btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnDetail.setFocusPainted(false);
-        btnDetail.setBorderPainted(true);
-        btnDetail.setContentAreaFilled(false);
-        btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+		printButtonPanel = new JPanel();
+		printButtonPanel.setBackground(Color.white);
+		printButtonPanel.setBounds(69, 4, 60, 60);
+		rightFunctionPanel.add(printButtonPanel);
 
-        // Thêm sự kiện click cho nút Detail
-        btnDetail.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int[] selectedRows = blTable.getSelectedRows();
-                if (selectedRows.length == 1) {
-                    String maBL = blTable.getValueAt(selectedRows[0], 0).toString(); 
-                    BangLuongDTO bangLuong = blBUS.selectById(maBL);
-                    DecimalFormat df = new DecimalFormat("#,###");
-                    Float luongTT = (Float) blTable.getValueAt(selectedRows[0], 5);
-                    Float luongOT = (Float) blTable.getValueAt(selectedRows[0], 6);
-                    Float phuCap = (Float) blTable.getValueAt(selectedRows[0], 7);
-                    Float thuong = (Float) blTable.getValueAt(selectedRows[0], 8);
-                    Float khoanTru = (Float) blTable.getValueAt(selectedRows[0], 9);
-                    
-                    Float tongtn = luongTT + luongTT + phuCap + thuong;
-                    String tongTN= df.format(tongtn);
-                    Float thucnhan = tongtn - khoanTru;
-                    String thucNhan= df.format(thucnhan);
-                    ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong, tongTN, thucNhan);
-                    ctbl.setVisible(true);
-                } else JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo", JOptionPane.WARNING_MESSAGE);  
-            }
-        });
-        btnDetail.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnDetail.setBackground(Color.white);
-        		detailButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
+		// ======================================= Đặt các nút chức năng vào các panel
+		// ==========================================================//
 
-        // Thêm nút vào panel
-        detailButtonPanel.setLayout(new BorderLayout());
-        detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
+		// Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
+		ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
+		Image imgDetail = iconDetail.getImage();
+		Image newImgDetail = imgDetail.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon scaledIconDetail = new ImageIcon(newImgDetail);
 
-        
-        //Nút Xuất Excel
-        //Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
-        ImageIcon iconExcel = new ImageIcon(getClass().getResource("/img/excel.png")); // Đặt đường dẫn ảnh ở đây
-        Image imgExcel = iconExcel.getImage();
-        Image newImgExcel = imgExcel.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        if (iconExcel.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconExcel = new ImageIcon(newImgExcel);
+		// Tạo nút Detail
+		JButton btnDetail = new ShadowButton("Xem", scaledIconDetail);
+		btnDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnDetail.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnDetail.setFocusPainted(false);
+		btnDetail.setBorderPainted(true);
+		btnDetail.setContentAreaFilled(false);
+		btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnDetail.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
-        // Tạo nút Detail
-        JButton btnExcel = new ShadowButton("Excel", scaledIconExcel);
-        btnExcel.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnExcel.setHorizontalTextPosition(SwingConstants.CENTER);
+		// Thêm sự kiện click cho nút Detail
+		btnDetail.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int[] selectedRows = blTable.getSelectedRows();
+				if (selectedRows.length == 1) {
+					String maBL = blTable.getValueAt(selectedRows[0], 0).toString();
+					BangLuongDTO bangLuong = blBUS.selectById(maBL);
+					DecimalFormat df = new DecimalFormat("#,###");
+					Float luongTT = Float.valueOf(blTable.getValueAt(selectedRows[0], 5).toString().replace(",", ""));
+					Float luongOT = Float.valueOf(blTable.getValueAt(selectedRows[0], 6).toString().replace(",", ""));
+					Float phuCap = Float.valueOf(blTable.getValueAt(selectedRows[0], 7).toString().replace(",", ""));
+					Float thuong = Float.valueOf(blTable.getValueAt(selectedRows[0], 8).toString().replace(",", ""));
+					Float khoanTru = Float.valueOf(blTable.getValueAt(selectedRows[0], 9).toString().replace(",", ""));
+
+					Float tongtn = luongTT + luongOT + phuCap + thuong;
+					String tongTN = df.format(tongtn);
+					Float thucnhan = tongtn - khoanTru;
+					String thucNhan = df.format(thucnhan);
+					ChiTietBangLuongGUI ctbl = new ChiTietBangLuongGUI(bangLuong, tongTN, thucNhan);
+					ctbl.setVisible(true);
+				} else
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn một nhân viên!", "Thông báo",
+							JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		btnDetail.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnDetail.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+				btnDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnDetail.setBackground(Color.white);
+				detailButtonPanel.setBackground(Color.white);
+			}
+		});
+
+		// Thêm nút vào panel
+		detailButtonPanel.setLayout(new BorderLayout());
+		detailButtonPanel.add(btnDetail, BorderLayout.CENTER);
+
+		// Nút Xuất Excel
+		// Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
+		ImageIcon iconExcel = new ImageIcon(getClass().getResource("/img/excel.png")); // Đặt đường dẫn ảnh ở đây
+		Image imgExcel = iconExcel.getImage();
+		Image newImgExcel = imgExcel.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		if (iconExcel.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconExcel = new ImageIcon(newImgExcel);
+
+		// Tạo nút Detail
+		JButton btnExcel = new ShadowButton("Excel", scaledIconExcel);
+		btnExcel.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnExcel.setHorizontalTextPosition(SwingConstants.CENTER);
 //        btnExcel.setFocusPainted(false);
-        btnExcel.setBorderPainted(true);
-        btnExcel.setContentAreaFilled(false);
-        btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+		btnExcel.setBorderPainted(true);
+		btnExcel.setContentAreaFilled(false);
+		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
-        // Thêm sự kiện click cho nút Detail
-        btnExcel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Excel button clicked!");
-            }
-        });
-        btnExcel.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnExcel.setBackground(Color.white);
-        		excelButtonPanel.setBackground(Color.white);
-        	}
-        });
-        
+		// Thêm sự kiện click cho nút Detail
+		btnExcel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				excelExporter ex = new excelExporter();
+				ex.excelExporterBangLuong();
+				JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		btnExcel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+				btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
 
-        // Thêm nút vào panel
-        excelButtonPanel.setLayout(new BorderLayout());
-        excelButtonPanel.add(btnExcel, BorderLayout.CENTER);
-        
-        
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnExcel.setBackground(Color.white);
+				excelButtonPanel.setBackground(Color.white);
+			}
+		});
+
+		// Thêm nút vào panel
+		excelButtonPanel.setLayout(new BorderLayout());
+		excelButtonPanel.add(btnExcel, BorderLayout.CENTER);
+
 		// Nút Print
 		// Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
 		ImageIcon iconPrint = new ImageIcon(getClass().getResource("/img/printer.png")); // Đặt đường dẫn ảnh ở đây
@@ -460,7 +301,14 @@ public class DSBangLuongGUI extends JPanel{
 		btnPrint.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+				PrintFile pr = new PrintFile();
+				JTable table = pr.getTableBangLuongFromDatabase();
+				if (table != null) {
+					pr.printTableBangLuong(table); // Thực hiện in
+				} else {
+					JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng lương.", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnPrint.addMouseListener(new MouseAdapter() {
@@ -481,376 +329,377 @@ public class DSBangLuongGUI extends JPanel{
 		printButtonPanel.setLayout(new BorderLayout());
 		printButtonPanel.add(btnPrint, BorderLayout.CENTER);
 
-        
-        
-        
-        
-        //======================================= seacrhPanel ========================================================//
-        //set thông số cho seacrhPanel
-        searchPanel = new JPanel();
-        searchPanel.setBackground(Color.white);
-        searchPanel.setLayout(new GridBagLayout());
-        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));	//Tạo border cho panel        
-        gbc.weightx = 0.6;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        topPanel.add(searchPanel,gbc);
-        
-        //chia 2 panel con nữa: searchInputPanel & searchButtonPanel. searchButtonPanel để chứa nút tìm kiềm và refresh
-        JPanel searchInputPanel, searchButtonPanel;
-        
-        searchInputPanel = new JPanel();
-        searchInputPanel.setBackground(Color.white);
-        searchInputPanel.setLayout(null);
-        gbc.weightx = 0.87;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        searchPanel.add(searchInputPanel, gbc);
-        
-        searchButtonPanel = new JPanel();
-        searchButtonPanel.setBackground(Color.white);
-        searchButtonPanel.setLayout(null);
-        gbc.weightx = 0.13;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        searchPanel.add(searchButtonPanel, gbc);
-        
-        
-        
-        
-        //==================================== searchInputPanel =======================================================//
-        String[] sortCriterias = {"Tất cả", "A-Z", "Z-A"};
-        sortComboBox = new JComboBox<String>(sortCriterias);
-        sortComboBox.setBounds(10, 24, 75, 25);
-        searchInputPanel.add(sortComboBox);
-        sortComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-		String selectedOption = (String)sortComboBox.getSelectedItem();
-		switch(selectedOption) {
-                    case "A-Z":
-			sortAZ();
-			break;
-                    case "Z-A":
-			sortZA();
-			break;
+		// ======================================= seacrhPanel
+		// ========================================================//
+		// set thông số cho seacrhPanel
+		searchPanel = new JPanel();
+		searchPanel.setBackground(Color.white);
+		searchPanel.setLayout(new GridBagLayout());
+		searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2))); // Tạo
+																														// border
+																														// cho
+																														// panel
+		gbc.weightx = 0.6;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		topPanel.add(searchPanel, gbc);
+
+		// chia 2 panel con nữa: searchInputPanel & searchButtonPanel. searchButtonPanel
+		// để chứa nút tìm kiềm và refresh
+		JPanel searchInputPanel, searchButtonPanel;
+
+		searchInputPanel = new JPanel();
+		searchInputPanel.setBackground(Color.white);
+		searchInputPanel.setLayout(null);
+		gbc.weightx = 0.87;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		searchPanel.add(searchInputPanel, gbc);
+
+		searchButtonPanel = new JPanel();
+		searchButtonPanel.setBackground(Color.white);
+		searchButtonPanel.setLayout(null);
+		gbc.weightx = 0.13;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		searchPanel.add(searchButtonPanel, gbc);
+
+		// ==================================== searchInputPanel
+		// =======================================================//
+		String[] sortCriterias = { "Tất cả", "A-Z", "Z-A" };
+		sortComboBox = new JComboBox<String>(sortCriterias);
+		sortComboBox.setBounds(10, 24, 75, 25);
+		searchInputPanel.add(sortComboBox);
+		sortComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedOption = (String) sortComboBox.getSelectedItem();
+				switch (selectedOption) {
+				case "A-Z":
+					sortAZ();
+					break;
+				case "Z-A":
+					sortZA();
+					break;
+				}
+			}
+		});
+
+		String[] thang = { "Tháng", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+		jc_thang = new JComboBox<String>(thang);
+		jc_thang.setBounds(90, 24, 80, 25);
+		searchInputPanel.add(jc_thang);
+		jc_thang.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadBangLuongTheoThoiGian();
+			}
+		});
+
+		LocalDate current = LocalDate.now();
+		String[] nam_title = new String[6];
+		nam_title[0] = "Năm";
+		for (int i = 1; i < nam_title.length; i++) {
+			nam_title[i] = current.getYear() - 2 + i + "";
 		}
-            }
-	});
-        
-        String[] thang = {"Tháng", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        jc_thang = new JComboBox<String>(thang);
-        jc_thang.setBounds(90, 24, 80, 25);
-        searchInputPanel.add(jc_thang);
-        jc_thang.addActionListener(new ActionListener() {
-			
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadBangLuongTheoThoiGian();  
-            }
-        });
-        
-        LocalDate current = LocalDate.now();
-        String[] nam_title= new String[6];
-        nam_title[0] = "Năm";
-    	for(int i=1;i<nam_title.length;i++) {
-    		nam_title[i] = current.getYear()-2+i+"";
-    	}
-        jc_nam = new JComboBox<String>();
-        jc_nam.setBounds(185, 24, 80, 25);
-        jc_nam.setModel(new DefaultComboBoxModel<>(nam_title));
-        searchInputPanel.add(jc_nam);
-        jc_nam.addActionListener(new ActionListener() {	
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadBangLuongTheoThoiGian();
-            }
-        });
-            
-        txtTimKiem = new JTextField();
-        txtTimKiem.setBounds(440,  24,  200, 25);
-        searchInputPanel.add(txtTimKiem);
-        
-        
-        
-        //==================================== searchButtonPanel =======================================================//
-        ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
-        Image imgSearch = iconSearch.getImage();
-        Image newImgSearch = imgSearch.getScaledInstance(20,20, Image.SCALE_SMOOTH);
-        if (iconSearch.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
+		jc_nam = new JComboBox<String>();
+		jc_nam.setBounds(185, 24, 80, 25);
+		jc_nam.setModel(new DefaultComboBoxModel<>(nam_title));
+		searchInputPanel.add(jc_nam);
+		jc_nam.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadBangLuongTheoThoiGian();
+			}
+		});
 
-        // Tạo nút Detail
-        JButton btnSearch = new ShadowButton(scaledIconSearch);
-        btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnSearch.setFocusPainted(false);
-        btnSearch.setBorderPainted(true);
-        btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSearch.setBackground(Color.white);
-        btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 9
-        
-        
-        btnSearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                searchPerformed();
-            }
-        });
-        btnSearch.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btnSearch.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
-                btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
+		txtTimKiem = new JTextField();
+		txtTimKiem.setBounds(440, 24, 200, 25);
+		searchInputPanel.add(txtTimKiem);
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnSearch.setBackground(Color.white); // Màu khi hover ra
-            }
-        });
-
-        btnSearch.setBounds(0, 15, 40, 40);
-        searchButtonPanel.add(btnSearch);
-        
-        ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
-        Image imgRefresh = iconRefresh.getImage();
-        Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        if (iconRefresh.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh!");
-        }
-        ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
-
-        // Tạo nút Detail
-        JButton btnRefresh = new ShadowButton(scaledIconRefresh);
-        btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnRefresh.setFocusPainted(false);
-        btnRefresh.setBorderPainted(true);
-        btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnRefresh.setBackground(Color.white);
-        btnRefresh.setFont(new Font("Arial", Font.BOLD, 8)); // Đặt kích cỡ chữ là 10
-
-        
-        btnRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	refreshList();
-            }
-        });
-        btnRefresh.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            	btnRefresh.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
-            	btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            	btnRefresh.setBackground(Color.white); // Màu khi hover ra
-            }
-        });
-
-        
-        btnRefresh.setBounds(45, 15, 40, 40);
-        searchButtonPanel.add(btnRefresh);
-        
-        //========================= Table =========================//
-        blTable = new JTable();
-        JScrollPane sp = new JScrollPane(blTable);
-        gbc.weightx = 1.3;
-	gbc.gridx = 0;
-	gbc.gridy = 0;
-	gbc.fill = GridBagConstraints.BOTH;
-	bottomPanel.add(sp, gbc);
-        blTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        
-        blTable.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
-    	blTable.setModel(blModel);
-    	blModel.addColumn("MaBL");
-    	blModel.addColumn("Nhân viên");
-    	blModel.addColumn("Thời gian");
-    	blModel.addColumn("Lương cơ bản");
-        blModel.addColumn("Hệ số");
-    	blModel.addColumn("Lương thực tế");
-        blModel.addColumn("Lương tăng ca");
-    	blModel.addColumn("Phụ cấp");
-    	blModel.addColumn("Lương thưởng");
-    	blModel.addColumn("Các khoản trừ");
-    	blModel.addColumn("Thực nhận");
-        blModel.addColumn("Trạng thái");
-        
-        //Điều chỉnh kích thước các cột
-        TableColumnModel tcm = blTable.getColumnModel();
-        tcm.getColumn(0).setPreferredWidth(120);
-        tcm.getColumn(1).setPreferredWidth(150);
-        tcm.getColumn(2).setPreferredWidth(80);
-        tcm.getColumn(3).setPreferredWidth(80);
-        tcm.getColumn(4).setPreferredWidth(50);
-        tcm.getColumn(5).setPreferredWidth(90);
-        tcm.getColumn(6).setPreferredWidth(90);
-        tcm.getColumn(7).setPreferredWidth(90);
-        tcm.getColumn(8).setPreferredWidth(90);
-        tcm.getColumn(9).setPreferredWidth(90);
-        tcm.getColumn(10).setPreferredWidth(90);
-        tcm.getColumn(11).setPreferredWidth(90);
-
-        blTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);    //Ngăn các cột tự resize
-
-        
-        /*blTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()>=1) {	//nếu nhấn vào dòng đó từ 1 lần trở lên
-                    layChiTietBangLuong();
+		// ==================================== searchButtonPanel
+		// =======================================================//
+		ImageIcon iconSearch = new ImageIcon(getClass().getResource("/img/loupe2.png")); // Đặt đường dẫn ảnh ở đây
+		Image imgSearch = iconSearch.getImage();
+		Image newImgSearch = imgSearch.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		if (iconSearch.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
 		}
-            }
-	});*/
-	 
-	JPanel attendancePanel = new JPanel(new GridBagLayout());
-	attendancePanel.setBackground(Color.white);
-	attendancePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
-        gbc.weightx = 1.0;
-	gbc.weighty = 1.0;
-	gbc.gridx = 1;
-	gbc.gridy = 0;
-    	gbc.fill = GridBagConstraints.BOTH;
-    	gbc.insets = new Insets(5, 5, 5, 5);
-	bottomPanel.add(attendancePanel, gbc);
-        attendancePanel.setBorder(BorderFactory.createTitledBorder("CHI TIẾT LƯƠNG"));	
-        
-        lb_thuong = new JLabel("MỨC THƯỞNG (%)");
-	gbc.gridx = 0;
-        gbc.gridy = 0;
-        lb_thuong.setFont(new Font("Arial",Font.BOLD,13));
-        attendancePanel.add(lb_thuong, gbc);
-	tf_thuong = new JTextField();
-	gbc.gridx = 1;
-	attendancePanel.add(tf_thuong, gbc);
-		
-	/// Các khoản trừ	
-	lb_khoanTru = new JLabel("CÁC KHOẢN TRỪ ");
-        lb_khoanTru.setFont(new Font("Arial",Font.BOLD,13));
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-	attendancePanel.add(lb_khoanTru, gbc);
-	
-        lb_bhxh= new JLabel("Bảo hiểm xã hội: ");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        lb_bhxh.setFont(new Font("Arial",Font.PLAIN,14));
-	attendancePanel.add(lb_bhxh, gbc);
-	tf_bhxh = new JTextField();
-        gbc.gridx = 1;
-	attendancePanel.add(tf_bhxh, gbc);
-        
-	lb_bhyt= new JLabel("Bảo hiểm y tế: ");
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        lb_bhyt.setFont(new Font("Arial",Font.PLAIN,14));
-	attendancePanel.add(lb_bhyt, gbc);
-	tf_bhyt = new JTextField();
-        gbc.gridx = 1;
-	attendancePanel.add(tf_bhyt, gbc);
-		
-	lb_bhtn = new JLabel("Bảo hiểm tai nạn: ");
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        lb_bhtn.setFont(new Font("Arial",Font.PLAIN,14));
-	attendancePanel.add(lb_bhtn, gbc);
-	tf_bhtn = new JTextField();
-        gbc.gridx = 1;
-	attendancePanel.add(tf_bhtn, gbc);
-		
-	lb_thue = new JLabel("Thuế thu nhập cá nhân: ");
-	gbc.gridx = 0;
-        gbc.gridy = 5;
-        lb_thue.setFont(new Font("Arial",Font.PLAIN,14));
-        attendancePanel.add(lb_thue, gbc);
-	tf_thue = new JTextField();
-	gbc.gridx = 1;
-        attendancePanel.add(tf_thue, gbc);
-		
-	lb_tamUng = new JLabel("Tạm ứng:");
-	gbc.gridx = 0;
-        gbc.gridy = 6;
-        lb_tamUng.setFont(new Font("Arial",Font.PLAIN,14));
-        attendancePanel.add(lb_tamUng, gbc);
-        tf_tamUng = new JTextField();
-	gbc.gridx = 1;
-        attendancePanel.add(tf_tamUng, gbc);
-        
-        lb_phuCap = new JLabel("PHỤ CẤP");
-	lb_phuCap.setFont(new Font("Arial",Font.BOLD,13));
-	gbc.gridx = 0;
-        gbc.gridy = 7;
-        attendancePanel.add(lb_phuCap, gbc);
-        
-        lb_pcAnTrua = new JLabel("Phụ cấp cơm trưa:");
-	gbc.gridx = 0;
-        gbc.gridy = 8;
-        lb_pcAnTrua.setFont(new Font("Arial",Font.PLAIN,14));
-        attendancePanel.add(lb_pcAnTrua, gbc);
-        tf_pcAnTrua = new JTextField();
-	gbc.gridx = 1;
-        attendancePanel.add(tf_pcAnTrua, gbc);
-        
-        lb_pcDiChuyen = new JLabel("Phụ cấp đi lại:");
-        lb_pcDiChuyen.setFont(new Font("Arial",Font.PLAIN,14));
-	gbc.gridx = 0;
-        gbc.gridy = 9;
-        attendancePanel.add(lb_pcDiChuyen, gbc);
-        tf_pcDiChuyen = new JTextField();
-	gbc.gridx = 1;
-        attendancePanel.add(tf_pcDiChuyen, gbc);
-        
-        btnLuu = new JButton("Lưu");
-        gbc.gridx = 1;
-        gbc.gridy = 10;
-        btnLuu.setFont(new Font("Arial", Font.BOLD, 14));
-        btnLuu.setForeground(Color.white);
-        btnLuu.setBackground(Color.decode("#37A4F2"));
-        btnLuu.setBorderPainted(false);
-        btnLuu.setFocusPainted(false);
-        btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	attendancePanel.add(btnLuu, gbc);
-        
-        btnLuu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnLuuSuaBangLuong();
-            }
-        });
-        
-        btnDuyet = new JButton("Duyệt");
-        gbc.gridx = 1;
-        gbc.gridy = 11;
-        btnDuyet.setFont(new Font("Arial", Font.BOLD, 14));
-        btnDuyet.setForeground(Color.white);
-        btnDuyet.setBackground(Color.decode("#37A4F2"));
-        btnDuyet.setBorderPainted(false);
-        btnDuyet.setFocusPainted(false);
-        btnDuyet.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	attendancePanel.add(btnDuyet, gbc);
-        
-        btnDuyet.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnDuyetBangLuong();
-            }
-        });
-    }
+		ImageIcon scaledIconSearch = new ImageIcon(newImgSearch);
 
-    private void loadBangLuongList() {
-	arrBangLuong = blBUS.selectAll();  
+		// Tạo nút Detail
+		JButton btnSearch = new ShadowButton(scaledIconSearch);
+		btnSearch.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnSearch.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnSearch.setFocusPainted(false);
+		btnSearch.setBorderPainted(true);
+		btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnSearch.setBackground(Color.white);
+		btnSearch.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 9
+
+		btnSearch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchPerformed();
+			}
+		});
+
+		btnSearch.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSearch.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
+				btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSearch.setBackground(Color.white); // Màu khi hover ra
+			}
+		});
+
+		btnSearch.setBounds(0, 15, 40, 40);
+		searchButtonPanel.add(btnSearch);
+
+		ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/img/refresh.png")); // Đặt đường dẫn ảnh ở đây
+		Image imgRefresh = iconRefresh.getImage();
+		Image newImgRefresh = imgRefresh.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		if (iconRefresh.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconRefresh = new ImageIcon(newImgRefresh);
+
+		// Tạo nút Detail
+		JButton btnRefresh = new ShadowButton(scaledIconRefresh);
+		btnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnRefresh.setFocusPainted(false);
+		btnRefresh.setBorderPainted(true);
+		btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnRefresh.setBackground(Color.white);
+		btnRefresh.setFont(new Font("Arial", Font.BOLD, 8)); // Đặt kích cỡ chữ là 10
+
+		btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				refreshList();
+			}
+		});
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnRefresh.setBackground(Color.decode("#D6D6D6")); // Màu khi hover vào
+				btnRefresh.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnRefresh.setBackground(Color.white); // Màu khi hover ra
+			}
+		});
+
+		btnRefresh.setBounds(45, 15, 40, 40);
+		searchButtonPanel.add(btnRefresh);
+
+		// ========================= Table =========================//
+		blTable = new JTable();
+		JScrollPane sp = new JScrollPane(blTable);
+		gbc.weightx = 0.8;
+		gbc.weighty = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(sp, gbc);
+		blTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		blTable.setDefaultEditor(Object.class, null); // không cho click vào & edit nội dung các cell trong bảng
+		blTable.setModel(blModel);
+		blModel.addColumn("MaBL");
+		blModel.addColumn("Nhân viên");
+		blModel.addColumn("Thời gian");
+		blModel.addColumn("Lương cơ bản");
+		blModel.addColumn("Hệ số");
+		blModel.addColumn("Lương thực tế");
+		blModel.addColumn("Lương tăng ca");
+		blModel.addColumn("Phụ cấp");
+		blModel.addColumn("Lương thưởng");
+		blModel.addColumn("Các khoản trừ");
+		blModel.addColumn("Thực nhận");
+		blModel.addColumn("Trạng thái");
+
+		// Điều chỉnh kích thước các cột
+		TableColumnModel tcm = blTable.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(120);
+		tcm.getColumn(1).setPreferredWidth(150);
+		tcm.getColumn(2).setPreferredWidth(80);
+		tcm.getColumn(3).setPreferredWidth(80);
+		tcm.getColumn(4).setPreferredWidth(50);
+		tcm.getColumn(5).setPreferredWidth(90);
+		tcm.getColumn(6).setPreferredWidth(90);
+		tcm.getColumn(7).setPreferredWidth(90);
+		tcm.getColumn(8).setPreferredWidth(90);
+		tcm.getColumn(9).setPreferredWidth(90);
+		tcm.getColumn(10).setPreferredWidth(90);
+		tcm.getColumn(11).setPreferredWidth(90);
+
+		blTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Ngăn các cột tự resize
+
+		/*
+		 * blTable.addMouseListener(new MouseAdapter() {
+		 * 
+		 * @Override public void mouseClicked(MouseEvent e) { if(e.getClickCount()>=1) {
+		 * //nếu nhấn vào dòng đó từ 1 lần trở lên layChiTietBangLuong(); } } });
+		 */
+
+		JPanel attendancePanel = new JPanel(new GridBagLayout());
+		attendancePanel.setBackground(Color.white);
+		attendancePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
+		gbc.weightx = 0.2;
+		gbc.weighty = 1.0;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		bottomPanel.add(attendancePanel, gbc);
+		attendancePanel.setBorder(BorderFactory.createTitledBorder("CHI TIẾT LƯƠNG"));
+
+		lb_thuong = new JLabel("MỨC THƯỞNG (%)");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		lb_thuong.setFont(new Font("Arial", Font.BOLD, 13));
+		attendancePanel.add(lb_thuong, gbc);
+		tf_thuong = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_thuong, gbc);
+
+		/// Các khoản trừ
+		lb_khoanTru = new JLabel("CÁC KHOẢN TRỪ ");
+		lb_khoanTru.setFont(new Font("Arial", Font.BOLD, 13));
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		attendancePanel.add(lb_khoanTru, gbc);
+
+		lb_bhxh = new JLabel("Bảo hiểm xã hội: ");
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		lb_bhxh.setFont(new Font("Arial", Font.PLAIN, 14));
+		attendancePanel.add(lb_bhxh, gbc);
+		tf_bhxh = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_bhxh, gbc);
+
+		lb_bhyt = new JLabel("Bảo hiểm y tế: ");
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		lb_bhyt.setFont(new Font("Arial", Font.PLAIN, 14));
+		attendancePanel.add(lb_bhyt, gbc);
+		tf_bhyt = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_bhyt, gbc);
+
+		lb_bhtn = new JLabel("Bảo hiểm tai nạn: ");
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		lb_bhtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		attendancePanel.add(lb_bhtn, gbc);
+		tf_bhtn = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_bhtn, gbc);
+
+		lb_thue = new JLabel("Thuế thu nhập cá nhân: ");
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		lb_thue.setFont(new Font("Arial", Font.PLAIN, 14));
+		attendancePanel.add(lb_thue, gbc);
+		tf_thue = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_thue, gbc);
+
+		lb_tamUng = new JLabel("Tạm ứng:");
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		lb_tamUng.setFont(new Font("Arial", Font.PLAIN, 14));
+		attendancePanel.add(lb_tamUng, gbc);
+		tf_tamUng = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_tamUng, gbc);
+
+		lb_phuCap = new JLabel("PHỤ CẤP");
+		lb_phuCap.setFont(new Font("Arial", Font.BOLD, 13));
+		gbc.gridx = 0;
+		gbc.gridy = 7;
+		attendancePanel.add(lb_phuCap, gbc);
+
+		lb_pcAnTrua = new JLabel("Phụ cấp cơm trưa:");
+		gbc.gridx = 0;
+		gbc.gridy = 8;
+		lb_pcAnTrua.setFont(new Font("Arial", Font.PLAIN, 14));
+		attendancePanel.add(lb_pcAnTrua, gbc);
+		tf_pcAnTrua = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_pcAnTrua, gbc);
+
+		lb_pcDiChuyen = new JLabel("Phụ cấp đi lại:");
+		lb_pcDiChuyen.setFont(new Font("Arial", Font.PLAIN, 14));
+		gbc.gridx = 0;
+		gbc.gridy = 9;
+		attendancePanel.add(lb_pcDiChuyen, gbc);
+		tf_pcDiChuyen = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_pcDiChuyen, gbc);
+
+		JPanel panelOptions = new JPanel(new GridBagLayout());
+		panelOptions.setBackground(Color.white);
+		gbc.weightx = 1.0;
+		gbc.gridx = 0;
+		gbc.gridy = 10;
+		attendancePanel.add(panelOptions, gbc);
+
+		btnLuu = new JButton("Lưu");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		btnLuu.setFont(new Font("Arial", Font.BOLD, 14));
+		btnLuu.setForeground(Color.white);
+		btnLuu.setBackground(Color.decode("#37A4F2"));
+		btnLuu.setBorderPainted(false);
+		btnLuu.setFocusPainted(false);
+		btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		panelOptions.add(btnLuu, gbc);
+
+		btnLuu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnLuuSuaBangLuong();
+			}
+		});
+
+		btnDuyet = new JButton("Duyệt");
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		btnDuyet.setFont(new Font("Arial", Font.BOLD, 14));
+		btnDuyet.setForeground(Color.white);
+		btnDuyet.setBackground(Color.decode("#37A4F2"));
+		btnDuyet.setBorderPainted(false);
+		btnDuyet.setFocusPainted(false);
+		btnDuyet.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		panelOptions.add(btnDuyet, gbc);
+
+		btnDuyet.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnDuyetBangLuong();
+			}
+		});
+	}
+
+    private ArrayList<BangLuongDTO> loadBangLuongList() {
+        blModel.setRowCount(0);
+	ArrayList<BangLuongDTO> arrBangLuong = blBUS.selectAll();  
         String trangThai = null;
 	for(BangLuongDTO bl: arrBangLuong) {
             NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
@@ -882,8 +731,11 @@ public class DSBangLuongGUI extends JPanel{
             Float cacKhoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
             String khoanTru= df.format(cacKhoanTru);
             
-            //Float thucNhan = luongTT + luongOT + pc + luongThuong - cacKhoanTru;
-            String thucNhan= df.format(luongTT + luongOT + pc + luongThuong - cacKhoanTru);
+            Float thucnhan = luongTT + luongOT + pc + luongThuong - cacKhoanTru;
+            String thucNhan= df.format(thucnhan);
+            bl.setThucNhan(thucnhan);
+            blBUS.updateBangLuong(bl);
+            //System.out.println("loadBangLuongList() - thucNhan: " + thucNhan);
             
             if (bl.getTrangThai().equals("on"))
                 trangThai = "Đã duyệt";
@@ -892,58 +744,71 @@ public class DSBangLuongGUI extends JPanel{
 			
             Object[] row = {maBL, nvien, thoiGian, luongCB, heSo, luongThucTe, luongTangCa, phuCap, thuong, khoanTru, thucNhan, trangThai};
             blModel.addRow(row);
-	}		
+	}
+        return arrBangLuong;
     }
     
     private void loadBangLuongTheoThoiGian() {
-        blModel.setRowCount(0);
         String thang = jc_thang.getSelectedItem().toString();
         String nam = jc_nam.getSelectedItem().toString();
+
         if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-            arrBangLuong = blBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
-            String trangThai = null;
-            for(BangLuongDTO bl: arrBangLuong) {
+            blModel.setRowCount(0);
+            ArrayList<BangLuongDTO> arrBangLuong = blBUS.selectByTime(thang, nam);
+
+            DecimalFormat df = new DecimalFormat("#,###");
+
+            for (BangLuongDTO bl : arrBangLuong) {
                 NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
-                String mabcc= bl.getMaLuong().replaceFirst("BL", "CC");
+                String mabcc = bl.getMaLuong().replaceFirst("BL", "CC");
                 BangChamCongDTO bcc = bccBUS.selectById(mabcc);
+
+                if (nv == null || bcc == null) continue;
 
                 String maBL = bl.getMaLuong();
                 String nvien = nv.getMaNV() + " - " + nv.getHoTen();
                 String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
-                DecimalFormat df = new DecimalFormat("#,###");
 
-                String luongCB= df.format(bl.getLuongCB());
-
+                String luongCB = df.format(bl.getLuongCB());
                 Float heSo = bl.getHeSo();
-                Float luongTT = ((bl.getLuongCB()* heSo)/24)* bcc.getSoNgayLam();
-                String luongThucTe= df.format(luongTT);
 
-                Float t = (bl.getLuongCB()* heSo)/(24* 8);
-                Float luongOT = t* bcc.getSoGioOTNgayThuong() + t*2*bcc.getSoGioOTCN() + t*3*bcc.getSoGioOTNgayLe();
-                String luongTangCa= df.format(luongOT);
+                // Tính lương thực tế theo số ngày làm
+                Float luongTT = ((bl.getLuongCB() * heSo) / 24) * bcc.getSoNgayLam();
+                String luongThucTe = df.format(luongTT);
 
-                Float pc = bl.getPhuCapAnTrua() + bl.getPhuCapDiLai();
-                String phuCap= df.format(pc);
+                // Tính lương tăng ca
+                Float t = (bl.getLuongCB() * heSo) / (24 * 8);
+                Float luongOT = t * bcc.getSoGioOTNgayThuong()
+                             + t * 2 * bcc.getSoGioOTCN()
+                             + t * 3 * bcc.getSoGioOTNgayLe();
+                String luongTangCa = df.format(luongOT);
 
-                Float luongThuong = bl.getThuong();
-                String thuong= df.format(luongThuong);
+                // Phụ cấp
+                Float phuCapValue = bl.getPhuCapAnTrua() + bl.getPhuCapDiLai();
+                String phuCap = df.format(phuCapValue);
 
+                // Thưởng
+                String thuong = df.format(bl.getThuong());
+
+                // Các khoản trừ
                 Float cacKhoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
-                String khoanTru= df.format(cacKhoanTru);
+                String khoanTru = df.format(cacKhoanTru);
 
-                //Float thucNhan = luongTT + luongOT + pc + luongThuong - cacKhoanTru;
-                String thucNhan= df.format(luongTT + luongOT + pc + luongThuong - cacKhoanTru);
+                // Thực nhận
+                String thucNhan = df.format(bl.getThucNhan());
 
-                if (bl.getTrangThai().equals("on"))
+                String trangThai;
+                if ("on".equalsIgnoreCase(bl.getTrangThai()))
                     trangThai = "Đã duyệt";
-                else if (bl.getTrangThai().equals("off"))
+                else
                     trangThai = "Chưa duyệt";
 
                 Object[] row = {maBL, nvien, thoiGian, luongCB, heSo, luongThucTe, luongTangCa, phuCap, thuong, khoanTru, thucNhan, trangThai};
                 blModel.addRow(row);
             }
-        } else loadBangLuongList();
+        }
     }
+
     
     private void btnLuuSuaBangLuong() {
         int[] selectedRows = blTable.getSelectedRows();
@@ -982,80 +847,101 @@ public class DSBangLuongGUI extends JPanel{
         int count = 0;
         for (int row : selectedRows) {
             String maBL = blTable.getValueAt(row, 0).toString(); 
-            BangLuongDTO bangLuong = blBUS.selectById(maBL);
+            BangLuongDTO bl = blBUS.selectById(maBL);
 
             if (!tf_thuong.getText().trim().isEmpty()) {
-                bangLuong.setThuong(bangLuong.getLuongCB() * Float.parseFloat(tf_thuong.getText()));
+                bl.setThuong((bl.getLuongCB()/100) * Float.parseFloat(tf_thuong.getText()));
+                //System.out.println("Thuong: " + bl.getThuong());
             }
             if (!tf_bhxh.getText().trim().isEmpty()) {
-                bangLuong.setBhxh(Float.parseFloat(tf_bhxh.getText()));
+                bl.setBhxh(Float.parseFloat(tf_bhxh.getText()));
+                //System.out.println("BHXH: " + bl.getBhxh());
             }
             if (!tf_bhyt.getText().trim().isEmpty()) {
-                bangLuong.setBhyt(Float.parseFloat(tf_bhyt.getText()));
+                bl.setBhyt(Float.parseFloat(tf_bhyt.getText()));
+                //System.out.println("BHYT: " + bl.getBhyt());
             }
             if (!tf_bhtn.getText().trim().isEmpty()) {
-                bangLuong.setBhtn(Float.parseFloat(tf_bhtn.getText()));
+                bl.setBhtn(Float.parseFloat(tf_bhtn.getText()));
+               //System.out.println("BHTN: " + bl.getBhtn());
             }
             if (!tf_thue.getText().trim().isEmpty()) {
-                bangLuong.setThue(Float.parseFloat(tf_thue.getText()));
+                bl.setThue(Float.parseFloat(tf_thue.getText()));
+                //System.out.println("Thue: " + bl.getThue());
             }
             if (!tf_tamUng.getText().trim().isEmpty()) {
-                bangLuong.setTamUng(Float.parseFloat(tf_tamUng.getText()));
+                bl.setTamUng(Float.parseFloat(tf_tamUng.getText()));
+                //System.out.println("Tam Ung: " + bl.getTamUng());
             }
             if (!tf_pcAnTrua.getText().trim().isEmpty()) {
-                bangLuong.setPhuCapAnTrua(Float.parseFloat(tf_pcAnTrua.getText()));
+                bl.setPhuCapAnTrua(Float.parseFloat(tf_pcAnTrua.getText()));
+                //System.out.println("An: " + bl.getPhuCapAnTrua());
             }
             if (!tf_pcDiChuyen.getText().trim().isEmpty()) {
-                bangLuong.setPhuCapDiLai(Float.parseFloat(tf_pcDiChuyen.getText()));
+                bl.setPhuCapDiLai(Float.parseFloat(tf_pcDiChuyen.getText()));
+                //System.out.println("Di lai: " + bl.getPhuCapDiLai());
             }
 
-            String mabcc = bangLuong.getMaLuong().replaceFirst("BL", "CC");
+            String mabcc = bl.getMaLuong().replaceFirst("BL", "CC");
             BangChamCongDTO bcc = bccBUS.selectById(mabcc);
-            Float luongTT = (bangLuong.getLuongCB() * bangLuong.getHeSo()) / 24 * bcc.getSoNgayLam();
-            luongTT = (float) Math.round(luongTT);
-            Float t = (bangLuong.getLuongCB() * bangLuong.getHeSo()) / (24 * 8);
+            
+            Float luongTT = (bl.getLuongCB() * bl.getHeSo())/ 24 * bcc.getSoNgayLam();
+            //luongTT = (float) Math.round(luongTT);
+            
+            Float t = (bl.getLuongCB() * bl.getHeSo()) / (24 * 8);
             Float luongTangCa = t * bcc.getSoGioOTNgayThuong() + t * 2 * bcc.getSoGioOTCN() + t * 3 * bcc.getSoGioOTNgayLe();
-            luongTangCa = (float) Math.round(luongTangCa);
-            Float phuCap = bangLuong.getPhuCapAnTrua() + bangLuong.getPhuCapDiLai();
+            //luongTangCa = (float) Math.round(luongTangCa);
+            
+            Float phuCap = bl.getPhuCapAnTrua() + bl.getPhuCapDiLai();
             phuCap = (float) Math.round(phuCap);
-            Float thuong = bangLuong.getThuong();
-            Float khoanTru = bangLuong.getBhxh() + bangLuong.getBhtn() + bangLuong.getBhyt() + bangLuong.getTamUng() + bangLuong.getThue();
-            khoanTru = (float) Math.round(khoanTru);
-            Float thucNhan = luongTT + luongTangCa + phuCap + thuong - khoanTru;
-            thucNhan = (float) Math.round(thucNhan);
-            bangLuong.setThucNhan(thucNhan);
+            //System.out.println("Phu cap: " + phuCap);   //
+            Float thuong = bl.getThuong();
+            Float khoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
+            //System.out.println("Khoan tru: " + khoanTru);   //
+            //khoanTru = (float) Math.round(khoanTru);
+            Float thucnhan = luongTT + luongTangCa + phuCap + thuong - khoanTru;
+            int thucNhan = (int) Math.round(thucnhan);
+            bl.setThucNhan(thucNhan);
+            //System.out.println("Thuc Nhan: " + bl.getThucNhan() + " ; " + thucNhan);    //
 
-            int resultUpdate = blBUS.updateBangLuong(bangLuong);
+            int resultUpdate = blBUS.updateBangLuong(bl);
             if (resultUpdate > 0) {
                 count++;
             }
         }
-
-        if (count == selectedRows.length) {
-            JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-
+        //System.out.println("== count:" + count);
+        if (count == selectedRows.length)
+            JOptionPane.showMessageDialog(null, "Cập nhật bảng lương thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(null, "Cập nhật bảng lương thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
         loadBangLuongList();
     }
 
     private void btnDuyetBangLuong() {
         int[] selectedRows = blTable.getSelectedRows();
+        int count = 0;
         if (selectedRows.length >= 1) {
             for (int row : selectedRows) {
                 String maBL = blTable.getValueAt(row, 0).toString(); 
                 BangLuongDTO bangLuong = blBUS.selectById(maBL);
                 bangLuong.setTrangThai("on");
-                blBUS.updateBangLuong(bangLuong);
-            }
-        } 
-        loadBangLuongList();
+                int kq = blBUS.updateBangLuong(bangLuong);
+                if (kq > 0) 
+                    count +=1;
+            } 
+            if (count == selectedRows.length)
+                JOptionPane.showMessageDialog(null, "Bảng lương đã được duyệt", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(null, "Bảng lương chưa được duyệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            loadBangLuongList();
+        } else JOptionPane.showMessageDialog(null, "Vui lòng chọn bảng lương!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        
     }
     
     private void searchPerformed(){
-        String searchContent = txtTimKiem.getText().trim();
-        if (!searchContent.isEmpty()) { 
+        if (!txtTimKiem.getText().trim().isEmpty()) { 
+            blModel.setRowCount(0);
+            String searchContent = txtTimKiem.getText().trim();
             ArrayList<BangLuongDTO> dsTimKiem = blBUS.selectByKeyWord(searchContent);
             String trangThai = null;
             for(BangLuongDTO bl: dsTimKiem) {
@@ -1101,16 +987,16 @@ public class DSBangLuongGUI extends JPanel{
         } else {
             // Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển thị tất cả sản phẩm
             JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
-            refreshList();
         }
     }
     
     private void refreshList(){
-        // Xóa tất cả các dòng trong mô hình bảng
         blModel.setRowCount(0);
-        blModel.setColumnCount(0);
-        loadBangLuongList();
         sortComboBox.setSelectedIndex(0);
+        txtTimKiem.setText("");
+        jc_thang.setSelectedIndex(0);
+        jc_nam.setSelectedIndex(0);
+        loadBangLuongList();
     }
     
     private void sortAZ(){
