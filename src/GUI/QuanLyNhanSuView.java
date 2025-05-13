@@ -15,6 +15,10 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 
 public class QuanLyNhanSuView {
 	
@@ -312,36 +316,42 @@ public class QuanLyNhanSuView {
 //		});
 		
 		
-		//ActionListener cho button Personal Information
-		personalInfoButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ThongTinCaNhanGUI personalInformationObj = new ThongTinCaNhanGUI();
-				contentPanel.add(personalInformationObj, thongTinCaNhan_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
-			}
-		});
-		
-        //mouseListener cho nút changeInfoButton
-		personalInfoButton.addMouseListener(new MouseAdapter() {
+     		personalInfoButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+    					System.out.println("Clicked personalInfoButton");
+                        JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+                        ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
+                        Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+                        javafx.application.Platform.runLater(() -> {
+                            fxPanel.setScene(new Scene(content));
+                        });
+                        contentPanel.add(fxPanel, thongTinCaNhan_Identity);
+                        CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+                        cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+                    } catch (Exception ex) {
+    					System.out.println("error personalInfoButton");
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				personalInfoButton.setBackground(Color.decode("#F38B2B")); //để đổi màu khi rê chuột vào
-				personalInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			
-    		@Override
-    		public void mousePressed(MouseEvent e) {
-    			personalInfoButton.setBackground(Color.decode("#F38B2B")); //để đổi màu khi nhấn nút
-    		}
-			
-    		@Override
-    		public void mouseExited(MouseEvent e) {
-    			personalInfoButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
-    		}
-		});
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+    		// mouseListener cho nút changeInfoButton
+    		personalInfoButton.addMouseListener(new MouseAdapter() {
+
+    			@Override
+    			public void mouseEntered(MouseEvent e) {
+    				personalInfoButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
+    				personalInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    			}
+
+    			@Override
+    			public void mouseExited(MouseEvent e) {
+    				personalInfoButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
+    			}
+    		});
 		
 		//mouseListener cho nút logoutButton
 		logoutButton.addMouseListener(new MouseAdapter() {

@@ -322,23 +322,34 @@ public class NhanVienKhoView {
 			}
 		});
 
-		// ActionListener cho button Personal Information
-		personalInfoButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ThongTinCaNhanGUI personalInformationObj = new ThongTinCaNhanGUI();
-				contentPanel.add(personalInformationObj, thongTinCaNhan_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
-			}
-		});
+		personalInfoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+					System.out.println("Clicked personalInfoButton");
+                    JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+                    ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
+                    Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+                    javafx.application.Platform.runLater(() -> {
+                        fxPanel.setScene(new Scene(content));
+                    });
+                    contentPanel.add(fxPanel, thongTinCaNhan_Identity);
+                    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+                    cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+                } catch (Exception ex) {
+					System.out.println("error personalInfoButton");
+
+                    ex.printStackTrace();
+                }
+            }
+        });
 
 		// mouseListener cho nút changeInfoButton
 		personalInfoButton.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				personalInfoButton.setBackground(Color.decode("#79DE54")); // để đổi màu khi rê chuột vào
+				personalInfoButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
 				personalInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 
