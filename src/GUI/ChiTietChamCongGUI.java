@@ -714,104 +714,92 @@ public class ChiTietChamCongGUI extends JPanel{
         return arr_temp;        
     } 
     
-    private void themChiTietChamCong() {
-        String thang = jc_thang.getSelectedItem().toString();
-        String soThang = thang.replace("Tháng ", "");
-        String nam = jc_nam.getSelectedItem().toString();
-        
-        int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
-        if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
-            manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
-        } else {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        String macc = "CC" + soThang + nam+ manv;
-        LocalDate date = LocalDate.now();
+	private void themChiTietChamCong() {
+		String thang = jc_thang.getSelectedItem().toString();
+		String soThang = thang.replace("Tháng ", "");
+		String nam = jc_nam.getSelectedItem().toString();
 
-        BangChamCongDTO bcc = bccBUS.selectById(macc);
-        if (bcc == null) {
-            // Nếu bảng chấm công chưa tồn tại => tạo bảng chấm công mới
-            bcc = new BangChamCongDTO();
-            bcc.setMaBCC(macc);
-            bcc.setThangCC(Integer.parseInt(soThang));
-            bcc.setNamCC(Integer.parseInt(nam));
-            bcc.setSoNgayLam(24.0f);
-            bcc.setSoNgayNghiKP(0);
-            bcc.setSoNPCoLuong(0);
-            bcc.setSoNPKhongLuong(0);
-            bcc.setSoGioOTNgayThuong(0);
-            bcc.setSoGioOTNgayLe(0);
-            bcc.setSoGioOTCN(0);
-            bcc.setMaNV(manv);
-            String resultAdd = bccBUS.insert(bcc);
-            System.out.println(resultAdd);
-        } else {
-            bcc.setSoNgayLam(24.0f);
-            bcc.setSoNgayNghiKP(0);
-            bcc.setSoNPCoLuong(0);
-            bcc.setSoNPKhongLuong(0);
-            bcc.setSoGioOTNgayThuong(0);
-            bcc.setSoGioOTNgayLe(0);
-            bcc.setSoGioOTCN(0);
-        }
+		int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn
+		if (selectedRow != -1) { // Kiểm tra có dòng nào được chọn không
+			manv = (String) table.getValueAt(selectedRow, 0); // Lấy giá trị cột 0 (Mã nhân viên)
+		} else {
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 
-        ctccBUS.xoaChiTietChamCongTheoMaCC(macc);
-        System.out.println(" arr_temp size: " + arr_temp.size());
-        int count = 0;
-        // Xoá hết ctcc có mabcc -> add ctct 
-        for (ChiTietChamCongDTO ct : arr_temp) {
-            if (ct.getMaBCC().equals(macc)) {
-                ct.setNgayTao(date);
-                System.out.println("Thêm CTCC: " + ct.getMaCTCC());
-                int resultAdd = ctccBUS.insertChiTietCC(ct);
-                System.out.println("Result Add: " + resultAdd);
-                if (resultAdd < 0) {
-                    count += 1;
-                    System.out.println("/// c = " + count);
-                    switch (ct.getLoaiChamCong()) {
-                        case "Nghỉ không phép":
-                            bcc.setSoNgayNghiKP(bcc.getSoNgayNghiKP() + 1.0f);
-                            break;
-                        case "Nghỉ phép có lương":
-                            bcc.setSoNPCoLuong(bcc.getSoNPCoLuong() + 1.0f);
-                            break;
-                        case "Nghỉ phép không lương":
-                            bcc.setSoNPKhongLuong(bcc.getSoNPKhongLuong() + 1.0f);
-                            break;
-                        case "Tăng ca ngày thường":
-                            bcc.setSoGioOTNgayThuong(bcc.getSoGioOTNgayThuong() + ct.getSoGioOT());
-                            break;
-                        case "Tăng ca ngày lễ":
-                            bcc.setSoGioOTNgayLe(bcc.getSoGioOTNgayLe() + ct.getSoGioOT());
-                            break;
-                        case "Tăng ca chủ nhật":
-                            bcc.setSoGioOTCN(bcc.getSoGioOTCN() + ct.getSoGioOT());
-                            break;
-                        default:
-                            break;
-                    }
-                    bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPCoLuong() - bcc.getSoNPKhongLuong());
-                    bccBUS.updateById(bcc);
-                    
-                }
-            }
-        }
-        /*System.out.println("=====Bảng chấm công: " + bcc.getMaBCC() + bcc.getSoNgayLam() + bcc.getSoNPKhongLuong());
-        System.out.println("SoNgayLam: " + bcc.getSoNgayLam());
-        System.out.println("SoNgayPhepKhongLuong: " + bcc.getSoNPKhongLuong());
-        System.out.println("SoNgayPhepCoLuong: " + bcc.getSoNPCoLuong());
-        System.out.println("SoNgayKP: " + bcc.getSoNgayNghiKP());
-        System.out.println("TangCaNgayThuong: " + bcc.getSoGioOTNgayThuong());
-        System.out.println("TangCaNgayLe: " + bcc.getSoGioOTNgayLe());
-        System.out.println("==TangCaNgayCN: " + bcc.getSoGioOTCN());*/
-        if (count == arr_temp.size()) {
-            JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        } else JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thất bại ", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        loadChamCongTheoNhanVien(manv);
-    }
-    
+		String macc = "CC" + soThang + nam + manv;
+		LocalDate date = LocalDate.now();
+
+		BangChamCongDTO bcc = bccBUS.selectById(macc);
+		if (bcc == null) {
+			// Nếu bảng chấm công chưa tồn tại => tạo bảng chấm công mới
+			bcc = new BangChamCongDTO();
+			bcc.setMaBCC(macc);
+			bcc.setThangCC(Integer.parseInt(soThang));
+			bcc.setNamCC(Integer.parseInt(nam));
+			bcc.setSoNgayLam(24.0f);
+			bcc.setSoNgayNghiKP(0);
+			bcc.setSoNPCoLuong(0);
+			bcc.setSoNPKhongLuong(0);
+			bcc.setSoGioOTNgayThuong(0);
+			bcc.setSoGioOTNgayLe(0);
+			bcc.setSoGioOTCN(0);
+			bcc.setMaNV(manv);
+			String resultAdd = bccBUS.insert(bcc);
+			System.out.println(resultAdd);
+		} else {
+			bcc.setSoNgayLam(24.0f);
+			bcc.setSoNgayNghiKP(0);
+			bcc.setSoNPCoLuong(0);
+			bcc.setSoNPKhongLuong(0);
+			bcc.setSoGioOTNgayThuong(0);
+			bcc.setSoGioOTNgayLe(0);
+			bcc.setSoGioOTCN(0);
+		}
+
+		ctccBUS.xoaChiTietChamCongTheoMaCC(macc);
+		System.out.println(" arr_temp size: " + arr_temp.size());
+		int count = 0;
+		// Xoá hết ctcc có mabcc -> add ctct
+		for (ChiTietChamCongDTO ct : arr_temp) {
+			if (ct.getMaBCC().equals(macc)) {
+				ct.setNgayTao(date);
+				System.out.println("Thêm CTCC: " + ct.getMaCTCC());
+				int resultAdd = ctccBUS.insertChiTietCC(ct);
+				System.out.println("Result Add: " + resultAdd);
+				if (resultAdd < 0) {
+					count += 1;
+					System.out.println("/// c = " + count);
+					switch (ct.getLoaiChamCong()) {
+					case "Nghỉ không phép":
+						bcc.setSoNgayNghiKP(bcc.getSoNgayNghiKP() + 1.0f);
+						break;
+					case "Nghỉ phép có lương":
+						bcc.setSoNPCoLuong(bcc.getSoNPCoLuong() + 1.0f);
+						break;
+					case "Nghỉ phép không lương":
+						bcc.setSoNPKhongLuong(bcc.getSoNPKhongLuong() + 1.0f);
+						break;
+					case "Tăng ca ngày thường":
+						bcc.setSoGioOTNgayThuong(bcc.getSoGioOTNgayThuong() + ct.getSoGioOT());
+						break;
+					case "Tăng ca ngày lễ":
+						bcc.setSoGioOTNgayLe(bcc.getSoGioOTNgayLe() + ct.getSoGioOT());
+						break;
+					case "Tăng ca chủ nhật":
+						bcc.setSoGioOTCN(bcc.getSoGioOTCN() + ct.getSoGioOT());
+						break;
+					default:
+						break;
+					}
+					bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPKhongLuong());
+					bccBUS.updateById(bcc);
+
+				}
+			}
+		}
+	}
+
     // Done
     private ArrayList<ChiTietChamCongDTO> loadChamCongTheoNhanVien(String manv) {
         String thang = jc_thang.getSelectedItem().toString();

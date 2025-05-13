@@ -512,6 +512,7 @@ INSERT INTO CHITIETCHAMCONG (maCTCC, ngayTao, loaiChamCong, chiTiet, maBCC, soGi
 ('CT01042025NV005', '2025-04-25', N'Tăng ca ngày thường', N'Tăng ca nhập hàng', 'CC042025NV005', 2);
 
 
+DELETE FROM BANGLUONG;	-- Xoá hết các dòng của bảng
 INSERT INTO BANGLUONG (maBL, thangLuong, namLuong, luongCB, heSo, phuCapAnTrua, phuCapDiLai, thuong, bhxh, bhyt, bhtn, thueTNCN, tamUng, thucNhan, maNV, trangThai) 
 VALUES 
 ('BL042025NV002', 4, 2025, 9000000, 2.0, 400000, 250000, 800000, 850000, 420000, 220000, 450000, 1500000, 14000000, 'NV002', 'on'),

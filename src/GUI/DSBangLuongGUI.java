@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -751,56 +752,66 @@ public class DSBangLuongGUI extends JPanel {
 	}
 
 	private void loadBangLuongTheoThoiGian() {
-		blModel.setRowCount(0);
 		String thang = jc_thang.getSelectedItem().toString();
 		String nam = jc_nam.getSelectedItem().toString();
+
 		if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-			ArrayList<BangLuongDTO> arrBangLuong = blBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
-			String trangThai = null;
+			blModel.setRowCount(0);
+			ArrayList<BangLuongDTO> arrBangLuong = blBUS.selectByTime(thang, nam);
+
+			DecimalFormat df = new DecimalFormat("#,###");
+
 			for (BangLuongDTO bl : arrBangLuong) {
 				NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
 				String mabcc = bl.getMaLuong().replaceFirst("BL", "CC");
 				BangChamCongDTO bcc = bccBUS.selectById(mabcc);
 
+				if (nv == null || bcc == null)
+					continue;
+
 				String maBL = bl.getMaLuong();
 				String nvien = nv.getMaNV() + " - " + nv.getHoTen();
 				String thoiGian = bl.getThangLuong() + "/" + bl.getNamLuong();
-				DecimalFormat df = new DecimalFormat("#,###");
 
 				String luongCB = df.format(bl.getLuongCB());
-
 				Float heSo = bl.getHeSo();
+
+				// Tính lương thực tế theo số ngày làm
 				Float luongTT = ((bl.getLuongCB() * heSo) / 24) * bcc.getSoNgayLam();
 				String luongThucTe = df.format(luongTT);
 
+				// Tính lương tăng ca
 				Float t = (bl.getLuongCB() * heSo) / (24 * 8);
 				Float luongOT = t * bcc.getSoGioOTNgayThuong() + t * 2 * bcc.getSoGioOTCN()
 						+ t * 3 * bcc.getSoGioOTNgayLe();
 				String luongTangCa = df.format(luongOT);
 
-				Float pc = bl.getPhuCapAnTrua() + bl.getPhuCapDiLai();
-				String phuCap = df.format(pc);
+				// Phụ cấp
+				Float phuCapValue = bl.getPhuCapAnTrua() + bl.getPhuCapDiLai();
+				String phuCap = df.format(phuCapValue);
 
-				Float luongThuong = bl.getThuong();
-				String thuong = df.format(luongThuong);
+				// Thưởng
+				String thuong = df.format(bl.getThuong());
 
+				// Các khoản trừ
 				Float cacKhoanTru = bl.getBhxh() + bl.getBhtn() + bl.getBhyt() + bl.getTamUng() + bl.getThue();
 				String khoanTru = df.format(cacKhoanTru);
 
-				Float thucnhan = bl.getThucNhan();
-				String thucNhan = df.format(thucnhan);
+				// Thực nhận
+				String thucNhan = df.format(bl.getThucNhan());
+				
 
-				if (bl.getTrangThai().equals("on"))
+				String trangThai;
+				if ("on".equalsIgnoreCase(bl.getTrangThai()))
 					trangThai = "Đã duyệt";
-				else if (bl.getTrangThai().equals("off"))
+				else
 					trangThai = "Chưa duyệt";
 
 				Object[] row = { maBL, nvien, thoiGian, luongCB, heSo, luongThucTe, luongTangCa, phuCap, thuong,
 						khoanTru, thucNhan, trangThai };
 				blModel.addRow(row);
 			}
-		} else
-			loadBangLuongList();
+		}
 	}
 
 	private void btnLuuSuaBangLuong() {
@@ -906,34 +917,42 @@ public class DSBangLuongGUI extends JPanel {
 				count++;
 			}
 		}
-		System.out.println("== count:" + count);
-		if (count == selectedRows.length) {
-			JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thành công", "Thành công",
+		// System.out.println("== count:" + count);
+		if (count == selectedRows.length)
+			JOptionPane.showMessageDialog(null, "Cập nhật bảng lương thành công", "Thành công",
 					JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(null, "Thêm chi tiết chấm công thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-		}
-
+		else
+			JOptionPane.showMessageDialog(null, "Cập nhật bảng lương thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
 		loadBangLuongList();
 	}
 
 	private void btnDuyetBangLuong() {
 		int[] selectedRows = blTable.getSelectedRows();
+		int count = 0;
 		if (selectedRows.length >= 1) {
 			for (int row : selectedRows) {
 				String maBL = blTable.getValueAt(row, 0).toString();
 				BangLuongDTO bangLuong = blBUS.selectById(maBL);
 				bangLuong.setTrangThai("on");
-				blBUS.updateBangLuong(bangLuong);
+				int kq = blBUS.updateBangLuong(bangLuong);
+				if (kq > 0)
+					count += 1;
 			}
-		}
-		loadBangLuongList();
+			if (count == selectedRows.length)
+				JOptionPane.showMessageDialog(null, "Bảng lương đã được duyệt", "Thành công",
+						JOptionPane.INFORMATION_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(null, "Bảng lương chưa được duyệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			loadBangLuongList();
+		} else
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn bảng lương!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+
 	}
 
 	private void searchPerformed() {
-		blModel.setRowCount(0);
-		String searchContent = txtTimKiem.getText().trim();
-		if (!searchContent.isEmpty()) {
+		if (!txtTimKiem.getText().trim().isEmpty()) {
+			blModel.setRowCount(0);
+			String searchContent = txtTimKiem.getText().trim();
 			ArrayList<BangLuongDTO> dsTimKiem = blBUS.selectByKeyWord(searchContent);
 			String trangThai = null;
 			for (BangLuongDTO bl : dsTimKiem) {
@@ -982,14 +1001,11 @@ public class DSBangLuongGUI extends JPanel {
 			// Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển
 			// thị tất cả sản phẩm
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
-			refreshList();
 		}
 	}
 
 	private void refreshList() {
-		// Xóa tất cả các dòng trong mô hình bảng
 		blModel.setRowCount(0);
-		blModel.setColumnCount(0);
 		sortComboBox.setSelectedIndex(0);
 		txtTimKiem.setText("");
 		jc_thang.setSelectedIndex(0);
