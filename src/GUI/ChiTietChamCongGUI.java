@@ -11,15 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -792,7 +784,7 @@ public class ChiTietChamCongGUI extends JPanel{
                         default:
                             break;
                     }
-                    bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPCoLuong() - bcc.getSoNPKhongLuong());
+                    bcc.setSoNgayLam(24.0f - bcc.getSoNgayNghiKP() - bcc.getSoNPKhongLuong());
                     bccBUS.updateById(bcc);
                     
                 }
