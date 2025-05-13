@@ -472,11 +472,11 @@ btnPrint.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
         PrintFile pr = new PrintFile();
-        JTable table = pr.getTableNhanVienFromDatabase();
+        JTable table = pr.getTableDonXinNghiFromDatabase();
         if (table != null) {
-            pr.printTableNhanVien(table); // Thực hiện in
+            pr.printTableNDonXinNghi(table); // Thực hiện in
         } else {
-            JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng nhân viên.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng đơn xin nghỉ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 });
