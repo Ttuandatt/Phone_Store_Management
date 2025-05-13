@@ -215,5 +215,38 @@ public class ChiTietChamCongDAO implements DAOInterface<ChiTietChamCongDTO>{
     public int delete(ChiTietChamCongDTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    public ArrayList<ChiTietChamCongDTO> getThongTinNgayNghi(String maBCC) {
+        ArrayList<ChiTietChamCongDTO> arr = new ArrayList<>();
+
+        try {
+            jdbc.openConnection();
+
+            String query = "SELECT maBCC, loaiChamCong, chiTiet " +
+                           "FROM ChiTietChamCong " +
+                           "WHERE maBCC = ? AND loaiChamCong LIKE N'%Nghỉ%'";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, maBCC);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietChamCongDTO ctcc = new ChiTietChamCongDTO();
+                ctcc.setMaBCC(rs.getString("maBCC"));
+                ctcc.setLoaiChamCong(rs.getString("loaiChamCong"));
+                ctcc.setChiTiet(rs.getString("chiTiet"));
+                arr.add(ctcc);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            jdbc.closeConnection();
+        }
+
+        return arr;
+    }
+
     
 }
