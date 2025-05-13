@@ -421,7 +421,28 @@ public class PhieuNhapGUI extends JPanel {
 		JButton btnExcel = new ShadowButton("Xuất Excel");
 		btnExcel.setBounds(510, 130, 100, 20);
 		informationPanel.add(btnExcel);
-		
+		   // Thêm sự kiện click cho nút Detail
+        btnExcel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                excelExporter ex = new excelExporter();
+                ex.excelExporterPhieuNhap();
+                JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        btnExcel.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseEntered(MouseEvent e) {
+        		btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+        		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        	}
+        	
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		btnExcel.setBackground(Color.white);
+        		informationPanel.setBackground(Color.white);
+        	}
+        });
 	}
 
 	private void loadDanhSachPN() {
