@@ -422,7 +422,9 @@ public class NhanVienGUI extends JPanel{
         btnExcel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Excel button clicked!");
+                excelExporter ex = new excelExporter();
+                ex.excelExporterNhanVien();
+                JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         btnExcel.addMouseListener(new MouseAdapter() {
