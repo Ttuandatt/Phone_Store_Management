@@ -44,7 +44,7 @@ public class BangLuongDAO implements DAOInterface<BangLuongDTO>{
                 bl.setBhtn(rs.getFloat("bhtn"));
                 bl.setThue(rs.getFloat("thueTNCN"));
                 bl.setTamUng(rs.getFloat("tamUng"));
-                bl.setThue(rs.getFloat("thucNhan"));
+                bl.setThucNhan(rs.getFloat("thucNhan"));
 		bl.setMaNV(rs.getString("maNV"));
 		bl.setTrangThai(rs.getString("trangThai"));		
             }
@@ -57,47 +57,77 @@ public class BangLuongDAO implements DAOInterface<BangLuongDTO>{
 	return bl;
     }
 
-    public ArrayList<BangLuongDTO> selectByTime(int thang, int nam) {
-        ArrayList<BangLuongDTO> arrBangLuong = new ArrayList<BangLuongDTO>();
-	try {
+    public ArrayList<BangLuongDTO> selectByTime(String thang, String nam) {
+        ArrayList<BangLuongDTO> arrBangLuong = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
             jdbc.openConnection();
-			
-            String query = "select * from BangLuong where thangLuong = ? and namLuong = ?";
-			
-            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-            ps.setInt(1, thang);
-            ps.setInt(2, nam);
-            
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-		BangLuongDTO bl = new BangLuongDTO();
-		bl.setMaLuong(rs.getString("maBL"));
-		bl.setThangLuong(rs.getInt("thangLuong"));
-		bl.setNamLuong(rs.getInt("namLuong"));
-		bl.setLuongCB(rs.getFloat("luongCB"));
-		bl.setHeSo(rs.getFloat("heSo"));
-		bl.setPhuCapAnTrua(rs.getFloat("phuCapAnTrua"));
-		bl.setPhuCapDiLai(rs.getFloat("phuCapDiLai"));
+
+            StringBuilder query = new StringBuilder("SELECT * FROM BangLuong WHERE 1=1");
+            ArrayList<Object> params = new ArrayList<>();
+
+            if (!thang.equals("Tháng")) {
+                query.append(" AND thangLuong = ?");
+                params.add(Integer.parseInt(thang));
+            }
+
+            if (!nam.equals("Năm")) {
+                query.append(" AND namLuong = ?");
+                params.add(Integer.parseInt(nam));
+            }
+
+            // Không có điều kiện tìm kiếm → trả về rỗng hoặc toàn bộ, tuỳ yêu cầu
+            if (params.isEmpty()) {
+                return arrBangLuong; // hoặc query toàn bộ nếu muốn
+            }
+
+            ps = jdbc.getConnection().prepareStatement(query.toString());
+
+            // Gán tham số cho PreparedStatement
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                BangLuongDTO bl = new BangLuongDTO();
+                bl.setMaLuong(rs.getString("maBL"));
+                bl.setThangLuong(rs.getInt("thangLuong"));
+                bl.setNamLuong(rs.getInt("namLuong"));
+                bl.setLuongCB(rs.getFloat("luongCB"));
+                bl.setHeSo(rs.getFloat("heSo"));
+                bl.setPhuCapAnTrua(rs.getFloat("phuCapAnTrua"));
+                bl.setPhuCapDiLai(rs.getFloat("phuCapDiLai"));
                 bl.setThuong(rs.getFloat("thuong"));
                 bl.setBhxh(rs.getFloat("bhxh"));
                 bl.setBhyt(rs.getFloat("bhyt"));
                 bl.setBhtn(rs.getFloat("bhtn"));
                 bl.setThue(rs.getFloat("thueTNCN"));
                 bl.setTamUng(rs.getFloat("tamUng"));
-                bl.setThue(rs.getFloat("thucNhan"));
-		bl.setMaNV(rs.getString("maNV"));
-		bl.setTrangThai(rs.getString("trangThai"));
-                
-		arrBangLuong.add(bl);
+                bl.setThucNhan(rs.getFloat("thucNhan")); 
+                bl.setMaNV(rs.getString("maNV"));
+                bl.setTrangThai(rs.getString("trangThai"));
+
+                arrBangLuong.add(bl);
             }
-	}catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            e.getMessage();
-	}finally {
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
             jdbc.closeConnection();
-	}
-	return arrBangLuong;
+        }
+
+        return arrBangLuong;
     }
+
 
     @Override
     public ArrayList<BangLuongDTO> selectAll() {
@@ -124,7 +154,7 @@ public class BangLuongDAO implements DAOInterface<BangLuongDTO>{
                 bl.setBhtn(rs.getFloat("bhtn"));
                 bl.setThue(rs.getFloat("thueTNCN"));
                 bl.setTamUng(rs.getFloat("tamUng"));
-                bl.setThue(rs.getFloat("thucNhan"));
+                bl.setThucNhan(rs.getFloat("thucNhan"));
 		bl.setMaNV(rs.getString("maNV"));
 		bl.setTrangThai(rs.getString("trangThai"));
                 
@@ -180,6 +210,52 @@ public class BangLuongDAO implements DAOInterface<BangLuongDTO>{
         }
         return result;
     }
+
+    public ArrayList<BangLuongDTO> selectByKeyWord(String keyWord) {
+        ArrayList<BangLuongDTO> arrBangLuong = new ArrayList<>();
+        try {
+            jdbc.openConnection();
+
+            String query = "SELECT * FROM BangLuong bl " +
+                           "JOIN NhanVien nv ON bl.maNV = nv.maNV " +
+                           "WHERE maBL LIKE ? OR bl.maNV LIKE ? OR hoTen LIKE ?";
+
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            String keywordPattern = "%" + keyWord + "%";
+            ps.setString(1, keywordPattern);
+            ps.setString(2, keywordPattern);
+            ps.setString(3, keywordPattern);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                BangLuongDTO bl = new BangLuongDTO();
+                bl.setMaLuong(rs.getString("maBL"));
+                bl.setThangLuong(rs.getInt("thangLuong"));
+                bl.setNamLuong(rs.getInt("namLuong"));
+                bl.setLuongCB(rs.getFloat("luongCB"));
+                bl.setHeSo(rs.getFloat("heSo"));
+                bl.setPhuCapAnTrua(rs.getFloat("phuCapAnTrua"));
+                bl.setPhuCapDiLai(rs.getFloat("phuCapDiLai"));
+                bl.setThuong(rs.getFloat("thuong"));
+                bl.setBhxh(rs.getFloat("bhxh"));
+                bl.setBhyt(rs.getFloat("bhyt"));
+                bl.setBhtn(rs.getFloat("bhtn"));
+                bl.setThue(rs.getFloat("thueTNCN"));
+                bl.setTamUng(rs.getFloat("tamUng"));
+                bl.setThucNhan(rs.getFloat("thucNhan")); // sửa đúng thuộc tính
+                bl.setMaNV(rs.getString("maNV"));
+                bl.setTrangThai(rs.getString("trangThai"));
+
+                arrBangLuong.add(bl);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            jdbc.closeConnection();
+        }
+        return arrBangLuong;
+    }
+
 
     
 }
