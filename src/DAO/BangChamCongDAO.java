@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import DTO.BangChamCongDTO;
 import Database.JDBCConnection;
-import java.sql.Date;
 import java.sql.SQLException;
 
 public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
@@ -156,18 +155,42 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
             }
             return result;
         }
-
-    public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
+        
+    public ArrayList<BangChamCongDTO> selectByTime(String thang, String nam) {
         ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
             jdbc.openConnection();
-            String query = "select * from BangChamCong where thangCC = ? and namCC = ?";
-            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-            ps.setInt(1, thang);
-            ps.setInt(2, nam);
 
-            ResultSet rs = ps.executeQuery();
+            StringBuilder query = new StringBuilder("SELECT * FROM BangChamCong WHERE 1=1");
+            ArrayList<Object> params = new ArrayList<>();
+
+            if (!thang.equals("Tháng")) {
+                query.append(" AND thangCC = ?");
+                params.add(Integer.parseInt(thang));
+            }
+
+            if (!nam.equals("Năm")) {
+                query.append(" AND namCC = ?");
+                params.add(Integer.parseInt(nam));
+            }
+
+            // Nếu không có điều kiện tìm kiếm, trả về rỗng hoặc toàn bộ tùy yêu cầu
+            if (params.isEmpty()) {
+                return arr_bcc; // hoặc viết query toàn bộ nếu cần
+            }
+
+            ps = jdbc.getConnection().prepareStatement(query.toString());
+
+            // Gán tham số
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            rs = ps.executeQuery();
+
             while (rs.next()) {
                 BangChamCongDTO bcc = new BangChamCongDTO();
                 bcc.setMaBCC(rs.getString("maBCC"));
@@ -181,19 +204,24 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO>{
                 bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
                 bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
                 bcc.setMaNV(rs.getString("maNV"));
+
                 arr_bcc.add(bcc);
             }
-
-            rs.close();
-            ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             jdbc.closeConnection();
         }
 
         return arr_bcc;
     }
+
 
     @Override
     public BangChamCongDTO selectById(String t) {
