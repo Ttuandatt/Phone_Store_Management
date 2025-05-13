@@ -252,7 +252,7 @@ public class DSBangLuongGUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 excelExporter ex = new excelExporter();
-                ex.excelExporterBangChamCong();
+                ex.excelExporterBangLuong();
                 JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
