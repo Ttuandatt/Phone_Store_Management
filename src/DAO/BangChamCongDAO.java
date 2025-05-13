@@ -157,43 +157,72 @@ public class BangChamCongDAO implements DAOInterface<BangChamCongDTO> {
             return result;
         }
 
-    public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
-        ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<>();
+        public ArrayList<BangChamCongDTO> selectByTime(String thang, String nam) {
+            ArrayList<BangChamCongDTO> arr_bcc = new ArrayList<>();
+            PreparedStatement ps = null;
+            ResultSet rs = null;
 
-        try {
-            jdbc.openConnection();
-            String query = "select * from BangChamCong where thangCC = ? and namCC = ?";
-            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
-            ps.setInt(1, thang);
-            ps.setInt(2, nam);
+            try {
+                jdbc.openConnection();
 
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                BangChamCongDTO bcc = new BangChamCongDTO();
-                bcc.setMaBCC(rs.getString("maBCC"));
-                bcc.setThangCC(rs.getInt("thangCC"));
-                bcc.setNamCC(rs.getInt("namCC"));
-                bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
-                bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
-                bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
-                bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
-                bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
-                bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
-                bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
-                bcc.setMaNV(rs.getString("maNV"));
-                arr_bcc.add(bcc);
+                StringBuilder query = new StringBuilder("SELECT * FROM BangChamCong WHERE 1=1");
+                ArrayList<Object> params = new ArrayList<>();
+
+                if (!thang.equals("Tháng")) {
+                    query.append(" AND thangCC = ?");
+                    params.add(Integer.parseInt(thang));
+                }
+
+                if (!nam.equals("Năm")) {
+                    query.append(" AND namCC = ?");
+                    params.add(Integer.parseInt(nam));
+                }
+
+                // Nếu không có điều kiện tìm kiếm, trả về rỗng hoặc toàn bộ tùy yêu cầu
+                if (params.isEmpty()) {
+                    return arr_bcc; // hoặc viết query toàn bộ nếu cần
+                }
+
+                ps = jdbc.getConnection().prepareStatement(query.toString());
+
+                // Gán tham số
+                for (int i = 0; i < params.size(); i++) {
+                    ps.setObject(i + 1, params.get(i));
+                }
+
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    BangChamCongDTO bcc = new BangChamCongDTO();
+                    bcc.setMaBCC(rs.getString("maBCC"));
+                    bcc.setThangCC(rs.getInt("thangCC"));
+                    bcc.setNamCC(rs.getInt("namCC"));
+                    bcc.setSoNgayLam(rs.getFloat("soNgayLam"));
+                    bcc.setSoNgayNghiKP(rs.getFloat("soNgayNghiKP"));
+                    bcc.setSoNPCoLuong(rs.getFloat("soNPCoLuong"));
+                    bcc.setSoNPKhongLuong(rs.getFloat("soNPKhongLuong"));
+                    bcc.setSoGioOTNgayThuong(rs.getFloat("soGioOTNgayThuong"));
+                    bcc.setSoGioOTNgayLe(rs.getFloat("soGioOTNgayLe"));
+                    bcc.setSoGioOTCN(rs.getFloat("soGioOTCN"));
+                    bcc.setMaNV(rs.getString("maNV"));
+
+                    arr_bcc.add(bcc);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (rs != null) rs.close();
+                    if (ps != null) ps.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                jdbc.closeConnection();
             }
 
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            jdbc.closeConnection();
+            return arr_bcc;
         }
 
-        return arr_bcc;
-    }
 
     @Override
     public BangChamCongDTO selectById(String t) {

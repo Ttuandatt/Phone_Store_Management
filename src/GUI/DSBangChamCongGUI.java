@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.SwingConstants;
@@ -33,12 +34,13 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 public class DSBangChamCongGUI extends JPanel {
 
 	BangChamCongBUS bccBUS = new BangChamCongBUS();
 	ChiTietChamCongBUS ctccBUS = new ChiTietChamCongBUS();
-	DonXinNghiBUS dxnBUS = new DonXinNghiBUS();
+
 	NhanVienBUS nvienBUS = new NhanVienBUS();
 
 	JTable bccTable, ngayNghiTable, tangCaTable;
@@ -590,39 +592,12 @@ public class DSBangChamCongGUI extends JPanel {
 		jc_thang = new JComboBox<String>(thang);
 		jc_thang.setBounds(90, 24, 80, 25);
 		searchInputPanel.add(jc_thang);
-		jc_thang.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				bccModel.setRowCount(0);
-				String thang = jc_thang.getSelectedItem().toString();
-				String nam = jc_nam.getSelectedItem().toString();
-				if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-					arrBangChamCong = bccBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
-					for (BangChamCongDTO bcc : arrBangChamCong) {
-						NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
-
-						String maBCC = bcc.getMaBCC();
-						String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
-						int thangCC = bcc.getThangCC();
-						int namCC = bcc.getNamCC();
-						float soNgayLam = bcc.getSoNgayLam();
-						float soNgayNghiKP = bcc.getSoNgayNghiKP();
-						float soNPCoLuong = bcc.getSoNPCoLuong();
-						float soNPKhongLuong = bcc.getSoNPKhongLuong();
-						float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
-						float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
-						float soGioOTCN = bcc.getSoGioOTCN();
-
-						Object[] row = { maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong,
-								soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN };
-						bccModel.addRow(row);
-
-					}
-				} else
-					loadBangChamCongList();
-			}
-		});
+		jc_thang.addActionListener(new ActionListener() {	
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadDanhSachChamCongTheoThoiGian();
+            }
+        });
 
 		LocalDate current = LocalDate.now();
 		String[] nam_title = new String[6];
@@ -634,40 +609,12 @@ public class DSBangChamCongGUI extends JPanel {
 		jc_nam.setBounds(185, 24, 80, 25);
 		jc_nam.setModel(new DefaultComboBoxModel<>(nam_title));
 		searchInputPanel.add(jc_nam);
-		jc_nam.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				bccModel.setRowCount(0);
-				String thang = jc_thang.getSelectedItem().toString();
-				String nam = jc_nam.getSelectedItem().toString();
-				if (!thang.equals("Tháng") || !nam.equals("Năm")) {
-					arrBangChamCong = bccBUS.selectByTime(Integer.parseInt(thang), Integer.parseInt(nam));
-					for (int i = 0; i < arrBangChamCong.size(); i++) {
-						BangChamCongDTO bcc = arrBangChamCong.get(i);
-						System.out.println("///// MaNV" + bcc.getMaNV());
-						NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
-
-						String maBCC = bcc.getMaBCC();
-						String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
-						int thangCC = bcc.getThangCC();
-						int namCC = bcc.getNamCC();
-						float soNgayLam = bcc.getSoNgayLam();
-						float soNgayNghiKP = bcc.getSoNgayNghiKP();
-						float soNPCoLuong = bcc.getSoNPCoLuong();
-						float soNPKhongLuong = bcc.getSoNPKhongLuong();
-						float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
-						float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
-						float soGioOTCN = bcc.getSoGioOTCN();
-
-						Object[] row = { maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong,
-								soNPKhongLuong, soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN };
-						bccModel.addRow(row);
-					}
-				} else
-					loadBangChamCongList();
-			}
-		});
+		jc_nam.addActionListener(new ActionListener() {	
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadDanhSachChamCongTheoThoiGian();
+            }
+        });
 
 		txtTimKiem = new JTextField();
 		txtTimKiem.setBounds(375, 24, 260, 25);
@@ -754,10 +701,9 @@ public class DSBangChamCongGUI extends JPanel {
 	private void loadNgayNghiList() {
 		ngayNghiTable.setDefaultEditor(Object.class, null);
 		ngayNghiTable.setModel(ngayNghiModel);
-		ngayNghiModel.addColumn("Ngày bắt đầu nghỉ");
-		ngayNghiModel.addColumn("Ngày kết thúc nghỉ");
-		ngayNghiModel.addColumn("Loại");
-		ngayNghiModel.addColumn("Lý do");
+		ngayNghiModel.addColumn("Ngày nghỉ");
+		ngayNghiModel.addColumn("Loại nghỉ phép");
+		ngayNghiModel.addColumn("Chi tiết");
 	}
 
 	private void loadTangCaList() {
@@ -768,215 +714,46 @@ public class DSBangChamCongGUI extends JPanel {
 		tangCaModel.addColumn("Số giờ tăng ca");
 	}
 
-	private void newBangChamCongDialog() {
-		JDialog newBangChamCongDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this),
-				"Thêm bảng chấm công", true);
-		newBangChamCongDialog.setSize(300, 300);
-		newBangChamCongDialog.setLayout(null);
+	private void loadDanhSachChamCongTheoThoiGian() {
+		String thang = jc_thang.getSelectedItem().toString();
+		String nam = jc_nam.getSelectedItem().toString();
 
-		JLabel lblMaBCC, lblThangCC, lblNamCC, lblMaNV;
-		lblMaBCC = new JLabel("Mã chấm công");
-		lblMaBCC.setBounds(10, 10, 150, 20);
-		newBangChamCongDialog.add(lblMaBCC);
+		if (!thang.equals("Tháng") || !nam.equals("Năm")) {
+			bccModel.setRowCount(0);
+			arrBangChamCong = bccBUS.selectByTime(thang, nam);
 
-		lblThangCC = new JLabel("Tháng");
-		lblThangCC.setBounds(10, 60, 150, 20);
-		newBangChamCongDialog.add(lblThangCC);
+			for (BangChamCongDTO bcc : arrBangChamCong) {
+				NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
 
-		lblNamCC = new JLabel("Năm");
-		lblNamCC.setBounds(10, 110, 150, 20);
-		newBangChamCongDialog.add(lblNamCC);
+				String maBCC = bcc.getMaBCC();
+				String nv = (nvien != null) ? bcc.getMaNV() + " - " + nvien.getHoTen() : bcc.getMaNV();
 
-		lblMaNV = new JLabel("Mã nhân viên");
-		lblMaNV.setBounds(10, 160, 150, 20);
-		newBangChamCongDialog.add(lblMaNV);
+				int thangCC = bcc.getThangCC();
+				int namCC = bcc.getNamCC();
+				float soNgayLam = bcc.getSoNgayLam();
+				float soNgayNghiKP = bcc.getSoNgayNghiKP();
+				float soNPCoLuong = bcc.getSoNPCoLuong();
+				float soNPKhongLuong = bcc.getSoNPKhongLuong();
+				float soGioOTNgayThuong = bcc.getSoGioOTNgayThuong();
+				float soGioOTNgayLe = bcc.getSoGioOTNgayLe();
+				float soGioOTCN = bcc.getSoGioOTCN();
 
-		JTextField txtMaBCC, txtThangCC, txtNamCC, txtMaNV;
-		txtMaBCC = new JTextField();
-		txtMaBCC.setBounds(10, 30, 260, 25);
-		newBangChamCongDialog.add(txtMaBCC);
-
-		txtThangCC = new JTextField();
-		txtThangCC.setBounds(10, 80, 260, 25);
-		newBangChamCongDialog.add(txtThangCC);
-
-		txtNamCC = new JTextField();
-		txtNamCC.setBounds(10, 130, 260, 25);
-		newBangChamCongDialog.add(txtNamCC);
-
-		txtMaNV = new JTextField();
-		txtMaNV.setBounds(10, 180, 260, 25);
-		newBangChamCongDialog.add(txtMaNV);
-
-		JButton btnSave = new ShadowButton("Lưu");
-		btnSave.setBounds(200, 230, 70, 25);
-		newBangChamCongDialog.add(btnSave);
-
-		btnSave.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				BangChamCongDTO bcc = new BangChamCongDTO();
-				bcc.setMaBCC(txtMaBCC.getText());
-				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
-				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
-				bcc.setSoNgayLam(0);
-				bcc.setSoNgayNghiKP(0);
-				bcc.setSoNPCoLuong(0);
-				bcc.setSoNPKhongLuong(0);
-				bcc.setSoGioOTNgayThuong(0);
-				bcc.setSoGioOTNgayLe(0);
-				bcc.setSoGioOTCN(0);
-				bcc.setMaNV(txtMaNV.getText());
-
-				String message = bccBUS.insert(bcc);
-				JOptionPane.showMessageDialog(null, message);
+				Object[] row = { maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong,
+						soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN };
+				bccModel.addRow(row);
 			}
-		});
-
-		newBangChamCongDialog.setLocationRelativeTo(this);
-		newBangChamCongDialog.setVisible(true);
-	}
-
-	private void updateBangChamCongDialog() {
-		JDialog updateBangChamCongDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this),
-				"Sửa bảng chấm công", true);
-		updateBangChamCongDialog.setSize(600, 300);
-		updateBangChamCongDialog.setLayout(null);
-
-		JLabel lblMaBCC, lblNV, lblThangCC, lblNamCC, lblSoNgayLam, lblSoNgayNghiKP, lblSoNPCoLuong, lblSoNPKhongLuong,
-				lbGioOTNgayThuong, lbGioOTLe, lbGioOTCN;
-		lblMaBCC = new JLabel("Mã chấm công");
-		lblMaBCC.setBounds(10, 10, 150, 20);
-		updateBangChamCongDialog.add(lblMaBCC);
-
-		lblNV = new JLabel("Nhân viên");
-		lblNV.setBounds(10, 160, 150, 20);
-		updateBangChamCongDialog.add(lblNV);
-
-		lblThangCC = new JLabel("Tháng chấm công");
-		lblThangCC.setBounds(10, 60, 150, 20);
-		updateBangChamCongDialog.add(lblThangCC);
-
-		lblNamCC = new JLabel("Năm chấm công");
-		lblNamCC.setBounds(10, 110, 150, 20);
-		updateBangChamCongDialog.add(lblNamCC);
-
-		lblSoNgayLam = new JLabel("Ngày công");
-		lblSoNgayLam.setBounds(170, 10, 150, 20);
-		updateBangChamCongDialog.add(lblSoNgayLam);
-
-		lblSoNgayNghiKP = new JLabel("Nghỉ không phép");
-		lblSoNgayNghiKP.setBounds(170, 60, 150, 20);
-		updateBangChamCongDialog.add(lblSoNgayNghiKP);
-
-		lblSoNPCoLuong = new JLabel("Nghỉ phép có lương");
-		lblSoNPCoLuong.setBounds(170, 110, 150, 20);
-		updateBangChamCongDialog.add(lblSoNPCoLuong);
-
-		lblSoNPKhongLuong = new JLabel("Nghỉ phép không lương");
-		lblSoNPKhongLuong.setBounds(170, 160, 170, 20);
-		updateBangChamCongDialog.add(lblSoNPKhongLuong);
-
-		lbGioOTNgayThuong = new JLabel("Tăng ca ngày thường");
-		lbGioOTNgayThuong.setBounds(170, 160, 170, 20);
-		updateBangChamCongDialog.add(lbGioOTNgayThuong);
-
-		lbGioOTLe = new JLabel("tăng ca ngày lễ");
-		lbGioOTLe.setBounds(170, 160, 170, 20);
-		updateBangChamCongDialog.add(lbGioOTLe);
-
-		lbGioOTCN = new JLabel("Tăng ca chủ nhật");
-		lbGioOTCN.setBounds(170, 160, 170, 20);
-		updateBangChamCongDialog.add(lbGioOTCN);
-
-		JTextField txtMaBCC, txtMaNV, txtThangCC, txtNamCC;
-		txtMaBCC = new JTextField();
-		txtMaBCC.setBounds(10, 30, 100, 25);
-		updateBangChamCongDialog.add(txtMaBCC);
-
-		txtThangCC = new JTextField();
-		txtThangCC.setBounds(10, 80, 100, 25);
-		updateBangChamCongDialog.add(txtThangCC);
-
-		txtNamCC = new JTextField();
-		txtNamCC.setBounds(10, 130, 100, 25);
-		updateBangChamCongDialog.add(txtNamCC);
-
-		txtMaNV = new JTextField();
-		txtMaNV.setBounds(10, 180, 100, 25);
-		updateBangChamCongDialog.add(txtMaNV);
-
-		JButton btnSave = new ShadowButton("Lưu");
-		btnSave.setBounds(400, 230, 70, 25);
-		updateBangChamCongDialog.add(btnSave);
-
-		btnSave.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				BangChamCongDTO bcc = new BangChamCongDTO();
-				bcc.setMaBCC(txtMaBCC.getText());
-				bcc.setThangCC(Integer.parseInt(txtThangCC.getText()));
-				bcc.setNamCC(Integer.parseInt(txtNamCC.getText()));
-				bcc.setSoNgayLam(0);
-				bcc.setSoNgayNghiKP(0);
-				bcc.setSoNPCoLuong(0);
-				bcc.setSoNPKhongLuong(0);
-				bcc.setSoGioOTNgayThuong(0);
-				bcc.setSoGioOTNgayLe(0);
-				bcc.setSoGioOTCN(0);
-				bcc.setMaNV(txtMaNV.getText());
-
-				String message = bccBUS.insert(bcc);
-				JOptionPane.showMessageDialog(null, message);
-			}
-		});
-
-		updateBangChamCongDialog.setLocationRelativeTo(this);
-		updateBangChamCongDialog.setVisible(true);
+		} else {
+			loadBangChamCongList(); // Nếu không chọn gì, load toàn bộ danh sách
+		}
 	}
 
 	private void searchPerformed(JTable tb) {
-		String searchContent = txtTimKiem.getText().trim(); // Lấy nội dung tìm kiếm từ textField và loại bỏ khoảng
-															// trắng ở đầu và cuối chuỗi
-		if (!searchContent.isEmpty()) { // Kiểm tra xem nội dung tìm kiếm có rỗng không
-			ArrayList<BangChamCongDTO> dsTimKiem = new ArrayList<>(); // Tạo một danh sách để lưu trữ kết quả tìm kiếm
-
-			// Duyệt qua danh sách sản phẩm và lọc những sản phẩm thỏa mãn điều kiện tìm
-			// kiếm
-			boolean found = false;
-			for (BangChamCongDTO bcc : arrBangChamCong) {
-				// Kiểm tra xem thông tin của bảng chấm công có chứa chuỗi tìm kiếm hay không
-				// (sử dụng phương thức contains)
-				if (bcc.getMaBCC().toLowerCase().contains(searchContent.toLowerCase().trim())
-						|| bcc.getMaNV().toLowerCase().contains(searchContent.toLowerCase().trim())) {
-					dsTimKiem.add(bcc); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
-					found = true;
-				} else if (bcc.getThangCC() == Integer.parseInt(searchContent.trim())
-						|| bcc.getNamCC() == Integer.parseInt(searchContent.trim())
-						|| bcc.getSoNgayLam() == Float.parseFloat(searchContent.trim())
-						|| bcc.getSoNgayNghiKP() == Float.parseFloat(searchContent.trim())
-						|| bcc.getSoNPCoLuong() == Float.parseFloat(searchContent.trim())
-						|| bcc.getSoNPKhongLuong() == Float.parseFloat(searchContent.trim())
-						|| bcc.getMaNV().toLowerCase().contains(searchContent.toLowerCase())) {
-					dsTimKiem.add(bcc); // Nếu sản phẩm thỏa mãn, thêm vào danh sách lọc
-					found = true;
-				}
-
-			}
-			// Kiểm tra nếu không tìm thấy sản phẩm nào
-			if (!found) {
-				JOptionPane.showMessageDialog(this, "Không tìm thấy bảng chấm công!");
-				refreshList();
-				return; // Kết thúc phương thức sau khi hiển thị thông báo
-			}
-
-			// Xóa tất cả các dòng hiện có trong bảng
-			DefaultTableModel tableModel = (DefaultTableModel) tb.getModel();
-			tableModel.setRowCount(0);
-
+		if (!txtTimKiem.getText().trim().isEmpty()) {
+			String searchContent = txtTimKiem.getText().trim();
+			bccModel.setRowCount(0);
+			ArrayList<BangChamCongDTO> arrBCC = bccBUS.selectByKeyWord(searchContent);
 			// Thêm các sản phẩm thỏa mãn vào bảng
-			for (BangChamCongDTO bcc : dsTimKiem) {
+			for (BangChamCongDTO bcc : arrBCC) {
 				NhanVienDTO nvien = nvienBUS.selectById(bcc.getMaNV());
 				String maBCC = bcc.getMaBCC();
 				String nv = bcc.getMaNV() + " - " + nvien.getHoTen();
@@ -992,23 +769,22 @@ public class DSBangChamCongGUI extends JPanel {
 
 				Object[] row = { maBCC, nv, thangCC, namCC, soNgayLam, soNgayNghiKP, soNPCoLuong, soNPKhongLuong,
 						soGioOTNgayThuong, soGioOTNgayLe, soGioOTCN };
-				tableModel.addRow(row);
+				bccModel.addRow(row);
 			}
 		} else {
 			// Nếu người dùng không nhập nội dung tìm kiếm, thực hiện làm mới bảng để hiển
 			// thị tất cả sản phẩm
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm");
-			refreshList();
 		}
 	}
 
 	private void refreshList() {
-		// Xóa tất cả các dòng trong mô hình bảng
 		bccModel.setRowCount(0);
-		bccModel.setColumnCount(0);
-		loadBangChamCongList();
 		sortComboBox.setSelectedIndex(0);
 		txtTimKiem.setText("");
+		jc_thang.setSelectedIndex(0);
+		jc_nam.setSelectedIndex(0);
+		loadBangChamCongList();
 	}
 
 	public void viewNgayNghi() {
@@ -1016,20 +792,21 @@ public class DSBangChamCongGUI extends JPanel {
 		if (selectedRow != -1) {
 			DefaultTableModel bccModel = (DefaultTableModel) bccTable.getModel();
 
-			String maNV = bccModel.getValueAt(selectedRow, 7).toString();
-			log("maNV=" + maNV);
-			ArrayList<DonXinNghiDTO> thongTinNgayNghi = dxnBUS.getThongTinNgayNghi(maNV);
+			String maCC = bccModel.getValueAt(selectedRow, 0).toString();
+			ArrayList<ChiTietChamCongDTO> ctcc_ngayNghi = ctccBUS.getThongTinNgayNghi(maCC);
 
 			ngayNghiModel.setRowCount(0);
-			for (int i = 0; i < thongTinNgayNghi.size(); i++) {
-				Date ngayBD = thongTinNgayNghi.get(i).getNgayBD();
-				log("ngayBD=" + ngayBD);
-				Date ngayKT = thongTinNgayNghi.get(i).getNgayKT();
-				log("ngayKT=" + ngayKT);
-				String loai = "";
-				String lyDo = thongTinNgayNghi.get(i).getLyDo();
+			for (ChiTietChamCongDTO ct : ctcc_ngayNghi) {
+				// Tách chuỗi theo vị trí: "CT" chiếm 2 ký tự đầu
+				String ngay = ct.getMaCTCC().substring(2, 4); // 10
+				String thang = ct.getMaCTCC().substring(4, 6); // 04
+				String nam = ct.getMaCTCC().substring(6, 10); // 2025
 
-				Object[] row = { ngayBD, ngayKT, loai, lyDo };
+				String ngayCC = ngay + "/" + thang + "/" + nam;
+				String loaiCC = ct.getLoaiChamCong();
+				String chiTiet = ct.getChiTiet();
+
+				Object[] row = { ngayCC, loaiCC, chiTiet };
 				ngayNghiModel.addRow(row);
 			}
 		}
@@ -1054,6 +831,30 @@ public class DSBangChamCongGUI extends JPanel {
 				tangCaModel.addRow(row);
 			}
 		}
+	}
+
+	private void sortAZ() {
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(bccModel);
+		bccTable.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+
+		int columnIndexSort = 1; // 1 là chỉ số cột tên nhân viên, cần sắp xếp
+		sortKeys.add(new RowSorter.SortKey(columnIndexSort, SortOrder.ASCENDING));
+
+		sorter.setSortKeys(sortKeys);
+		sorter.sort();
+	}
+
+	private void sortZA() {
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(bccModel);
+		bccTable.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+
+		int columnIndexSort = 1; // 1 là chỉ số cột tên nhân viên, cần sắp xếp
+		sortKeys.add(new RowSorter.SortKey(columnIndexSort, SortOrder.DESCENDING));
+
+		sorter.setSortKeys(sortKeys);
+		sorter.sort();
 	}
 
 	// hàm hiển thị thông tin dòng code
