@@ -205,6 +205,10 @@ public class DangNhapBUS {
     public String getMaNV() {
         return DangNhapBUS.maNV;
     }
+    
+    public String getChucVu() {
+        return DangNhapBUS.chucVu;
+    }
 
     // Hàm hiển thị thông tin dòng code
     public static void log(String message) {

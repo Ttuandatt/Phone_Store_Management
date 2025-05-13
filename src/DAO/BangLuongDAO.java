@@ -193,7 +193,7 @@ public class BangLuongDAO implements DAOInterface<BangLuongDTO>{
 		try {
 			jdbc.openConnection();
 
-			String query = "update BangLuogn set luongCB=?, heSo=?, phuCapAnTrua=?, phuCapDiLai=?, thuong=?, bhxh=?, bhyt=?, bhtn=?, thueTNCN=?, tamUng=?, thucNhan=?, trangThai=? where maBL=?";
+			String query = "update BangLuong set luongCB=?, heSo=?, phuCapAnTrua=?, phuCapDiLai=?, thuong=?, bhxh=?, bhyt=?, bhtn=?, thueTNCN=?, tamUng=?, thucNhan=?, trangThai=? where maBL=?";
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setFloat(1, t.getLuongCB());
 			ps.setFloat(2, t.getHeSo());

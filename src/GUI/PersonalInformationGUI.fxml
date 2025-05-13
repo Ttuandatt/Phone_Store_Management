@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1509.0" style="-fx-background-color: #67cac5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PersonalInformationController">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1509.0" style="-fx-background-color: white; " xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PersonalInformationController">
    <children>
-      <Pane layoutX="87.0" layoutY="61.0" prefHeight="508.0" prefWidth="578.0" style="-fx-border-color: #000000;">
+      <Pane layoutX="87.0" layoutY="50.0" prefHeight="480.0" prefWidth="630.0" style="-fx-border-color: gray;">
          <children>
             <Label fx:id="labelName" layoutX="253.0" layoutY="100.0" text="Nguyen Van A">
                <font>
@@ -35,11 +35,11 @@
             <RadioButton fx:id="rbFemale" layoutX="93.0" layoutY="362.0" mnemonicParsing="false" onMouseClicked="#handleClickFemale" text="Nữ" />
             <Label layoutX="31.0" layoutY="407.0" text="Địa chỉ" />
             <TextField fx:id="tfAddress" layoutX="31.0" layoutY="437.0" onKeyPressed="#handleKeyPressAddress" text="123 Lê Lợi, TP.HCM" />
-            <Button fx:id="bt_update" disable="true" layoutX="464.0" layoutY="450.0" mnemonicParsing="false" onMouseClicked="#handleClickUpdate" text="Cập nhật" />
+            <Button fx:id="bt_update" disable="true" layoutX="430.0" layoutY="450.0" mnemonicParsing="false" onMouseClicked="#handleClickUpdate" text="Cập nhật" />
             <Pane fx:id="pn_image" layoutX="23.0" layoutY="46.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-background-radius: 50%;" />
          </children>
       </Pane>
-      <Pane layoutX="765.0" layoutY="61.0" prefHeight="508.0" prefWidth="358.0" style="-fx-border-color: #000000;">
+      <Pane layoutX="750.0" layoutY="50.0" prefHeight="480.0" prefWidth="375.0" style="-fx-border-color: gray;">
          <children>
             <Label layoutX="67.0" layoutY="64.0" text="Tháng ">
                <font>
@@ -65,7 +65,7 @@
             <Label fx:id="tf_sogiotangca" layoutX="271.0" layoutY="349.0" text="0" />
          </children>
       </Pane>
-      <TableView fx:id="tb_bangluong" layoutX="87.0" layoutY="589.0" prefHeight="200.0" prefWidth="1037.0">
+      <TableView fx:id="tb_bangluong" layoutX="87.0" layoutY="550.0" prefHeight="200.0" prefWidth="1037.0">
         <columns>
           <TableColumn fx:id="tv_thoigian" prefWidth="88.7999267578125" text="Thời gian" />
           <TableColumn fx:id="tv_heso" prefWidth="121.60000610351562" text="Hệ Số" />
@@ -73,7 +73,7 @@
             <TableColumn fx:id="tv_phucap" prefWidth="167.20001220703125" text="Phụ Cấp" />
             <TableColumn fx:id="tv_luongthuong" prefWidth="215.199951171875" text="Lương Thưởng" />
             <TableColumn fx:id="tv_cackhoangtru" prefWidth="127.20001220703125" text="Các Khoảng Trừ" />
-            <TableColumn fx:id="tv_thucnhan" prefWidth="171.2000732421875" text="Thực Nhận" />
+            <TableColumn fx:id="tv_thucnhan" prefWidth="164" text="Thực Nhận" />
         </columns>
       </TableView>
    </children>

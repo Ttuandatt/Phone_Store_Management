@@ -210,13 +210,19 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         ArrayList<SanPhamDTO> listSanPham=new ArrayList<>();
         try {
             jdbc.openConnection();
-            String query = "SELECT * FROM SANPHAM WHERE trangThai='on' AND tenSP like ?";
+            String query = "SELECT * FROM SANPHAM WHERE trangThai='on' AND tenSP like ? "
+            		+ "or maSP like ? "
+            		+ "or pin like ? "
+            		+ "or os like ? "
+            		+ "or camTruoc like ?"
+            		+ "or camSau like ?"
+            		+ "or xuatXu like ?";
 
             PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, "%"+ search_query +"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                DTO.SanPhamDTO products = new DTO.SanPhamDTO();
+                SanPhamDTO products = new SanPhamDTO();
                 products.setMaSP(rs.getString("maSP"));
                 products.setTenSP(rs.getString("tenSP"));
                 products.setPin(rs.getString("pin"));

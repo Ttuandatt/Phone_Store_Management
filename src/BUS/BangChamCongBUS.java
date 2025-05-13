@@ -11,8 +11,8 @@ public class BangChamCongBUS {
 		return bccDAO.selectAll();
 	}
 	
-	public BangChamCongDTO selectById(String maNV) {
-		return bccDAO.selectById(maNV);
+	public BangChamCongDTO selectById(String maBCC) {
+		return bccDAO.selectById(maBCC);
 	}
 	
 	public String insert(BangChamCongDTO bcc) {
@@ -33,7 +33,7 @@ public class BangChamCongBUS {
         return bccDAO.selectByKeyWord(tuKhoa);
     }
     
-  //get bang cham cong by thang va nam
+    //get bang cham cong by thang va nam
   	public BangChamCongDTO getBangChamCongByThangNam(String maNV, int thang, int nam) {
   		return bccDAO.getBangChamCongByNVAndThangNam(maNV, thang, nam);
   	}

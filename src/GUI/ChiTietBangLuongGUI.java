@@ -4,6 +4,7 @@ package GUI;
 import BUS.BangChamCongBUS;
 import BUS.BangLuongBUS;
 import BUS.ChucVuBUS;
+import BUS.DangNhapBUS;
 import BUS.NhanVienBUS;
 import DTO.BangChamCongDTO;
 import DTO.BangLuongDTO;
@@ -27,6 +28,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
     private JTextField tf_luongtt1, tf_luongot1, tf_luongot2, tf_luongot3, tf_phucap1, tf_phucap2, 
             tf_thuong, tf_khoantru1, tf_khoantru2, tf_khoantru3, tf_khoantru4, tf_khoantru5, tf_tongtn, tf_thuclinh;
     private NhanVienBUS nvBUS = new NhanVienBUS();
+    private DangNhapBUS dnBUS =  new DangNhapBUS();
     private BangChamCongBUS bccBUS = new BangChamCongBUS();
     private ChucVuBUS cvBUS = new ChucVuBUS();
     private BangLuongBUS blBUS = new BangLuongBUS();
@@ -35,6 +37,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
         NhanVienDTO nv = nvBUS.selectById(bl.getMaNV());
         String mabcc= bl.getMaLuong().replaceFirst("BL", "CC");
         BangChamCongDTO bcc = bccBUS.selectById(mabcc);
+        log("maBCC="+bcc.getMaBCC());
         ChucVuDTO cv = cvBUS.selectById(nv.getChucVu());
         DecimalFormat df = new DecimalFormat("#,###");
         
@@ -76,6 +79,7 @@ public final class ChiTietBangLuongGUI extends JFrame {
         jp_ttnv.add(lb_nhanvien);
 
         jl_nhanvien = new JLabel(nv.getMaNV() + " - " + nv.getHoTen());
+        log("maNV="+nv.getMaNV());
         jl_nhanvien.setBounds(150, 25, 160, 30);
         jl_nhanvien.setFont(tfFont);
         jp_ttnv.add(jl_nhanvien);
@@ -85,7 +89,9 @@ public final class ChiTietBangLuongGUI extends JFrame {
         lb_chucvu.setBounds(430, 25, 160, 30);
         jp_ttnv.add(lb_chucvu);
 
-        jl_chucvu = new JLabel(cv.getTenCV());
+        jl_chucvu = new JLabel();
+        String chucVu = nvBUS.getChucVuByMaNV(nv.getMaNV());
+        jl_chucvu.setText(chucVu);
         jl_chucvu.setBounds(520, 25, 200, 30);
         jl_chucvu.setFont(tfFont);
         jp_ttnv.add(jl_chucvu);
@@ -117,13 +123,13 @@ public final class ChiTietBangLuongGUI extends JFrame {
         TitledBorder border1 = BorderFactory.createTitledBorder("Chi tiết lương");
         border1.setTitleFont(new Font("Tahoma", Font.BOLD, 16));
         jp_ctl.setBorder(border1);
-        jp_ctl.setBounds(20, 200, 850, 250);
+        jp_ctl.setBounds(20, 200, 850, 500);
         jp_ctl.setPreferredSize(new Dimension(900, 600));
         jp_ctl.setBackground(Color.white);
         JScrollPane scrollPane = new JScrollPane(jp_ctl);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBounds(20, 200, 850, 200); // Đặt vị trí và kích thước
+        scrollPane.setBounds(20, 200, 850, 450); // Đặt vị trí và kích thước
         scrollPane.getViewport().setBackground(Color.white);
         jp_main.add(scrollPane);
         
@@ -175,6 +181,8 @@ public final class ChiTietBangLuongGUI extends JFrame {
         
         Float t = (bl.getLuongCB()* bl.getHeSo())/(24* 8);
         String luongOT1 = df.format(bcc.getSoGioOTNgayThuong()*t);
+        log("bcc.getSoGioOTNgayThuong()="+bcc.getSoGioOTNgayThuong());
+        log("luongOT1="+luongOT1);
         tf_luongot1 = new JTextField(luongOT1);
         tf_luongot1.setBounds(680, 90, 130, 25);
         tf_luongot1.setFont(tfFont);
@@ -362,4 +370,11 @@ public final class ChiTietBangLuongGUI extends JFrame {
         jp_ctl.repaint();
         
     }
+ // hàm hiển thị thông tin dòng code
+ 	public static void log(String message) {
+ 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+ 		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+ 		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+ 				+ element.getLineNumber() + " | " + message);
+ 	}
 }

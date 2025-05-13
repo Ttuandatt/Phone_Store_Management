@@ -116,4 +116,8 @@ public class NhanVienBUS {
 			return "Cập nhật thông tin cá nhân thành công";
 		return "Cập nhật thông tin cá nhân thất bại";
 	}
+	
+	public String getChucVuByMaNV(String maNV) {
+		return nvDAO.getChucVuByMaNV(maNV);
+	}
 }
