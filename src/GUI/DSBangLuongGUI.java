@@ -248,12 +248,14 @@ public class DSBangLuongGUI extends JPanel {
 		btnExcel.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
 		// Thêm sự kiện click cho nút Detail
-		btnExcel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
-			}
-		});
+		  btnExcel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                excelExporter ex = new excelExporter();
+                ex.excelExporterBangChamCong();
+                JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 		btnExcel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
