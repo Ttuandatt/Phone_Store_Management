@@ -582,12 +582,37 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			}
 			return false;
 		}
-	
-	//hàm hiển thị thông tin dòng code
-  	public static void log(String message) {
-  	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-  	    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
-  	    System.out.println(element.getClassName() + " | method: " 
-  	        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
-  	}
+		
+		
+		public String getChucVuByMaNV(String maNV) {
+			String chucVu = "";
+		
+			try {
+				jdbc.openConnection();
+				
+				String query = "select tenCV from chucvu left join nhanvien on nhanvien.maCV = chucvu.maCV where maNV=?";
+				PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+				ps.setString(1, maNV);
+
+				ResultSet rs = ps.executeQuery();
+				if(rs.next()) {
+					chucVu = rs.getString("tenCV");
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+				e.getMessage();
+			}finally {
+				jdbc.closeConnection();
+			}
+			
+			return chucVu;
+		}
+
+		// hàm hiển thị thông tin dòng code
+		public static void log(String message) {
+			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+			StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+			System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+					+ element.getLineNumber() + " | " + message);
+		}
 }

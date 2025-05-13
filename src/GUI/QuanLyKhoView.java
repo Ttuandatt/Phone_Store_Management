@@ -357,49 +357,72 @@ public class QuanLyKhoView {
 				cardLayout.show(contentPanel, thongKe_Identity);
 			}
 		});
-		
-		
-		//ActionListener cho button Personal Information
-		personalInfoButton.addActionListener(new ActionListener() {
+
+		personalInfoButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				ThongTinCaNhanGUI personalInformationObj = new ThongTinCaNhanGUI();
-				contentPanel.add(personalInformationObj, thongTinCaNhan_Identity);
-				CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-				cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+			public void mouseClicked(MouseEvent e) {
+				try {
+					System.out.println("Clicked personalInfoButton");
+					JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+					ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
+					Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+					javafx.application.Platform.runLater(() -> {
+						fxPanel.setScene(new Scene(content));
+					});
+					contentPanel.add(fxPanel, thongTinCaNhan_Identity);
+					CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+					cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+				} catch (Exception ex) {
+					System.out.println("error personalInfoButton");
+
+					ex.printStackTrace();
+				}
 			}
 		});
-		
-        //mouseListener cho nút changeInfoButton
+
+		// mouseListener cho nút changeInfoButton
 		personalInfoButton.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				personalInfoButton.setBackground(Color.decode("#DD1155")); //để đổi màu khi rê chuột vào
+				personalInfoButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
 				personalInfoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
-			
-    		
-    		@Override
-    		public void mouseExited(MouseEvent e) {
-    			personalInfoButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
-    		}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				personalInfoButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
+			}
 		});
-		
-		//mouseListener cho nút logoutButton
+
+		// mouseListener cho nút logoutButton
 		logoutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				logoutButton.setBackground(Color.decode("#DD1155")); //để đổi màu khi rê chuột vào
+				logoutButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
 				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
-			
-    		
-    		@Override
-    		public void mouseExited(MouseEvent e) {
-    			logoutButton.setBackground(Color.white); //để đổi màu về như cũ khi rê chuột vào
-    		}
 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				logoutButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
+			}
+
+		});
+
+		logoutButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(f, "Bạn muốn đăng xuất?", "Đăng xuất",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (choice == JOptionPane.OK_OPTION) {
+					f.dispose();
+					DangNhapGUI dnGUI = new DangNhapGUI();
+					dnGUI.setVisible(true);
+				}
+			}
 		});
 	
 		

@@ -390,7 +390,7 @@ public class PhieuNhapGUI extends JPanel {
 		
 		String[] trangThai = {"Chờ xác nhận", "Đã xác nhận", "Đã nhận hàng", "Từ chối"};
 		cbbTrangThai = new JComboBox<String>(trangThai);
-		cbbTrangThai.setBounds(100, 130, 115, 25);
+		cbbTrangThai.setBounds(100, 128, 115, 25);
 		informationPanel.add(cbbTrangThai);
 		
 		// Gắn MouseListener để biết khi người dùng click vào combobox
@@ -418,7 +418,10 @@ public class PhieuNhapGUI extends JPanel {
 		});
 		
 
-
+		JButton btnExcel = new ShadowButton("Xuất Excel");
+		btnExcel.setBounds(510, 130, 100, 20);
+		informationPanel.add(btnExcel);
+		
 	}
 
 	private void loadDanhSachPN() {

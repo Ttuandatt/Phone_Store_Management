@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1305.0" style="-fx-background-color: #6ea8fe;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductsGUIController"> 
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1305.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductsGUIController"> 
    <children>
       <Pane>
          <children>
@@ -19,14 +19,13 @@
                <children>
                   <TableView fx:id="tb_products" layoutX="23.0" layoutY="98.0" onMouseClicked="#handleClickTableProducts" prefHeight="326.0" prefWidth="699.0">
                     <columns>
-                      <TableColumn fx:id="tb_c_masp" prefWidth="63.19997864961624" text="Mã SP" />
-                      <TableColumn fx:id="tb_c_tensp" prefWidth="144.0" text="Tên SP" />
-                        <TableColumn fx:id="tb_c_pin" prefWidth="50.39997863769531" text="Pin" />
+                      <TableColumn fx:id="tb_c_masp" prefWidth="99" text="Mã SP" />
+                      <TableColumn fx:id="tb_c_tensp" prefWidth="150" text="Tên SP" />
+                        <TableColumn fx:id="tb_c_pin" prefWidth="90" text="Pin" />
                         <TableColumn fx:id="tb_c_os" prefWidth="92.0" text="Hệ Điều Hành" />
                         <TableColumn fx:id="tb_c_camtruoc" minWidth="4.7999267578125" prefWidth="75.20001220703125" text="Cam Trước" />
-                        <TableColumn fx:id="tb_c_camsau" minWidth="0.0" prefWidth="77.60003662109375" text="Cam Sau" />
-                        <TableColumn fx:id="tb_c_xuatxu" prefWidth="95.20001220703125" text="Xuất Xứ" />
-                        <TableColumn prefWidth="98.4000122070313" text="Thương Hiệu" />
+                        <TableColumn fx:id="tb_c_camsau" minWidth="0.0" prefWidth="100" text="Cam Sau" />
+                        <TableColumn fx:id="tb_c_xuatxu" prefWidth="90" text="Xuất Xứ" />
                     </columns>
                   </TableView>
                   <TableView fx:id="tb_pbsp" layoutX="23.0" layoutY="444.0" onMouseClicked="#handleClickTableVersion" prefHeight="257.0" prefWidth="698.0">
@@ -44,8 +43,8 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="textFieldTimKiem" layoutX="263.0" layoutY="63.0" onKeyPressed="#handlePressTimKiem" />
-                  <Text layoutX="192.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tìm kiếm">
+                  <TextField fx:id="textFieldTimKiem" layoutX="90.0" layoutY="63.0" onKeyPressed="#handlePressTimKiem" />
+                  <Text layoutX="20.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tìm kiếm">
                      <font>
                         <Font size="14.0" />
                      </font>
