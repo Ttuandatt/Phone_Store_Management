@@ -25,7 +25,7 @@ public class BangChamCongBUS {
         return bccDAO.update(bcc);
     }
 
-    public ArrayList<BangChamCongDTO> selectByTime(int thang, int nam) {
+    public ArrayList<BangChamCongDTO> selectByTime(String thang, String nam) {
         return bccDAO.selectByTime(thang, nam);
     }
 
