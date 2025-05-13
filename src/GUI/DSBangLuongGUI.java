@@ -1,3 +1,4 @@
+
 package GUI;
 
 import BUS.BangChamCongBUS;
@@ -5,6 +6,7 @@ import BUS.BangLuongBUS;
 import BUS.NhanVienBUS;
 import Components.ShadowButton;
 import DTO.*;
+import Printer.PrintFile;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -251,7 +253,10 @@ public class DSBangLuongGUI extends JPanel {
 		btnExcel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+				excelExporter ex = new excelExporter();
+				ex.excelExporterBangLuong();
+				JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		btnExcel.addMouseListener(new MouseAdapter() {
@@ -296,7 +301,14 @@ public class DSBangLuongGUI extends JPanel {
 		btnPrint.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+				PrintFile pr = new PrintFile();
+				JTable table = pr.getTableBangLuongFromDatabase();
+				if (table != null) {
+					pr.printTableBangLuong(table); // Thực hiện in
+				} else {
+					JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng lương.", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnPrint.addMouseListener(new MouseAdapter() {

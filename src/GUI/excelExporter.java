@@ -5,10 +5,12 @@ import java.sql.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import Database.JDBCConnection;
+
 public class excelExporter {
-	private String dbUrl = "jdbc:mysql://localhost:3306/phonestore";
-	private String username = "root";
-	private String password = "1234";
+	private String dbUrl = JDBCConnection.getDatabaseUrl();
+	private String username = "";
+	private String password = "";
     public static void main(String[] args) {
       
     }
@@ -436,5 +438,160 @@ public class excelExporter {
             System.err.println("Error: " + e.getMessage());
         }
      }
+     public void excelExporterDonXinNghi(){
+     try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
+            String sql = "SELECT * FROM donxinnghi";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
 
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("donxinnghi");
+
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            for (int i = 1; i <= columnCount; i++) {
+                headerRow.createCell(i - 1).setCellValue(metaData.getColumnName(i));
+            }
+
+            // Write data rows
+            int rowNum = 1;
+            while (resultSet.next()) {
+                Row row = sheet.createRow(rowNum++);
+                for (int i = 1; i <= columnCount; i++) {
+                    Object value = resultSet.getObject(i);
+                    if (value != null) {
+                        row.createCell(i - 1).setCellValue(value.toString());
+                    } else {
+                        row.createCell(i - 1).setCellValue("");
+                    }
+                }
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < columnCount; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Write workbook to file
+            try (FileOutputStream fileOut = new FileOutputStream("./src/xcl_files/donxinnghi_data.xlsx")) {
+                workbook.write(fileOut);
+                System.out.println("Excel file exported successfully.");
+            } catch (IOException e) {
+                System.err.println("Error exporting Excel file: " + e.getMessage());
+            }
+
+            // Close workbook
+            workbook.close();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
+     }
+          public void excelExporterBangChamCong(){
+     try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
+            String sql = "SELECT * FROM BangChamCong";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("BangChamCong");
+
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            for (int i = 1; i <= columnCount; i++) {
+                headerRow.createCell(i - 1).setCellValue(metaData.getColumnName(i));
+            }
+
+            // Write data rows
+            int rowNum = 1;
+            while (resultSet.next()) {
+                Row row = sheet.createRow(rowNum++);
+                for (int i = 1; i <= columnCount; i++) {
+                    Object value = resultSet.getObject(i);
+                    if (value != null) {
+                        row.createCell(i - 1).setCellValue(value.toString());
+                    } else {
+                        row.createCell(i - 1).setCellValue("");
+                    }
+                }
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < columnCount; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Write workbook to file
+            try (FileOutputStream fileOut = new FileOutputStream("./src/xcl_files/BangChamCong_data.xlsx")) {
+                workbook.write(fileOut);
+                System.out.println("Excel file exported successfully.");
+            } catch (IOException e) {
+                System.err.println("Error exporting Excel file: " + e.getMessage());
+            }
+
+            // Close workbook
+            workbook.close();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
+     }
+           public void excelExporterBangLuong(){
+     try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
+            String sql = "SELECT * FROM BangLuong";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("BangLuong");
+
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            for (int i = 1; i <= columnCount; i++) {
+                headerRow.createCell(i - 1).setCellValue(metaData.getColumnName(i));
+            }
+
+            // Write data rows
+            int rowNum = 1;
+            while (resultSet.next()) {
+                Row row = sheet.createRow(rowNum++);
+                for (int i = 1; i <= columnCount; i++) {
+                    Object value = resultSet.getObject(i);
+                    if (value != null) {
+                        row.createCell(i - 1).setCellValue(value.toString());
+                    } else {
+                        row.createCell(i - 1).setCellValue("");
+                    }
+                }
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < columnCount; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Write workbook to file
+            try (FileOutputStream fileOut = new FileOutputStream("./src/xcl_files/BangLuong_data.xlsx")) {
+                workbook.write(fileOut);
+                System.out.println("Excel file exported successfully.");
+            } catch (IOException e) {
+                System.err.println("Error exporting Excel file: " + e.getMessage());
+            }
+
+            // Close workbook
+            workbook.close();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
+     }
 }

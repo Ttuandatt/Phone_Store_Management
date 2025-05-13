@@ -6,6 +6,7 @@ import BUS.NhaCungCapBUS;
 import Components.ShadowButton;
 import DAO.NhaCungCapDAO;
 import DTO.*;
+import Printer.PrintFile;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -50,7 +51,6 @@ public class DanhSachDonXinGUI extends JPanel {
 	JLabel lblTrangThai, lblNguoiDuyet;
 	DangNhapBUS dnBUS = new DangNhapBUS();
 	boolean comboboxClicked = false;
-	
 
 	// Constructor
 	public DanhSachDonXinGUI() {
@@ -99,7 +99,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		gbc.insets = new Insets(5, 5, 5, 5);
 		taoDonXinContent.add(bottomPanel, gbc);
 
-		//=== TOP PANEL =====//
+		// === TOP PANEL =====//
 		JPanel functionsPanel, searchPanel;
 
 		// ======================================= functionsPanel
@@ -373,7 +373,10 @@ public class DanhSachDonXinGUI extends JPanel {
 		btnExcel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+				excelExporter ex = new excelExporter();
+				ex.excelExporterDonXinNghi();
+				JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		btnExcel.addMouseListener(new MouseAdapter() {
@@ -418,7 +421,14 @@ public class DanhSachDonXinGUI extends JPanel {
 		btnPrint.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
+				PrintFile pr = new PrintFile();
+				JTable table = pr.getTableDonXinNghiFromDatabase();
+				if (table != null) {
+					pr.printTableDonXinNghi(table); // Thực hiện in
+				} else {
+					JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng đơn xin nghỉ.", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnPrint.addMouseListener(new MouseAdapter() {
@@ -588,8 +598,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		btnRefresh.setBounds(45, 15, 40, 40);
 		searchButtonPanel.add(btnRefresh);
 
-		
-		//==== BOTTOM PANEL ===/
+		// ==== BOTTOM PANEL ===/
 		JPanel tablePanel, statusPanel;
 		tablePanel = new JPanel(new GridBagLayout());
 		tablePanel.setBackground(Color.white);
@@ -608,7 +617,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		bottomPanel.add(statusPanel, gbc);
-		
+
 		donXinTable = new JTable();
 		JScrollPane sp = new JScrollPane(donXinTable);
 		gbc.weightx = 1.0;
@@ -617,11 +626,11 @@ public class DanhSachDonXinGUI extends JPanel {
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		tablePanel.add(sp, gbc);
-		
+
 		lblTrangThai = new JLabel("Trạng thái: ");
 		lblTrangThai.setBounds(10, 10, 100, 20);
 		statusPanel.add(lblTrangThai);
-		String[] trangThai = {"Chờ duyệt","Đã duyệt", "Từ chối"};
+		String[] trangThai = { "Chờ duyệt", "Đã duyệt", "Từ chối" };
 		trangThaiDonXinComboBox = new JComboBox<String>(trangThai);
 		trangThaiDonXinComboBox.setBounds(120, 10, 100, 20);
 		statusPanel.add(trangThaiDonXinComboBox);
@@ -631,23 +640,23 @@ public class DanhSachDonXinGUI extends JPanel {
 				comboboxClicked = true;
 			}
 		});
-		
+
 		trangThaiDonXinComboBox.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = donXinTable.getSelectedRow();
-				if(selectedRow != -1) {
-					if(comboboxClicked) {
+				if (selectedRow != -1) {
+					if (comboboxClicked) {
 						DefaultTableModel model = (DefaultTableModel) donXinTable.getModel();
-						String maDon = (String)model.getValueAt(selectedRow, 0);
+						String maDon = (String) model.getValueAt(selectedRow, 0);
 						String trangThai = trangThaiDonXinComboBox.getSelectedItem().toString();
 						updateTrangThai(maDon, trangThai);
 						comboboxClicked = false;
-						
+
 					}
 				}
-				
+
 			}
 		});
 		lblNguoiDuyet = new JLabel("Người chỉnh sửa: ");
@@ -659,7 +668,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		txtNguoiDuyet.setText(maNguoiDuyet);
 		txtNguoiDuyet.setBounds(120, 40, 100, 20);
 		statusPanel.add(txtNguoiDuyet);
-		
+
 	}
 
 	private void loadDonXinNghiList() {
@@ -680,7 +689,7 @@ public class DanhSachDonXinGUI extends JPanel {
 		for (int i = 0; i < donXinArr.size(); i++) {
 			DonXinNghiDTO dxn = donXinArr.get(i);
 			String maDon = dxn.getMaDon();
-			log("maDon="+maDon);
+			log("maDon=" + maDon);
 			Date ngayTao = dxn.getNgayTao();
 			Date ngayBD = dxn.getNgayBD();
 			Date ngayKT = dxn.getNgayKT();
@@ -716,20 +725,19 @@ public class DanhSachDonXinGUI extends JPanel {
 
 	}
 
-	
 	private void updateTrangThai(String maDon, String trangThai) {
 		String maNguoiDuyet = dnBUS.getMaNV();
 		int selectedIndex = trangThaiDonXinComboBox.getSelectedIndex();
-		if(selectedIndex != -1) {
+		if (selectedIndex != -1) {
 			String message = donXinBUS.updateTrangThai(maDon, trangThai, maNguoiDuyet);
-			
-			if(message.equalsIgnoreCase("Cập nhật trạng thái đơn thành công!"))
+
+			if (message.equalsIgnoreCase("Cập nhật trạng thái đơn thành công!"))
 				JOptionPane.showMessageDialog(null, message);
-			else if(message.equalsIgnoreCase("Cập nhật trạng thái đơn thất bại!"))
+			else if (message.equalsIgnoreCase("Cập nhật trạng thái đơn thất bại!"))
 				JOptionPane.showMessageDialog(null, message);
 		}
 	}
-	
+
 	public static void log(String message) {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
