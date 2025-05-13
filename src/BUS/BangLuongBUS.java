@@ -18,8 +18,12 @@ public class BangLuongBUS {
         return blDAO.update(bangLuong);
     }
 
-    public ArrayList<BangLuongDTO> selectByTime(int thang, int nam) {
+    public ArrayList<BangLuongDTO> selectByTime(String thang, String nam) {
         return blDAO.selectByTime(thang, nam);
+    }
+
+    public ArrayList<BangLuongDTO> selectByKeyWord(String keyWord) {
+        return blDAO.selectByKeyWord(keyWord);
     }
 
 }
