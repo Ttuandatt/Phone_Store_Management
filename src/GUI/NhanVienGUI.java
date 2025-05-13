@@ -468,12 +468,18 @@ public class NhanVienGUI extends JPanel{
 		btnPrint.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
 
 		// Thêm sự kiện click cho nút Print
-		btnPrint.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Excel button clicked!");
-			}
-		});
+btnPrint.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        PrintFile pr = new PrintFile();
+        JTable table = pr.getTableNhanVienFromDatabase();
+        if (table != null) {
+            pr.printTableNhanVien(table); // Thực hiện in
+        } else {
+            JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng nhân viên.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+});
 		btnPrint.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
