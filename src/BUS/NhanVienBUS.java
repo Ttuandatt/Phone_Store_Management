@@ -101,4 +101,12 @@ public class NhanVienBUS {
 	public double getSoGioTangCa(int thangCC, int namCC, String maNV) {
 		return nvDAO.getSoGioTangCa(thangCC, namCC, maNV);
 	}
+
+    public NhanVienDTO selectByKeyWord(String maNV) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public ArrayList<NhanVienDTO> selectNhanVienMoi() {
+        return nvDAO.selectNhanVienMoi();
+    }
 }
