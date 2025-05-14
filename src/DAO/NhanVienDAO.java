@@ -608,6 +608,51 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 			return chucVu;
 		}
 
+		
+		public ArrayList<NhanVienDTO> selectNhanVienMoi() {
+	        ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
+
+	        try {
+	            // Mở kết nối CSDL
+	            jdbc.openConnection();
+
+	            // Gọi stored procedure
+	            String query = "select * from NhanVien WHERE maNV NOT IN (SELECT maNV FROM BangLuong)";
+	            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+
+	            // Thực thi truy vấn
+	            ResultSet rs = ps.executeQuery();
+	            while (rs.next()) {
+	                NhanVienDTO nv = new NhanVienDTO();
+	                nv.setMaNV(rs.getString("maNV"));
+	                nv.setHoTen(rs.getString("hoTen"));
+	                nv.setNgaySinh(rs.getDate("ngaySinh"));
+	                nv.setGioiTinh(rs.getString("gioiTinh"));
+	                nv.setDiaChi(rs.getString("diaChi"));
+	                nv.setSoDienThoai(rs.getString("sdt"));
+	                nv.setEmail(rs.getString("email"));
+	                nv.setTrangThai(rs.getString("trangThai"));
+	                nv.setChucVu(rs.getString("maCV"));
+	                nv.setChiNhanh(rs.getString("chiNhanh"));
+	                nv.setMatKhau(rs.getString("matKhau"));
+	                nv.setHinhAnh(rs.getBytes("hinhAnh")); // BLOB ảnh
+
+	                arrNhanVien.add(nv);
+	            }
+
+	            rs.close();
+	            ps.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            jdbc.closeConnection();
+	        }
+
+	        return arrNhanVien;
+	    }
+		
+		
+		
 		// hàm hiển thị thông tin dòng code
 		public static void log(String message) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();

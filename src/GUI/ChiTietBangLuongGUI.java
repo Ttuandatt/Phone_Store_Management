@@ -370,11 +370,12 @@ public final class ChiTietBangLuongGUI extends JFrame {
         jp_ctl.repaint();
         
     }
- // hàm hiển thị thông tin dòng code
- 	public static void log(String message) {
- 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
- 		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
- 		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
- 				+ element.getLineNumber() + " | " + message);
- 	}
+
+	// hàm hiển thị thông tin dòng code
+	public static void log(String message) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+		System.out.println(element.getClassName() + " | method: " + element.getMethodName() + " | line: "
+				+ element.getLineNumber() + " | " + message);
+	}
 }

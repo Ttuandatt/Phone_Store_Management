@@ -32,4 +32,7 @@ public class BangLuongBUS {
     public ArrayList<BangLuongDTO> selectByKeyWord(String keyWord) {
         return blDAO.selectByKeyWord(keyWord);
     }
+    public int insert(BangLuongDTO bl) {
+        return blDAO.insert(bl);
+    }
 }

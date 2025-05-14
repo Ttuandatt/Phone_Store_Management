@@ -1,13 +1,12 @@
 package GUI;
 
 import BUS.ChiTietPhieuNhapBUS;
+import BUS.DangNhapBUS;
 import BUS.PhienBanSanPhamBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
 import Components.ShadowButton;
 import DTO.*;
-import net.miginfocom.layout.Grid;
-import DAO.SanPhamDAO;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -19,10 +18,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -31,33 +28,22 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 import com.toedter.calendar.JDateChooser; // Thêm thư viện JCalendar
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class PhieuNhapGUI extends JPanel {
 
@@ -65,6 +51,7 @@ public class PhieuNhapGUI extends JPanel {
 	SanPhamBUS spBUS = new SanPhamBUS();
 	ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
 	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
+	DangNhapBUS dnBUS = new DangNhapBUS();
 	JTable pnTable, ctpnTable;
 	DefaultTableModel pnModel, ctpnModel;
 	ArrayList<PhieuNhapDTO> arrPhieuNhap = new ArrayList<PhieuNhapDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
@@ -76,6 +63,7 @@ public class PhieuNhapGUI extends JPanel {
 	JLabel imageLabel;
 	JTextField tfTimKiem, tfPriceStart, tfPriceEnd;
 	JLabel maPNValue, maKhoValue, maNguoiTaoValue, nhaCungCapValue;
+	
 
 	// Constructor
 	public PhieuNhapGUI() {
@@ -367,8 +355,10 @@ public class PhieuNhapGUI extends JPanel {
 		
 		lblTrangThai = new JLabel("Trạng thái:");
 		lblTrangThai.setBounds(10, 130, 100, 20);
-		informationPanel.add(lblTrangThai); 
-		
+		log("chucVu="+dnBUS.getChucVu());
+		if (dnBUS.getChucVu().equals("Admin") || dnBUS.getChucVu().equals("Quản lý kho")) {
+			informationPanel.add(lblTrangThai);
+		}		
 		
 		maPNValue = new JLabel("abc");
 		maPNValue.setBounds(100, 10, 50, 20);
@@ -391,32 +381,33 @@ public class PhieuNhapGUI extends JPanel {
 		String[] trangThai = {"Chờ xác nhận", "Đã xác nhận", "Đã nhận hàng", "Từ chối"};
 		cbbTrangThai = new JComboBox<String>(trangThai);
 		cbbTrangThai.setBounds(100, 128, 115, 25);
-		informationPanel.add(cbbTrangThai);
-		
-		// Gắn MouseListener để biết khi người dùng click vào combobox
-		cbbTrangThai.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				comboboxClicked = true;
-			}
-		});
-		
-		// Gắn ActionListener để thực hiện hành động sau khi chọn
-		cbbTrangThai.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(comboboxClicked) {
-					String maPN = maPNValue.getText();
-					String trangThai = cbbTrangThai.getSelectedItem().toString();
-					updateTrangThai(maPN, trangThai);
-					comboboxClicked = false; // Reset cờ để tránh lặp
-					
-					if(trangThai.equalsIgnoreCase("Đã nhận hàng"))
-						updateSoLuongPBSP(pnTable,ctpnTable);
+		if (dnBUS.getChucVu().equals("Admin") || dnBUS.getChucVu().equals("Quản lý kho")) {
+			informationPanel.add(cbbTrangThai);
+
+			// Gắn MouseListener để biết khi người dùng click vào combobox
+			cbbTrangThai.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					comboboxClicked = true;
 				}
-			}
-		});
-		
+			});
+
+			// Gắn ActionListener để thực hiện hành động sau khi chọn
+			cbbTrangThai.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (comboboxClicked) {
+						String maPN = maPNValue.getText();
+						String trangThai = cbbTrangThai.getSelectedItem().toString();
+						updateTrangThai(maPN, trangThai);
+						comboboxClicked = false; // Reset cờ để tránh lặp
+
+						if (trangThai.equalsIgnoreCase("Đã nhận hàng"))
+							updateSoLuongPBSP(pnTable, ctpnTable);
+					}
+				}
+			});
+		}
 
 		JButton btnExcel = new ShadowButton("Xuất Excel");
 		btnExcel.setBounds(510, 130, 100, 20);

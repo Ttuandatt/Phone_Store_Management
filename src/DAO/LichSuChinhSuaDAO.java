@@ -1,19 +1,44 @@
 package DAO;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import DTO.LichSuChinhSuaDTO;
 import Database.JDBCConnection;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class LichSuChinhSuaDAO implements DAOInterface<LichSuChinhSuaDTO> {
 	JDBCConnection jdbc = new JDBCConnection();
 
 	@Override
 	public ArrayList<LichSuChinhSuaDTO> selectAll() {
-		// TODO Auto-generated method stub
-		return null;
+            ArrayList<LichSuChinhSuaDTO> arrLS = new ArrayList<>();
+            try {
+                jdbc.openConnection();
+                String query = "SELECT * FROM LSChinhSua";
+                PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    LichSuChinhSuaDTO ls = new LichSuChinhSuaDTO();
+                    ls.setMaNguoiBiChinhSua(rs.getString("maNguoiBiChinhSua"));
+                    ls.setThoiGian(rs.getTimestamp("thoiGian").toLocalDateTime()); // nếu kiểu dữ liệu là DATETIME
+                    ls.setMaNguoiChinhSua(rs.getString("maNguoiChinhSua"));
+                    ls.setGiaTriCu(rs.getString("giaTriCu"));
+                    ls.setGiaTriMoi(rs.getString("giaTriMoi"));
+                    arrLS.add(ls);
+                }
+
+                rs.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace(); // dùng e.printStackTrace() thay vì chỉ gọi e.getMessage()
+            } finally {
+                jdbc.closeConnection();
+            }
+            return arrLS;
 	}
 
 	@Override
@@ -29,16 +54,15 @@ public class LichSuChinhSuaDAO implements DAOInterface<LichSuChinhSuaDTO> {
 		try {
 			jdbc.openConnection();
 
-			String query = "INSERT INTO LSCHINHSUA (maNguoiChinhSua, maNguoiBiChinhSua, thoiGian, noiDungChinhSua) VALUES (?, ?, ?, ?)";
+			String query = "INSERT INTO LSCHINHSUA (maNguoiChinhSua, maNguoiBiChinhSua, thoiGian, giaTriCu, giaTriMoi) VALUES (?, ?, ?, ?, ?)";
 
 			PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
 			ps.setString(1, lscs.getMaNguoiChinhSua());
 			ps.setString(2, lscs.getMaNguoiBiChinhSua());
-			ps.setDate(3, lscs.getThoiGian()); // Đảm bảo thoiGian là kiểu java.sql.Date
-			ps.setNString(4, lscs.getNoiDungChinhSua());
-			
+			ps.setTimestamp(3, Timestamp.valueOf(lscs.getThoiGian()));
+			ps.setNString(4, lscs.getGiaTriCu());
+                        ps.setNString(5, lscs.getGiaTriMoi());	
 			result = ps.executeUpdate();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
@@ -61,5 +85,34 @@ public class LichSuChinhSuaDAO implements DAOInterface<LichSuChinhSuaDTO> {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+    public ArrayList<LichSuChinhSuaDTO> selectByMaNV(String maNV) {
+        ArrayList<LichSuChinhSuaDTO> arrLS = new ArrayList<>();
+        try {
+            jdbc.openConnection();
+            String query = "SELECT * FROM LSChinhSua WHERE maNguoiBiChinhSua = ?";
+            PreparedStatement ps = jdbc.getConnection().prepareStatement(query);
+            ps.setString(1, maNV);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LichSuChinhSuaDTO ls = new LichSuChinhSuaDTO();
+                ls.setMaNguoiBiChinhSua(rs.getString("maNguoiBiChinhSua"));
+                ls.setThoiGian(rs.getTimestamp("thoiGian").toLocalDateTime());
+                ls.setMaNguoiChinhSua(rs.getString("maNguoiChinhSua"));
+                ls.setGiaTriCu(rs.getString("giaTriCu"));
+                ls.setGiaTriMoi(rs.getString("giaTriMoi"));
+                arrLS.add(ls);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace(); // dùng e.printStackTrace() thay vì chỉ gọi e.getMessage()
+        } finally {
+            jdbc.closeConnection();
+        }
+        return arrLS;
+    }
 
 }
