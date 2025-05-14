@@ -47,8 +47,10 @@ public class NhanVienBUS {
 		if(cvDAO.getIdByName(nv.getChucVu()) != null && khoDAO.getIdByName(nv.getChiNhanh()) != null){
 			nv.setChucVu(cvDAO.getIdByName(nv.getChucVu()));
 			nv.setChiNhanh(khoDAO.getIdByName(nv.getChiNhanh()));
-			if(nvDAO.updateWithoutChangingImage(nv)>0)
+			if(nvDAO.updateWithoutChangingImage(nv)==-1) {	//ly do == -1 thi xem o ben NhanVienDAO ngay phuong thuc nay luon se co giai thich
+				log("nvDAO.updateWithoutChangingImage(nv)="+nvDAO.updateWithoutChangingImage(nv));
 				return "Cập nhật nhân viên thành công";
+			}
 		}
 		
 		return "Cập nhật nhân viên thất bại";
@@ -120,4 +122,22 @@ public class NhanVienBUS {
 	public String getChucVuByMaNV(String maNV) {
 		return nvDAO.getChucVuByMaNV(maNV);
 	}
+	
+	
+    public NhanVienDTO selectByKeyWord(String maNV) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public ArrayList<NhanVienDTO> selectNhanVienMoi() {
+        return nvDAO.selectNhanVienMoi();
+    }
+	
+	
+	//hàm hiển thị thông tin dòng code
+		public static void log(String message) {
+		    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		    StackTraceElement element = stackTrace[2]; // [0]=getStackTrace, [1]=log(), [2]=caller
+		    System.out.println(element.getClassName() + " | method: " 
+		        + element.getMethodName() + " | line: " + element.getLineNumber() + " | " + message);
+		}
 }

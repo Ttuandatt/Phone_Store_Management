@@ -40,7 +40,7 @@ public class NhanVienKhoView {
 		FlatIntelliJLaf.setup();
 
 		// Tạo JFrame
-		JFrame f = new JFrame("Admin");
+		JFrame f = new JFrame("Nhân viên kho");
 		f.setSize(1500, 800);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -51,18 +51,19 @@ public class NhanVienKhoView {
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBackground(Color.BLUE);
 
-		// ======================= Menu Panel (Chứa 3 phần) ============================//
+		// ======================= Menu Panel (Chứa 3 phần)
+		// ============================//
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new GridBagLayout()); // Chia theo chiều dọc
 		menuPanel.setBackground(Color.white);
-        menuPanel.setPreferredSize(new Dimension(900, 500));
+		menuPanel.setPreferredSize(new Dimension(900, 500));
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		// ======================= 1. Info Panel ============================//
 		JPanel infoPanel = new JPanel(new GridBagLayout());
-		infoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.decode("#79DE54")));	//top=0, left=0, bottom=2, right=0
-		
-		
+		infoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.decode("#79DE54"))); // top=0, left=0,
+																									// bottom=2, right=0
+
 		JPanel infoLeftPanel, infoRightPanel;
 		infoLeftPanel = new JPanel(null);
 		infoLeftPanel.setPreferredSize(new Dimension(200, 200));
@@ -73,7 +74,7 @@ public class NhanVienKhoView {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		infoPanel.add(infoLeftPanel, gbc);
-		
+
 		/// ======================= Thêm ảnh vào infoLeftPanel =======================//
 		ImageIcon icon = new ImageIcon(getClass().getResource("/img/staff.png")); // Đường dẫn ảnh
 		Image image = icon.getImage();
@@ -84,30 +85,27 @@ public class NhanVienKhoView {
 
 		// Lắng nghe sự kiện resize của infoLeftPanel để cập nhật ảnh
 		infoLeftPanel.addComponentListener(new ComponentAdapter() {
-		    @Override
-		    public void componentResized(ComponentEvent e) {
-		        // Chỉ thực hiện khi kích thước Panel đã sẵn sàng
-		        if (infoLeftPanel.getWidth() > 0 && infoLeftPanel.getHeight() > 0) {
-		            // Điều chỉnh kích thước ảnh vừa với infoLeftPanel
-		            Image scaledImage = image.getScaledInstance(infoLeftPanel.getWidth()-10, infoLeftPanel.getHeight()-10, Image.SCALE_SMOOTH);
+			@Override
+			public void componentResized(ComponentEvent e) {
+				// Chỉ thực hiện khi kích thước Panel đã sẵn sàng
+				if (infoLeftPanel.getWidth() > 0 && infoLeftPanel.getHeight() > 0) {
+					// Điều chỉnh kích thước ảnh vừa với infoLeftPanel
+					Image scaledImage = image.getScaledInstance(infoLeftPanel.getWidth() - 10,
+							infoLeftPanel.getHeight() - 10, Image.SCALE_SMOOTH);
 
-		            // Cập nhật icon cho JLabel
-		            imageLabel.setIcon(new ImageIcon(scaledImage));
-		            
-		            // Set kích thước cho label trùng với panel
-		            imageLabel.setBounds(0, 0, infoLeftPanel.getWidth(), infoLeftPanel.getHeight());
+					// Cập nhật icon cho JLabel
+					imageLabel.setIcon(new ImageIcon(scaledImage));
 
-		            // Vẽ lại panel
-		            infoLeftPanel.revalidate();
-		            infoLeftPanel.repaint();
-		        }
-		    }
+					// Set kích thước cho label trùng với panel
+					imageLabel.setBounds(0, 0, infoLeftPanel.getWidth(), infoLeftPanel.getHeight());
+
+					// Vẽ lại panel
+					infoLeftPanel.revalidate();
+					infoLeftPanel.repaint();
+				}
+			}
 		});
 
-
-		
-		
-		
 		infoRightPanel = new JPanel(null);
 		infoRightPanel.setBackground(Color.white);
 		gbc.weightx = 0.57;
@@ -116,7 +114,7 @@ public class NhanVienKhoView {
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		infoPanel.add(infoRightPanel, gbc);
-		
+
 		infoPanel.setBackground(Color.decode("#01BFF4"));
 		infoPanel.setPreferredSize(new Dimension(menuPanel.getWidth(), 100));
 		gbc.weightx = 1.0;
@@ -125,18 +123,15 @@ public class NhanVienKhoView {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		menuPanel.add(infoPanel, gbc);
-		
+
 		dataHoTen = new JLabel("ABC");
 		dataHoTen.setBounds(10, 25, 200, 20);
 		infoRightPanel.add(dataHoTen);
-		
+
 		dataChucVu = new JLabel("DEF");
 		dataChucVu.setBounds(10, 45, 200, 20);
 		infoRightPanel.add(dataChucVu);
-		
-		
-	
-		
+
 		Font lblFont = new Font("Arial", Font.BOLD, 13);
 		dataHoTen.setFont(lblFont);
 		Font lblFont2 = new Font("Arial", Font.PLAIN, 12);
@@ -150,7 +145,8 @@ public class NhanVienKhoView {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.Y_AXIS));
 
-		// ================================ MENU ITEMS ================================//
+		// ================================ MENU ITEMS
+		// ================================//
 		JMenu menuSanPham = createRightAlignedMenu("SẢN PHẨM");
 
 		JMenu menuNhaCungCap = createRightAlignedMenu("NHÀ CUNG CẤP");
@@ -323,26 +319,26 @@ public class NhanVienKhoView {
 		});
 
 		personalInfoButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
 					System.out.println("Clicked personalInfoButton");
-                    JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
-                    ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
-                    Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
-                    javafx.application.Platform.runLater(() -> {
-                        fxPanel.setScene(new Scene(content));
-                    });
-                    contentPanel.add(fxPanel, thongTinCaNhan_Identity);
-                    CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-                    cardLayout.show(contentPanel, thongTinCaNhan_Identity);
-                } catch (Exception ex) {
+					JFXPanel fxPanel = new JFXPanel(); // Khởi tạo toolkit JavaFX
+					ThongTinCaNhanGUI personalInforObj = new ThongTinCaNhanGUI();
+					Parent content = personalInforObj.getContent(); // Load FXML sau khi toolkit sẵn sàng
+					javafx.application.Platform.runLater(() -> {
+						fxPanel.setScene(new Scene(content));
+					});
+					contentPanel.add(fxPanel, thongTinCaNhan_Identity);
+					CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+					cardLayout.show(contentPanel, thongTinCaNhan_Identity);
+				} catch (Exception ex) {
 					System.out.println("error personalInfoButton");
 
-                    ex.printStackTrace();
-                }
-            }
-        });
+					ex.printStackTrace();
+				}
+			}
+		});
 
 		// mouseListener cho nút changeInfoButton
 		personalInfoButton.addMouseListener(new MouseAdapter() {
@@ -363,7 +359,7 @@ public class NhanVienKhoView {
 		logoutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				logoutButton.setBackground(Color.decode("#79DE54")); // để đổi màu khi rê chuột vào
+				logoutButton.setBackground(Color.decode("#47CBFF")); // để đổi màu khi rê chuột vào
 				logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 
@@ -372,6 +368,21 @@ public class NhanVienKhoView {
 				logoutButton.setBackground(Color.white); // để đổi màu về như cũ khi rê chuột vào
 			}
 
+		});
+
+		logoutButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(f, "Bạn muốn đăng xuất?", "Đăng xuất",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (choice == JOptionPane.OK_OPTION) {
+					f.dispose();
+					DangNhapGUI dnGUI = new DangNhapGUI();
+					dnGUI.setVisible(true);
+				}
+			}
 		});
 
 		personalInfoButton.setOpaque(true);

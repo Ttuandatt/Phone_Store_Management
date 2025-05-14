@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.ChiTietPhieuXuatBUS;
+import BUS.DangNhapBUS;
 import BUS.PhienBanSanPhamBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
@@ -65,6 +66,7 @@ public class PhieuXuatGUI extends JPanel {
 	SanPhamBUS spBUS = new SanPhamBUS();
 	ChiTietPhieuXuatBUS ctpxBUS = new ChiTietPhieuXuatBUS();
 	PhienBanSanPhamBUS pbspBUS = new PhienBanSanPhamBUS();
+	DangNhapBUS dnBUS = new DangNhapBUS();
 	JTable pxTable, ctpxTable;
 	DefaultTableModel pxModel, ctpxModel;
 	ArrayList<PhieuXuatDTO> arrPhieuXuat = new ArrayList<PhieuXuatDTO>(); // Tạo ArrayList sp với kiểu là ProductsDTO
@@ -367,7 +369,11 @@ public class PhieuXuatGUI extends JPanel {
 		
 		lblTrangThai = new JLabel("Trạng thái:");
 		lblTrangThai.setBounds(10, 130, 100, 20);
-		informationPanel.add(lblTrangThai); 
+		if (dnBUS.getChucVu().equals("Admin") || dnBUS.getChucVu().equals("Quản lý kho")) {
+			informationPanel.add(lblTrangThai); 
+		}
+
+
 		
 		
 		maPXValue = new JLabel("abc");
@@ -387,61 +393,42 @@ public class PhieuXuatGUI extends JPanel {
 		informationPanel.add(khachHangValue);
 		
 		
-		
-		String[] trangThai = {"Chờ xác nhận", "Đã xác nhận", "Đã xuất hàng", "Từ chối"};
-		cbbTrangThai = new JComboBox<String>(trangThai);
-		cbbTrangThai.setBounds(100, 128, 115, 25);
-		informationPanel.add(cbbTrangThai);
-		
-		// Gắn MouseListener để biết khi người dùng click vào combobox
-		cbbTrangThai.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				comboboxClicked = true;
-			}
-		});
-		
-		// Gắn ActionListener để thực hiện hành động sau khi chọn
-		cbbTrangThai.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(comboboxClicked) {
-					String maPX = maPXValue.getText();
-					String trangThai = cbbTrangThai.getSelectedItem().toString();
-					updateTrangThai(maPX, trangThai);
-					comboboxClicked = false; // Reset cờ để tránh lặp
-					
-					if(trangThai.equalsIgnoreCase("Đã xuất hàng"))
-						updateSoLuongPBSP(pxTable, ctpxTable);
+		if (dnBUS.getChucVu().equals("Admin") || dnBUS.getChucVu().equals("Quản lý kho")) {
+
+			String[] trangThai = { "Chờ xác nhận", "Đã xác nhận", "Đã xuất hàng", "Từ chối" };
+			cbbTrangThai = new JComboBox<String>(trangThai);
+			cbbTrangThai.setBounds(100, 128, 115, 25);
+			informationPanel.add(cbbTrangThai);
+
+			// Gắn MouseListener để biết khi người dùng click vào combobox
+			cbbTrangThai.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					comboboxClicked = true;
 				}
-			}
-		});
+			});
+
+			// Gắn ActionListener để thực hiện hành động sau khi chọn
+			cbbTrangThai.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (comboboxClicked) {
+						String maPX = maPXValue.getText();
+						String trangThai = cbbTrangThai.getSelectedItem().toString();
+						updateTrangThai(maPX, trangThai);
+						comboboxClicked = false; // Reset cờ để tránh lặp
+
+						if (trangThai.equalsIgnoreCase("Đã xuất hàng"))
+							updateSoLuongPBSP(pxTable, ctpxTable);
+					}
+				}
+			});
+		}
 		
 		
 		JButton btnExcel = new ShadowButton("Xuất Excel");
 		btnExcel.setBounds(510, 130, 100, 20);
 		informationPanel.add(btnExcel);
-		   btnExcel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                excelExporter ex = new excelExporter();
-                ex.excelExporterPhieuXuat();
-                JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-        btnExcel.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseEntered(MouseEvent e) {
-        		btnExcel.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
-        		btnExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        	}
-        	
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		btnExcel.setBackground(Color.white);
-        		informationPanel.setBackground(Color.white);
-        	}
-        });
 
 	}
 
@@ -558,25 +545,27 @@ public class PhieuXuatGUI extends JPanel {
 			}
 
 			// Đặt thông tin phiếu nhập (chỉ lấy phần tử đầu tiên nếu có)
-			if (!thongTinPhieuXuat.isEmpty()) {
-				maPXValue.setText(thongTinPhieuXuat.get(0).getMaPX());
-				maKhoValue.setText(thongTinPhieuXuat.get(0).getMaKho());
-				maNguoiTaoValue.setText(thongTinPhieuXuat.get(0).getMaNV());
-				khachHangValue.setText(thongTinPhieuXuat.get(0).getMaKH());
-				if (trangThai.equalsIgnoreCase("Chờ xác nhận")) {
-					cbbTrangThai.setSelectedIndex(0);
-					cbbTrangThai.setEnabled(true);
-				} else if (trangThai.equalsIgnoreCase("Đã xác nhận")) {
-					cbbTrangThai.setSelectedIndex(1);
-					cbbTrangThai.setEnabled(true);
-				} else if (trangThai.equalsIgnoreCase("Đã xuất hàng")) {
-					cbbTrangThai.setSelectedIndex(2);
-					cbbTrangThai.setEnabled(false);
-				} else if (trangThai.equalsIgnoreCase("Từ chối")) {
-					cbbTrangThai.setSelectedIndex(3);
-					cbbTrangThai.setEnabled(false);
-				}
+			if (dnBUS.getChucVu().equals("Admin") || dnBUS.getChucVu().equals("Admin")) {
+				if (!thongTinPhieuXuat.isEmpty()) {
+					maPXValue.setText(thongTinPhieuXuat.get(0).getMaPX());
+					maKhoValue.setText(thongTinPhieuXuat.get(0).getMaKho());
+					maNguoiTaoValue.setText(thongTinPhieuXuat.get(0).getMaNV());
+					khachHangValue.setText(thongTinPhieuXuat.get(0).getMaKH());
+					if (trangThai.equalsIgnoreCase("Chờ xác nhận")) {
+						cbbTrangThai.setSelectedIndex(0);
+						cbbTrangThai.setEnabled(true);
+					} else if (trangThai.equalsIgnoreCase("Đã xác nhận")) {
+						cbbTrangThai.setSelectedIndex(1);
+						cbbTrangThai.setEnabled(true);
+					} else if (trangThai.equalsIgnoreCase("Đã xuất hàng")) {
+						cbbTrangThai.setSelectedIndex(2);
+						cbbTrangThai.setEnabled(false);
+					} else if (trangThai.equalsIgnoreCase("Từ chối")) {
+						cbbTrangThai.setSelectedIndex(3);
+						cbbTrangThai.setEnabled(false);
+					}
 
+				}
 			}
 			ctpxTable.repaint();
 			

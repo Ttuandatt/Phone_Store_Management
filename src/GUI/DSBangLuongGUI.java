@@ -1,18 +1,16 @@
-
 package GUI;
 
 import BUS.BangChamCongBUS;
 import BUS.BangLuongBUS;
+import BUS.ChucVuBUS;
 import BUS.NhanVienBUS;
 import Components.ShadowButton;
 import DTO.*;
-import Printer.PrintFile;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -31,6 +29,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -41,6 +41,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
@@ -49,17 +50,18 @@ public class DSBangLuongGUI extends JPanel {
 	NhanVienBUS nvBUS = new NhanVienBUS();
 	BangChamCongBUS bccBUS = new BangChamCongBUS();
 	BangLuongBUS blBUS = new BangLuongBUS();
+	ChucVuBUS cvBUS = new ChucVuBUS();
 	private static JTable blTable;
 	DefaultTableModel blModel = new DefaultTableModel();
 	ArrayList<NhanVienDTO> arrNhanVien = new ArrayList<NhanVienDTO>();
 	private JComboBox<String> sortComboBox;
 	private JComboBox<String> jc_thang, jc_nam;
-	ArrayList<BangLuongDTO> arrBangLuong = null;
 	JPanel bangLuongContent;
 	JTextField txtTimKiem;
 
-	JLabel lb_thuong, lb_khoanTru, lb_bhxh, lb_bhyt, lb_bhtn, lb_thue, lb_tamUng, lb_phuCap, lb_pcAnTrua, lb_pcDiChuyen;
-	JTextField tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua, tf_pcDiChuyen;
+	JLabel lb_thuong, lb_khoanTru, lb_bhxh, lb_bhyt, lb_bhtn, lb_thue, lb_tamUng, lb_phuCap, lb_pcAnTrua, lb_pcDiChuyen,
+			lb_heSo;
+	JTextField tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua, tf_pcDiChuyen, tf_heSo;
 	JButton btnLuu, btnDuyet;
 
 	// Constructor
@@ -150,11 +152,27 @@ public class DSBangLuongGUI extends JPanel {
 		functionsPanel.add(rightFunctionPanel, gbc);
 
 		// Chia tiếp các panel con để chứa các nút chức năng ở leftFunctionPanel
-		JPanel updateButtonPanel, detailButtonPanel, excelButtonPanel, printButtonPanel;
+		JPanel addButtonPanel, updateButtonPanel, deleteButtonPanel, detailButtonPanel, excelButtonPanel,
+				printButtonPanel;
+
+		addButtonPanel = new JPanel();
+		addButtonPanel.setBackground(Color.white);
+		addButtonPanel.setBounds(10, 4, 60, 60);
+		leftFunctionPanel.add(addButtonPanel);
+
+		updateButtonPanel = new JPanel();
+		updateButtonPanel.setBackground(Color.white);
+		updateButtonPanel.setBounds(79, 4, 60, 60);
+		leftFunctionPanel.add(updateButtonPanel);
+
+		deleteButtonPanel = new JPanel();
+		deleteButtonPanel.setBackground(Color.white);
+		deleteButtonPanel.setBounds(148, 4, 60, 60);
+		leftFunctionPanel.add(deleteButtonPanel);
 
 		detailButtonPanel = new JPanel();
 		detailButtonPanel.setBackground(Color.white);
-		detailButtonPanel.setBounds(10, 4, 60, 60);
+		detailButtonPanel.setBounds(217, 4, 60, 60);
 		leftFunctionPanel.add(detailButtonPanel);
 
 		excelButtonPanel = new JPanel();
@@ -169,6 +187,43 @@ public class DSBangLuongGUI extends JPanel {
 
 		// ======================================= Đặt các nút chức năng vào các panel
 		// ==========================================================//
+		// Đặt các nút chức năng vào các panel
+		ImageIcon iconAdd = new ImageIcon(getClass().getResource("/img/plus.png"));
+		Image imgAdd = iconAdd.getImage();
+		Image newImgAdd = imgAdd.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		if (iconAdd.getIconWidth() == -1) {
+			System.out.println("Không tìm thấy ảnh!");
+		}
+		ImageIcon scaledIconAdd = new ImageIcon(newImgAdd);
+		// Tạo nút Add
+		JButton btnAdd = new ShadowButton("Thêm", scaledIconAdd);
+		btnAdd.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnAdd.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAdd.setFocusPainted(false);
+		btnAdd.setBorderPainted(true);
+		btnAdd.setContentAreaFilled(false);
+		btnAdd.setFont(new Font("Arial", Font.BOLD, 9)); // Đặt kích cỡ chữ là 10
+
+		// Thêm sự kiện click cho nút Update
+		btnAdd.addActionListener(e -> TaoBangLuongNhanVienMoiDialog());
+
+		btnAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnAdd.setBackground(Color.decode("#D6D6D6")); // Đổi màu khi hover vào
+				btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnAdd.setBackground(Color.white);
+				addButtonPanel.setBackground(Color.white);
+			}
+		});
+
+		// Thêm nút vào panel
+		addButtonPanel.setLayout(new BorderLayout());
+		addButtonPanel.add(btnAdd, BorderLayout.CENTER);
 
 		// Tạo icon (cần đảm bảo đường dẫn hình ảnh đúng)
 		ImageIcon iconDetail = new ImageIcon(getClass().getResource("/img/info.png")); // Đặt đường dẫn ảnh ở đây
@@ -254,10 +309,7 @@ public class DSBangLuongGUI extends JPanel {
 		btnExcel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				excelExporter ex = new excelExporter();
-				ex.excelExporterBangLuong();
-				JOptionPane.showMessageDialog(null, "Excel file exported successfully.", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Excel button clicked!");
 			}
 		});
 		btnExcel.addMouseListener(new MouseAdapter() {
@@ -302,14 +354,7 @@ public class DSBangLuongGUI extends JPanel {
 		btnPrint.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PrintFile pr = new PrintFile();
-				JTable table = pr.getTableBangLuongFromDatabase();
-				if (table != null) {
-					pr.printTableBangLuong(table); // Thực hiện in
-				} else {
-					JOptionPane.showMessageDialog(null, "Không thể lấy dữ liệu từ bảng lương.", "Lỗi",
-							JOptionPane.ERROR_MESSAGE);
-				}
+				JOptionPane.showMessageDialog(null, "Excel button clicked!");
 			}
 		});
 		btnPrint.addMouseListener(new MouseAdapter() {
@@ -492,6 +537,7 @@ public class DSBangLuongGUI extends JPanel {
 				refreshList();
 			}
 		});
+
 		btnRefresh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -511,7 +557,7 @@ public class DSBangLuongGUI extends JPanel {
 		// ========================= Table =========================//
 		blTable = new JTable();
 		JScrollPane sp = new JScrollPane(blTable);
-		gbc.weightx = 0.8;
+		gbc.weightx = 0.85;
 		gbc.weighty = 1.0;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -551,27 +597,31 @@ public class DSBangLuongGUI extends JPanel {
 
 		blTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Ngăn các cột tự resize
 
-		/*
-		 * blTable.addMouseListener(new MouseAdapter() {
-		 * 
-		 * @Override public void mouseClicked(MouseEvent e) { if(e.getClickCount()>=1) {
-		 * //nếu nhấn vào dòng đó từ 1 lần trở lên layChiTietBangLuong(); } } });
-		 */
-
 		JPanel attendancePanel = new JPanel(new GridBagLayout());
 		attendancePanel.setBackground(Color.white);
 		attendancePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray, 2)));
-		gbc.weightx = 0.2;
+		gbc.weightx = 0.15;
 		gbc.weighty = 1.0;
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(5, 5, 5, 5);
 		bottomPanel.add(attendancePanel, gbc);
 		attendancePanel.setBorder(BorderFactory.createTitledBorder("CHI TIẾT LƯƠNG"));
-
-		lb_thuong = new JLabel("MỨC THƯỞNG (%)");
+///////////////////////        
+		lb_heSo = new JLabel("HỆ SỐ LƯƠNG (0.0)");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		lb_heSo.setFont(new Font("Arial", Font.BOLD, 13));
+		attendancePanel.add(lb_heSo, gbc);
+		tf_heSo = new JTextField();
+		gbc.gridx = 1;
+		attendancePanel.add(tf_heSo, gbc);
+
+/////////////////////////        
+		lb_thuong = new JLabel("MỨC THƯỞNG (%)");
+		gbc.gridx = 0;
+		gbc.gridy = 1;
 		lb_thuong.setFont(new Font("Arial", Font.BOLD, 13));
 		attendancePanel.add(lb_thuong, gbc);
 		tf_thuong = new JTextField();
@@ -582,12 +632,12 @@ public class DSBangLuongGUI extends JPanel {
 		lb_khoanTru = new JLabel("CÁC KHOẢN TRỪ ");
 		lb_khoanTru.setFont(new Font("Arial", Font.BOLD, 13));
 		gbc.gridx = 0;
-		gbc.gridy = 1;
+		gbc.gridy = 2;
 		attendancePanel.add(lb_khoanTru, gbc);
 
 		lb_bhxh = new JLabel("Bảo hiểm xã hội: ");
 		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy = 3;
 		lb_bhxh.setFont(new Font("Arial", Font.PLAIN, 14));
 		attendancePanel.add(lb_bhxh, gbc);
 		tf_bhxh = new JTextField();
@@ -596,7 +646,7 @@ public class DSBangLuongGUI extends JPanel {
 
 		lb_bhyt = new JLabel("Bảo hiểm y tế: ");
 		gbc.gridx = 0;
-		gbc.gridy = 3;
+		gbc.gridy = 4;
 		lb_bhyt.setFont(new Font("Arial", Font.PLAIN, 14));
 		attendancePanel.add(lb_bhyt, gbc);
 		tf_bhyt = new JTextField();
@@ -605,7 +655,7 @@ public class DSBangLuongGUI extends JPanel {
 
 		lb_bhtn = new JLabel("Bảo hiểm tai nạn: ");
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		lb_bhtn.setFont(new Font("Arial", Font.PLAIN, 14));
 		attendancePanel.add(lb_bhtn, gbc);
 		tf_bhtn = new JTextField();
@@ -614,7 +664,7 @@ public class DSBangLuongGUI extends JPanel {
 
 		lb_thue = new JLabel("Thuế thu nhập cá nhân: ");
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		lb_thue.setFont(new Font("Arial", Font.PLAIN, 14));
 		attendancePanel.add(lb_thue, gbc);
 		tf_thue = new JTextField();
@@ -623,7 +673,7 @@ public class DSBangLuongGUI extends JPanel {
 
 		lb_tamUng = new JLabel("Tạm ứng:");
 		gbc.gridx = 0;
-		gbc.gridy = 6;
+		gbc.gridy = 7;
 		lb_tamUng.setFont(new Font("Arial", Font.PLAIN, 14));
 		attendancePanel.add(lb_tamUng, gbc);
 		tf_tamUng = new JTextField();
@@ -633,12 +683,12 @@ public class DSBangLuongGUI extends JPanel {
 		lb_phuCap = new JLabel("PHỤ CẤP");
 		lb_phuCap.setFont(new Font("Arial", Font.BOLD, 13));
 		gbc.gridx = 0;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		attendancePanel.add(lb_phuCap, gbc);
 
 		lb_pcAnTrua = new JLabel("Phụ cấp cơm trưa:");
 		gbc.gridx = 0;
-		gbc.gridy = 8;
+		gbc.gridy = 9;
 		lb_pcAnTrua.setFont(new Font("Arial", Font.PLAIN, 14));
 		attendancePanel.add(lb_pcAnTrua, gbc);
 		tf_pcAnTrua = new JTextField();
@@ -648,7 +698,7 @@ public class DSBangLuongGUI extends JPanel {
 		lb_pcDiChuyen = new JLabel("Phụ cấp đi lại:");
 		lb_pcDiChuyen.setFont(new Font("Arial", Font.PLAIN, 14));
 		gbc.gridx = 0;
-		gbc.gridy = 9;
+		gbc.gridy = 10;
 		attendancePanel.add(lb_pcDiChuyen, gbc);
 		tf_pcDiChuyen = new JTextField();
 		gbc.gridx = 1;
@@ -658,10 +708,10 @@ public class DSBangLuongGUI extends JPanel {
 		panelOptions.setBackground(Color.white);
 		gbc.weightx = 1.0;
 		gbc.gridx = 0;
-		gbc.gridy = 10;
+		gbc.gridy = 11;
 		attendancePanel.add(panelOptions, gbc);
 
-		btnLuu = new JButton("Lưu");
+		btnLuu = new JButton("Cập nhật");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		btnLuu.setFont(new Font("Arial", Font.BOLD, 14));
@@ -799,7 +849,6 @@ public class DSBangLuongGUI extends JPanel {
 
 				// Thực nhận
 				String thucNhan = df.format(bl.getThucNhan());
-				
 
 				String trangThai;
 				if ("on".equalsIgnoreCase(bl.getTrangThai()))
@@ -821,7 +870,8 @@ public class DSBangLuongGUI extends JPanel {
 		if (selectedRows.length < 1 || (tf_thuong.getText().trim().isEmpty() && tf_bhxh.getText().trim().isEmpty()
 				&& tf_bhyt.getText().trim().isEmpty() && tf_bhtn.getText().trim().isEmpty()
 				&& tf_thue.getText().trim().isEmpty() && tf_tamUng.getText().trim().isEmpty()
-				&& tf_pcAnTrua.getText().trim().isEmpty() && tf_pcDiChuyen.getText().trim().isEmpty())) {
+				&& tf_pcAnTrua.getText().trim().isEmpty() && tf_pcDiChuyen.getText().trim().isEmpty()
+				&& tf_heSo.getText().trim().isEmpty())) {
 
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên và nhập chi tiết!", "Thông báo",
 					JOptionPane.WARNING_MESSAGE);
@@ -829,9 +879,10 @@ public class DSBangLuongGUI extends JPanel {
 		}
 
 		// Kiểm tra định dạng số và không âm
-		JTextField[] fields = { tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua, tf_pcDiChuyen };
-		String[] fieldNames = { "Thưởng", "BHXH", "BHYT", "BHTN", "Thuế TNCN", "Tạm ứng", "Phụ cấp ăn trưa",
-				"Phụ cấp di chuyển" };
+		JTextField[] fields = { tf_heSo, tf_thuong, tf_bhxh, tf_bhyt, tf_bhtn, tf_thue, tf_tamUng, tf_pcAnTrua,
+				tf_pcDiChuyen };
+		String[] fieldNames = { "Hệ số lương", "Thưởng", "BHXH", "BHYT", "BHTN", "Thuế TNCN", "Tạm ứng",
+				"Phụ cấp ăn trưa", "Phụ cấp di chuyển" };
 
 		for (int i = 0; i < fields.length; i++) {
 			String text = fields[i].getText().trim();
@@ -855,6 +906,11 @@ public class DSBangLuongGUI extends JPanel {
 		for (int row : selectedRows) {
 			String maBL = blTable.getValueAt(row, 0).toString();
 			BangLuongDTO bl = blBUS.selectById(maBL);
+
+			if (!tf_heSo.getText().trim().isEmpty()) {
+				bl.setHeSo(Float.parseFloat(tf_heSo.getText()));
+				// System.out.println("HeSo: " + bl.getHeSo());
+			}
 
 			if (!tf_thuong.getText().trim().isEmpty()) {
 				bl.setThuong((bl.getLuongCB() / 100) * Float.parseFloat(tf_thuong.getText()));
@@ -1011,6 +1067,126 @@ public class DSBangLuongGUI extends JPanel {
 		jc_thang.setSelectedIndex(0);
 		jc_nam.setSelectedIndex(0);
 		loadBangLuongList();
+	}
+
+	private void TaoBangLuongNhanVienMoiDialog() {
+		JDialog bangLuongNVMoi = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this),
+				"Thêm bảng lương cho nhân viên mới", true);
+		bangLuongNVMoi.setSize(300, 360);
+		bangLuongNVMoi.setLayout(null);
+
+		JLabel lblThang, lblNam, lblMaNV, lblHeSo;
+		JTextField txtHeSo;
+		JComboBox jc_nhanvien, cb_thang, cb_nam;
+
+		lblMaNV = new JLabel("Nhân viên");
+		lblMaNV.setFont(new Font("Arial", Font.BOLD, 13));
+		lblMaNV.setBounds(28, 10, 150, 30);
+		bangLuongNVMoi.add(lblMaNV);
+
+		ArrayList<NhanVienDTO> arr_nvmoi = nvBUS.selectNhanVienMoi();
+		jc_nhanvien = new JComboBox();
+		jc_nhanvien.setBounds(25, 40, 220, 30);
+		bangLuongNVMoi.add(jc_nhanvien);
+		for (NhanVienDTO nv : arr_nvmoi) {
+			String display = nv.getMaNV() + " - " + nv.getHoTen();
+			jc_nhanvien.addItem(display);
+		}
+
+		lblThang = new JLabel("Tháng lương");
+		lblThang.setFont(new Font("Arial", Font.BOLD, 13));
+		lblThang.setBounds(28, 75, 150, 30);
+		bangLuongNVMoi.add(lblThang);
+
+		String[] month = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+		cb_thang = new JComboBox<String>(month);
+		cb_thang.setBounds(25, 105, 220, 30);
+		bangLuongNVMoi.add(cb_thang);
+
+		lblNam = new JLabel("Năm lương");
+		lblNam.setFont(new Font("Arial", Font.BOLD, 13));
+		lblNam.setBounds(28, 140, 150, 30);
+		bangLuongNVMoi.add(lblNam);
+
+		LocalDate current = LocalDate.now();
+		String[] nam = new String[6];
+		for (int i = 0; i < nam.length; i++) {
+			nam[i] = String.valueOf(current.getYear() - 2 + i);
+		}
+
+		cb_nam = new JComboBox<String>();
+		cb_nam.setModel(new DefaultComboBoxModel<>(nam));
+		cb_nam.setBounds(25, 170, 220, 30);
+		bangLuongNVMoi.add(cb_nam);
+
+		lblHeSo = new JLabel("Hệ số lương (0.0)");
+		lblHeSo.setFont(new Font("Arial", Font.BOLD, 13));
+		lblHeSo.setBounds(28, 205, 150, 30);
+		bangLuongNVMoi.add(lblHeSo);
+
+		txtHeSo = new JTextField();
+		txtHeSo.setBounds(25, 235, 220, 30);
+		bangLuongNVMoi.add(txtHeSo);
+
+		JButton btnSave = new ShadowButton("Lưu");
+		btnSave.setBounds(200, 280, 70, 30);
+		bangLuongNVMoi.add(btnSave);
+
+		btnSave.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String thang = cb_thang.getSelectedItem().toString();
+				String nam = cb_nam.getSelectedItem().toString();
+
+				if (thang.equals("Tháng") || nam.equals("Năm") || txtHeSo.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn tháng, năm và nhập hệ số lương!",
+							"Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+
+				float heSo;
+				try {
+					heSo = Float.parseFloat(txtHeSo.getText().trim());
+					if (heSo <= 0) {
+						JOptionPane.showMessageDialog(null, "Hệ số lương phải lớn hơn 0!", "Giá trị không hợp lệ",
+								JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "Hệ số lương phải là số!", "Lỗi định dạng",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				String nv = jc_nhanvien.getSelectedItem().toString();
+				String maNV = nv.split(" - ")[0];
+				String mabl = "BL" + thang + nam + maNV;
+
+				float luongCB = 0;
+				for (NhanVienDTO nvien : arr_nvmoi) {
+					if (maNV.equals(nvien.getMaNV())) {
+						ChucVuDTO cv = cvBUS.selectById(nvien.getChucVu());
+						luongCB = cv.getLuongCoBan();
+						break;
+					}
+				}
+
+				BangLuongDTO bl = new BangLuongDTO(mabl, Integer.parseInt(thang), Integer.parseInt(nam), luongCB, heSo,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, maNV, "off");
+
+				int kq = blBUS.insert(bl);
+				if (kq > 0)
+					JOptionPane.showMessageDialog(null, "Tạo bảng lương cho nhân viên mới thành công!", "Thành công",
+							JOptionPane.INFORMATION_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(null, "Tạo bảng lương thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+				loadBangLuongList();
+			}
+		});
+
+		bangLuongNVMoi.setLocationRelativeTo(this);
+		bangLuongNVMoi.setVisible(true);
 	}
 
 	private void sortAZ() {

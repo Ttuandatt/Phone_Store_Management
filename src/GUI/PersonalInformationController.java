@@ -2,7 +2,6 @@ package GUI;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Date;
@@ -19,14 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -37,7 +30,6 @@ import BUS.NhanVienBUS;
 import DTO.BangChamCongDTO;
 import DTO.BangLuongDTO;
 import DTO.NhanVienDTO;
-import DTO.SanPhamDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -138,7 +130,7 @@ public class PersonalInformationController {
 
     public void setBangLuong(ArrayList<BangLuongDTO> arrBangLuong) {
         ObservableList<BangLuongDTO> bangLuongDTOs = FXCollections.observableArrayList(arrBangLuong);
-
+        
         tv_heso.setCellValueFactory(new PropertyValueFactory<>("heSo"));
 
         tv_thoigian.setCellValueFactory(cellData -> {
@@ -146,13 +138,42 @@ public class PersonalInformationController {
             return new SimpleStringProperty(dto.getThangLuong() + "/" + dto.getNamLuong());
         });
 
-        tv_luongthucte.setCellValueFactory(cellData -> {
+        tv_luongCB.setCellValueFactory(cellData -> {
+            //BangLuongDTO dto = cellData.getValue();
             String formatted = formatter.format(cellData.getValue().getLuongCB());
+            return new SimpleStringProperty(formatted);
+        });
+        
+        tv_luongthucte.setCellValueFactory(cellData -> {
+            BangLuongDTO dto = cellData.getValue();
+            String mabcc = dto.getMaLuong().replaceFirst("BL", "CC");
+            BangChamCongDTO bcc = bccBUS.selectById(mabcc);
+            double luongThucTe = 0.0;
+            if (bcc != null) {
+                luongThucTe = (dto.getLuongCB() * dto.getHeSo()) / 24 * bcc.getSoNgayLam();
+            }
+            String formatted = formatter.format(luongThucTe);
+            return new SimpleStringProperty(formatted);
+        });
+
+        tv_luongOT.setCellValueFactory(cellData -> {
+            BangLuongDTO dto = cellData.getValue();
+            String mabcc = dto.getMaLuong().replaceFirst("BL", "CC");
+            BangChamCongDTO bcc = bccBUS.selectById(mabcc);
+            double luongOT = 0.0;
+            if (bcc != null) {
+                double t = (dto.getLuongCB() * dto.getHeSo()) / (24 * 8);
+                luongOT = t * bcc.getSoGioOTNgayThuong()
+                        + t * 2 * bcc.getSoGioOTCN()
+                        + t * 3 * bcc.getSoGioOTNgayLe();
+            }
+            String formatted = formatter.format(luongOT);
             return new SimpleStringProperty(formatted);
         });
 
         tv_phucap.setCellValueFactory(cellData -> {
-            double tongPhuCap = cellData.getValue().getPhuCapAnTrua() + cellData.getValue().getPhuCapDiLai();
+            BangLuongDTO dto = cellData.getValue();
+            double tongPhuCap = dto.getPhuCapAnTrua() + dto.getPhuCapDiLai();
             String formatted = formatter.format(tongPhuCap);
             return new SimpleStringProperty(formatted);
         });
@@ -162,24 +183,65 @@ public class PersonalInformationController {
             return new SimpleStringProperty(formatted);
         });
 
-        tv_cackhoangtru.setCellValueFactory(cellData -> {
-            double tongTru = cellData.getValue().getBhxh()
-                    + cellData.getValue().getBhyt()
-                    + cellData.getValue().getBhtn()
-                    + cellData.getValue().getThue()
-                    + cellData.getValue().getTamUng();
+        tv_cackhoantru.setCellValueFactory(cellData -> {
+            BangLuongDTO dto = cellData.getValue();
+            double tongTru = dto.getBhxh() + dto.getBhyt() + dto.getBhtn() + dto.getThue() + dto.getTamUng();
+            log("maBL="+dto.getMaLuong());
+            log("BHTN="+dto.getBhtn());
+            log("BHXH="+dto.getBhxh());
+            log("BHYT="+dto.getBhyt());
+            log("thue="+dto.getThue());
+            log("tamUng="+dto.getTamUng());
+            log("tongTru="+tongTru);
+
+
+            
             String formatted = formatter.format(tongTru);
             return new SimpleStringProperty(formatted);
         });
 
+
         tv_thucnhan.setCellValueFactory(cellData -> {
-            String formatted = formatter.format(cellData.getValue().getThucNhan());
-            log("thucNhan="+formatted);
+            BangLuongDTO dto = cellData.getValue();
+            String mabcc = dto.getMaLuong().replaceFirst("BL", "CC");
+            BangChamCongDTO bcc = bccBUS.selectById(mabcc);
+
+            // Tính lương thực tế
+            double luongThucTe = 0.0;
+            if (bcc != null) {
+                luongThucTe = (dto.getLuongCB() * dto.getHeSo()) / 24 * bcc.getSoNgayLam();
+            }
+
+            // Tính lương OT
+            double luongOT = 0.0;
+            if (bcc != null) {
+                double t = (dto.getLuongCB() * dto.getHeSo()) / (24 * 8);
+                luongOT = t * bcc.getSoGioOTNgayThuong()
+                        + t * 2 * bcc.getSoGioOTCN()
+                        + t * 3 * bcc.getSoGioOTNgayLe();
+            }
+
+            // Phụ cấp
+            double tongPhuCap = dto.getPhuCapAnTrua() + dto.getPhuCapDiLai();
+
+            // Tổng các khoản trừ
+            double tongTru = dto.getBhxh()
+                    + dto.getBhyt()
+                    + dto.getBhtn()
+                    + dto.getThue()
+                    + dto.getTamUng();
+
+            // Tổng thực nhận
+            double thucNhan = luongThucTe + luongOT + tongPhuCap + dto.getThuong() - tongTru;
+
+            String formatted = formatter.format(thucNhan);
+            log("thucNhan=" + formatted);
             return new SimpleStringProperty(formatted);
         });
+
         tb_bangluong.getColumns().clear();
         tb_bangluong.setItems(bangLuongDTOs);
-        tb_bangluong.getColumns().addAll(tv_thoigian, tv_heso, tv_luongthucte, tv_phucap, tv_luongthuong, tv_cackhoangtru, tv_thucnhan);
+        tb_bangluong.getColumns().addAll(tv_thoigian, tv_heso, tv_luongCB, tv_luongthucte, tv_luongOT, tv_phucap, tv_luongthuong, tv_cackhoantru, tv_thucnhan);
     }
 
     // set bang cham cong, tham so la nv va thang nam
@@ -304,32 +366,37 @@ public class PersonalInformationController {
     private Label tf_songaynghiphepkhongluong;
 
     @FXML
+    private TableColumn<BangLuongDTO, String> tv_thoigian;
+    
+    @FXML
     private TableColumn<BangLuongDTO, Float> tv_heso;
 
     @FXML
-    private TableColumn<BangLuongDTO, String> tv_thoigian;
-
-    @FXML
-    private TableColumn<BangLuongDTO, String> tv_tongluong;
-
-    @FXML
-    private TableColumn<BangLuongDTO, String> tv_cackhoangtru;
-
-    @FXML
-    private TableColumn<BangLuongDTO, String> tv_luongtangca;
+    private TableColumn<BangLuongDTO, String> tv_luongCB;
 
     @FXML
     private TableColumn<BangLuongDTO, String> tv_luongthucte;
+    
+    
+    @FXML
+    private TableColumn<BangLuongDTO, String> tv_luongOT;
+
 
     @FXML
     private TableColumn<BangLuongDTO, String> tv_phucap;
-
-
-    @FXML
-    private TableColumn<BangLuongDTO, String> tv_thucnhan;
-
+    
     @FXML
     private TableColumn<BangLuongDTO, String> tv_luongthuong;
+    
+    
+    @FXML
+    private TableColumn<BangLuongDTO, String> tv_cackhoantru;
+
+    
+    @FXML
+    private TableColumn<BangLuongDTO, String> tv_thucnhan;
+    
+
 
     @FXML
     private TableView<BangLuongDTO> tb_bangluong;

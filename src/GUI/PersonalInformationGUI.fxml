@@ -69,10 +69,12 @@
         <columns>
           <TableColumn fx:id="tv_thoigian" prefWidth="88.7999267578125" text="Thời gian" />
           <TableColumn fx:id="tv_heso" prefWidth="121.60000610351562" text="Hệ Số" />
-            <TableColumn fx:id="tv_luongthucte" prefWidth="149.5999755859375" text="Lương Cơ Bản" />
+            <TableColumn fx:id="tv_luongCB" prefWidth="149.5999755859375" text="Lương Cơ Bản" />
+            <TableColumn fx:id="tv_luongthucte" prefWidth="149.5999755859375" text="Lương Thực Tế" />
+            <TableColumn fx:id="tv_luongOT" prefWidth="149.5999755859375" text="Lương Tăng Ca" />
             <TableColumn fx:id="tv_phucap" prefWidth="167.20001220703125" text="Phụ Cấp" />
             <TableColumn fx:id="tv_luongthuong" prefWidth="215.199951171875" text="Lương Thưởng" />
-            <TableColumn fx:id="tv_cackhoangtru" prefWidth="127.20001220703125" text="Các Khoảng Trừ" />
+            <TableColumn fx:id="tv_cackhoantru" prefWidth="127.20001220703125" text="Các Khoản Trừ" />
             <TableColumn fx:id="tv_thucnhan" prefWidth="164" text="Thực Nhận" />
         </columns>
       </TableView>
