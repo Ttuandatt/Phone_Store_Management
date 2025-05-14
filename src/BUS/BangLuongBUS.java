@@ -26,4 +26,8 @@ public class BangLuongBUS {
         return blDAO.selectByKeyWord(keyWord);
     }
 
+    public int insert(BangLuongDTO bl) {
+        return blDAO.insert(bl);
+    }
+
 }
